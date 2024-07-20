@@ -1,0 +1,69 @@
+using System.Collections.Generic;
+
+enum PlayerStates {
+    idle,
+    walk,
+    sprint,
+    crouch,
+    grounded,
+    jump,
+    fall,
+    wallrun,
+    walljump
+}
+
+public class PlayerStateFactory{
+
+    PlayerStateMachine context;
+    Dictionary<PlayerStates, PlayerBaseState> states = new Dictionary<PlayerStates, PlayerBaseState>();
+
+    public PlayerStateFactory(PlayerStateMachine currentContext) {
+        context = currentContext;
+        states[PlayerStates.idle] = new PlayerIdleState(context, this);
+        states[PlayerStates.walk] = new PlayerWalkState(context, this);
+        states[PlayerStates.sprint] = new PlayerSprintState(context, this);
+        states[PlayerStates.crouch] = new PlayerCrouchState(context, this);
+        states[PlayerStates.jump] = new PlayerJumpState(context, this);
+        states[PlayerStates.grounded] = new PlayerGroundedState(context, this);
+        states[PlayerStates.fall] = new PlayerFallState(context, this);
+        states[PlayerStates.wallrun] = new PlayerWallRunState(context, this);
+        states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
+    }
+
+    public PlayerBaseState Idle() {
+        return states[PlayerStates.idle];
+    }
+
+    public PlayerBaseState Walk() {
+        return states[PlayerStates.walk];
+    }
+
+    public PlayerBaseState Sprint () {
+        return states[PlayerStates.sprint];
+    }
+
+    public PlayerBaseState Crouch () {
+        return states[PlayerStates.crouch];
+    }
+
+    public PlayerBaseState Jump() {
+        return states[PlayerStates.jump];
+    }   
+
+    public PlayerBaseState Grounded() {
+        return states[PlayerStates.grounded];
+    }
+
+    public PlayerBaseState Fall() {
+        return states[PlayerStates.fall];
+    }
+
+    public PlayerBaseState Wallrun() {
+        return states[PlayerStates.wallrun];
+    }
+    
+    public PlayerBaseState Walljump() {
+        return states[PlayerStates.walljump];
+    }
+ 
+}
