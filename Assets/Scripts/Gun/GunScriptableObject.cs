@@ -59,7 +59,7 @@ public class GunScriptableObject : ScriptableObject
             
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
-                Debug.Log("Hit something");
+                // Debug.Log("Hit something");
             }
             else
             {
