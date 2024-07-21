@@ -12,7 +12,7 @@ public class PlayerGunSelector : MonoBehaviour
     [SerializeField]
     private List<GunScriptableObject> Guns;
     [SerializeField]
-    // private PlayerIK InverseKinematics;
+    //public PlayerIK InverseKinematics;
 
     [Space]
     [Header("Runtime Filled")]
