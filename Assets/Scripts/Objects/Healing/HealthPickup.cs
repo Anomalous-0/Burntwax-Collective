@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour {
@@ -9,12 +6,12 @@ public class NewBehaviourScript : MonoBehaviour {
 
     PlayerHealth playerHealth;
 
-    void OnTriggerStay(Collider other) {
+    void OnTriggerEnter(Collider other) {
         
         if(other.GetComponentInParent<PlayerHealth>() != false) {
             // Debug.Log("COllided");
             playerHealth = other.GetComponentInParent<PlayerHealth>();
-            if(playerHealth.maxHealth  - playerHealth.CurrentHealth() > heal) {
+            if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
                 playerHealth.RestoreHealth(heal);
                 Destroy(gameObject);
             }
