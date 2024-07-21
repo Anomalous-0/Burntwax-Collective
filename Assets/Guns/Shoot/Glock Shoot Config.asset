@@ -15,8 +15,8 @@ MonoBehaviour:
   HitMask:
     serializedVersion: 2
     m_Bits: 503
-  Spread: {x: 0, y: 0, z: 0}
+  Spread: {x: 0.05, y: 0.05, z: 0.05}
   FireRate: 0.25
-  RecoilRecoverySpeed: 1
-  MaxSpreadTime: 1
+  RecoilRecoverySpeed: 0.25
+  MaxSpreadTime: 2
   SpreadType: 1
