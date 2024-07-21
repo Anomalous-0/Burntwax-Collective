@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.402
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.05118145, g: 0.053927206, b: 0.048673574, a: 0.402}
+  m_IndirectSpecularColor: {r: 0.051181465, g: 0.053927198, b: 0.048673596, a: 0.402}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -5052,6 +5052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GunSelector: {fileID: 401126583}
+  input: {fileID: 845597538}
 --- !u!1 &401294661
 GameObject:
   m_ObjectHideFlags: 0

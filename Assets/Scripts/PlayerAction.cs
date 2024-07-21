@@ -6,10 +6,11 @@ public class PlayerAction : MonoBehaviour
 {
     [SerializeField]
     private PlayerGunSelector GunSelector;
+    public InputManager input;
 
     private void Update()
     {
-        if (Mouse.current.leftButton.isPressed
+        if (input.shootIsPressed
             && GunSelector.ActiveGun != null)
         {
             GunSelector.ActiveGun.Shoot();
