@@ -16,7 +16,13 @@ public class PlayerCrouchState : PlayerBaseState {
     }
 
     public override void UpdateState(){
-
+        if(Ctx.input.aimIsPressed) {
+            Ctx.cam.Aim();
+    
+        }
+        else {
+            Ctx.cam.FPS();
+        }
         CheckSwitchStates();
     }
 
