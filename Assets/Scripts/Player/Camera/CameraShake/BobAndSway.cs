@@ -28,24 +28,31 @@ public class BobAndSway : MonoBehaviour
             Sway();
         }
         SwayRotation();
-        if (!input.aimIsPressed && !input.crouchIsPressed) {
+        if (!input.aimIsPressed) {
             BobOffset();
             BobRotation();
             originalBobPos = bobPosition;
             timeAimed = -5f;
-        }
-        if (input.aimIsPressed){
-            if (timeAimed < 0) {
-                timeAimed = Time.time;
-            }
-            if (bobPosition != Vector3.zero) {
-                Debug.Log(bobPosition.x + ", " + bobPosition.y + ", " + bobPosition.z);
-                if (Time.time - timeAimed <= 1f) {
-                    bobPosition = Vector3.Lerp(originalBobPos, new Vector3(0,0,0), (Time.time - timeAimed));
-                } else {
-                    bobPosition = new Vector3(0,0,0);
-                }
-            }
+        } else {
+            // if (timeAimed < 0) {
+            //     timeAimed = Time.time;
+            // }
+            Debug.Log(bobPosition.x + ", " + bobPosition.y + ", " + bobPosition.z);
+            transform.localPosition = Vector3.zero;
+            bobPosition = Vector3.zero;
+            // if (bobPosition != Vector3.zero) {
+                
+                // if (Time.time - timeAimed <= 1f) {
+                //     transform.localPosition = Vector3.zero;
+                //     // new Vector3(
+                //     //     Mathf.Lerp(bobPosition.x, 0, Time.time - timeAimed),
+                //     //     transform.localPosition.y,
+                //     //     transform.localPosition.z
+                //     // );
+                // } else {
+                //     transform.localPosition = Vector3.zero;
+                // }
+            // }
         }
 
         CompositePositionRotation();
