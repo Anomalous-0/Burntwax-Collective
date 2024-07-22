@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.402
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.05118145, g: 0.053927206, b: 0.048673574, a: 0.402}
+  m_IndirectSpecularColor: {r: 0.051181465, g: 0.053927198, b: 0.048673596, a: 0.402}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1609,7 +1609,7 @@ MonoBehaviour:
   speedCurve: 0
   travelLimit: {x: 0.025, y: 0.025, z: 0.025}
   bobLimit: {x: 0.01, y: 0.01, z: 0.01}
-  multiplier: {x: 2, y: 2, z: 2}
+  multiplier: {x: 1, y: 1, z: 1}
 --- !u!1001 &253729113
 PrefabInstance:
   m_ObjectHideFlags: 0
