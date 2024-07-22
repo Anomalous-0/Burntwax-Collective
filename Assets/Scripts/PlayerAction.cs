@@ -10,9 +10,10 @@ public class PlayerAction : MonoBehaviour
 
     private void Update()
     {
-        if (GunSelector.ActiveGun != null)
+        if (input.shootIsPressed
+            && GunSelector.ActiveGun != null)
         {
-            GunSelector.ActiveGun.Tick(input.shootIsPressed);
+            GunSelector.ActiveGun.Shoot();
         }
     }
 }
