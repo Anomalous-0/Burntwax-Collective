@@ -211,7 +211,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
         float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
         if(Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance)) {
-            if(glove.currentState == glove.states.Hold()) {
+            if(glove.isActiveAndEnabled && glove.currentState == glove.states.Hold()) {
                 if(groundCheckHit.collider.GetComponent<Pickupable>() != false) {
                     return false;
                 }
