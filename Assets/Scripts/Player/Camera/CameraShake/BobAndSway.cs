@@ -32,7 +32,7 @@ public class BobAndSway : MonoBehaviour
             BobOffset();
             BobRotation();
             originalBobPos = bobPosition;
-            timeAimed = -5f;
+            //timeAimed = -5f;
         } else {
             // if (timeAimed < 0) {
             //     timeAimed = Time.time;
