@@ -15,8 +15,10 @@ MonoBehaviour:
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 1
   Name: Assault Rifle
-  ModelPrefab: {fileID: 100006, guid: bfda376b0f658a748870ea8f7c2c7c03, type: 3}
-  SpawnPoint: {x: 0, y: 0.223, z: -0.4}
-  SpawnRotation: {x: -179, y: 20, z: 2.1}
+  ModelPrefab: {fileID: 8445401694592989334, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
+    type: 3}
+  SpawnPoint: {x: 0.235, y: -0.267, z: 0.603}
+  SpawnRotation: {x: 0, y: 0, z: 0}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   TrailConfig: {fileID: 11400000, guid: 79c1328b195bf3b4497caa97d3949cd7, type: 2}
+  AimConfig: {fileID: 11400000, guid: 922b64436795b7844b7f096d697b5f50, type: 2}

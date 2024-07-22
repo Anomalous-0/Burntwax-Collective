@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Trail Config", menuName = "Guns/Trail Config", order = 4)]
-public class TrailConfigScriptableObject : ScriptableObject
+public class TrailConfig : ScriptableObject
 {
     public Material Material;
     public AnimationCurve WidthCurve;

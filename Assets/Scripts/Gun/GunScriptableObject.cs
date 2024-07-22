@@ -12,8 +12,9 @@ public class GunScriptableObject : ScriptableObject
     public Vector3 SpawnPoint;
     public Vector3 SpawnRotation;
 
-    public ShootConfigScriptableObject ShootConfig;
-    public TrailConfigScriptableObject TrailConfig;
+    public ShootConfig ShootConfig;
+    public TrailConfig TrailConfig;
+    public AimConfig AimConfig;
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
@@ -22,12 +23,14 @@ public class GunScriptableObject : ScriptableObject
 
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
+    private ObjectPool<Rigidbody> bullets;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour)
     {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         LastShootTime = 0; // in editor this will not be properly reset, in build it's fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+        //bullets = new ObjectPool<Rigidbody>(InstantiateBullet);
 
         Model = Instantiate(ModelPrefab);
         Model.transform.SetParent(Parent, false);
@@ -37,8 +40,7 @@ public class GunScriptableObject : ScriptableObject
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
     }
 
-    public void Shoot()
-    {
+    public void Shoot() {
         
         if (Time.time > ShootConfig.FireRate + LastShootTime) {
             LastShootTime = Time.time;
@@ -77,6 +79,22 @@ public class GunScriptableObject : ScriptableObject
         }
     }
 
+    public void ADS() {
+        // Vector3 targetPos = AimConfig.aimPoint;
+        // Vector3 targetRot = AimConfig.aimRotation;
+
+        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
+        
+    }
+
+    public void DeADS() {
+        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
+    }
+    
+
+    private IEnumerator InstantiateBullet() {
+        yield return null;
+    }
     private IEnumerator PlayTrail(Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
@@ -87,8 +105,7 @@ public class GunScriptableObject : ScriptableObject
 
         float distance = Vector3.Distance(StartPoint, EndPoint);
         float remainingDistance = distance;
-        while (remainingDistance > 0)
-        {
+        while (remainingDistance > 0) {
             instance.transform.position = Vector3.Lerp(
                 StartPoint,
                 EndPoint,
@@ -101,8 +118,7 @@ public class GunScriptableObject : ScriptableObject
 
         instance.transform.position = EndPoint;
 
-        if (Hit.collider != null)
-        {
+        if (Hit.collider != null) {
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
             //     EndPoint,
@@ -119,8 +135,7 @@ public class GunScriptableObject : ScriptableObject
         TrailPool.Release(instance);
     }
 
-    private TrailRenderer CreateTrail()
-    {
+    private TrailRenderer CreateTrail() {
         GameObject instance = new GameObject("Bullet Trail");
         TrailRenderer trail = instance.AddComponent<TrailRenderer>();
         trail.colorGradient = TrailConfig.Color;

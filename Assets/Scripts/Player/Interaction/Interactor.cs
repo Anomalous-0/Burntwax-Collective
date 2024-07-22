@@ -38,7 +38,7 @@ public class Interactor : MonoBehaviour
             
                 interactIcon.SetActive(true);
                 defaultIcon.SetActive(true);
-                aimIcon.SetActive(false);
+                // aimIcon.SetActive(false);
         
 
             //Actual interaction
@@ -70,15 +70,15 @@ public class Interactor : MonoBehaviour
             if(glove.looking) {
                 interactIcon.SetActive(true);
                 defaultIcon.SetActive(true);
-                aimIcon.SetActive(false);
+                
             }
             else if (input.aimIsPressed) {
                 defaultIcon.SetActive(false);
-                aimIcon.SetActive(true);
+      
                 interactIcon.SetActive(false);
             } else {
                 defaultIcon.SetActive(true);
-                aimIcon.SetActive(false);
+                
                 interactIcon.SetActive(false);
             }
             

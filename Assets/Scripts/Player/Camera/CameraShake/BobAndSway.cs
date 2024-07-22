@@ -28,10 +28,13 @@ public class BobAndSway : MonoBehaviour
             Sway();
         }
         SwayRotation();
-        //if (!input.aimIsPressed && !input.crouchIsPressed) {
-        BobOffset();
-        BobRotation();
-        //}
+        if (!input.aimIsPressed && !input.crouchIsPressed) {
+            BobOffset();
+            BobRotation();
+        }
+        else {
+            speedCurve = 0;
+        }
 
         CompositePositionRotation();
     }
