@@ -8,7 +8,7 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 99c9720ab356a0642a771bea13969a05
+  m_SceneGUID: 98772aa96af503e48a3c748f3019d923
   m_OcclusionCullingData: {fileID: 36300000, guid: 4e899475101011445ab0a445c680c736,
     type: 2}
 --- !u!104 &2
@@ -6435,8 +6435,8 @@ MonoBehaviour:
   bobSway: 1
   step: 0.01
   maxStepDistance: 0.06
-  rotationStep: 6
-  maxRotationStep: 8
+  rotationStep: 4
+  maxRotationStep: 5
   speedCurve: 0
   travelLimit: {x: 0.025, y: 0.025, z: 0.025}
   bobLimit: {x: 0.02, y: 0.02, z: 0.02}
@@ -10942,6 +10942,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1634761956}
+  - {fileID: 1858407641}
   m_Father: {fileID: 1320568534}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &324058977
@@ -47818,7 +47819,6 @@ GameObject:
   - component: {fileID: 1636031307}
   - component: {fileID: 1636031306}
   - component: {fileID: 1636031310}
-  - component: {fileID: 1636031309}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -47912,18 +47912,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1636031304}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &1636031309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1636031304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eebea48a2000d1349a223210837258ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!95 &1636031310
 Animator:
   serializedVersion: 5
@@ -55161,7 +55149,7 @@ RectTransform:
   - {fileID: 1624850779}
   - {fileID: 189774940}
   - {fileID: 1529604633}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 324058976}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -62962,7 +62950,6 @@ SceneRoots:
   - {fileID: 736951251}
   - {fileID: 401126576}
   - {fileID: 1320568534}
-  - {fileID: 1858407641}
   - {fileID: 1795585899}
   - {fileID: 1307851217}
   - {fileID: 1830847043}

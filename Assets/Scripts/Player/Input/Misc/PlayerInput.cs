@@ -116,6 +116,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""WeaponScroll"",
+                    ""type"": ""Button"",
+                    ""id"": ""fd4bf2e3-5663-42a2-a536-c4ca517fe39b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -402,6 +411,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""GloveShoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc2f8e55-b624-40b6-b499-d0b81e9ca4af"",
+                    ""path"": ""<Mouse>/scroll"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""WeaponScroll"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -938,6 +958,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_Shoot = m_OnFoot.FindAction("Shoot", throwIfNotFound: true);
         m_OnFoot_Gloves = m_OnFoot.FindAction("Gloves", throwIfNotFound: true);
         m_OnFoot_GloveShoot = m_OnFoot.FindAction("GloveShoot", throwIfNotFound: true);
+        m_OnFoot_WeaponScroll = m_OnFoot.FindAction("WeaponScroll", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1021,6 +1042,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Shoot;
     private readonly InputAction m_OnFoot_Gloves;
     private readonly InputAction m_OnFoot_GloveShoot;
+    private readonly InputAction m_OnFoot_WeaponScroll;
     public struct OnFootActions
     {
         private @PlayerInput m_Wrapper;
@@ -1035,6 +1057,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Shoot => m_Wrapper.m_OnFoot_Shoot;
         public InputAction @Gloves => m_Wrapper.m_OnFoot_Gloves;
         public InputAction @GloveShoot => m_Wrapper.m_OnFoot_GloveShoot;
+        public InputAction @WeaponScroll => m_Wrapper.m_OnFoot_WeaponScroll;
         public InputActionMap Get() { return m_Wrapper.m_OnFoot; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1074,6 +1097,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @GloveShoot.started += instance.OnGloveShoot;
             @GloveShoot.performed += instance.OnGloveShoot;
             @GloveShoot.canceled += instance.OnGloveShoot;
+            @WeaponScroll.started += instance.OnWeaponScroll;
+            @WeaponScroll.performed += instance.OnWeaponScroll;
+            @WeaponScroll.canceled += instance.OnWeaponScroll;
         }
 
         private void UnregisterCallbacks(IOnFootActions instance)
@@ -1108,6 +1134,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @GloveShoot.started -= instance.OnGloveShoot;
             @GloveShoot.performed -= instance.OnGloveShoot;
             @GloveShoot.canceled -= instance.OnGloveShoot;
+            @WeaponScroll.started -= instance.OnWeaponScroll;
+            @WeaponScroll.performed -= instance.OnWeaponScroll;
+            @WeaponScroll.canceled -= instance.OnWeaponScroll;
         }
 
         public void RemoveCallbacks(IOnFootActions instance)
@@ -1255,6 +1284,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnShoot(InputAction.CallbackContext context);
         void OnGloves(InputAction.CallbackContext context);
         void OnGloveShoot(InputAction.CallbackContext context);
+        void OnWeaponScroll(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
