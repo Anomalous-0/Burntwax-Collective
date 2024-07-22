@@ -57,9 +57,7 @@ public class GunScriptableObject : ScriptableObject
 
         if (Time.time > ShootConfig.FireRate + LastShootTime) {
             LastShootTime = Time.time;
-            //ShootSystem.Play();
 
-            // ShootSystem.Play();
             Vector3 spreadAmount = ShootConfig.GetSpread(Time.time - InitialClickTime);
             Model.transform.forward += Model.transform.TransformDirection(spreadAmount);
 
