@@ -24,7 +24,7 @@ public class BobAndSway : MonoBehaviour
     {
         GetInput();
 
-        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob) {
+        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob && !input.aimIsPressed) {
             Sway();
         }
         SwayRotation();
@@ -39,9 +39,11 @@ public class BobAndSway : MonoBehaviour
                 timeAimed = Time.time;
             }
             if (bobPosition != Vector3.zero) {
-                Debug.Log(originalBobPos.x + ", " + originalBobPos.y + ", " + originalBobPos.z);
+                Debug.Log(bobPosition.x + ", " + bobPosition.y + ", " + bobPosition.z);
                 if (Time.time - timeAimed <= 1f) {
-                    bobPosition = Vector3.Lerp(originalBobPos, Vector3.zero, (Time.time - timeAimed) * 3);
+                    bobPosition = Vector3.Lerp(originalBobPos, new Vector3(0,0,0), (Time.time - timeAimed));
+                } else {
+                    bobPosition = new Vector3(0,0,0);
                 }
             }
         }
