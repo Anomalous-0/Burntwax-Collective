@@ -6,7 +6,6 @@ public class BobAndSway : MonoBehaviour
 {
     [Header("External References")]
 
-
     [SerializeField] InputManager input;
     [SerializeField] PlayerStateMachine player;
     [SerializeField] Rigidbody rb;
@@ -17,7 +16,8 @@ public class BobAndSway : MonoBehaviour
     public bool bobSway = true;
     private bool shouldBob = true;
 
-    
+    private Vector3 originalBobPos;
+    private float timeAimed;
 
     // Update is called once per frame
     void Update()
@@ -31,9 +31,19 @@ public class BobAndSway : MonoBehaviour
         if (!input.aimIsPressed && !input.crouchIsPressed) {
             BobOffset();
             BobRotation();
+            originalBobPos = bobPosition;
+            timeAimed = -5f;
         }
-        else {
-            speedCurve = 0;
+        if (input.aimIsPressed){
+            if (timeAimed < 0) {
+                timeAimed = Time.time;
+            }
+            if (bobPosition != Vector3.zero) {
+                Debug.Log(originalBobPos.x + ", " + originalBobPos.y + ", " + originalBobPos.z);
+                if (Time.time - timeAimed <= 1f) {
+                    bobPosition = Vector3.Lerp(originalBobPos, Vector3.zero, (Time.time - timeAimed) * 3);
+                }
+            }
         }
 
         CompositePositionRotation();
