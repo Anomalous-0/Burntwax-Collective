@@ -97,9 +97,9 @@
                 },
                 {
                     "name": "WeaponScroll",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "fd4bf2e3-5663-42a2-a536-c4ca517fe39b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -394,8 +394,8 @@
                 },
                 {
                     "name": "",
-                    "id": "fc2f8e55-b624-40b6-b499-d0b81e9ca4af",
-                    "path": "<Mouse>/scroll",
+                    "id": "c07038d8-dde5-46be-a11c-b55a8ea3a7d7",
+                    "path": "<Mouse>/scroll/y",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

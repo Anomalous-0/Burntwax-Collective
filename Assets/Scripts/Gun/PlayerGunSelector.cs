@@ -3,8 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [DisallowMultipleComponent]
-public class PlayerGunSelector : MonoBehaviour
-{
+public class PlayerGunSelector : MonoBehaviour {
     [SerializeField]
     private GunType Gun;
     [SerializeField]
