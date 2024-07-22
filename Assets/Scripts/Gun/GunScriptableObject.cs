@@ -19,8 +19,7 @@ public class GunScriptableObject : ScriptableObject
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
 
-    private float LastShootTime;
-
+    private float LastShootTime = 0;
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Rigidbody> bullets;
@@ -50,14 +49,22 @@ public class GunScriptableObject : ScriptableObject
         if (shooting) {
             Shoot();
         }
+        
+        if (Time.time - LastShootTime < ShootConfig.RecoveryTime) {
+            Model.transform.localRotation = Quaternion.Slerp(
+                Model.transform.localRotation,
+                Quaternion.Euler(SpawnRotation),
+                (Time.time - LastShootTime) / ShootConfig.RecoveryTime
+            );
+        }
     }
 
     private void Shoot() {
-        
-        if (Time.time > ShootConfig.FireRate + LastShootTime) {
+        Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
+        if (Time.time > /*Hard coded change later*/ 0.1f + LastShootTime) {
             LastShootTime = Time.time;
 
-            Vector3 shootDirection = Camera.main.transform.forward
+            Vector3 shootDirection = Model.transform.forward
                 + new Vector3(
                     Random.Range(
                         -ShootConfig.Spread.x,
@@ -74,7 +81,18 @@ public class GunScriptableObject : ScriptableObject
                 );
             shootDirection.Normalize();
             
-            //Model.transform.rotation = Quaternion.Euler(0, 5, 0);
+            //Debug.Log(Model.transform.localRotation.x);
+
+            if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
+                Model.transform.Rotate(/*Hard coded change later*/ -0.7f, 0, 0);
+            } else {
+                Model.transform.localRotation = Quaternion.Euler(
+                    Model.transform.localRotation.x - /*Hard coded change later*/0.7f,
+                    Model.transform.localRotation.y,
+                    Model.transform.localRotation.z
+                );
+            }
+            Model.transform.Translate(0, 0, /*Hard coded change later*/-0.02f);
 
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));

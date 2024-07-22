@@ -37,7 +37,7 @@ public class BobAndSway : MonoBehaviour
             // if (timeAimed < 0) {
             //     timeAimed = Time.time;
             // }
-            Debug.Log(bobPosition.x + ", " + bobPosition.y + ", " + bobPosition.z);
+            //Debug.Log(bobPosition.x + ", " + bobPosition.y + ", " + bobPosition.z);
             transform.localPosition = Vector3.zero;
             bobPosition = Vector3.zero;
             // if (bobPosition != Vector3.zero) {
