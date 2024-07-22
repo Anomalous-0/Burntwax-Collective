@@ -40,7 +40,19 @@ public class GunScriptableObject : ScriptableObject
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
     }
 
-    public void Shoot() {
+    public void Tick(bool aiming, bool shooting) {
+        if (aiming) {
+            ADS();
+        } else {
+            DeADS();
+        }
+
+        if (shooting) {
+            Shoot();
+        }
+    }
+
+    private void Shoot() {
         
         if (Time.time > ShootConfig.FireRate + LastShootTime) {
             LastShootTime = Time.time;
@@ -62,6 +74,8 @@ public class GunScriptableObject : ScriptableObject
                 );
             shootDirection.Normalize();
             
+            //Model.transform.rotation = Quaternion.Euler(0, 5, 0);
+
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
                 // Debug.Log("Hit something");
@@ -79,7 +93,7 @@ public class GunScriptableObject : ScriptableObject
         }
     }
 
-    public void ADS() {
+    private void ADS() {
         // Vector3 targetPos = AimConfig.aimPoint;
         // Vector3 targetRot = AimConfig.aimRotation;
 
@@ -87,7 +101,7 @@ public class GunScriptableObject : ScriptableObject
         
     }
 
-    public void DeADS() {
+    private void DeADS() {
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
     }
     

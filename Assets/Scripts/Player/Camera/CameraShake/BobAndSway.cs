@@ -17,7 +17,7 @@ public class BobAndSway : MonoBehaviour
     private bool shouldBob = true;
 
     private Vector3 originalBobPos;
-    private float timeAimed;
+    //private float timeAimed;
 
     // Update is called once per frame
     void Update()

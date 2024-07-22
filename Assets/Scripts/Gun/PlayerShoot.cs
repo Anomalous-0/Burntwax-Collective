@@ -8,19 +8,17 @@ public class PlayerShoot : MonoBehaviour {
 
     private void Update() {
         if(GunSelector.ActiveGun != null) {
+            bool aiming = false;
+            bool shooting = false;
+
             if(input.aimIsPressed) {
-                // Debug.Log("Aim");
-                GunSelector.ActiveGun.ADS();
+                aiming = true;
             }
-            else {
-                GunSelector.ActiveGun.DeADS();
+            if (input.shootIsPressed) {
+                shooting = true;
             }
-            if (input.shootIsPressed ) {
-                GunSelector.ActiveGun.Shoot();
-            }   
-
-
-        }
-        
+            
+            GunSelector.ActiveGun.Tick(aiming, shooting);
+        }   
     }
 }
