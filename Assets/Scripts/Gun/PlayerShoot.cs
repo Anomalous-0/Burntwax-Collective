@@ -17,12 +17,7 @@ public class PlayerShoot : MonoBehaviour {
             if (input.shootIsPressed) {
                 shooting = true;
             }
-            if(input.mouseScroll > 0) {
-                Debug.Log("Scroll up");
-            }
-            else if(input.mouseScroll < 0) {
-                Debug.Log("Scroll down");
-            }
+           
             // else {
             //     Debug.
             // }

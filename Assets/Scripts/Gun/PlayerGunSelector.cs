@@ -4,25 +4,26 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 public class PlayerGunSelector : MonoBehaviour {
-    [SerializeField]
-    private GunType Gun;
-    [SerializeField]
-    private Transform GunParent;
-    [SerializeField]
-    private List<GunScriptableObject> Guns;
-    [SerializeField]
+    [SerializeField] private GunType Gun;
+
+    public InputManager input;
+    
+    [SerializeField] int currentID;
+    [SerializeField] private Transform GunParent;
+    [SerializeField] private List<GunScriptableObject> Guns;
+   
+
     //public PlayerIK InverseKinematics;
 
     [Space]
-    [Header("Runtime Filled")]
-    public GunScriptableObject ActiveGun;
+    [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
 
-    private void Start()
-    {
-        GunScriptableObject gun = Guns.Find(gun => gun.Type == Gun);
+    private void Start() {
+        currentID = 0;
 
-        if (gun == null)
-        {
+        GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+
+        if (gun == null) {
             Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
             return;
         }
@@ -37,4 +38,46 @@ public class PlayerGunSelector : MonoBehaviour {
         // InverseKinematics.LeftHandIKTarget = allChildren.FirstOrDefault(child => child.name == "LeftHand");
         // InverseKinematics.RightHandIKTarget = allChildren.FirstOrDefault(child => child.name == "RightHand");
     }
+
+    private void Update() {
+        
+        // Debug.Log(currentID);
+        if(input.mouseScroll != 0) {
+            ScrollID();
+            GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+
+            if (gun == null) {
+                Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+                return;
+            }
+        
+            ActiveGun.Despawn(this);
+            ActiveGun = gun;
+            gun.Spawn(GunParent, this);
+        }
+
+        
+
+        
+    }
+
+    private void ScrollID() {
+        if(input.mouseScroll > 0) {
+            currentID++;
+            if(currentID > Guns.Count - 1) {
+                currentID = 0;
+            }
+        }
+        else if(input.mouseScroll < 0) {
+            currentID--;
+            if(currentID < 0) {
+                currentID = Guns.Count - 1;
+            }
+        }
+
+        
+        
+    }
+
+
 }

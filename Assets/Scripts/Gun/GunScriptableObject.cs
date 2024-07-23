@@ -4,6 +4,8 @@ using UnityEngine.Pool;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
 public class GunScriptableObject : ScriptableObject {
+
+    public int ID;
     public ImpactType ImpactType;
     public GunType Type;
     public string Name;
@@ -23,8 +25,7 @@ public class GunScriptableObject : ScriptableObject {
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Rigidbody> bullets;
 
-    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour)
-    {
+    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         LastShootTime = 0; // in editor this will not be properly reset, in build it's fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
@@ -36,6 +37,12 @@ public class GunScriptableObject : ScriptableObject {
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
 
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
+    }
+
+    public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
+        this.ActiveMonoBehaviour = ActiveMonoBehaviour;
+        Destroy(Model);
+
     }
 
     public void Tick(bool aiming, bool shooting) {
