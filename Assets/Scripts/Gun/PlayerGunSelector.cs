@@ -4,13 +4,16 @@ using UnityEngine;
 
 [DisallowMultipleComponent]
 public class PlayerGunSelector : MonoBehaviour {
-    [SerializeField] private GunType Gun;
+    // private GunType Gun;
 
     public InputManager input;
     
-    [SerializeField] int currentID;
-    [SerializeField] private Transform GunParent;
-    [SerializeField] private List<GunScriptableObject> Guns;
+    public int currentID;
+    [SerializeField] public Transform GunParent;
+    public List<GunScriptableObject> Guns;
+
+    public MonoBehaviour ActiveMonoBehaviour;
+    
    
 
     //public PlayerIK InverseKinematics;
@@ -19,17 +22,18 @@ public class PlayerGunSelector : MonoBehaviour {
     [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
 
     private void Start() {
-        currentID = 0;
+        ActiveMonoBehaviour = this;
+        // currentID = 0;
 
-        GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+        // GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
 
-        if (gun == null) {
-            Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
-            return;
-        }
+        // if (gun == null) {
+        //     Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+        //     return;
+        // }
 
-        ActiveGun = gun;
-        gun.Spawn(GunParent, this);
+        // ActiveGun = gun;
+        // gun.Spawn(GunParent, this);
 
         // some magic for IK
         // Transform[] allChildren = GunParent.GetComponentsInChildren<Transform>();
@@ -42,23 +46,41 @@ public class PlayerGunSelector : MonoBehaviour {
     private void Update() {
         
         // Debug.Log(currentID);
-        if(input.mouseScroll != 0) {
-            ScrollID();
-            GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+       if(Guns.Count >  0) {
+            if(input.mouseScroll != 0) {
+                ScrollID();
+                GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
 
-            if (gun == null) {
-                Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
-                return;
+                if (gun == null) {
+                    Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+                    return;
+                }
+            
+                ActiveGun.Despawn(this);
+                ActiveGun = gun;
+                gun.Spawn(GunParent, this);
             }
+            
+       }
+
         
-            ActiveGun.Despawn(this);
+
+        
+    }
+
+
+    public void Pickup(GunScriptableObject gun) {
+        if(!Guns.Contains(gun)) {
+            Guns.Add(gun);
+            if(ActiveGun != null) {
+                ActiveGun.Despawn(this);
+            }
+                
             ActiveGun = gun;
+            currentID = gun.ID;
             gun.Spawn(GunParent, this);
-        }
-
-        
-
-        
+            }    
+            
     }
 
     private void ScrollID() {
