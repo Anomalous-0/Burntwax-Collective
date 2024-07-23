@@ -51,11 +51,7 @@ public class PlayerGunSelector : MonoBehaviour {
                 ScrollID();
                 GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
 
-                if (gun == null) {
-                    Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
-                    return;
-                }
-            
+               
                 ActiveGun.Despawn(this);
                 ActiveGun = gun;
                 gun.Spawn(GunParent, this);
