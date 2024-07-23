@@ -47,10 +47,10 @@ public class GunScriptableObject : ScriptableObject {
 
     public void Shoot() {
         // Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
-        if (Time.time > /*Hard coded change later*/ 0.1f + LastShootTime) {
+        if (Time.time > ShootConfig.FireRate + LastShootTime) {
             LastShootTime = Time.time;
 
-            Vector3 shootDirection = Model.transform.forward
+            Vector3 shootDirection = Camera.main.transform.forward
                 + new Vector3(
                     Random.Range(
                         -ShootConfig.Spread.x,
@@ -67,13 +67,13 @@ public class GunScriptableObject : ScriptableObject {
                 );
             shootDirection.Normalize();
             
-            //Debug.Log(Model.transform.localRotation.x);
+            Debug.Log(Model.transform.localRotation.x);
 
             if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
-                Model.transform.Rotate(/*Hard coded change later*/ -0.7f, 0, 0);
+                Model.transform.Rotate(/*Hard coded change later*/ -ShootConfig.RecoilAmount, 0, 0);
             } else {
                 Model.transform.localRotation = Quaternion.Euler(
-                    Model.transform.localRotation.x - /*Hard coded change later*/0.7f,
+                    Model.transform.localRotation.x - /*Hard coded change later*/ShootConfig.RecoilAmount,
                     Model.transform.localRotation.y,
                     Model.transform.localRotation.z
                 );
@@ -84,22 +84,13 @@ public class GunScriptableObject : ScriptableObject {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
                 // Debug.Log("Hit something");
             }
-            else
-            {
-                ActiveMonoBehaviour.StartCoroutine(
-                    PlayTrail(
-                        ShootSystem.transform.position,
-                        ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance),
-                        new RaycastHit()
-                    )
-                );
+            else {
+                ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
             }
         }
     }
 
     public void ADS() {
-        // Vector3 targetPos = AimConfig.aimPoint;
-        // Vector3 targetRot = AimConfig.aimRotation;
 
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
         

@@ -67,7 +67,7 @@ public class Interactor : MonoBehaviour
                 }
             }
         } else {
-            if(glove.looking) {
+            if(glove.looking && !input.aimIsPressed) {
                 interactIcon.SetActive(true);
                 defaultIcon.SetActive(true);
                 

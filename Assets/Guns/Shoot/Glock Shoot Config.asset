@@ -16,7 +16,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 503
   Spread: {x: 0, y: 0, z: 0}
-  FireRate: 0.25
-  RecoilRecoverySpeed: 1
-  MaxSpreadTime: 2
-  SpreadType: 0
+  FireRate: 0.3
+  RecoveryTime: 0.3
+  RecoilAmount: 1
+  RecoilTime: 0.05

@@ -42,7 +42,7 @@ public class PlayerJumpState : PlayerBaseState {
         if(Ctx.playerIsGrounded) {
             SwitchState(Factory.Grounded());
         }
-        else if((Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)) {
+        else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
             SwitchState(Factory.Wallrun());
         }
 
