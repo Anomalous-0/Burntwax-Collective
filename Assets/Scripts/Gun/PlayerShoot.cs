@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,21 +9,16 @@ public class PlayerShoot : MonoBehaviour {
 
     private void Update() {
         if(GunSelector.ActiveGun != null) {
-            bool aiming = false;
-            bool shooting = false;
+           if (input.aimIsPressed) {
+                GunSelector.ActiveGun.ADS();
+            } else {
+                GunSelector.ActiveGun.DeADS();
+            }
 
-            if(input.aimIsPressed) {
-                aiming = true;
-            }
             if (input.shootIsPressed) {
-                shooting = true;
+                GunSelector.ActiveGun.Shoot();
             }
-           
-            // else {
-            //     Debug.
-            // }
             
-            GunSelector.ActiveGun.Tick(aiming, shooting);
         }   
     }
 }

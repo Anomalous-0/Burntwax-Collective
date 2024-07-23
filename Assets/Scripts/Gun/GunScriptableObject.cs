@@ -45,28 +45,8 @@ public class GunScriptableObject : ScriptableObject {
 
     }
 
-    public void Tick(bool aiming, bool shooting) {
-        if (aiming) {
-            ADS();
-        } else {
-            DeADS();
-        }
-
-        if (shooting) {
-            Shoot();
-        }
-        
-        if (Time.time - LastShootTime < ShootConfig.RecoveryTime) {
-            Model.transform.localRotation = Quaternion.Slerp(
-                Model.transform.localRotation,
-                Quaternion.Euler(SpawnRotation),
-                (Time.time - LastShootTime) / ShootConfig.RecoveryTime
-            );
-        }
-    }
-
-    private void Shoot() {
-        Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
+    public void Shoot() {
+        // Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
         if (Time.time > /*Hard coded change later*/ 0.1f + LastShootTime) {
             LastShootTime = Time.time;
 
@@ -117,7 +97,7 @@ public class GunScriptableObject : ScriptableObject {
         }
     }
 
-    private void ADS() {
+    public void ADS() {
         // Vector3 targetPos = AimConfig.aimPoint;
         // Vector3 targetRot = AimConfig.aimRotation;
 
@@ -125,7 +105,7 @@ public class GunScriptableObject : ScriptableObject {
         
     }
 
-    private void DeADS() {
+    public void DeADS() {
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
     }
     
