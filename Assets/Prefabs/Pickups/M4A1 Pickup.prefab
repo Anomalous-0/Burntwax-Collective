@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8946988713654426791}
   - component: {fileID: 3045520616644016817}
   - component: {fileID: 1516820497999405261}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: M4A1 Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -129,7 +129,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8349964679406726908}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Eject_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -161,7 +161,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4487892761640388226}
   - component: {fileID: 967970072383875043}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SM_AR_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1519554473451889290}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -291,7 +291,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5424583591835949611}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: bolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -322,7 +322,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5752550853900107776}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7576835273273821294}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SKEL_AR_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -386,7 +386,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9006206758179487517}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -425,7 +425,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 22401048095452582}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -456,7 +456,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 154943505028662698}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -488,7 +488,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2220935687202630485}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -519,7 +519,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4710347019901045243}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -551,7 +551,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3171516133815513271}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -583,7 +583,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7608583520609083739}
-  m_Layer: 12
+  m_Layer: 0
   m_Name: SOCKET_Eject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -620,7 +620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 894eecaba4473bc41a05f263041a2272, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 894eecaba4473bc41a05f263041a2272, type: 3}
       propertyPath: m_RootOrder
@@ -747,7 +747,7 @@ PrefabInstance:
     - target: {fileID: 4344479955153924831, guid: 613eeb9dc59c9934392391ae63fffa9d,
         type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5367789600872443889, guid: 613eeb9dc59c9934392391ae63fffa9d,
         type: 3}
@@ -757,12 +757,12 @@ PrefabInstance:
     - target: {fileID: 5367789600872443889, guid: 613eeb9dc59c9934392391ae63fffa9d,
         type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6452824536385822609, guid: 613eeb9dc59c9934392391ae63fffa9d,
         type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1103329891092828159, guid: 613eeb9dc59c9934392391ae63fffa9d, type: 3}
@@ -790,7 +790,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 9f4d52975d229e74fa27561b00052caa, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 9f4d52975d229e74fa27561b00052caa, type: 3}
       propertyPath: m_RootOrder
