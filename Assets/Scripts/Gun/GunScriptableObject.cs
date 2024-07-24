@@ -90,16 +90,6 @@ public class GunScriptableObject : ScriptableObject {
         }
     }
 
-    public void ReturnToInitial() {
-        if (Time.time - LastShootTime < ShootConfig.RecoveryTime) {
-            Model.transform.localRotation = Quaternion.Slerp(
-                Model.transform.localRotation,
-                Quaternion.Euler(SpawnRotation),
-                Time.deltaTime * 0.3f
-            );
-        }
-    }
-
     public void ADS() {
 
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
