@@ -39,7 +39,7 @@ RenderSettings:
   m_ReflectionIntensity: 0.402
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 254040436}
-  m_IndirectSpecularColor: {r: 0.072473906, g: 0.09073682, b: 0.12338268, a: 0.402}
+  m_IndirectSpecularColor: {r: 0.072473906, g: 0.09073674, b: 0.12338252, a: 0.402}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -6429,7 +6429,7 @@ MonoBehaviour:
   input: {fileID: 845597538}
   player: {fileID: 401126580}
   rb: {fileID: 401126577}
-  sway: 1
+  sway: 0
   swayRotation: 1
   bobOffset: 1
   bobSway: 1

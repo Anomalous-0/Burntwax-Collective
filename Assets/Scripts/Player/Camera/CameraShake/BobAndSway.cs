@@ -24,16 +24,16 @@ public class BobAndSway : MonoBehaviour
     {
         GetInput();
 
-        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob /*&& !input.aimIsPressed*/) {
+        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob && !input.aimIsPressed) {
             Sway();
         }
         SwayRotation();
-        //if (!input.aimIsPressed) {
+        if (!input.aimIsPressed) {
             BobOffset();
             BobRotation();
             originalBobPos = bobPosition;
             //timeAimed = -5f;
-        //} else {
+        } else {
             // if (timeAimed < 0) {
             //     timeAimed = Time.time;
             // }
@@ -53,7 +53,7 @@ public class BobAndSway : MonoBehaviour
                 //     transform.localPosition = Vector3.zero;
                 // }
             // }
-        //}
+        }
 
         CompositePositionRotation();
     }
@@ -86,11 +86,11 @@ public class BobAndSway : MonoBehaviour
         invertLook.x = Mathf.Clamp(invertLook.x, -maxStepDistance, maxStepDistance);
         invertLook.y = Mathf.Clamp(invertLook.y, -maxStepDistance, maxStepDistance);
 
-        if (lookInput.magnitude > 0.1f) {
-            shouldBob = false;
-        } else {
-            shouldBob = true;
-        }
+        // if (lookInput.magnitude > 0.1f) {
+        //     shouldBob = false;
+        // } else {
+        //     shouldBob = true;
+        // }
 
         swayPos = invertLook;
     }
