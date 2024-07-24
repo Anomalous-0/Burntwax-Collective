@@ -71,10 +71,10 @@ public class GunScriptableObject : ScriptableObject {
             Debug.Log(Model.transform.localRotation.x);
 
             if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
-                Model.transform.Rotate(/*Hard coded change later*/ -ShootConfig.RecoilAmount, 0, 0);
+                Model.transform.Rotate(/*Hard coded change later*/ -1/*RecoilConfig.RecoilAngle*/, 0, 0);
             } else {
                 Model.transform.localRotation = Quaternion.Euler(
-                    Model.transform.localRotation.x - /*Hard coded change later*/ShootConfig.RecoilAmount,
+                    Model.transform.localRotation.x /*-*/ /*Hard coded change later*//*RecoilConfig.RecoilAngle*/,
                     Model.transform.localRotation.y,
                     Model.transform.localRotation.z
                 );
@@ -92,7 +92,7 @@ public class GunScriptableObject : ScriptableObject {
     }
 
     public void ReturnToInitial() {
-        if (Time.time - LastShootTime < ShootConfig.RecoveryTime) {
+        if (Time.time - LastShootTime < 0.25/*RecoilConfig.RecoveryTime*/) {
             Model.transform.localRotation = Quaternion.Slerp(
                 Model.transform.localRotation,
                 Quaternion.Euler(SpawnRotation),
