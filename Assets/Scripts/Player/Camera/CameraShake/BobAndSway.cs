@@ -24,7 +24,7 @@ public class BobAndSway : MonoBehaviour
     {
         GetInput();
 
-        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob && !input.aimIsPressed) {
+        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob /*&& !input.aimIsPressed*/) {
             Sway();
         }
         SwayRotation();

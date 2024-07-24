@@ -24,6 +24,7 @@ public class GunScriptableObject : ScriptableObject {
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Rigidbody> bullets;
+    private bool isADS;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
@@ -95,7 +96,12 @@ public class GunScriptableObject : ScriptableObject {
             Model.transform.localRotation = Quaternion.Slerp(
                 Model.transform.localRotation,
                 Quaternion.Euler(SpawnRotation),
-                Time.deltaTime * 0.3f
+                Time.deltaTime * /*Hard coded change later*/ 10f
+            );
+            Model.transform.localPosition = Vector3.Lerp(
+                Model.transform.localPosition,
+                (isADS) ? AimConfig.aimPoint : SpawnPoint,
+                Time.deltaTime * 10f /*Hard coded change later*/ 
             );
         }
     }
@@ -103,11 +109,13 @@ public class GunScriptableObject : ScriptableObject {
     public void ADS() {
 
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
-        
+        isADS = true;
+
     }
 
     public void DeADS() {
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
+        isADS = false;
     }
     
 
