@@ -67,6 +67,18 @@ public class GunScriptableObject : ScriptableObject {
                 );
             shootDirection.Normalize();
             
+            Debug.Log(Model.transform.localRotation.x);
+
+            if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
+                Model.transform.Rotate(/*Hard coded change later*/ -ShootConfig.RecoilAmount, 0, 0);
+            } else {
+                Model.transform.localRotation = Quaternion.Euler(
+                    Model.transform.localRotation.x - /*Hard coded change later*/ShootConfig.RecoilAmount,
+                    Model.transform.localRotation.y,
+                    Model.transform.localRotation.z
+                );
+            }
+            Model.transform.Translate(0, 0, /*Hard coded change later*/-0.02f);
 
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
@@ -78,7 +90,15 @@ public class GunScriptableObject : ScriptableObject {
         }
     }
 
-    
+    public void ADS() {
+
+        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
+        
+    }
+
+    public void DeADS() {
+        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
+    }
     
 
     private IEnumerator InstantiateBullet() {

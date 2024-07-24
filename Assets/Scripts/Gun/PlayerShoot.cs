@@ -10,9 +10,9 @@ public class PlayerShoot : MonoBehaviour {
     private void Update() {
         if(GunSelector.ActiveGun != null) {
            if (input.aimIsPressed) {
-                // GunSelector.ActiveGun.ADS();
+                GunSelector.ActiveGun.ADS();
             } else {
-                // GunSelector.ActiveGun.DeADS();
+                GunSelector.ActiveGun.DeADS();
             }
 
             if (input.shootIsPressed) {
