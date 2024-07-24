@@ -28,12 +28,12 @@ public class BobAndSway : MonoBehaviour
             Sway();
         }
         SwayRotation();
-        //if (!input.aimIsPressed) {
+        if (!input.aimIsPressed) {
             BobOffset();
             BobRotation();
             originalBobPos = bobPosition;
             //timeAimed = -5f;
-        //} else {
+        } else {
             // if (timeAimed < 0) {
             //     timeAimed = Time.time;
             // }
@@ -53,7 +53,7 @@ public class BobAndSway : MonoBehaviour
                 //     transform.localPosition = Vector3.zero;
                 // }
             // }
-        //}
+        }
 
         CompositePositionRotation();
     }
