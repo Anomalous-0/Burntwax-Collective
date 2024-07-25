@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea7301d1c341f36478e6140cdbb9ca03, type: 3}
   m_Name: Glock
   m_EditorClassIdentifier: 
+  ID: 0
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 0
   Name: Glock
@@ -22,3 +23,4 @@ MonoBehaviour:
   ShootConfig: {fileID: 11400000, guid: 272786616a48f3947925007fecdf07f3, type: 2}
   TrailConfig: {fileID: 11400000, guid: f27ce4189ab286044818d9e95f5d8b2e, type: 2}
   AimConfig: {fileID: 11400000, guid: fe29849d7ee5e3e479e2d020bd4196e8, type: 2}
+  RecoilConfig: {fileID: 11400000, guid: 4186b3b54148fdc4bb7c834ed25c0353, type: 2}

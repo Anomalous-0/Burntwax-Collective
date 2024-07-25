@@ -16,6 +16,8 @@ public class GunScriptableObject : ScriptableObject {
     public ShootConfig ShootConfig;
     public TrailConfig TrailConfig;
     public AimConfig AimConfig;
+    public RecoilConfig RecoilConfig;
+    public bool CamChange;
 
     private MonoBehaviour ActiveMonoBehaviour;
     private GameObject Model;
@@ -25,6 +27,7 @@ public class GunScriptableObject : ScriptableObject {
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Rigidbody> bullets;
     private bool isADS;
+    private bool isRecoiling;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
@@ -47,9 +50,21 @@ public class GunScriptableObject : ScriptableObject {
     }
 
     public void Shoot() {
+
+        if (Model == null)
+        {
+            Debug.LogError("Model is not assigned!");
+            return;
+        }
+
         // Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
-        if (Time.time > ShootConfig.FireRate + LastShootTime) {
+        if (Time.time - LastShootTime >= ShootConfig.FireRate)
+        {
             LastShootTime = Time.time;
+            // Implement shooting logic here (raycasting, bullet instantiation, etc.)
+            // Apply recoil
+            
+            ApplyRecoil();
 
             Vector3 shootDirection = Camera.main.transform.forward
                 + new Vector3(
@@ -68,18 +83,21 @@ public class GunScriptableObject : ScriptableObject {
                 );
             shootDirection.Normalize();
             
-            Debug.Log(Model.transform.localRotation.x);
+            // Debug.Log(Model.transform.localRotation.x);
 
-            if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
-                Model.transform.Rotate(/*Hard coded change later*/ -1/*RecoilConfig.RecoilAngle*/, 0, 0);
-            } else {
-                Model.transform.localRotation = Quaternion.Euler(
-                    Model.transform.localRotation.x /*-*/ /*Hard coded change later*//*RecoilConfig.RecoilAngle*/,
-                    Model.transform.localRotation.y,
-                    Model.transform.localRotation.z
-                );
-            }
-            Model.transform.Translate(0, 0, /*Hard coded change later*/-0.02f);
+            // if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
+            //     Model.transform.Rotate(/*Hard coded change later*/ -1/*RecoilConfig.RecoilAngle*/, 0, 0);
+            // } else {
+            //     Model.transform.localRotation = Quaternion.Euler(
+            //         Model.transform.localRotation.x /*-*/ /*Hard coded change later*//*RecoilConfig.RecoilAngle*/,
+            //         Model.transform.localRotation.y,
+            //         Model.transform.localRotation.z
+            //     );
+            // }
+
+            // Model.transform.Translate(0, 0, /*Hard coded change later*/-0.02f);
+
+            // Recoil();
 
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
@@ -91,18 +109,80 @@ public class GunScriptableObject : ScriptableObject {
         }
     }
 
-    public void ReturnToInitial() {
-        if (Time.time - LastShootTime < 0.25f/*RecoilConfig.RecoveryTime*/) {
-            Model.transform.localRotation = Quaternion.Slerp(
-                Model.transform.localRotation,
-                Quaternion.Euler(SpawnRotation),
-                Time.deltaTime * /*Hard coded change later*/ 10f
-            );
-            Model.transform.localPosition = Vector3.Lerp(
-                Model.transform.localPosition,
-                (isADS) ? AimConfig.aimPoint : SpawnPoint,
-                Time.deltaTime * 10f /*Hard coded change later*/ 
-            );
+    private void Recoil() {
+        
+        float timeElapsed = Time.time - LastShootTime;
+
+        //Model.transform.localRotation = Quaternion.Slerp(localRotation, );
+        //Model.transform.localPosition = Vector3.Lerp();
+
+    }
+
+    // public void ReturnToInitial() {
+    //     if (Time.time - LastShootTime < 0.25f/*RecoilConfig.RecoveryTime*/) {
+    //         Model.transform.localRotation = Quaternion.Slerp(
+    //             Model.transform.localRotation,
+    //             Quaternion.Euler(SpawnRotation),
+    //             Time.deltaTime /*Hard coded change later*/ 
+    //         );
+    //         Model.transform.localPosition = Vector3.Lerp(
+    //             Model.transform.localPosition,
+    //             (isADS) ? AimConfig.aimPoint : SpawnPoint,
+    //             Time.deltaTime /*Hard coded change later*/ 
+    //         );
+    //     }
+    // }
+
+    
+    private void ApplyRecoil()
+    {
+        if (Model != null)
+        {
+            // Calculate the target displacement and rotation for recoil
+            Vector3 recoilDisplacement = Model.transform.localPosition + Vector3.back * RecoilConfig.RecoilDistance;
+            Quaternion recoilRotation = Quaternion.Euler(Model.transform.localRotation.eulerAngles + Vector3.right * RecoilConfig.RecoilAngle);
+
+            // Start the recoil coroutine
+            CoroutineManager.Instance.StartCoroutine(RecoilCoroutine(recoilDisplacement, recoilRotation));
+        }
+    }
+
+    private IEnumerator RecoilCoroutine(Vector3 targetPosition, Quaternion targetRotation)
+    {
+        isRecoiling = true;
+        float elapsedTime = 0;
+
+        Vector3 initialPosition = Model.transform.localPosition;
+        Quaternion initialRotation = Model.transform.localRotation;
+
+        while (elapsedTime < RecoilConfig.RecoilTime)
+        {
+            Model.transform.localPosition = Vector3.Lerp(initialPosition, targetPosition, Mathf.Pow(elapsedTime / RecoilConfig.RecoilTime, 0.2f));
+            Model.transform.localRotation = Quaternion.Slerp(initialRotation, targetRotation, Mathf.Pow(elapsedTime / RecoilConfig.RecoilTime, 0.2f));
+
+            if (CamChange){
+                Camera.main.transform.localRotation = Model.transform.localRotation;
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        Model.transform.localPosition = targetPosition;
+        Model.transform.localRotation = targetRotation;
+        isRecoiling = false;
+    }
+    
+    public void ReturnToInitial()
+    {
+        if (Model != null /*&& !isRecoiling*/)
+        {
+            // Linearly interpolate the position
+            Model.transform.localPosition = Vector3.Lerp(Model.transform.localPosition, (isADS) ? AimConfig.aimPoint : SpawnPoint, Time.deltaTime / RecoilConfig.RecoveryTime);
+            
+            // Linearly interpolate the rotation
+            Quaternion targetRotation = Quaternion.Euler(SpawnRotation);
+            Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, targetRotation, Time.deltaTime / RecoilConfig.RecoveryTime);
         }
     }
 
