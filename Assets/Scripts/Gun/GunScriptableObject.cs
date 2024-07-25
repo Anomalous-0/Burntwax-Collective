@@ -188,7 +188,7 @@ public class GunScriptableObject : ScriptableObject {
 
     public void ADS() {
 
-        Model.transform.localPosition  = Vector3.LerpUnclamped(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
+        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
         isADS = true;
 
     }
