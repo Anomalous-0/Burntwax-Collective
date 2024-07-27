@@ -6,6 +6,8 @@ using UnityEngine.Pool;
 public class GunScriptableObject : ScriptableObject {
 
     public int ID;
+
+    public Animator animator;
     public ImpactType ImpactType;
     public GunType Type;
     public string Name;
@@ -58,13 +60,12 @@ public class GunScriptableObject : ScriptableObject {
         }
 
         // Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
-        if (Time.time - LastShootTime >= ShootConfig.FireRate)
-        {
+        if (Time.time - LastShootTime >= ShootConfig.FireRate) {
             LastShootTime = Time.time;
             // Implement shooting logic here (raycasting, bullet instantiation, etc.)
             // Apply recoil
             
-            ApplyRecoil();
+            // ApplyRecoil();
 
             Vector3 shootDirection = Camera.main.transform.forward
                 + new Vector3(
@@ -109,14 +110,14 @@ public class GunScriptableObject : ScriptableObject {
         }
     }
 
-    private void Recoil() {
+    // private void Recoil() {
         
-        float timeElapsed = Time.time - LastShootTime;
+    //     float timeElapsed = Time.time - LastShootTime;
 
         //Model.transform.localRotation = Quaternion.Slerp(localRotation, );
         //Model.transform.localPosition = Vector3.Lerp();
 
-    }
+    // }
 
     // public void ReturnToInitial() {
     //     if (Time.time - LastShootTime < 0.25f/*RecoilConfig.RecoveryTime*/) {
@@ -134,69 +135,69 @@ public class GunScriptableObject : ScriptableObject {
     // }
 
     
-    private void ApplyRecoil()
-    {
-        if (Model != null)
-        {
-            // Calculate the target displacement and rotation for recoil
-            Vector3 recoilDisplacement = Model.transform.localPosition + Vector3.back * RecoilConfig.RecoilDistance;
-            Quaternion recoilRotation = Quaternion.Euler(Model.transform.localRotation.eulerAngles + Vector3.right * RecoilConfig.RecoilAngle);
+    // private void ApplyRecoil()
+    // {
+    //     if (Model != null)
+    //     {
+    //         // Calculate the target displacement and rotation for recoil
+    //         Vector3 recoilDisplacement = Model.transform.localPosition + Vector3.back * RecoilConfig.RecoilDistance;
+    //         Quaternion recoilRotation = Quaternion.Euler(Model.transform.localRotation.eulerAngles + Vector3.right * RecoilConfig.RecoilAngle);
 
-            // Start the recoil coroutine
-            CoroutineManager.Instance.StartCoroutine(RecoilCoroutine(recoilDisplacement, recoilRotation));
-        }
-    }
+    //         // Start the recoil coroutine
+    //         CoroutineManager.Instance.StartCoroutine(RecoilCoroutine(recoilDisplacement, recoilRotation));
+    //     }
+    // }
 
-    private IEnumerator RecoilCoroutine(Vector3 targetPosition, Quaternion targetRotation)
-    {
-        isRecoiling = true;
-        float elapsedTime = 0;
+    // private IEnumerator RecoilCoroutine(Vector3 targetPosition, Quaternion targetRotation)
+    // {
+    //     isRecoiling = true;
+    //     float elapsedTime = 0;
 
-        Vector3 initialPosition = Model.transform.localPosition;
-        Quaternion initialRotation = Model.transform.localRotation;
+    //     Vector3 initialPosition = Model.transform.localPosition;
+    //     Quaternion initialRotation = Model.transform.localRotation;
 
-        while (elapsedTime < RecoilConfig.RecoilTime)
-        {
-            Model.transform.localPosition = Vector3.Lerp(initialPosition, targetPosition, Mathf.Pow(elapsedTime / RecoilConfig.RecoilTime, 0.2f));
-            Model.transform.localRotation = Quaternion.Slerp(initialRotation, targetRotation, Mathf.Pow(elapsedTime / RecoilConfig.RecoilTime, 0.2f));
+    //     while (elapsedTime < RecoilConfig.RecoilTime)
+    //     {
+    //         Model.transform.localPosition = Vector3.Lerp(initialPosition, targetPosition, Mathf.Pow(elapsedTime / RecoilConfig.RecoilTime, 0.2f));
+    //         Model.transform.localRotation = Quaternion.Slerp(initialRotation, targetRotation, Mathf.Pow(elapsedTime / RecoilConfig.RecoilTime, 0.2f));
 
-            if (CamChange){
-                Camera.main.transform.localRotation = Model.transform.localRotation;
-            }
+    //         if (CamChange){
+    //             Camera.main.transform.localRotation = Model.transform.localRotation;
+    //         }
 
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
+    //         elapsedTime += Time.deltaTime;
+    //         yield return null;
+    //     }
 
-        Model.transform.localPosition = targetPosition;
-        Model.transform.localRotation = targetRotation;
-        isRecoiling = false;
-    }
+    //     Model.transform.localPosition = targetPosition;
+    //     Model.transform.localRotation = targetRotation;
+    //     isRecoiling = false;
+    // }
     
-    public void ReturnToInitial()
-    {
-        if (Model != null /*&& !isRecoiling*/)
-        {
-            // Linearly interpolate the position
-            Model.transform.localPosition = Vector3.Lerp(Model.transform.localPosition, (isADS) ? AimConfig.aimPoint : SpawnPoint, Time.deltaTime / RecoilConfig.RecoveryTime);
+    // public void ReturnToInitial()
+    // {
+    //     if (Model != null /*&& !isRecoiling*/)
+    //     {
+    //         // Linearly interpolate the position
+    //         Model.transform.localPosition = Vector3.Lerp(Model.transform.localPosition, (isADS) ? AimConfig.aimPoint : SpawnPoint, Time.deltaTime / RecoilConfig.RecoveryTime);
             
-            // Linearly interpolate the rotation
-            Quaternion targetRotation = Quaternion.Euler(SpawnRotation);
-            Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, targetRotation, Time.deltaTime / RecoilConfig.RecoveryTime);
-        }
-    }
+    //         // Linearly interpolate the rotation
+    //         Quaternion targetRotation = Quaternion.Euler(SpawnRotation);
+    //         Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, targetRotation, Time.deltaTime / RecoilConfig.RecoveryTime);
+    //     }
+    // }
 
-    public void ADS() {
+    // public void ADS() {
 
-        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
-        isADS = true;
+    //     Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimConfig.aimPoint, AimConfig.speed * Time.deltaTime);
+    //     isADS = true;
 
-    }
+    // }
 
-    public void DeADS() {
-        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
-        isADS = false;
-    }
+    // public void DeADS() {
+    //     Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, SpawnPoint, AimConfig.speed * Time.deltaTime);
+    //     isADS = false;
+    // }
     
 
     private IEnumerator InstantiateBullet() {

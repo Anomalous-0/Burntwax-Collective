@@ -12,7 +12,6 @@ public class PlayerGunSelector : MonoBehaviour {
     [SerializeField] public Transform GunParent;
     public List<GunScriptableObject> Guns;
 
-    public MonoBehaviour ActiveMonoBehaviour;
     
    
 
@@ -22,7 +21,7 @@ public class PlayerGunSelector : MonoBehaviour {
     [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
 
     private void Start() {
-        ActiveMonoBehaviour = this;
+        
         // currentID = 0;
 
         // GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
@@ -62,9 +61,6 @@ public class PlayerGunSelector : MonoBehaviour {
             }
             
        }
-
-        
-
         
     }
 
