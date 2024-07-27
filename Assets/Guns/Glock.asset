@@ -13,14 +13,22 @@ MonoBehaviour:
   m_Name: Glock
   m_EditorClassIdentifier: 
   ID: 0
+  animator: {fileID: 0}
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 0
   Name: Glock
   ModelPrefab: {fileID: 189091626145577203, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
     type: 3}
-  SpawnPoint: {x: 0.189, y: -0.238, z: 0.561}
+  SpawnPoint: {x: -0.83, y: -0.97, z: 0.009}
   SpawnRotation: {x: 0, y: 0, z: 0}
+  RestPoint: {x: 0.189, y: -0.238, z: 0.561}
+  RestRotation: {x: 0, y: 0, z: 0}
+  AimPoint: {x: 0, y: -0.1, z: 0.4}
+  AimRotation: {x: 0, y: 0, z: 0}
+  StowPoint: {x: 0.373, y: -0.689, z: 0.009}
+  StowRotation: {x: 90, y: 0, z: 0}
   ShootConfig: {fileID: 11400000, guid: 272786616a48f3947925007fecdf07f3, type: 2}
   TrailConfig: {fileID: 11400000, guid: f27ce4189ab286044818d9e95f5d8b2e, type: 2}
   AimConfig: {fileID: 11400000, guid: fe29849d7ee5e3e479e2d020bd4196e8, type: 2}
   RecoilConfig: {fileID: 11400000, guid: 4186b3b54148fdc4bb7c834ed25c0353, type: 2}
+  CamChange: 0

@@ -10,6 +10,8 @@ public class PlayerGunSelector : MonoBehaviour {
     
     public int currentID;
     [SerializeField] public Transform GunParent;
+
+    [SerializeField] private Animator animator;
     public List<GunScriptableObject> Guns;
 
     
@@ -47,17 +49,7 @@ public class PlayerGunSelector : MonoBehaviour {
         // Debug.Log(currentID);
        if(Guns.Count >  0) {
             if(input.mouseScroll != 0) {
-                ScrollID();
-                GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
-
-                if (gun == null) {
-                    Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
-                    return;
-                }
-            
-                ActiveGun.Despawn(this);
-                ActiveGun = gun;
-                gun.Spawn(GunParent, this);
+                WeaponSwitch();
             }
             
        }
@@ -75,8 +67,23 @@ public class PlayerGunSelector : MonoBehaviour {
             ActiveGun = gun;
             currentID = gun.ID;
             gun.Spawn(GunParent, this);
-            }    
+        }    
             
+    }
+
+    private void WeaponSwitch() {
+        ScrollID();
+                GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+
+                if (gun == null) {
+                    Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+                    return;
+                }
+            
+                ActiveGun.Despawn(this);
+                ActiveGun = gun;
+                gun.Spawn(GunParent, this);
+                animator = ActiveGun.animator;
     }
 
     private void ScrollID() {
