@@ -9,6 +9,8 @@ public class PlayerShoot : MonoBehaviour {
     [SerializeField] private PlayerGunSelector GunSelector;
     public InputManager input;
 
+    
+
 
 
     private void Update() {
@@ -19,14 +21,29 @@ public class PlayerShoot : MonoBehaviour {
                 GunSelector.ActiveGun.ADS();
             } else {
                 GunSelector.ActiveGun.Rest();
-                Debug.Log("Go to res pos");
+                
             }
 
             // GunSelector.ActiveGun.ReturnToInitial();
 
-            if (input.shootIsPressed) {
-                // GunSelector.ActiveGun.animator.SetTrigger();
+
+
+            // LOOK AT THIS THIS SHIT IMPORTANT MAYBE FIX LATER 
+            if (input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
+                // GunSelector.animator.SetBool(GunSelector.restingHash, false);
+                if (input.aimIsPressed) {
+                    GunSelector.animator.SetTrigger(GunSelector.aimShootHash);
+
+                }
+                else {
+                    Debug.Log("Shoot mf");
+                    GunSelector.animator.SetTrigger(GunSelector.shootHash);
+                }
+                
                 GunSelector.ActiveGun.Shoot();
+            }
+            else {
+                // GunSelector.animator.SetBool(GunSelector.restingHash, true);
             }
         }
 

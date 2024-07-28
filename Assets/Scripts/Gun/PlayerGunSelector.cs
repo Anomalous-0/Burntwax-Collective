@@ -11,7 +11,10 @@ public class PlayerGunSelector : MonoBehaviour {
     public int currentID;
     [SerializeField] public Transform GunParent;
 
-    [SerializeField] private Animator animator;
+    [Header("Animation")]
+    public  Animator animator;
+    public int shootHash, aimShootHash, restingHash;
+
     public List<GunScriptableObject> Guns;
 
     
@@ -67,23 +70,40 @@ public class PlayerGunSelector : MonoBehaviour {
             ActiveGun = gun;
             currentID = gun.ID;
             gun.Spawn(GunParent, this);
+
+
+            animator = ActiveGun.Model.GetComponent<Animator>();
+            shootHash = Animator.StringToHash("shoot");
+            aimShootHash = Animator.StringToHash("aimShoot");
+            // restingHash = Animator.StringToHash("resting");
+
+
         }    
+        else {
+            // Get ammo;
+        }
             
     }
 
     private void WeaponSwitch() {
         ScrollID();
-                GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+        GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
 
-                if (gun == null) {
-                    Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
-                    return;
-                }
+        if (gun == null) {
+            Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+            return;
+        }
             
-                ActiveGun.Despawn(this);
-                ActiveGun = gun;
-                gun.Spawn(GunParent, this);
-                animator = ActiveGun.animator;
+        ActiveGun.Despawn(this);
+        ActiveGun = gun;
+        gun.Spawn(GunParent, this);
+
+
+
+        animator = ActiveGun.Model.GetComponent<Animator>();
+        shootHash = Animator.StringToHash("shoot");
+        aimShootHash = Animator.StringToHash("aimShoot");
+        // restingHash = Animator.StringToHash("resting");
     }
 
     private void ScrollID() {

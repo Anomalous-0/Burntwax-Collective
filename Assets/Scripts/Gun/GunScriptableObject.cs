@@ -6,8 +6,6 @@ using UnityEngine.Pool;
 public class GunScriptableObject : ScriptableObject {
 
     public int ID;
-
-    public Animator animator;
     public ImpactType ImpactType;
     public GunType Type;
     public string Name;
@@ -32,9 +30,9 @@ public class GunScriptableObject : ScriptableObject {
     public bool CamChange;
 
     private MonoBehaviour ActiveMonoBehaviour;
-    private GameObject Model;
+    public GameObject Model;
 
-    private float LastShootTime = 0;
+    public float LastShootTime = 0;
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Rigidbody> bullets;
@@ -49,7 +47,7 @@ public class GunScriptableObject : ScriptableObject {
         Model.transform.SetParent(Parent, false);
         Model.transform.localPosition = SpawnPoint;
         Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
-        animator = Model.GetComponent<Animator>();
+        
 
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
     }
@@ -62,52 +60,20 @@ public class GunScriptableObject : ScriptableObject {
 
     public void Shoot() {
 
-        if (Model == null)
-        {
+        if (Model == null) {
             Debug.LogError("Model is not assigned!");
             return;
         }
 
-        // Debug.Log(LastShootTime + " " + ShootConfig.FireRate + " " + (ShootConfig.FireRate + LastShootTime) + " " + Time.time);
+        
         if (Time.time - LastShootTime >= ShootConfig.FireRate) {
             LastShootTime = Time.time;
-            // Implement shooting logic here (raycasting, bullet instantiation, etc.)
-            // Apply recoil
             
-            // ApplyRecoil();
 
-            Vector3 shootDirection = Camera.main.transform.forward
-                + new Vector3(
-                    Random.Range(
-                        -ShootConfig.Spread.x,
-                        ShootConfig.Spread.x
-                    ),
-                    Random.Range(
-                        -ShootConfig.Spread.y,
-                        ShootConfig.Spread.y
-                    ),
-                    Random.Range(
-                        -ShootConfig.Spread.z,
-                        ShootConfig.Spread.z
-                    )
-                );
+            Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
             shootDirection.Normalize();
             
-            // Debug.Log(Model.transform.localRotation.x);
-
-            // if (Mathf.Abs(Model.transform.localRotation.x) < /*Hard coded change later*/ 0.01f) {
-            //     Model.transform.Rotate(/*Hard coded change later*/ -1/*RecoilConfig.RecoilAngle*/, 0, 0);
-            // } else {
-            //     Model.transform.localRotation = Quaternion.Euler(
-            //         Model.transform.localRotation.x /*-*/ /*Hard coded change later*//*RecoilConfig.RecoilAngle*/,
-            //         Model.transform.localRotation.y,
-            //         Model.transform.localRotation.z
-            //     );
-            // }
-
-            // Model.transform.Translate(0, 0, /*Hard coded change later*/-0.02f);
-
-            // Recoil();
+            
 
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
