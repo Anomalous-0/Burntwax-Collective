@@ -30,7 +30,7 @@ public class GunScriptableObject : ScriptableObject {
     public bool CamChange;
 
     private MonoBehaviour ActiveMonoBehaviour;
-    public GameObject Model;
+    [HideInInspector] public GameObject Model;
 
     public float LastShootTime = 0;
     private ParticleSystem ShootSystem;
@@ -89,7 +89,7 @@ public class GunScriptableObject : ScriptableObject {
     public void ADS() {
 
         Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimPoint, AimConfig.speed * Time.deltaTime);
-        
+        Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(AimRotation), AimConfig.speed * Time.deltaTime);
 
     }
 

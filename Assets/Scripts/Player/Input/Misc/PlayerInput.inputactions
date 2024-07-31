@@ -78,6 +78,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Reload",
+                    "type": "Button",
+                    "id": "9146fa94-317b-4c04-9d0a-0632cdee9d33",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Gloves",
                     "type": "Button",
                     "id": "bf7ebad4-55a5-4316-9ea5-ff43c22f980b",
@@ -400,6 +409,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "WeaponScroll",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "572dc812-0719-4393-a010-d4260b84ab38",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reload",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

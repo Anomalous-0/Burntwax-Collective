@@ -19,9 +19,13 @@ public class PlayerShoot : MonoBehaviour {
         if(GunSelector.ActiveGun != null) {
             if (input.aimIsPressed) {
                 GunSelector.ActiveGun.ADS();
-            } else {
-                GunSelector.ActiveGun.Rest();
+            } 
+            else if(input.sprintIsPressed  && input.moveIsPressed){
+                GunSelector.ActiveGun.Stow();
                 
+            }
+            else {
+                GunSelector.ActiveGun.Rest();
             }
 
             // GunSelector.ActiveGun.ReturnToInitial();
@@ -29,14 +33,15 @@ public class PlayerShoot : MonoBehaviour {
 
 
             // LOOK AT THIS THIS SHIT IMPORTANT MAYBE FIX LATER 
-            if (input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
+            if (input.aimIsPressed || (!input.sprintIsPressed && !input.moveIsPressed) && input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
+                
                 // GunSelector.animator.SetBool(GunSelector.restingHash, false);
                 if (input.aimIsPressed) {
                     GunSelector.animator.SetTrigger(GunSelector.aimShootHash);
 
                 }
                 else {
-                    Debug.Log("Shoot mf");
+                   
                     GunSelector.animator.SetTrigger(GunSelector.shootHash);
                 }
                 
@@ -46,6 +51,7 @@ public class PlayerShoot : MonoBehaviour {
                 // GunSelector.animator.SetBool(GunSelector.restingHash, true);
             }
         }
+     
 
     }
 }

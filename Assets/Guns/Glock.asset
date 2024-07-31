@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Glock
   m_EditorClassIdentifier: 
   ID: 0
-  animator: {fileID: 0}
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 0
   Name: Glock
@@ -25,10 +24,12 @@ MonoBehaviour:
   RestRotation: {x: 0, y: 0, z: 0}
   AimPoint: {x: 0, y: -0.11, z: 0.6}
   AimRotation: {x: 0, y: 0, z: 0}
-  StowPoint: {x: 0.373, y: -0.689, z: 0.009}
-  StowRotation: {x: 90, y: 0, z: 0}
+  StowPoint: {x: 0.32, y: 0, z: 0.37}
+  StowRotation: {x: -65.19, y: 20.6, z: 0}
   ShootConfig: {fileID: 11400000, guid: 272786616a48f3947925007fecdf07f3, type: 2}
   TrailConfig: {fileID: 11400000, guid: f27ce4189ab286044818d9e95f5d8b2e, type: 2}
   AimConfig: {fileID: 11400000, guid: fe29849d7ee5e3e479e2d020bd4196e8, type: 2}
   RecoilConfig: {fileID: 11400000, guid: 4186b3b54148fdc4bb7c834ed25c0353, type: 2}
   CamChange: 0
+  Model: {fileID: 0}
+  LastShootTime: 0

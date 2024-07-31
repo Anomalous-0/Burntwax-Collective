@@ -100,6 +100,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""9146fa94-317b-4c04-9d0a-0632cdee9d33"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Gloves"",
                     ""type"": ""Button"",
                     ""id"": ""bf7ebad4-55a5-4316-9ea5-ff43c22f980b"",
@@ -422,6 +431,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""WeaponScroll"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""572dc812-0719-4393-a010-d4260b84ab38"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -956,6 +976,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_Crouch = m_OnFoot.FindAction("Crouch", throwIfNotFound: true);
         m_OnFoot_Aim = m_OnFoot.FindAction("Aim", throwIfNotFound: true);
         m_OnFoot_Shoot = m_OnFoot.FindAction("Shoot", throwIfNotFound: true);
+        m_OnFoot_Reload = m_OnFoot.FindAction("Reload", throwIfNotFound: true);
         m_OnFoot_Gloves = m_OnFoot.FindAction("Gloves", throwIfNotFound: true);
         m_OnFoot_GloveShoot = m_OnFoot.FindAction("GloveShoot", throwIfNotFound: true);
         m_OnFoot_WeaponScroll = m_OnFoot.FindAction("WeaponScroll", throwIfNotFound: true);
@@ -1040,6 +1061,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Crouch;
     private readonly InputAction m_OnFoot_Aim;
     private readonly InputAction m_OnFoot_Shoot;
+    private readonly InputAction m_OnFoot_Reload;
     private readonly InputAction m_OnFoot_Gloves;
     private readonly InputAction m_OnFoot_GloveShoot;
     private readonly InputAction m_OnFoot_WeaponScroll;
@@ -1055,6 +1077,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Crouch => m_Wrapper.m_OnFoot_Crouch;
         public InputAction @Aim => m_Wrapper.m_OnFoot_Aim;
         public InputAction @Shoot => m_Wrapper.m_OnFoot_Shoot;
+        public InputAction @Reload => m_Wrapper.m_OnFoot_Reload;
         public InputAction @Gloves => m_Wrapper.m_OnFoot_Gloves;
         public InputAction @GloveShoot => m_Wrapper.m_OnFoot_GloveShoot;
         public InputAction @WeaponScroll => m_Wrapper.m_OnFoot_WeaponScroll;
@@ -1091,6 +1114,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
             @Gloves.started += instance.OnGloves;
             @Gloves.performed += instance.OnGloves;
             @Gloves.canceled += instance.OnGloves;
@@ -1128,6 +1154,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
             @Gloves.started -= instance.OnGloves;
             @Gloves.performed -= instance.OnGloves;
             @Gloves.canceled -= instance.OnGloves;
@@ -1282,6 +1311,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnCrouch(InputAction.CallbackContext context);
         void OnAim(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
         void OnGloves(InputAction.CallbackContext context);
         void OnGloveShoot(InputAction.CallbackContext context);
         void OnWeaponScroll(InputAction.CallbackContext context);

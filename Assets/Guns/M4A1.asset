@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: M4A1
   m_EditorClassIdentifier: 
   ID: 1
-  animator: {fileID: 0}
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 1
   Name: Assault Rifle
@@ -25,10 +24,12 @@ MonoBehaviour:
   RestRotation: {x: 0, y: 0, z: 0}
   AimPoint: {x: 0, y: -0.185, z: 0.28}
   AimRotation: {x: 0, y: 0, z: 0}
-  StowPoint: {x: 0.373, y: -0.689, z: 0.009}
-  StowRotation: {x: 90, y: 0, z: 0}
+  StowPoint: {x: 0.07, y: -0.22, z: 0.16}
+  StowRotation: {x: 18.65, y: -49.4, z: 11.7}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   TrailConfig: {fileID: 11400000, guid: 79c1328b195bf3b4497caa97d3949cd7, type: 2}
   AimConfig: {fileID: 11400000, guid: 922b64436795b7844b7f096d697b5f50, type: 2}
   RecoilConfig: {fileID: 11400000, guid: b9fc9e9e43e540248a79e21f8ac1ce5f, type: 2}
-  CamChange: 0
+  CamChange: 1
+  Model: {fileID: 0}
+  LastShootTime: 0

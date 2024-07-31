@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: Shotgun
   m_EditorClassIdentifier: 
   ID: 2
-  animator: {fileID: 0}
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 2
   Name: Shotgun
@@ -25,10 +24,12 @@ MonoBehaviour:
   RestRotation: {x: 0, y: 0, z: 0}
   AimPoint: {x: 0, y: -0.11, z: 0.35}
   AimRotation: {x: 0, y: 0, z: 0}
-  StowPoint: {x: 0.373, y: -0.689, z: 0.009}
-  StowRotation: {x: 90, y: 0, z: 0}
+  StowPoint: {x: 0.07, y: -0.115, z: 0.1}
+  StowRotation: {x: 20.4, y: -35.66, z: 19.3}
   ShootConfig: {fileID: 11400000, guid: 99ca2a953ce268649a799a91f88cb7f0, type: 2}
   TrailConfig: {fileID: 11400000, guid: b75bbdbefbbe8104085bcedccfacb630, type: 2}
   AimConfig: {fileID: 11400000, guid: 3131a09318aa9184eb8660ee8f7b9e6d, type: 2}
   RecoilConfig: {fileID: 11400000, guid: 8c5ef009d2ef0344092d1126daced638, type: 2}
   CamChange: 0
+  Model: {fileID: 0}
+  LastShootTime: 0

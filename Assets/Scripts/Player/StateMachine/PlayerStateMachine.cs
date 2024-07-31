@@ -76,8 +76,8 @@ public class PlayerStateMachine : MonoBehaviour {
     public float maxSlopeAngle;
     RaycastHit slopeHit;
 
-    PlayerBaseState currentState;
-    PlayerStateFactory states;
+    public PlayerBaseState currentState;
+    public PlayerStateFactory states;
 
     
     // For states
@@ -212,6 +212,7 @@ public class PlayerStateMachine : MonoBehaviour {
         float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
         if(Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance)) {
             if(glove.isActiveAndEnabled && glove.currentState == glove.states.Hold()) {
+                Debug.Log("No collision when holdnig shit");
                 if(groundCheckHit.collider.GetComponent<Pickupable>() != false) {
                     return false;
                 }
