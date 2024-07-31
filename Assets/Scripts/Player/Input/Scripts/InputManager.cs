@@ -12,7 +12,7 @@ public class InputManager : MonoBehaviour {
     public bool moveIsPressed { get; private set; } = false;
     public bool sprintIsPressed  = false;
     public bool crouchIsPressed { get; private set; } = false;
-    public bool jumpIsPressed { get; private set; } = false;
+    public bool jumpIsPressed /*{ get; private set; }*/ = false;
     
     public bool shootIsPressed = false;
     public float mouseScroll = 0;

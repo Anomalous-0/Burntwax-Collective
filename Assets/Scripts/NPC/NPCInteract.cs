@@ -4,37 +4,38 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class NPCInteract : MonoBehaviour {
-    private float health;
-    private float lerpTimer;
-    public float maxHealth = 100;
-    public float chipSpeed = 2.0f;
+    
 
-    public Image frontHealthBar;
-    public Image backHealthBar;
+    bool inDanger;
+
     // Start is called before the first frame update
     void Start() {
-        health = maxHealth;
+        inDanger = false;
     }
 
     // Update is called once per frame
     void Update() {
         
-        
     }
 
-    public void UpdateHealthUI(){
-        
+    public void Interact(){
+        if (!inDanger) {
+            
+        } else {
+            FollowDangerPath();
+        }
     }
 
-    public void TakeDamage(float damage){
-        Debug.Log("hurting like parth");
+    private void FollowDangerPath() {
+        // Update targetPos to some place that is a rendevous in the story
     }
 
-    public void RestoreHealth(float healAmount){
-        Debug.Log("healing");
+    public void PutInDanger() {
+        inDanger = true;
     }
 
-    public float CurrentHealth() {
-        return 1f;
+    public void RemoveDanger() {
+        inDanger = false;
     }
+    
 }
