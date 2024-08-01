@@ -13586,7 +13586,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GunSelector: {fileID: 401126583}
   input: {fileID: 845597538}
-  stateMachine: {fileID: 1794737442}
+  stateMachine: {fileID: 401126580}
 --- !u!1 &401294661
 GameObject:
   m_ObjectHideFlags: 0
@@ -28012,10 +28012,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22944dadd551da34d9ed25df56396b0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  chipSpeed: 2
-  frontHealthBar: {fileID: 0}
-  backHealthBar: {fileID: 0}
 --- !u!114 &939880594
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53251,7 +53247,6 @@ GameObject:
   - component: {fileID: 1787427242}
   - component: {fileID: 1787427241}
   - component: {fileID: 1787427240}
-  - component: {fileID: 1787427239}
   - component: {fileID: 1787427238}
   m_Layer: 0
   m_Name: Cube (1)
@@ -53291,18 +53286,6 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
---- !u!114 &1787427239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1787427236}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75021615b6fc1704f8336a2c862bbe4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1787427240
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -60305,7 +60288,6 @@ GameObject:
   - component: {fileID: 2002697245}
   - component: {fileID: 2002697244}
   - component: {fileID: 2002697243}
-  - component: {fileID: 2002697242}
   - component: {fileID: 2002697246}
   m_Layer: 0
   m_Name: Cube
@@ -60329,18 +60311,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 71603461}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2002697242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2002697240}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75021615b6fc1704f8336a2c862bbe4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &2002697243
 BoxCollider:
   m_ObjectHideFlags: 0

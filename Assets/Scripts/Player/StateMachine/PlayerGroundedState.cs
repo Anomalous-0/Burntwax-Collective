@@ -11,6 +11,7 @@ public class PlayerGroundedState : PlayerBaseState {
     }
     
     public override void EnterState(){
+        
         InitializeSubState();
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
@@ -41,8 +42,10 @@ public class PlayerGroundedState : PlayerBaseState {
 
     public override void InitializeSubState(){
         if(!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+            
             SetSubState(Factory.Idle());
         } else if(Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+            
             SetSubState(Factory.Walk());
         }
         else { 

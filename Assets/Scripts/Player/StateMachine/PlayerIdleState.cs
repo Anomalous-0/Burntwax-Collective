@@ -9,6 +9,7 @@ public class PlayerIdleState : PlayerBaseState {
     }
 
     public override void EnterState(){
+        
         Ctx.moveDirection.x = 0;
         Ctx.moveDirection.y = 0;
         if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {

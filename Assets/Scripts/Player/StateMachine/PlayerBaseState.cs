@@ -16,6 +16,10 @@ public abstract class PlayerBaseState  {
         factory = playerStateFactory;
     }
 
+
+    public PlayerBaseState CurrentSubstate() {
+        return currentSubState;
+    }
     public abstract void EnterState();
 
     public abstract void UpdateState();

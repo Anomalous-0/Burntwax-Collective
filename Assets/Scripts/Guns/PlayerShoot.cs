@@ -9,7 +9,12 @@ public class PlayerShoot : MonoBehaviour {
     [SerializeField] private PlayerGunSelector GunSelector;
     public InputManager input;
 
-    
+    public PlayerStateMachine stateMachine;
+
+
+    void Start() {
+        stateMachine = GetComponent<PlayerStateMachine>();
+    }
 
 
 
@@ -20,7 +25,7 @@ public class PlayerShoot : MonoBehaviour {
             if (input.aimIsPressed) {
                 GunSelector.ActiveGun.ADS();
             } 
-            else if(input.sprintIsPressed  && input.moveIsPressed){
+            else if(stateMachine.currentState.CurrentSubstate() == stateMachine.states.Sprint()){
                 GunSelector.ActiveGun.Stow();
                 
             }
@@ -33,7 +38,7 @@ public class PlayerShoot : MonoBehaviour {
 
 
             // LOOK AT THIS THIS SHIT IMPORTANT MAYBE FIX LATER 
-            if (input.aimIsPressed || (!input.sprintIsPressed && !input.moveIsPressed) && input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
+            if (stateMachine.currentState.CurrentSubstate() != stateMachine.states.Sprint() &&  input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
                 
                 // GunSelector.animator.SetBool(GunSelector.restingHash, false);
                 if (input.aimIsPressed) {

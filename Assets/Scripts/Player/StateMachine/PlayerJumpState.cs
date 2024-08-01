@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerJumpState : PlayerBaseState {
@@ -40,6 +38,7 @@ public class PlayerJumpState : PlayerBaseState {
     
     public override void CheckSwitchStates(){
         if(Ctx.playerIsGrounded) {
+            
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
@@ -50,6 +49,7 @@ public class PlayerJumpState : PlayerBaseState {
 
     public override void InitializeSubState(){
         if(!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+            
             SetSubState(Factory.Idle());
         } else if(Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
             SetSubState(Factory.Walk());
