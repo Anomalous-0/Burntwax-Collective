@@ -13,7 +13,7 @@ public class PlayerGunSelector : MonoBehaviour {
 
     [Header("Animation")]
     public  Animator animator;
-    public int shootHash, aimShootHash, restingHash;
+    public int shootHash, aimShootHash, restingHash, reloadHash;
 
     public List<GunScriptableObject> Guns;
 
@@ -72,10 +72,7 @@ public class PlayerGunSelector : MonoBehaviour {
             gun.Spawn(GunParent, this);
 
 
-            animator = ActiveGun.Model.GetComponent<Animator>();
-            shootHash = Animator.StringToHash("shoot");
-            aimShootHash = Animator.StringToHash("aimShoot");
-            // restingHash = Animator.StringToHash("resting");
+            SetAnimator();
 
 
         }    
@@ -100,9 +97,7 @@ public class PlayerGunSelector : MonoBehaviour {
 
 
 
-        animator = ActiveGun.Model.GetComponent<Animator>();
-        shootHash = Animator.StringToHash("shoot");
-        aimShootHash = Animator.StringToHash("aimShoot");
+        SetAnimator();
         // restingHash = Animator.StringToHash("resting");
     }
 
@@ -122,6 +117,14 @@ public class PlayerGunSelector : MonoBehaviour {
 
         
         
+    }
+
+
+    private void SetAnimator() {
+        animator = ActiveGun.Model.GetComponent<Animator>();
+        shootHash = Animator.StringToHash("shoot");
+        aimShootHash = Animator.StringToHash("aimShoot");
+        reloadHash = Animator.StringToHash("reload");
     }
 
 

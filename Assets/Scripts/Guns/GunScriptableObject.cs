@@ -24,6 +24,8 @@ public class GunScriptableObject : ScriptableObject {
     public Vector3 StowRotation;
 
     public ShootConfig ShootConfig;
+    public AmmoConfig AmmoConfig;
+    public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
     public AimConfig AimConfig;
     public RecoilConfig RecoilConfig;
@@ -66,13 +68,14 @@ public class GunScriptableObject : ScriptableObject {
         }
 
         
-        if (Time.time - LastShootTime >= ShootConfig.FireRate) {
+        if (Time.time - LastShootTime > ShootConfig.FireRate) {
             LastShootTime = Time.time;
             
 
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
             shootDirection.Normalize();
             
+            AmmoConfig.currentClip--;
             
 
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
@@ -83,6 +86,14 @@ public class GunScriptableObject : ScriptableObject {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
             }
         }
+    }
+
+    public bool CanReload() {
+        return AmmoConfig.CanReload();
+    }
+
+    public void EndReload() {
+        AmmoConfig.Reload();
     }
 
    
@@ -139,6 +150,10 @@ public class GunScriptableObject : ScriptableObject {
             //     ImpactType,
             //     0
             // );
+        }
+
+        if(Hit.collider.TryGetComponent(out Damageable damageable)) {
+           damageable.TakeDamage(DamageConfig.GetDamage(distance));
         }
 
         yield return new WaitForSeconds(TrailConfig.Duration);

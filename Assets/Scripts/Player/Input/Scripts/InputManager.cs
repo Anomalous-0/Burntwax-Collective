@@ -15,6 +15,8 @@ public class InputManager : MonoBehaviour {
     public bool jumpIsPressed /*{ get; private set; }*/ = false;
     
     public bool shootIsPressed = false;
+
+    public bool reloadIsPressed = false;
     public float mouseScroll = 0;
 
     public bool useGloves = false;
@@ -47,6 +49,9 @@ public class InputManager : MonoBehaviour {
 
         input.OnFoot.Shoot.started += SetShoot;
         input.OnFoot.Shoot.canceled += SetShoot;
+
+        input.OnFoot.Reload.started += SetReload;
+        input.OnFoot.Reload.canceled += SetReload;
 
         input.OnFoot.WeaponScroll.performed += SetScroll;
         input.OnFoot.WeaponScroll.canceled += SetScroll;
@@ -85,6 +90,9 @@ public class InputManager : MonoBehaviour {
 
         input.OnFoot.Shoot.started -= SetShoot;
         input.OnFoot.Shoot.canceled -= SetShoot;
+
+        input.OnFoot.Reload.started -= SetReload;
+        input.OnFoot.Reload.canceled -= SetReload;
 
         input.OnFoot.WeaponScroll.performed -= SetScroll;
         input.OnFoot.WeaponScroll.canceled -= SetScroll;
@@ -134,6 +142,10 @@ public class InputManager : MonoBehaviour {
 
     private void SetShoot(InputAction.CallbackContext ctx) {
         shootIsPressed = ctx.started;
+    }
+
+    private void SetReload(InputAction.CallbackContext ctx) {
+        reloadIsPressed = ctx.started;
     }
 
     private void SetScroll(InputAction.CallbackContext ctx) {
