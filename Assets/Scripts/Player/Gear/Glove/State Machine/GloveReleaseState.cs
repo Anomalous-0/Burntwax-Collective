@@ -6,7 +6,7 @@ using UnityEngine;
 public class GloveReleaseState : GloveBaseState {
     float switchTime;
     
-    public GloveReleaseState(Glove currentContext, GloveStateFactory gloveStateFactory)
+    public GloveReleaseState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
     : base (currentContext, gloveStateFactory) {
         IsRootState = true;
 

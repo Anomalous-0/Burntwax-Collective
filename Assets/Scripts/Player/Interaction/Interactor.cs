@@ -16,7 +16,7 @@ public class Interactor : MonoBehaviour
     [SerializeField] GameObject interactIcon;
     [SerializeField] GameObject aimIcon;
 
-    [SerializeField] Glove glove;
+    [SerializeField] GloveStateMachine glove;
 
     // Start is called before the first frame update
     void Awake()

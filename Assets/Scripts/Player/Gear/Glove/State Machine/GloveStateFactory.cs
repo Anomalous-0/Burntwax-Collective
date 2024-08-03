@@ -14,10 +14,10 @@ enum GloveStates {
 
 public class GloveStateFactory{
 
-    Glove context;
+    GloveStateMachine context;
     Dictionary<GloveStates, GloveBaseState> states = new Dictionary<GloveStates, GloveBaseState>();
 
-    public GloveStateFactory(Glove currentContext) {
+    public GloveStateFactory(GloveStateMachine currentContext) {
         context = currentContext;
         states[GloveStates.rest] = new GloveRestState(context, this);
         states[GloveStates.search] = new GloveSearchState(context, this);

@@ -1,17 +1,17 @@
 public abstract class GloveBaseState  {
 
     private bool isRootState = false;
-    private Glove ctx;
+    private GloveStateMachine ctx;
     private GloveStateFactory factory;
     private GloveBaseState currentSubState;
     private GloveBaseState currentSuperState;
 
     protected bool IsRootState { set { isRootState = value; } }
-    protected Glove Ctx { get { return ctx; } }
+    protected GloveStateMachine Ctx { get { return ctx; } }
     protected GloveStateFactory Factory { get { return factory; } }
 
     
-    public GloveBaseState(Glove currentContext, GloveStateFactory gloveStateFactory) {
+    public GloveBaseState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory) {
         ctx = currentContext;
         factory = gloveStateFactory;
     }

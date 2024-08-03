@@ -4,12 +4,18 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 
-public class FirstPersonCam : MonoBehaviour {
+public class CameraStateMachine : MonoBehaviour {
     public InputManager input;
     CinemachineVirtualCamera activeCam;
      
     public CinemachineVirtualCamera fpsCam;
     public CinemachineVirtualCamera aimCam;
+
+    public CameraBaseState currentState;
+    public CameraStateFactory states;
+
+    //Attracting
+    public CameraBaseState CurrentState {get { return currentState; } set { currentState = value; } }
     int activeCameraPriorityModifier = 2000;
 
 
@@ -23,6 +29,10 @@ public class FirstPersonCam : MonoBehaviour {
         activeCam = fpsCam;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        states = new CameraStateFactory(this);
+        currentState = states.Fps();
+        currentState.EnterState();
     }
 
 

@@ -1,69 +1,48 @@
-// using System.Collections.Generic;
+using System.Collections.Generic;
 
-// enum GunStates {
-//     idle,
-//     walk,
-//     sprint,
-//     crouch,
-//     grounded,
-//     jump,
-//     fall,
-//     wallrun,
-//     walljump
-// }
+enum GunStates {
+    rest,
+    shoot,
+    reload,
+    aim,
 
-// public class GunStateFactory{
+    stow
 
-//     PlayerStateMachine context;
-//     Dictionary<GunStates, GunBaseState> states = new Dictionary<GunStates, GunBaseState>();
 
-//     public GunStateFactory(PlayerStateMachine currentContext) {
-//         context = currentContext;
-//         // states[GunStates.idle] = new GunIdleState(context, this);
-//         // states[GunStates.walk] = new GunWalkState(context, this);
-//         // states[GunStates.sprint] = new GunSprintState(context, this);
-//         // states[GunStates.crouch] = new PlayerCrouchState(context, this);
-//         // states[GunStates.jump] = new PlayerJumpState(context, this);
-//         // states[GunStates.grounded] = new PlayerGroundedState(context, this);
-//         // states[GunStates.fall] = new PlayerFallState(context, this);
-//         // states[GunStates.wallrun] = new PlayerWallRunState(context, this);
-//         // states[GunStates.walljump] = new PlayerWallJumpState(context, this);
-//     }
+}
 
-//     public PlayerBaseState Idle() {
-//         return states[GunStates.idle];
-//     }
+public class GunStateFactory{
 
-//     public PlayerBaseState Walk() {
-//         return states[GunStates.walk];
-//     }
+    GunStateMachine context;
+    Dictionary<GunStates, GunBaseState> states = new Dictionary<GunStates, GunBaseState>();
 
-//     public PlayerBaseState Sprint () {
-//         return states[GunStates.sprint];
-//     }
+    public GunStateFactory(GunStateMachine currentContext) {
+        context = currentContext;
+        states[GunStates.rest] = new GunRestState(context, this);
+        states[GunStates.shoot] = new GunShootState(context, this);
+        states[GunStates.reload] = new GunReloadState(context, this);
+        states[GunStates.aim] = new GunAimState(context, this);
+        states[GunStates.stow] = new GunStowState(context, this);
+       
+    }
 
-//     public PlayerBaseState Crouch () {
-//         return states[GunStates.crouch];
-//     }
+    public GunBaseState Rest() {
+        return states[GunStates.rest];
+    }
 
-//     public PlayerBaseState Jump() {
-//         return states[GunStates.jump];
-//     }   
+    public GunBaseState Shoot() {
+        return states[GunStates.shoot];
+    }
 
-//     public PlayerBaseState Grounded() {
-//         return states[GunStates.grounded];
-//     }
+    public GunBaseState Reload () {
+        return states[GunStates.reload];
+    }
 
-//     public PlayerBaseState Fall() {
-//         return states[GunStates.fall];
-//     }
+    public GunBaseState Aim () {
+        return states[GunStates.aim];
+    }
 
-//     public PlayerBaseState Wallrun() {
-//         return states[GunStates.wallrun];
-//     }
-    
-//     public PlayerBaseState Walljump() {
-//         return states[GunStates.walljump];
-//     }
- 
-// }
+    public GunBaseState Stow() {
+        return states[GunStates.stow];
+    }   
+}

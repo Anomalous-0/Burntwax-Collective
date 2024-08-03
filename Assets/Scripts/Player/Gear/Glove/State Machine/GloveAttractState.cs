@@ -5,7 +5,7 @@ using UnityEngine;
 public class GloveAttractState : GloveBaseState {
    
     float timeToLock;
-    public GloveAttractState(Glove currentContext, GloveStateFactory gloveStateFactory)
+    public GloveAttractState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
     : base (currentContext, gloveStateFactory) {
         IsRootState = true;
 

@@ -9,7 +9,7 @@ public class PlayerStateMachine : MonoBehaviour {
     public InputManager input;
     public Rigidbody rb;
     public CapsuleCollider capsuleCollider;
-    public FirstPersonCam cam;
+    public CameraStateMachine cam;
 
     [Header("Movement")]
 
@@ -30,7 +30,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
 
     [Header("Glove")]
-    public Glove glove;
+    public GloveStateMachine glove;
 
     [Header("Crouching")]
 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class GloveShootState : GloveBaseState {
     float switchTime;
-    public GloveShootState(Glove currentContext, GloveStateFactory gloveStateFactory)
+    public GloveShootState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
     : base (currentContext, gloveStateFactory) {
         IsRootState = true;
 

@@ -3,17 +3,33 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 [DisallowMultipleComponent]
-public class PlayerShoot : MonoBehaviour {
+public class GunStateMachine : MonoBehaviour {
 
    
-    [SerializeField] private PlayerGunSelector GunSelector;
+    public PlayerGunSelector GunSelector;
     public InputManager input;
+
 
     public PlayerStateMachine stateMachine;
 
-    private bool autoReload = true;
-    private bool isReloading = false;
+    public GunBaseState currentState;
+    public GunStateFactory states;
 
+  
+    public GunBaseState CurrentState {get { return currentState; } set { currentState = value; } }
+
+    
+
+
+
+   
+
+
+    void Awake() {
+        states = new GunStateFactory(this);
+        currentState = states.Rest();
+        currentState.EnterState();
+    }
 
     void Start() {
         stateMachine = GetComponent<PlayerStateMachine>();
@@ -30,7 +46,7 @@ public class PlayerShoot : MonoBehaviour {
             
             if(ManualReload() || AutoReload()) {
                 Debug.Log("Reload");
-                isReloading = true;
+                //isReloading = true;
                 GunSelector.animator.SetTrigger(GunSelector.reloadHash);
                 GunSelector.ActiveGun.AmmoConfig.Reload();
             }
@@ -62,18 +78,18 @@ public class PlayerShoot : MonoBehaviour {
     private void EndReload() {
         
         GunSelector.ActiveGun.EndReload();
-        isReloading = false;
+        // isReloading = false;
     }
 
-    private bool ManualReload() {
+    public bool ManualReload() {
 
         return input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
         
         // return  !isReloading && input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
     }
 
-    private bool AutoReload() {
-        return autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
+    public bool AutoReload() {
+        return GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
         // return !isReloading && autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
     }
 
