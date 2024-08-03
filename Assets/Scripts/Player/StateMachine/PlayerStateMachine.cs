@@ -9,7 +9,7 @@ public class PlayerStateMachine : MonoBehaviour {
     public InputManager input;
     public Rigidbody rb;
     public CapsuleCollider capsuleCollider;
-    public CameraStateMachine cam;
+    public CamStateMachine cam;
 
     [Header("Movement")]
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraFpsState : CameraBaseState {
    
-    public CameraFpsState(CameraStateMachine currentContext, CameraStateFactory cameraStateFactory)
+    public CameraFpsState(CamStateMachine currentContext, CameraStateFactory cameraStateFactory)
     : base (currentContext, cameraStateFactory) {
         IsRootState = true;
 

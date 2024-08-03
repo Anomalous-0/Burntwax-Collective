@@ -7,10 +7,10 @@ enum CameraStates {
 
 public class CameraStateFactory{
 
-    CameraStateMachine context;
+    CamStateMachine context;
     Dictionary<CameraStates, CameraBaseState> states = new Dictionary<CameraStates, CameraBaseState>();
 
-    public CameraStateFactory(CameraStateMachine currentContext) {
+    public CameraStateFactory(CamStateMachine currentContext) {
         context = currentContext;
         states[CameraStates.fps] = new CameraFpsState(context, this);
         states[CameraStates.aim] = new CameraAimState(context, this);

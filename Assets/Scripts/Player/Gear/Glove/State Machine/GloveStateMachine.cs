@@ -6,7 +6,7 @@ public class GloveStateMachine : MonoBehaviour {
 
     
 
-    public CameraStateMachine cam;
+    public CamStateMachine cam;
     public InputManager input;
     public CapsuleCollider capsule;
 

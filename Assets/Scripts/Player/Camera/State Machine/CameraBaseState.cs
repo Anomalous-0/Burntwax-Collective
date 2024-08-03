@@ -1,17 +1,17 @@
 public abstract class CameraBaseState  {
 
     private bool isRootState = false;
-    private CameraStateMachine ctx;
+    private CamStateMachine ctx;
     private CameraStateFactory factory;
     private CameraBaseState currentSubState;
     private CameraBaseState currentSuperState;
 
     protected bool IsRootState { set { isRootState = value; } }
-    protected CameraStateMachine Ctx { get { return ctx; } }
+    protected CamStateMachine Ctx { get { return ctx; } }
     protected CameraStateFactory Factory { get { return factory; } }
 
     
-    public CameraBaseState(CameraStateMachine currentContext, CameraStateFactory cameraStateFactory) {
+    public CameraBaseState(CamStateMachine currentContext, CameraStateFactory cameraStateFactory) {
         ctx = currentContext;
         factory = cameraStateFactory;
     }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraAimState : CameraBaseState {
    
-    public CameraAimState(CameraStateMachine currentContext, CameraStateFactory cameraStateFactory)
+    public CameraAimState(CamStateMachine currentContext, CameraStateFactory cameraStateFactory)
     : base (currentContext, cameraStateFactory) {
         IsRootState = true;
 

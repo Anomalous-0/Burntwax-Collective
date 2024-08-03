@@ -4,7 +4,7 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 
-public class CameraStateMachine : MonoBehaviour {
+public class CamStateMachine : MonoBehaviour {
     public InputManager input;
     CinemachineVirtualCamera activeCam;
      
