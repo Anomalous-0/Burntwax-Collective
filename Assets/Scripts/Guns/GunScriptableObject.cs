@@ -28,7 +28,6 @@ public class GunScriptableObject : ScriptableObject {
     public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
     public AimConfig AimConfig;
-    public RecoilConfig RecoilConfig;
     public bool CamChange;
 
     private MonoBehaviour ActiveMonoBehaviour;
@@ -143,6 +142,7 @@ public class GunScriptableObject : ScriptableObject {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
+            Debug.Log("Hit something");
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
             //     EndPoint,

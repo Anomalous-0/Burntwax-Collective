@@ -3,6 +3,7 @@ using System.Collections.Generic;
 enum GunStates {
     rest,
     shoot,
+    noShoot,
     reload,
     aim,
 
@@ -20,6 +21,7 @@ public class GunStateFactory{
         context = currentContext;
         states[GunStates.rest] = new GunRestState(context, this);
         states[GunStates.shoot] = new GunShootState(context, this);
+        states[GunStates.noShoot] = new GunNoShootState(context, this);
         states[GunStates.reload] = new GunReloadState(context, this);
         states[GunStates.aim] = new GunAimState(context, this);
         states[GunStates.stow] = new GunStowState(context, this);
@@ -32,6 +34,10 @@ public class GunStateFactory{
 
     public GunBaseState Shoot() {
         return states[GunStates.shoot];
+    }
+
+    public GunBaseState NoShoot() {
+        return states[GunStates.noShoot];
     }
 
     public GunBaseState Reload () {

@@ -18,6 +18,9 @@ public class GunStateMachine : MonoBehaviour {
   
     public GunBaseState CurrentState {get { return currentState; } set { currentState = value; } }
 
+
+    public bool isReloading = false;
+    public bool isShooting = false;
     
 
 
@@ -38,44 +41,49 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void Update() {
-        
-
         if(GunSelector.ActiveGun != null) {
-            CheckPos();
+            currentState.UpdateStates();
+        }
+        //     CheckPos();
 
             
-            if(ManualReload() || AutoReload()) {
-                Debug.Log("Reload");
-                //isReloading = true;
-                GunSelector.animator.SetTrigger(GunSelector.reloadHash);
-                GunSelector.ActiveGun.AmmoConfig.Reload();
-            }
+        //     if(ManualReload() || AutoReload()) {
+        //         Debug.Log("Reload");
+        //         //isReloading = true;
+        //         GunSelector.animator.SetTrigger(GunSelector.reloadHash);
+        //         GunSelector.ActiveGun.AmmoConfig.Reload();
+        //     }
 
 
-            // LOOK AT THIS THIS SHIT IMPORTANT MAYBE FIX LATER 
-            if (GunSelector.ActiveGun.AmmoConfig.currentClip > 0 && stateMachine.currentState.CurrentSubstate() != stateMachine.states.Sprint() &&  input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
+        //     // LOOK AT THIS THIS SHIT IMPORTANT MAYBE FIX LATER 
+        //     if (GunSelector.ActiveGun.AmmoConfig.currentClip > 0 && stateMachine.currentState.CurrentSubstate() != stateMachine.states.Sprint() &&  input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
                 
-                // GunSelector.animator.SetBool(GunSelector.restingHash, false);
-                if (input.aimIsPressed) {
-                    GunSelector.animator.SetTrigger(GunSelector.aimShootHash);
+        //         // GunSelector.animator.SetBool(GunSelector.restingHash, false);
+        //         if (input.aimIsPressed) {
+        //             GunSelector.animator.SetTrigger(GunSelector.aimShootHash);
 
-                }
-                else {
+        //         }
+        //         else {
                    
-                    GunSelector.animator.SetTrigger(GunSelector.shootHash);
-                }
+        //             GunSelector.animator.SetTrigger(GunSelector.shootHash);
+        //         }
                 
-                GunSelector.ActiveGun.Shoot();
-            }
-            else {
-                // GunSelector.animator.SetBool(GunSelector.restingHash, true);
-            }
-        }
+        //         GunSelector.ActiveGun.Shoot();
+        //     }
+        //     else {
+        //         // GunSelector.animator.SetBool(GunSelector.restingHash, true);
+        //     }
+        // }
      
 
     }
 
-    private void EndReload() {
+
+    public bool CanShoot() {
+        return GunSelector.ActiveGun.AmmoConfig.currentClip > 0;
+    }
+
+    public void EndReload() {
         
         GunSelector.ActiveGun.EndReload();
         // isReloading = false;
@@ -93,16 +101,5 @@ public class GunStateMachine : MonoBehaviour {
         // return !isReloading && autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
     }
 
-    private void CheckPos() {
-        if (input.aimIsPressed) {
-                GunSelector.ActiveGun.ADS();
-        } 
-        else if(stateMachine.currentState.CurrentSubstate() == stateMachine.states.Sprint()){
-            GunSelector.ActiveGun.Stow();
-                
-        }
-        else {
-            GunSelector.ActiveGun.Rest();
-        }
-    }
+
 }

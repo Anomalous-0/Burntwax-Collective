@@ -12,25 +12,43 @@ public class GunStowState : GunBaseState {
 
     public override void EnterState(){
        
-        Debug.Log("Aim State");
+        Debug.Log("Stow State");
         InitializeSubState();
     }
 
     public override void UpdateState(){
-        
+        Ctx.GunSelector.ActiveGun.Stow();
         CheckSwitchStates();
         
     }
 
     public override void ExitState(){
+
         
     }
     
     public override void CheckSwitchStates(){
+        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint()) {
+            SwitchState(Factory.Rest());
+        } 
+        else if(Ctx.AutoReload()  || Ctx.ManualReload()) {
+            SwitchState(Factory.Reload());
+        }
+
+        else if(!Ctx.isReloading && Ctx.input.aimIsPressed) {
+            Ctx.input.sprintIsPressed = false; 
+            SwitchState(Factory.Aim());
+        }
+       
         
     }
 
 
-    public override void InitializeSubState(){}
+    public override void InitializeSubState(){
+        if(Ctx.CanShoot() && Ctx.input.shootIsPressed) {
+            SetSubState(Factory.Shoot());
+        }
+        
+    }
 
 }

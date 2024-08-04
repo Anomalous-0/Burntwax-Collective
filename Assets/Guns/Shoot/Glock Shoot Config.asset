@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e29a1cd59aa11e48b0094a4ed015a47, type: 3}
   m_Name: Glock Shoot Config
   m_EditorClassIdentifier: 
+  isHitscan: 0
+  bulletPrefab: {fileID: 0}
+  bulletForce: 0
   HitMask:
     serializedVersion: 2
-    m_Bits: 503
+    m_Bits: 511
   Spread: {x: 0, y: 0, z: 0}
-  FireRate: 0.53
+  FireRate: 0.43

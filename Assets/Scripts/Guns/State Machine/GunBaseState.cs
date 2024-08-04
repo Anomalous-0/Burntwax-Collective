@@ -20,6 +20,10 @@ public abstract class GunBaseState  {
     public GunBaseState CurrentSubstate() {
         return currentSubState;
     }
+
+    public GunBaseState CurrentSuperstate() {
+        return currentSuperState;
+    }
     public abstract void EnterState();
 
     public abstract void UpdateState();

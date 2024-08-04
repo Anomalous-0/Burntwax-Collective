@@ -38,7 +38,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   Duration: 0.1
-  MinVertexDistance: 0.1
+  MinVertexDistance: 0.01
   Color:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
@@ -69,5 +69,5 @@ MonoBehaviour:
     m_ColorSpace: -1
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  MissDistance: 9999
-  SimulationSpeed: 100
+  MissDistance: 999
+  SimulationSpeed: 700

@@ -12,12 +12,12 @@ public class GunRestState : GunBaseState {
 
     public override void EnterState(){
        
-        Debug.Log("Gun Rest State");
+        Debug.Log("Rest State");
         InitializeSubState();
     }
 
     public override void UpdateState(){
-        // Ctx.GunSelector.ActiveGun.Rest();
+        Ctx.GunSelector.ActiveGun.Rest();
         CheckSwitchStates();
         
     }
@@ -39,6 +39,10 @@ public class GunRestState : GunBaseState {
     }
 
 
-    public override void InitializeSubState(){}
+    public override void InitializeSubState(){
+        SetSubState(Factory.NoShoot());
+        
+
+    }
 
 }

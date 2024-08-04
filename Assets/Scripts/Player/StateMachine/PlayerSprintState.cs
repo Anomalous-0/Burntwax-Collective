@@ -34,7 +34,8 @@ public class PlayerSprintState : PlayerBaseState {
                 SwitchState(Factory.Walk());
             }
         }
-        if(Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+        if((Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) || Ctx.input.shootIsPressed) {
+            Ctx.input.sprintIsPressed = false;
             SwitchState(Factory.Walk());
         }
         else if(!Ctx.input.moveIsPressed) {
