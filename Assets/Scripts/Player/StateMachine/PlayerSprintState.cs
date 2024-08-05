@@ -11,7 +11,7 @@ public class PlayerSprintState : PlayerBaseState {
 
     public override void EnterState(){
         Ctx.PlayerVelocity = Ctx.SprintVelocity;
-        Ctx.cam.FPS();
+        // Ctx.cam.FPS();
         if(Ctx.input.aimIsPressed) {
             Ctx.input.aimIsPressed = false;
         }
@@ -28,12 +28,12 @@ public class PlayerSprintState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.aimIsPressed) {
-            if(Ctx.input.moveIsPressed) {
-                Ctx.cam.Aim();
-                SwitchState(Factory.Walk());
-            }
-        }
+        // if(Ctx.input.aimIsPressed) {
+        //     if(Ctx.input.moveIsPressed) {
+        //         Ctx.cam.Aim();
+        //         SwitchState(Factory.Walk());
+        //     }
+        // }
         if((Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) || Ctx.input.shootIsPressed) {
             Ctx.input.sprintIsPressed = false;
             SwitchState(Factory.Walk());

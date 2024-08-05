@@ -40,11 +40,11 @@ public class PlayerIdleState : PlayerBaseState {
     public override void InitializeSubState(){}
 
     private void SwitchCam() {
-        if(Ctx.input.aimIsPressed) {
-            Ctx.cam.Aim();
-        }   
-        else {
-            Ctx.cam.FPS();
-        }
+        // if(Ctx.input.aimIsPressed) {
+        //     Ctx.cam.Aim();
+        // }   
+        // else {
+        //     Ctx.cam.FPS();
+        // }
     }
 }

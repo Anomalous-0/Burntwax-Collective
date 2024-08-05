@@ -13764,6 +13764,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
+  player: {fileID: 401126580}
+  gun: {fileID: 401126584}
   fpsCam: {fileID: 324058977}
   aimCam: {fileID: 1239344394}
   mouseWorldPosition: {x: 0, y: 0, z: 0}
@@ -24339,7 +24341,7 @@ PrefabInstance:
     - target: {fileID: 189091626145577203, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 189091626146063571, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
         type: 3}

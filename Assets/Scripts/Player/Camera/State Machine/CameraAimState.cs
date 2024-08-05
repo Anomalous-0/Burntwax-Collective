@@ -16,6 +16,7 @@ public class CameraAimState : CameraBaseState {
     }
 
     public override void UpdateState(){
+        Ctx.Aim();
         CheckSwitchStates();
        
     }
@@ -25,6 +26,14 @@ public class CameraAimState : CameraBaseState {
     }
     
     public override void CheckSwitchStates(){
+        if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {
+
+            Ctx.input.aimIsPressed = false;
+            SwitchState(Factory.Fps());
+        }
+        else if(!Ctx.input.aimIsPressed ){
+            SwitchState(Factory.Fps());
+        }
         
     }
 

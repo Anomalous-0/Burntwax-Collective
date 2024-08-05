@@ -16,6 +16,7 @@ public class CameraFpsState : CameraBaseState {
     }
 
     public override void UpdateState(){
+        Ctx.FPS();
         CheckSwitchStates();
        
     }
@@ -25,7 +26,13 @@ public class CameraFpsState : CameraBaseState {
     }
     
     public override void CheckSwitchStates(){
-        
+        if(Ctx.player.currentState.CurrentSubstate() == Ctx.player.states.Sprint() && Ctx.input.aimIsPressed) {
+            Ctx.input.sprintIsPressed = false;
+            SwitchState(Factory.Aim());
+        }
+        else if(Ctx.input.aimIsPressed) {
+            SwitchState(Factory.Aim());
+        }
     }
 
 

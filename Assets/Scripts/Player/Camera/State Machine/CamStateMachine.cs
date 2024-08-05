@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 
 public class CamStateMachine : MonoBehaviour {
     public InputManager input;
+
+
+    public PlayerStateMachine player;
+    public GunStateMachine gun;
     CinemachineVirtualCamera activeCam;
      
     public CinemachineVirtualCamera fpsCam;
@@ -37,11 +41,13 @@ public class CamStateMachine : MonoBehaviour {
 
 
     void Update() {
-        Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
-            mouseWorldPosition = raycastHit.point;
-        }
+
+        currentState.UpdateState();
+        // Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
+        // Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        // if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
+        //     mouseWorldPosition = raycastHit.point;
+        // }
         
     }
     
