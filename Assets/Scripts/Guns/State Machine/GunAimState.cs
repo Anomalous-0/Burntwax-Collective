@@ -17,7 +17,7 @@ public class GunAimState : GunBaseState {
     }
 
     public override void UpdateState(){
-        Ctx.GunSelector.ActiveGun.ADS();
+        Ctx.ActiveGun.ADS();
         CheckSwitchStates();
         
     }

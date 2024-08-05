@@ -13574,7 +13574,6 @@ GameObject:
   - component: {fileID: 401126577}
   - component: {fileID: 401126580}
   - component: {fileID: 401126581}
-  - component: {fileID: 401126583}
   - component: {fileID: 401126584}
   - component: {fileID: 401126585}
   - component: {fileID: 401126586}
@@ -13698,28 +13697,6 @@ MonoBehaviour:
   chipSpeed: 2
   frontHealthBar: {fileID: 70947281}
   backHealthBar: {fileID: 727431829}
---- !u!114 &401126583
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 401126575}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe02b29ca4948be4b93f31a0a0c85152, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  input: {fileID: 845597538}
-  currentID: 0
-  GunParent: {fileID: 455773204}
-  animator: {fileID: 0}
-  shootHash: 0
-  aimShootHash: 0
-  restingHash: 0
-  reloadHash: 0
-  Guns: []
-  ActiveGun: {fileID: 0}
 --- !u!114 &401126584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13732,8 +13709,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfead5a010aee34e862cd1c493dd008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GunSelector: {fileID: 401126583}
   input: {fileID: 845597538}
+  currentID: 0
+  GunParent: {fileID: 455773204}
+  animator: {fileID: 0}
+  shootHash: 0
+  aimShootHash: 0
+  restingHash: 0
+  reloadHash: 0
+  Guns: []
+  ActiveGun: {fileID: 0}
   stateMachine: {fileID: 401126580}
   isReloading: 0
   isShooting: 0
@@ -13749,7 +13734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34b3163934397941855be9ca59a6034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunSelector: {fileID: 401126583}
+  gunSelector: {fileID: 401126584}
   ammoText: {fileID: 342194566}
 --- !u!114 &401126586
 MonoBehaviour:

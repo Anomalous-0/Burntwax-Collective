@@ -17,7 +17,7 @@ public class GunRestState : GunBaseState {
     }
 
     public override void UpdateState(){
-        Ctx.GunSelector.ActiveGun.Rest();
+        Ctx.ActiveGun.Rest();
         CheckSwitchStates();
         
     }

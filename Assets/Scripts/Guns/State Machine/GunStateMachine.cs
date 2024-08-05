@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,10 +7,23 @@ using UnityEngine.InputSystem;
 public class GunStateMachine : MonoBehaviour {
 
    
-    public PlayerGunSelector GunSelector;
+    
     public InputManager input;
 
+    public int currentID;
+    [SerializeField] public Transform GunParent;
 
+    [Header("Animation")]
+    public  Animator animator;
+    [HideInInspector] public int shootHash, aimShootHash, restingHash, reloadHash;
+
+    public List<GunScriptableObject> Guns;
+
+    [Space]
+    [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
+
+
+    [Space]
     public PlayerStateMachine stateMachine;
 
     public GunBaseState currentState;
@@ -41,63 +55,105 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void Update() {
-        if(GunSelector.ActiveGun != null) {
+        if(ActiveGun != null) {
             currentState.UpdateStates();
-        }
-        //     CheckPos();
-
             
-        //     if(ManualReload() || AutoReload()) {
-        //         Debug.Log("Reload");
-        //         //isReloading = true;
-        //         GunSelector.animator.SetTrigger(GunSelector.reloadHash);
-        //         GunSelector.ActiveGun.AmmoConfig.Reload();
-        //     }
+            if(input.mouseScroll != 0) {
+                WeaponSwitch();
+            }  
+
+        }
 
 
-        //     // LOOK AT THIS THIS SHIT IMPORTANT MAYBE FIX LATER 
-        //     if (GunSelector.ActiveGun.AmmoConfig.currentClip > 0 && stateMachine.currentState.CurrentSubstate() != stateMachine.states.Sprint() &&  input.shootIsPressed && Time.time - GunSelector.ActiveGun.LastShootTime >= GunSelector.ActiveGun.ShootConfig.FireRate) {
+    }
+
+    private void WeaponSwitch() {
+        ScrollID();
+        GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+
+        if (gun == null) {
+            Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+            return;
+        }
+            
+        ActiveGun.Despawn(this);
+        ActiveGun = gun;
+        gun.Spawn(GunParent, this);
+
+
+
+        SetAnimator();
+        // restingHash = Animator.StringToHash("resting");
+    }
+
+    private void ScrollID() {
+        if(input.mouseScroll > 0) {
+            currentID++;
+            if(currentID > Guns.Count - 1) {
+                currentID = 0;
+            }
+        }
+        else if(input.mouseScroll < 0) {
+            currentID--;
+            if(currentID < 0) {
+                currentID = Guns.Count - 1;
+            }
+        }
+
+        
+        
+    }
+
+    public void Pickup(GunScriptableObject gun) {
+        if(!Guns.Contains(gun)) {
+            Guns.Add(gun);
+            if(ActiveGun != null) {
+                ActiveGun.Despawn(this);
+            }
                 
-        //         // GunSelector.animator.SetBool(GunSelector.restingHash, false);
-        //         if (input.aimIsPressed) {
-        //             GunSelector.animator.SetTrigger(GunSelector.aimShootHash);
+            ActiveGun = gun;
+            currentID = gun.ID;
+            gun.Spawn(GunParent, this);
 
-        //         }
-        //         else {
-                   
-        //             GunSelector.animator.SetTrigger(GunSelector.shootHash);
-        //         }
-                
-        //         GunSelector.ActiveGun.Shoot();
-        //     }
-        //     else {
-        //         // GunSelector.animator.SetBool(GunSelector.restingHash, true);
-        //     }
-        // }
-     
 
+            SetAnimator();
+
+
+        }    
+        else {
+            // Get ammo;
+        }
+            
+    }
+
+
+    private void SetAnimator() {
+        animator = ActiveGun.Model.GetComponent<Animator>();
+        shootHash = Animator.StringToHash("shoot");
+        aimShootHash = Animator.StringToHash("aimShoot");
+        reloadHash = Animator.StringToHash("reload");
     }
 
 
     public bool CanShoot() {
-        return GunSelector.ActiveGun.AmmoConfig.currentClip > 0;
+        return ActiveGun.AmmoConfig.currentClip > 0;
     }
 
     public void EndReload() {
         
-        GunSelector.ActiveGun.EndReload();
+        ActiveGun.EndReload();
         // isReloading = false;
     }
 
     public bool ManualReload() {
 
-        return input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
+        return input.reloadIsPressed && ActiveGun.CanReload();
         
         // return  !isReloading && input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
     }
 
     public bool AutoReload() {
-        return GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
+        return ActiveGun.CanReload() && ActiveGun.AmmoConfig.currentClip == 0;
         // return !isReloading && autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
     }
 

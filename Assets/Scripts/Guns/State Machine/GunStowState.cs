@@ -17,7 +17,7 @@ public class GunStowState : GunBaseState {
     }
 
     public override void UpdateState(){
-        Ctx.GunSelector.ActiveGun.Stow();
+        Ctx.ActiveGun.Stow();
         CheckSwitchStates();
         
     }

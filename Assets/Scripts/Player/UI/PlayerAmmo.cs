@@ -8,7 +8,7 @@ using UnityEngine;
 public class PlayerAmmo : MonoBehaviour {
   
 
-    [SerializeField ] private PlayerGunSelector gunSelector;
+    [SerializeField ] private GunStateMachine gunSelector;
     [SerializeField] private TextMeshProUGUI ammoText;
 
     
