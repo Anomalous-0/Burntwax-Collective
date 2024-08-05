@@ -26,21 +26,26 @@ public class GloveHoldState : GloveBaseState {
     }
 
     public override void UpdateState(){
-        Hold();
         CheckSwitchStates();
+        if(Ctx.Target != null) {
+            Hold();
+        }
+        
         
     }
 
     public override void ExitState(){
         Ctx.animator.SetBool(Ctx.holdingHash, false);
-
-        Ctx.Target.transform.SetParent(Ctx.BodyHierarchy);
-        Ctx.Target.interpolation = RigidbodyInterpolation.Interpolate;
-        Ctx.Target.excludeLayers = LayerMask.GetMask("Nothing");
+        if(Ctx.Target != null) {
+            Ctx.Target.transform.SetParent(Ctx.BodyHierarchy);
+            Ctx.Target.interpolation = RigidbodyInterpolation.Interpolate;
+            Ctx.Target.excludeLayers = LayerMask.GetMask("Nothing");
+        }
+        
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.useGloves) {
+        if(Ctx.input.useGloves || Ctx.Target == null) {
             SwitchState(Factory.Release());
         }
         else if(Ctx.input.gloveShootIsPressed) {
@@ -50,7 +55,9 @@ public class GloveHoldState : GloveBaseState {
 
 
     private void Hold() {
-        Ctx.Target.transform.position = Vector3.Lerp(Ctx.Target.transform.position, Ctx.GlovePos.position +  .18f* Ctx.HoldDistance * Ctx.GlovePos.forward, Ctx.LerpTime * Time.deltaTime);
+        
+            Ctx.Target.transform.position = Vector3.Lerp(Ctx.Target.transform.position, Ctx.GlovePos.position +  .18f* Ctx.HoldDistance * Ctx.GlovePos.forward, Ctx.LerpTime * Time.deltaTime);
+    
     }
     public override void InitializeSubState(){}
 

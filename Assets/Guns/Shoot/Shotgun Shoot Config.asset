@@ -12,8 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e29a1cd59aa11e48b0094a4ed015a47, type: 3}
   m_Name: Shotgun Shoot Config
   m_EditorClassIdentifier: 
+  isHitscan: 0
+  bulletPrefab: {fileID: 0}
+  bulletForce: 0
   HitMask:
     serializedVersion: 2
     m_Bits: 511
   Spread: {x: 0.02, y: 0.02, z: 0.02}
   FireRate: 0.8
+  bulletSpeed: 10

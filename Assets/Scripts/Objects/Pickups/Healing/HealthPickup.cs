@@ -4,13 +4,13 @@ public class NewBehaviourScript : MonoBehaviour {
 
     public int heal;
 
-    PlayerHealth playerHealth;
+    private PlayerHealth playerHealth;
 
     void OnTriggerEnter(Collider other) {
         
-        if(other.GetComponentInParent<PlayerHealth>() != false) {
+        if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
             // Debug.Log("COllided");
-            playerHealth = other.GetComponentInParent<PlayerHealth>();
+            playerHealth = FindObjectOfType<PlayerHealth>();
             if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
                 playerHealth.RestoreHealth(heal);
                 Destroy(gameObject);

@@ -12,7 +12,7 @@ public class GunAimState : GunBaseState {
 
     public override void EnterState(){
        
-        Debug.Log("Aim State");
+        // Debug.Log("Aim State");
         InitializeSubState();
     }
 

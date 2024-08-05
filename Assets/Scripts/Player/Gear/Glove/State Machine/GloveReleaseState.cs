@@ -16,9 +16,13 @@ public class GloveReleaseState : GloveBaseState {
     public override void EnterState(){
         Ctx.animator.SetTrigger(Ctx.droppingHash);
         switchTime = Ctx.TempStateTime;
-        Ctx.Target.useGravity = true;
-        Ctx.Force = Ctx.AttractForce;
-        Ctx.Target = null;
+
+        if(Ctx.Target != null) {
+            Ctx.Target.useGravity = true;
+            Ctx.Force = Ctx.AttractForce;
+            Ctx.Target = null;
+        }
+        
         // Debug.Log("Release State");
         InitializeSubState();
     }

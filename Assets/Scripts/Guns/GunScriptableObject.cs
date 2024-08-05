@@ -137,7 +137,7 @@ public class GunScriptableObject : ScriptableObject {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
-            // Debug.Log("Hit something");
+            Debug.Log("Hit something");
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
             //     EndPoint,

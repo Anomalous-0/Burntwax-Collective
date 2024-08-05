@@ -28,6 +28,10 @@ public class GloveLockState : GloveBaseState {
         if(CheckHold(Ctx.Target)) {
             SwitchState(Factory.Hold());
         }
+        else if(Ctx.Target == null) {
+            Ctx.animator.SetBool(Ctx.attractingHash, false);
+            SwitchState(Factory.Release());
+        }
     }
 
     private void Attract(Rigidbody target) {

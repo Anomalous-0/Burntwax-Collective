@@ -10,7 +10,7 @@ public class GunNoShootState : GunBaseState {
 
         
         
-        Debug.Log("No shoot STATE");
+        // Debug.Log("No shoot STATE");
     }
 
     public override void UpdateState(){

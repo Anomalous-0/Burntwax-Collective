@@ -21,7 +21,7 @@ public class GunShootState : GunBaseState {
 
         
         
-        Debug.Log("Shoot State");
+        // Debug.Log("Shoot State");
     }
 
     public override void UpdateState(){

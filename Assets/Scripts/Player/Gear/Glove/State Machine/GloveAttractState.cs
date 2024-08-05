@@ -20,9 +20,11 @@ public class GloveAttractState : GloveBaseState {
     }
 
     public override void UpdateState(){
-        Attract(Ctx.Target);
         CheckSwitchStates();
-        
+        if(Ctx.Target != null) {
+            Attract(Ctx.Target);
+        }
+    
         timeToLock--;
         
     }
@@ -34,7 +36,7 @@ public class GloveAttractState : GloveBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(!Ctx.input.useGloves || !Ctx.InRange) {
+        if(!Ctx.input.useGloves || !Ctx.InRange || Ctx.Target == null) {
             Ctx.animator.SetBool(Ctx.attractingHash, false);
             SwitchState(Factory.Release());
         }
@@ -45,6 +47,7 @@ public class GloveAttractState : GloveBaseState {
             Ctx.animator.SetBool(Ctx.attractingHash, false);
             SwitchState(Factory.Hold());
         }
+
     }
 
     private void Attract(Rigidbody target) {

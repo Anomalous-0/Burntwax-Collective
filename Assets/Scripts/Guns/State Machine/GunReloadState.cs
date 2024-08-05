@@ -16,7 +16,7 @@ public class GunReloadState : GunBaseState {
         switchTime = 1;
         Ctx.animator.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
-        Debug.Log("Reload State");
+        // Debug.Log("Reload State");
         InitializeSubState();
     }
 
