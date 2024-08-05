@@ -61,11 +61,6 @@ public class GunScriptableObject : ScriptableObject {
 
     public void Shoot() {
 
-        if (Model == null) {
-            Debug.LogError("Model is not assigned!");
-            return;
-        }
-
         
         if (Time.time - LastShootTime > ShootConfig.FireRate) {
             LastShootTime = Time.time;
