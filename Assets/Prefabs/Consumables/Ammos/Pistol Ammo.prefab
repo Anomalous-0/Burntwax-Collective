@@ -258,13 +258,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2534855556683237600}
-  - component: {fileID: 1927820067518834455}
   - component: {fileID: 3161494543826322948}
   - component: {fileID: 5286035585440516554}
   - component: {fileID: 1327630242725743083}
   - component: {fileID: 8725762791249871987}
+  - component: {fileID: -199172209931897743}
   m_Layer: 11
-  m_Name: Ammo
+  m_Name: Pistol Ammo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,19 +288,6 @@ Transform:
   - {fileID: 8329308907151087028}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1927820067518834455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9176256781164373382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f3e53056d44d424b9b6efb0e49de0bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  heal: 10
 --- !u!135 &3161494543826322948
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -382,3 +369,15 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 0.79, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-199172209931897743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27dab0227dd16b041a523646b88da179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
