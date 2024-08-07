@@ -18,11 +18,11 @@ public class AmmoPickup : MonoBehaviour {
             gun.AmmoConfig.currentAmmo += ammoCount;
         
             // Debug.Log("COllided");
-            playerHealth = FindObjectOfType<PlayerHealth>();
-            if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
-                playerHealth.RestoreHealth(heal);
-                Destroy(gameObject);
-            }
+            // playerHealth = FindObjectOfType<PlayerHealth>();
+            // if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
+            //     playerHealth.RestoreHealth(heal);
+            //     Destroy(gameObject);
+            // }
             
         }
     }
