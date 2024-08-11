@@ -7,18 +7,34 @@ public class AmmoPickup : MonoBehaviour {
     public int ammoCount;
 
     public int gunID;
-    [SerializeField] GunScriptableObject gun;
+
+    private GunStateMachine playerGun;
 
 
     void OnTriggerEnter(Collider other) {
         
         if(other.GetComponentInParent<GunStateMachine>() != false || other.GetComponent<ConsumableGlovePickup>()) {
+            
 
+            
+            playerGun = FindObjectOfType<GunStateMachine>();
 
-            gun.AmmoConfig.currentAmmo += ammoCount;
+            GunScriptableObject gun = playerGun.Guns.Find(gun => gun.ID == gunID);
+            if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {
+                if(gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount) {
+                    gun.AmmoConfig.currentAmmo += ammoCount;
+                }
+                else {
+                    gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
+                }
+                Destroy(gameObject);
+            }
+            
+            
         
             // Debug.Log("COllided");
-            // playerHealth = FindObjectOfType<PlayerHealth>();
+        
+            
             // if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
             //     playerHealth.RestoreHealth(heal);
             //     Destroy(gameObject);
