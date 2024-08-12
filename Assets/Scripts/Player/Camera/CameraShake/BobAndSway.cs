@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BobAndSway : MonoBehaviour
-{
+public class BobAndSway : MonoBehaviour {
     [Header("External References")]
 
     [SerializeField] InputManager input;
     [SerializeField] PlayerStateMachine player;
+    [SerializeField] CamStateMachine cam;
+
     [SerializeField] Rigidbody rb;
     
     public bool sway = true;
@@ -24,11 +25,11 @@ public class BobAndSway : MonoBehaviour
     {
         GetInput();
 
-        if (input.MoveInput != Vector2.zero && player.playerIsGrounded && shouldBob && !input.aimIsPressed) {
+        if (input.MoveInput != Vector2.zero && player.currentState == player.states.Grounded() && shouldBob && cam.currentState != cam.states.Aim()) {
             Sway();
         }
         SwayRotation();
-        if (!input.aimIsPressed) {
+        if (cam.currentState != cam.states.Aim()) {
             BobOffset();
             BobRotation();
             originalBobPos = bobPosition;
@@ -129,7 +130,7 @@ public class BobAndSway : MonoBehaviour
 
     void BobOffset() {
 
-        if (player.playerIsGrounded) {
+        if (player.currentState == player.states.Grounded()) {
             lastTime = Time.deltaTime;
         }
 

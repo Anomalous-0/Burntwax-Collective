@@ -10,7 +10,7 @@ public class GunShootState : GunBaseState {
     float switchTime;
     public override void EnterState(){
         Ctx.isShooting = true;
-        switchTime = 35;
+        switchTime = 15;
 
         if(CurrentSuperstate() == Factory.Aim()){
             Ctx.animator.SetTrigger(Ctx.aimShootHash);
@@ -21,13 +21,16 @@ public class GunShootState : GunBaseState {
 
         
         
-        // Debug.Log("Shoot State");
+        Debug.Log("Shoot State");
     }
 
     public override void UpdateState(){
 
         switchTime--;
-        Ctx.ActiveGun.Shoot();
+        if(Ctx.input.shootIsPressed) {
+            Ctx.ActiveGun.Shoot();
+        }
+        
         
         CheckSwitchStates();
     }
@@ -35,9 +38,9 @@ public class GunShootState : GunBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        // if(switchTime == 0) {
+        if(switchTime == 0) {
             SwitchState(Factory.NoShoot());
-        // }
+        }
         
     }
 

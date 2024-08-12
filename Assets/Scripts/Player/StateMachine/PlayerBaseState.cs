@@ -20,6 +20,7 @@ public abstract class PlayerBaseState  {
     public PlayerBaseState CurrentSubstate() {
         return currentSubState;
     }
+
     public abstract void EnterState();
 
     public abstract void UpdateState();

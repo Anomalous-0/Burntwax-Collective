@@ -11,6 +11,7 @@ public class GunStowState : GunBaseState {
     }
 
     public override void EnterState(){
+        Ctx.input.shootIsPressed = false;
        
         // Debug.Log("Stow State");
         InitializeSubState();
@@ -28,7 +29,7 @@ public class GunStowState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint()) {
+        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() || Ctx.input.shootIsPressed){
             SwitchState(Factory.Rest());
         } 
         else if(Ctx.AutoReload()  || Ctx.ManualReload()) {
@@ -45,9 +46,7 @@ public class GunStowState : GunBaseState {
 
 
     public override void InitializeSubState(){
-        if(Ctx.CanShoot() && Ctx.input.shootIsPressed) {
-            SetSubState(Factory.Shoot());
-        }
+        SetSubState(Factory.NoShoot());
         
     }
 

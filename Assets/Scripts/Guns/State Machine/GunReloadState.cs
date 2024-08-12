@@ -21,6 +21,7 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void UpdateState(){
+        Ctx.ActiveGun.Rest();
         switchTime--;
         CheckSwitchStates();
         
@@ -51,7 +52,7 @@ public class GunReloadState : GunBaseState {
 
 
     public override void InitializeSubState(){
-    
+        SetSubState(Factory.NoShoot());
        
     }
 
