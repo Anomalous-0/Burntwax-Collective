@@ -25,7 +25,7 @@ public class BobAndSway : MonoBehaviour {
     {
         GetInput();
 
-        if (input.MoveInput != Vector2.zero && player.currentState == player.states.Grounded() && shouldBob && cam.currentState != cam.states.Aim()) {
+        if (input.MoveInput != Vector2.zero && player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() && shouldBob && cam.currentState != cam.states.Aim()) {
             Sway();
         }
         SwayRotation();
@@ -130,18 +130,18 @@ public class BobAndSway : MonoBehaviour {
 
     void BobOffset() {
 
-        if (player.currentState == player.states.Grounded()) {
+        if (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun()) {
             lastTime = Time.deltaTime;
         }
 
-        speedCurve += 1.5f * lastTime * (player.playerIsGrounded ? rb.velocity.magnitude : 1f);
+        speedCurve += 1.5f * lastTime * (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() ? rb.velocity.magnitude : 1f);
 
         if (bobOffset == false) {
             bobPosition = Vector3.zero;
             return;
         }
 
-        bobPosition.x = (curveCos * bobLimit.x * (player.playerIsGrounded ? 1 : 0)) - (walkInput.x * travelLimit.x);
+        bobPosition.x = (curveCos * bobLimit.x * (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() ? 1 : 0)) - (walkInput.x * travelLimit.x);
         bobPosition.y = (curveSin * bobLimit.y) - (rb.velocity.y * travelLimit.y);
         bobPosition.z = (walkInput.y * travelLimit.z);
     }

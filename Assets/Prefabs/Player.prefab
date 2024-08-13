@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1186628176162295092}
   - component: {fileID: 2926336376552375138}
   - component: {fileID: 3993751473907198522}
-  - component: {fileID: 631236388936705551}
   - component: {fileID: 7593056247257005254}
   - component: {fileID: 4998941023216351194}
   m_Layer: 3
@@ -135,31 +134,6 @@ MonoBehaviour:
   chipSpeed: 2
   frontHealthBar: {fileID: 0}
   backHealthBar: {fileID: 0}
---- !u!114 &631236388936705551
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1148579728589637519}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dfead5a010aee34e862cd1c493dd008, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  input: {fileID: 3522338294497473196}
-  currentID: 0
-  GunParent: {fileID: 0}
-  animator: {fileID: 0}
-  shootHash: 0
-  aimShootHash: 0
-  restingHash: 0
-  reloadHash: 0
-  Guns: []
-  ActiveGun: {fileID: 0}
-  stateMachine: {fileID: 2926336376552375138}
-  isReloading: 0
-  isShooting: 0
 --- !u!114 &7593056247257005254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34b3163934397941855be9ca59a6034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunSelector: {fileID: 631236388936705551}
+  gunSelector: {fileID: 0}
   ammoText: {fileID: 0}
 --- !u!114 &4998941023216351194
 MonoBehaviour:
@@ -188,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 3522338294497473196}
   player: {fileID: 2926336376552375138}
-  gun: {fileID: 631236388936705551}
+  gun: {fileID: 0}
   fpsCam: {fileID: 0}
   aimCam: {fileID: 0}
   mouseWorldPosition: {x: 0, y: 0, z: 0}

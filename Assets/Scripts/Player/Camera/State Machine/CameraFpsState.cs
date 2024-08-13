@@ -30,7 +30,7 @@ public class CameraFpsState : CameraBaseState {
             Ctx.input.sprintIsPressed = false;
             SwitchState(Factory.Aim());
         }
-        else if(Ctx.input.aimIsPressed) {
+        else if(Ctx.input.aimIsPressed && Ctx.gun.currentState != Ctx.gun.states.Reload()) {
             SwitchState(Factory.Aim());
         }
     }

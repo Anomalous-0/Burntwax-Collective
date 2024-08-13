@@ -14,7 +14,9 @@ public class GunStateMachine : MonoBehaviour {
     [SerializeField] public Transform GunParent;
 
     [Header("Animation")]
-    public  Animator animator;
+    [HideInInspector] public Animator animator;
+    public  Animator gunAnimator;
+
     [HideInInspector] public int shootHash, aimShootHash, restingHash, reloadHash;
 
     public List<GunScriptableObject> Guns;
@@ -43,13 +45,14 @@ public class GunStateMachine : MonoBehaviour {
 
 
     void Awake() {
+        animator = GetComponent<Animator>();
         states = new GunStateFactory(this);
         currentState = states.Rest();
         currentState.EnterState();
     }
 
     void Start() {
-        stateMachine = GetComponent<PlayerStateMachine>();
+        // stateMachine = GetComponent<PlayerStateMachine>();
     }
 
 
@@ -128,7 +131,8 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetAnimator() {
-        animator = ActiveGun.Model.GetComponent<Animator>();
+        gunAnimator = ActiveGun.Model.GetComponent<Animator>();
+        animator.runtimeAnimatorController = gunAnimator.runtimeAnimatorController;
         shootHash = Animator.StringToHash("shoot");
         aimShootHash = Animator.StringToHash("aimShoot");
         reloadHash = Animator.StringToHash("reload");

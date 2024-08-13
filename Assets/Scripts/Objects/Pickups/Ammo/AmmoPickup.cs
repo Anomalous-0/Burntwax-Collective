@@ -13,7 +13,7 @@ public class AmmoPickup : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         
-        if(other.GetComponentInParent<GunStateMachine>() != false || other.GetComponent<ConsumableGlovePickup>()) {
+        if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
             
 
             
