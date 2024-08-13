@@ -13,10 +13,10 @@ public class GunShootState : GunBaseState {
         switchTime = 15;
 
         if(CurrentSuperstate() == Factory.Aim()){
-            Ctx.gunAnimator.SetTrigger(Ctx.aimShootHash);
+            Ctx.animator.SetTrigger(Ctx.aimShootHash);
         }
         else {
-            Ctx.gunAnimator.SetTrigger(Ctx.shootHash);
+            Ctx.animator.SetTrigger(Ctx.shootHash);
         }
 
         
