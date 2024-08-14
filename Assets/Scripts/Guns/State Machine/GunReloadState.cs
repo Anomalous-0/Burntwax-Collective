@@ -28,7 +28,7 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void ExitState(){
-       
+       Ctx.isReloading = false;
     }
     
     public override void CheckSwitchStates(){
@@ -43,6 +43,17 @@ public class GunReloadState : GunBaseState {
             else  {
                 SwitchState(Factory.Rest());
             }
+        }
+        else if(Ctx.input.mouseScroll != 0) {
+            if(Ctx.input.aimIsPressed) {
+                SwitchState(Factory.Aim());
+            }
+            else if (Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+                SwitchState(Factory.Stow());
+            }
+            else  {
+                SwitchState(Factory.Rest());
+            }                  
         }
     }
 

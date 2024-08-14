@@ -34,7 +34,8 @@ public class GunShootState : GunBaseState {
         CheckSwitchStates();
     }
 
-    public override void ExitState(){}
+    public override void ExitState(){
+    }
     
     public override void CheckSwitchStates(){
         if(!Ctx.isShooting) {
