@@ -1,32 +1,37 @@
 using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-[CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
-public class AmmoConfig : ScriptableObject {
+[CreateAssetMenu(fileName = "Audio Config", menuName = "Guns/Audio Config", order = 5)]
+public class AudioConfig : ScriptableObject {
     
-    public int maxAmmo;
-    public int clipSize;
 
-    public int currentAmmo;
-    public int currentClip;
+    [Range(0,1f)] public float volume = 1f;
+    public AudioClip[] fireClips;
+    public AudioClip emptyClip;
+    public AudioClip reloadClip;
+    public AudioClip lastBulletClip;
 
-
-    void OnEnable() {
-        currentClip = clipSize;
-        currentAmmo = maxAmmo;
+    public void PlayShootingClip(AudioSource audioSource, bool isLastBullet = false) {
+        if(isLastBullet && lastBulletClip != null) {
+            audioSource.PlayOneShot(lastBulletClip, volume);
+        }
+        else {
+            audioSource.PlayOneShot(fireClips[Random.Range(0, fireClips.Length)], volume);
+        }
     }
 
-    public void Reload() {
-        int maxReloadAmount = Mathf.Min(clipSize, currentAmmo);
-        int availableBullets = clipSize - currentClip;
-        int reloadAmount = Mathf.Min(maxReloadAmount, availableBullets);
-        currentClip = currentClip + reloadAmount;
-        currentAmmo -= reloadAmount;
+    public void PlayEmptyClip(AudioSource audioSource) {
+
+        if(emptyClip!= null) {
+            audioSource.PlayOneShot(emptyClip, volume);
+        }
     }
 
-
-    public bool CanReload() {
-        return currentClip < clipSize && currentAmmo > 0;
+    public void PlayReloadClip(AudioSource audioSource) {
+        if(reloadClip!= null) {
+            audioSource.PlayOneShot(reloadClip, volume);
+        }
     }
 
 

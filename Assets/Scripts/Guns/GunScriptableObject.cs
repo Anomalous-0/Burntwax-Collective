@@ -27,6 +27,8 @@ public class GunScriptableObject : ScriptableObject {
 
     public ShootConfig ShootConfig;
     public AmmoConfig AmmoConfig;
+    public AudioConfig AudioConfig;
+    
     public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
     public AimConfig AimConfig;
@@ -34,6 +36,7 @@ public class GunScriptableObject : ScriptableObject {
 
     private MonoBehaviour ActiveMonoBehaviour;
     [HideInInspector] public GameObject Model;
+    private AudioSource ShootingAudioSource;
 
     public float LastShootTime = 0;
     private ParticleSystem ShootSystem;
@@ -53,6 +56,7 @@ public class GunScriptableObject : ScriptableObject {
         
 
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
+        ShootingAudioSource = Model.GetComponent<AudioSource>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
@@ -71,9 +75,15 @@ public class GunScriptableObject : ScriptableObject {
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
             shootDirection.Normalize();
             
-            AmmoConfig.currentClip--;
+            if(AmmoConfig.currentClip == 0) {
+                AudioConfig.PlayEmptyClip(ShootingAudioSource);
+                return; // Empty clip
+            }
+            
             
             ShootSystem.Play();
+            AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
+            AmmoConfig.currentClip--;
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
                 // Debug.Log("Hit something");
@@ -88,9 +98,15 @@ public class GunScriptableObject : ScriptableObject {
         return AmmoConfig.CanReload();
     }
 
+    public void StartReload() {
+        AudioConfig.PlayReloadClip(ShootingAudioSource);
+    }
+
     public void EndReload() {
         AmmoConfig.Reload();
     }
+
+
 
    
     public void ADS() {
