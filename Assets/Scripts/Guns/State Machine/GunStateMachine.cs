@@ -14,8 +14,8 @@ public class GunStateMachine : MonoBehaviour {
     [SerializeField] public Transform GunParent;
 
     [Header("Animation")]
-    [HideInInspector] public Animator animator;
-    public  Animator gunAnimator;
+    [HideInInspector] public Animator handAnimator;
+    [HideInInspector] public  Animator gunAnimator;
 
     [HideInInspector] public int shootHash, aimShootHash, restingHash, reloadHash;
 
@@ -31,6 +31,7 @@ public class GunStateMachine : MonoBehaviour {
     public GunBaseState currentState;
     public GunStateFactory states;
 
+
   
     public GunBaseState CurrentState {get { return currentState; } set { currentState = value; } }
 
@@ -45,7 +46,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     void Awake() {
-        animator = GetComponent<Animator>();
+        handAnimator = GetComponent<Animator>();
         states = new GunStateFactory(this);
         currentState = states.Rest();
         currentState.EnterState();
@@ -131,8 +132,11 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetAnimator() {
+
         gunAnimator = ActiveGun.Model.GetComponent<Animator>();
-        animator.runtimeAnimatorController = gunAnimator.runtimeAnimatorController;
+
+        handAnimator.runtimeAnimatorController = ActiveGun.handController;
+
         shootHash = Animator.StringToHash("shoot");
         aimShootHash = Animator.StringToHash("aimShoot");
         reloadHash = Animator.StringToHash("reload");
@@ -144,9 +148,13 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void EndReload() {
-        
         ActiveGun.EndReload();
-        // isReloading = false;
+        isReloading = false;
+        
+    }
+
+    public void EndShoot() {
+        isShooting = false;
     }
 
     public bool ManualReload() {

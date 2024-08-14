@@ -19,6 +19,8 @@ public class GunScriptableObject : ScriptableObject {
     public Vector3 AimPoint;
     public Vector3 AimRotation;
 
+    public RuntimeAnimatorController handController;
+
 
     public Vector3 StowPoint;
     public Vector3 StowRotation;
@@ -137,7 +139,7 @@ public class GunScriptableObject : ScriptableObject {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
-            Debug.Log("Hit something");
+            // Debug.Log("Hit something");
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
             //     EndPoint,

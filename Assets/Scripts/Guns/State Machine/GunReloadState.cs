@@ -13,27 +13,27 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void EnterState(){
-        switchTime = 100f;
-        Ctx.animator.SetTrigger(Ctx.reloadHash);
+        Ctx.handAnimator.SetTrigger(Ctx.reloadHash);
+        Ctx.gunAnimator.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
-        // Debug.Log("Reload State");
+        Ctx.isShooting = false;
+        Debug.Log("Reload State");
         InitializeSubState();
     }
 
     public override void UpdateState(){
         Ctx.ActiveGun.Rest();
-        switchTime--;
         CheckSwitchStates();
         
     }
 
     public override void ExitState(){
-        Ctx.EndReload();
+       
     }
     
     public override void CheckSwitchStates(){
         
-        if(switchTime == 0) {
+        if(!Ctx.isReloading) {
             if(Ctx.input.aimIsPressed) {
                 SwitchState(Factory.Aim());
             }
