@@ -20,15 +20,18 @@ public class AmmoPickup : MonoBehaviour {
             playerGun = FindObjectOfType<GunStateMachine>();
 
             GunScriptableObject gun = playerGun.Guns.Find(gun => gun.ID == gunID);
-            if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {
-                if(gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount) {
-                    gun.AmmoConfig.currentAmmo += ammoCount;
-                }
-                else {
-                    gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
-                }
-                Destroy(gameObject);
+            if(gun) {
+                if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {
+                    if(gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount) {
+                        gun.AmmoConfig.currentAmmo += ammoCount;
+                    }
+                    else {
+                        gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
+                    }
+                    Destroy(gameObject);
+                }   
             }
+            
             
             
         
