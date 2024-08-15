@@ -15937,6 +15937,7 @@ MonoBehaviour:
   Guns: []
   ActiveGun: {fileID: 0}
   stateMachine: {fileID: 401126580}
+  camMachine: {fileID: 401126586}
   isReloading: 0
   isShooting: 0
 --- !u!95 &455773206
@@ -19649,52 +19650,52 @@ PrefabInstance:
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.18
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.267
+      value: -0.115
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.39
+      value: 0.13
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.91457736
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.11567806
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.32534918
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.21051069
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 20.4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -35.66
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 19.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7927989591502400544, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
@@ -19704,7 +19705,7 @@ PrefabInstance:
     - target: {fileID: 7927989591502400544, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8249023148791830595, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
@@ -29486,6 +29487,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 455773204}
     m_Modifications:
+    - target: {fileID: -3387911104896323931, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
+        type: 3}
+      propertyPath: camMachine
+      value: 
+      objectReference: {fileID: 401126586}
+    - target: {fileID: -3387911104896323931, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
+        type: 3}
+      propertyPath: gunMachine
+      value: 
+      objectReference: {fileID: 455773205}
     - target: {fileID: 1900748150603368532, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
         type: 3}
       propertyPath: m_CullingMode
@@ -29509,12 +29520,12 @@ PrefabInstance:
     - target: {fileID: 8445401694593213622, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.185
+      value: -0.18
       objectReference: {fileID: 0}
     - target: {fileID: 8445401694593213622, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.28
+      value: 0.16
       objectReference: {fileID: 0}
     - target: {fileID: 8445401694593213622, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
         type: 3}
@@ -67854,6 +67865,16 @@ PrefabInstance:
       propertyPath: glove
       value: 
       objectReference: {fileID: 1794737442}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: wallDrag
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: jumpForce
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 3993751473907198522, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: backHealthBar

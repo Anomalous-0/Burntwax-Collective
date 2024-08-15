@@ -27,6 +27,8 @@ public class GunStateMachine : MonoBehaviour {
 
     [Space]
     public PlayerStateMachine stateMachine;
+    public CamStateMachine camMachine;
+    
 
     public GunBaseState currentState;
     public GunStateFactory states;

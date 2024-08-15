@@ -11,7 +11,7 @@ public class GunShootState : GunBaseState {
     public override void EnterState(){
         Ctx.isShooting = true;
 
-        if(CurrentSuperstate() == Factory.Aim()){
+        if(Ctx.camMachine.currentState == Ctx.camMachine.states.Aim()){
             Ctx.gunAnimator.SetTrigger(Ctx.aimShootHash);
             Ctx.handAnimator.SetTrigger(Ctx.aimShootHash);
         }

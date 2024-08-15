@@ -62,7 +62,7 @@ public class PlayerJumpState : PlayerBaseState {
     private void Jump() {
         // reset y velocity
         
-
+        // Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
         Ctx.rb.AddForce(Ctx.player.up * Ctx.JumpForce, ForceMode.Impulse);
         
     }
