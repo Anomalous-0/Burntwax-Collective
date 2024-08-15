@@ -110,7 +110,7 @@ public class GloveStateMachine : MonoBehaviour {
 
 
     private void OnTriggerStay(Collider other) {
-        if(target == null && (currentState == states.Search() || currentState == states.Attract())  && other.GetComponent<Rigidbody>() != false && other.GetComponent<Pickupable>() != false) {
+        if((currentState == states.Search() || currentState == states.Attract())  && other.GetComponent<Rigidbody>() != false && other.GetComponent<Pickupable>() != false) {
             inRange = true;
             looking = false;
             target = other.GetComponent<Rigidbody>();

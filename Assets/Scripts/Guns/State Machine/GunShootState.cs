@@ -39,8 +39,10 @@ public class GunShootState : GunBaseState {
     
     public override void CheckSwitchStates(){
         if(!Ctx.isShooting) {
+            Ctx.isShooting = false;
             SwitchState(Factory.NoShoot());
         }
+        
         
     }
 
