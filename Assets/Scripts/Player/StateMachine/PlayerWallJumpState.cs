@@ -62,7 +62,8 @@ public class PlayerWallJumpState : PlayerBaseState {
     private void Jump() {
         // reset y velocity
         //Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
-        Ctx.rb.AddForce(Ctx.player.up * Ctx.JumpForce * 1.25f, ForceMode.Impulse);
+        // Ctx.rb.AddForce(Ctx.player.input.MoveInput.normalized * Ctx.WallJumpForce, ForceMode.Impulse);
+        Ctx.rb.AddForce(Ctx.player.up * Ctx.WallJumpForce, ForceMode.Impulse);
         
         
     }

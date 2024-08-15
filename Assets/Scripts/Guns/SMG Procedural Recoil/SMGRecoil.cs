@@ -1,57 +1,79 @@
-// using System.Collections;
-// using System.Collections.Generic;
-// using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-// public class SMGRecoil : MonoBehaviour {
+public class SMGRecoil : MonoBehaviour {
 
-//     [Header("Recoil Settings")]
-//     public float rotationSpeed = 6f;
-//     public float returnSpeed = 25f;
+    [Header("Reference Points:")]
+    public Transform recoilPosition;
+    public Transform rotationPoint;
 
-//     [Space()]
+    [Header("Speed Settings:")]
+    public float positionalRecoilSpeed = 8f;
+    public float rotationalRecoilSpeed = 8f;
+    public float positionalReturnSpeed = 18f;
+    public float rotationalReturnSpeed = 38f;
 
-//     [Header("Hipfire:")]
-//     public Vector3 recoilRotation = new Vector3(2f, 2f, 2f);
-    
-//     [Header("Aiming:")]
-//     public Vector3 recoilRotationAiming = new Vector3(.5f, .5f, 1.5f);
+    [Header("Amount Settings:")]
+    public Vector3 recoilRotation = new Vector3(10f, 5f, 7f);
+    public Vector3 recoilKickBack = new Vector3(.015f, 0f, -0.2f);
 
-//     [Header("State:")]
-//     public bool aiming;
-//     public GunStateMachine gunMachine;
-//     public CamStateMachine camMachine;
+    public Vector3 recoilRotationAim = new Vector3(10f, 4f, 6f);
+    public Vector3 recoilKickBackAim = new Vector3(.015f, 0f, -0.2f);
 
-//     private Vector3 currentRotation;
-//     private Vector3 rot;
+    [Space(10)]
 
-
-//     void Start() {
-//         gunMachine = FindObjectOfType<GunStateMachine>();
-//         camMachine = FindObjectOfType<CamStateMachine>();
-//     }
-
-//     void FixedUpdate() {
-//         currentRotation = Vector3.Lerp(currentRotation, Vector3.zero, returnSpeed * Time.deltaTime);
-//         rot = Vector3.Slerp(rot, currentRotation, rotationSpeed * Time.fixedDeltaTime);
-//         transform.localRotation = Quaternion.Euler(rot);
-//     }
+    Vector3 rotationalRecoil;
+    Vector3 positionalRecoil;
+    Vector3 rot;
 
 
-//     public void Fire() {
-//         if(camMachine.currentState == camMachine.states.Aim()) {
-//             currentRotation += new Vector3(-recoilRotationAiming.x, Random.Range(-recoilRotationAiming.y, recoilRotationAiming.y), Random.Range(-recoilRotationAiming.z, recoilRotationAiming.z));
-//         }
-//         else {
-//             currentRotation += new Vector3(-recoilRotation.x, Random.Range(-recoilRotation.y, recoilRotation.y), Random.Range(-recoilRotation.z, recoilRotation.z));
-//         }
-//     }
+    [Header("States:")]
 
-//     void Update() {
-//         if(gunMachine.CurrentState.CurrentSubstate() == gunMachine.states.Shoot()) {
-//             Fire();
-//         }
+    public GunStateMachine gunMachine;
+    public CamStateMachine camMachine;
+    public InputManager input;
 
-//     }
 
     
-// }
+
+    void Start() {
+        gunMachine = FindObjectOfType<GunStateMachine>();
+        camMachine = FindObjectOfType<CamStateMachine>();
+        input = FindObjectOfType<InputManager>();
+        recoilPosition = GetComponent<Transform>();
+        // Very sketchy
+        rotationPoint = FindObjectOfType<RotationPoint>().GetComponent<Transform>();
+    }
+
+    void FixedUpdate() {
+        rotationalRecoil = Vector3.Lerp(rotationalRecoil, Vector3.zero, rotationalReturnSpeed * Time.deltaTime);
+        positionalRecoil = Vector3.Lerp(positionalRecoil, Vector3.zero, positionalReturnSpeed * Time.deltaTime);
+
+        recoilPosition.localPosition = Vector3.Slerp(recoilPosition.localPosition, positionalRecoil, positionalRecoilSpeed * Time.fixedDeltaTime);
+        rot = Vector3.Slerp(rot, rotationalRecoil, rotationalRecoilSpeed * Time.fixedDeltaTime);
+        rotationPoint.localRotation = Quaternion.Euler(rot);
+    }
+
+
+    public void Fire() {
+        if(camMachine.CurrentState == camMachine.states.Aim()) {
+            rotationalRecoil += new Vector3(-recoilRotationAim.x, Random.Range(-recoilRotationAim.y, recoilRotationAim.y), Random.Range(-recoilRotationAim.z, recoilRotationAim.z));
+            positionalRecoil += new Vector3(Random.Range(-recoilKickBackAim.x, recoilKickBackAim.x), Random.Range(-recoilKickBackAim.y, recoilKickBackAim.y), recoilKickBackAim.z);
+        }
+        else {
+            rotationalRecoil += new Vector3(-recoilRotation.x, Random.Range(-recoilRotation.y, recoilRotation.y), Random.Range(recoilRotation.z, recoilRotation.z));
+            positionalRecoil += new Vector3(Random.Range(-recoilKickBack.x, recoilKickBack.x), Random.Range(-recoilKickBack.y, recoilKickBack.y), recoilKickBack.z);
+        }
+    }
+
+
+    void Update() {
+        if(gunMachine.CurrentState.CurrentSubstate() == gunMachine.states.Shoot() && input.shootIsPressed) {
+            Fire();
+        }
+
+    }
+
+    
+}

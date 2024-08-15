@@ -18,6 +18,8 @@ public class PlayerStateMachine : MonoBehaviour {
     float moveMultiplier;
     [SerializeField] float groundMultiplier = 1f;
     [SerializeField] float airMultiplier = .7f;
+    [SerializeField] float wallMultiplier = 1.2f;
+    
     [SerializeField]  float walkVelocity;
     [SerializeField]  float sprintVelocity;
     [SerializeField]  float groundDrag;
@@ -58,6 +60,8 @@ public class PlayerStateMachine : MonoBehaviour {
     [Header("Wall Running")]
     [SerializeField] LayerMask wall;
     [SerializeField] float wallRunForce;
+
+    [SerializeField] float wallJumpForce;
     [SerializeField] float wallCheckDistance;
     [SerializeField] float sphereCastRadius; 
     [SerializeField] float minHeight;
@@ -92,6 +96,8 @@ public class PlayerStateMachine : MonoBehaviour {
 
     public float GroundMultiplier {get {return groundMultiplier;}}
     public float AirMultiplier {get {return airMultiplier; }}
+
+    public float WallMultiplier {get {return wallMultiplier;}}
     public float SprintVelocity {get { return sprintVelocity; }}
     public float WalkVelocity {get { return walkVelocity; }}
     public float GroundDrag {get { return groundDrag;} }
@@ -118,6 +124,8 @@ public class PlayerStateMachine : MonoBehaviour {
     public float WallRunSwitch {get {return wallRunSwitch;} set { wallRunSwitch = value; } }
     // public bool PlayerIsWallRunning{ get {return playerIsWallRunning;} set {playerIsWallRunning = value; } }
     public float WallRunForce {get {return wallRunForce;} }
+
+    public float WallJumpForce {get {return wallJumpForce;} }
     // public float MaxWallRunTime{ get {return maxWallRunTime;} }
     public float WallCheckDistance { get {return wallCheckDistance;}}
     public float SphereCastRadius {get {return sphereCastRadius;}}
@@ -160,9 +168,13 @@ public class PlayerStateMachine : MonoBehaviour {
 
     private void Update() {
         currentState.UpdateStates();
+        
         playerIsGrounded = PlayerGroundCheck();
-       
         GetMoveInput();
+
+       
+       
+        
         
         
         
@@ -192,13 +204,11 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void PlayerMove() {
-        if(wallRunSwitch == 0) {
+        if(currentState != states.Wallrun()) {
             moveDirection = player.forward * verticalInput + player.right * horizontalInput;
         }
-        else {
-           
-            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-           
+        else { 
+            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput; 
         }
         
         rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);

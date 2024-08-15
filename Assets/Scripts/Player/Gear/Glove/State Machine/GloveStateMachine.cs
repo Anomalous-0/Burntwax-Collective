@@ -106,7 +106,7 @@ public class GloveStateMachine : MonoBehaviour {
     private void Update() {
         currentState.UpdateStates();
         
-        }
+    }
 
 
     private void OnTriggerStay(Collider other) {

@@ -18,7 +18,7 @@ public class PlayerWallRunState : PlayerBaseState {
 
     public override void EnterState(){
         InitializeSubState(); 
-        Ctx.MoveMultiplier = Ctx.GroundMultiplier;
+        Ctx.MoveMultiplier = Ctx.WallMultiplier;
         Ctx.rb.drag = Ctx.WallDrag;
         Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
         Ctx.WallRunSwitch = 1;
@@ -45,7 +45,7 @@ public class PlayerWallRunState : PlayerBaseState {
         }
         else if(Ctx.input.jumpIsPressed) {
             Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
-            Vector3 force =  wallNormal * Ctx.WallRunForce;
+            Vector3 force =   4f * wallNormal * Ctx.WallJumpForce;
             Ctx.rb.AddForce(force, ForceMode.Impulse);
             SwitchState(Factory.Walljump());
         }

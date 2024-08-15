@@ -30,7 +30,7 @@ public class GunStateMachine : MonoBehaviour {
     public CamStateMachine camMachine;
     
 
-    public GunBaseState currentState;
+    private GunBaseState currentState;
     public GunStateFactory states;
 
 
@@ -64,7 +64,7 @@ public class GunStateMachine : MonoBehaviour {
         if(ActiveGun != null) {
             currentState.UpdateStates();
             
-            if(input.mouseScroll != 0) {
+            if(input.mouseScroll != 0 && !isShooting) {
                 WeaponSwitch();
             }  
 
