@@ -3915,7 +3915,7 @@ GameObject:
   - component: {fileID: 133617632}
   - component: {fileID: 133617631}
   - component: {fileID: 133617630}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Heal (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34492,7 +34492,7 @@ GameObject:
   - component: {fileID: 1122760219}
   - component: {fileID: 1122760218}
   - component: {fileID: 1122760222}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Damage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -37990,7 +37990,7 @@ GameObject:
   - component: {fileID: 1265364646}
   - component: {fileID: 1265364650}
   - component: {fileID: 1265364651}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Heal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -54913,7 +54913,7 @@ GameObject:
   - component: {fileID: 1744906266}
   - component: {fileID: 1744906265}
   - component: {fileID: 1744906264}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Heal (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67156,7 +67156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Surfaces:
-  - Albedo: {fileID: 0}
+  - Albedo: {fileID: 2800000, guid: 4465c0aae8371694d8400e4dc45b23e3, type: 3}
     Surface: {fileID: 11400000, guid: d77f6d2b803e0094da8be2991c395e3f, type: 2}
   DefaultSurface: {fileID: 11400000, guid: d77f6d2b803e0094da8be2991c395e3f, type: 2}
 --- !u!4 &2100966634

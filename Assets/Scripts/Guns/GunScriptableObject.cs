@@ -155,6 +155,10 @@ public class GunScriptableObject : ScriptableObject {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
+            Debug.Log("Add FOrce");
+            if(Hit.collider.GetComponent<Rigidbody>()) {
+                Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * ShootConfig.bulletForce, ForceMode.Impulse);
+            }
             // Debug.Log("Hit something");
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
