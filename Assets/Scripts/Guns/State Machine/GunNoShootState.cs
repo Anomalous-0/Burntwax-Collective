@@ -22,7 +22,7 @@ public class GunNoShootState : GunBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(Ctx.currentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.currentState.CurrentSuperstate() != Ctx.states.Stow() && Ctx.CanShoot() && Ctx.input.shootIsPressed && !Ctx.isShooting && Time.time - Ctx.ActiveGun.LastShootTime >= Ctx.ActiveGun.ShootConfig.FireRate) {
+        if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() && Ctx.CanShoot() && Ctx.input.shootIsPressed && !Ctx.isShooting && Time.time - Ctx.ActiveGun.LastShootTime >= Ctx.ActiveGun.ShootConfig.FireRate) {
             SwitchState(Factory.Shoot());
         }
     }

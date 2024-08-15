@@ -58,6 +58,8 @@ public class PlayerStateMachine : MonoBehaviour {
     [Header("Wall Running")]
     [SerializeField] LayerMask wall;
     [SerializeField] float wallRunForce;
+
+    [SerializeField] float wallJumpForce;
     [SerializeField] float wallCheckDistance;
     [SerializeField] float sphereCastRadius; 
     [SerializeField] float minHeight;
@@ -118,6 +120,8 @@ public class PlayerStateMachine : MonoBehaviour {
     public float WallRunSwitch {get {return wallRunSwitch;} set { wallRunSwitch = value; } }
     // public bool PlayerIsWallRunning{ get {return playerIsWallRunning;} set {playerIsWallRunning = value; } }
     public float WallRunForce {get {return wallRunForce;} }
+
+    public float WallJumpForce {get {return wallJumpForce;} }
     // public float MaxWallRunTime{ get {return maxWallRunTime;} }
     public float WallCheckDistance { get {return wallCheckDistance;}}
     public float SphereCastRadius {get {return sphereCastRadius;}}
@@ -160,9 +164,13 @@ public class PlayerStateMachine : MonoBehaviour {
 
     private void Update() {
         currentState.UpdateStates();
+        
         playerIsGrounded = PlayerGroundCheck();
-       
         GetMoveInput();
+
+       
+       
+        
         
         
         

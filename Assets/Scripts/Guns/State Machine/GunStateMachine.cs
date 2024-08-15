@@ -30,7 +30,7 @@ public class GunStateMachine : MonoBehaviour {
     public CamStateMachine camMachine;
     
 
-    public GunBaseState currentState;
+    private GunBaseState currentState;
     public GunStateFactory states;
 
 
