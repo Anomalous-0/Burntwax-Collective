@@ -135,7 +135,7 @@ public class GunStateMachine : MonoBehaviour {
 
     private void SetAnimator() {
 
-        gunAnimator = ActiveGun.Model.GetComponent<Animator>();
+        // gunAnimator = ActiveGun.Model.GetComponent<Animator>();
 
         handAnimator.runtimeAnimatorController = ActiveGun.handController;
 

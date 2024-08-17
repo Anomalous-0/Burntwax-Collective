@@ -15927,7 +15927,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
   currentID: 0
-  GunParent: {fileID: 229109509}
+  GunParent: {fileID: 455773204}
   handAnimator: {fileID: 0}
   gunAnimator: {fileID: 0}
   shootHash: 0
@@ -19705,11 +19705,6 @@ PrefabInstance:
     - target: {fileID: 7927989591502400544, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8249023148791830595, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_CullingMode
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -25863,7 +25858,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -8660362334139065003, guid: 464d2b315a1ed6b408948cc2fc04e8f7, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -29530,11 +29526,6 @@ PrefabInstance:
       propertyPath: gunMachine
       value: 
       objectReference: {fileID: 455773205}
-    - target: {fileID: 1900748150603368532, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
-        type: 3}
-      propertyPath: m_CullingMode
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8445401694592989334, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
         type: 3}
       propertyPath: m_Name
