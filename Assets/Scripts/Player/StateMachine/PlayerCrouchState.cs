@@ -10,7 +10,7 @@ public class PlayerCrouchState : PlayerBaseState {
 
     public override void EnterState(){
         Ctx.PlayerVelocity = Ctx.CrouchVelocity;
-        // Debug.Log("CROUCH STATE");
+        Debug.Log("CROUCH STATE");
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.CrouchYScale, Ctx.LocalScale.z);
         Ctx.rb.AddForce(Vector3.down * 5f, ForceMode.Impulse);
     }
