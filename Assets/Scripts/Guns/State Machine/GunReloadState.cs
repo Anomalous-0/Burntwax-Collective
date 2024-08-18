@@ -23,7 +23,7 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void UpdateState(){
-        Ctx.ActiveGun.Rest();
+        // Ctx.ActiveGun.Rest();
         CheckSwitchStates();
         
     }
