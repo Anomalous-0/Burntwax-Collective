@@ -20,13 +20,13 @@ MonoBehaviour:
     type: 3}
   SpawnPoint: {x: -0.83, y: -0.97, z: 0.009}
   SpawnRotation: {x: 0, y: 0, z: 0}
-  RestPoint: {x: 0.07, y: -0.16, z: 0.28}
+  RestPoint: {x: 0.17, y: -0.23, z: 0.3}
   RestRotation: {x: 0, y: 0, z: 0}
   AimPoint: {x: 0, y: -0.11, z: 0.25}
   AimRotation: {x: 0, y: 0, z: 0}
-  handController: {fileID: 9100000, guid: e8ae04216d51b034aa8cfd643da3580c, type: 2}
-  StowPoint: {x: 0.07, y: -0.16, z: 0.28}
-  StowRotation: {x: 0, y: 0, z: 0}
+  handController: {fileID: 22100000, guid: 65178ee634cc5784b8820a49b97b035f, type: 2}
+  StowPoint: {x: 0.32, y: 0, z: 0.37}
+  StowRotation: {x: -65.19, y: 20.6, z: 0}
   ShootConfig: {fileID: 11400000, guid: a13aae88f39b4484e8010b362f8c37ae, type: 2}
   AmmoConfig: {fileID: 11400000, guid: c2cb183655458ef41b0d71ec31290955, type: 2}
   AudioConfig: {fileID: 11400000, guid: 5a58e1630be0fb342b792af52d39d5d0, type: 2}
@@ -35,4 +35,4 @@ MonoBehaviour:
   AimConfig: {fileID: 11400000, guid: fe29849d7ee5e3e479e2d020bd4196e8, type: 2}
   CamChange: 0
   Model: {fileID: 0}
-  LastShootTime: 5.6165075
+  LastShootTime: 0
