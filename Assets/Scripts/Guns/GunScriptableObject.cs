@@ -19,7 +19,16 @@ public class GunScriptableObject : ScriptableObject {
     public Vector3 AimPoint;
     public Vector3 AimRotation;
 
+    
+
+    [Header("Animation")]
+
     public RuntimeAnimatorController handController;
+    public Vector3 HandIKRightPos;
+    public Vector3 HandIKLeftPos;
+
+    public Quaternion HandIKLeftRot;
+    public Quaternion HandIKRightRot;
 
 
     public Vector3 StowPoint;

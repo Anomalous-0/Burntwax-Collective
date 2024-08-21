@@ -25,6 +25,10 @@ MonoBehaviour:
   AimPoint: {x: 0, y: -0.11, z: 0.25}
   AimRotation: {x: 0, y: 0, z: 0}
   handController: {fileID: 22100000, guid: 65178ee634cc5784b8820a49b97b035f, type: 2}
+  HandIKRightPos: {x: 0.07870007, y: -0.17575, z: 0.2483499}
+  HandIKLeftPos: {x: 0.02244997, y: -0.2481999, z: 0.24895}
+  HandIKLeftRot: {x: 0.45835352, y: 0.37005767, z: -0.54082274, w: 0.60040003}
+  HandIKRightRot: {x: 0.60438424, y: 0.35679272, z: 0.46079063, w: -0.54322255}
   StowPoint: {x: 0.32, y: 0, z: 0.37}
   StowRotation: {x: -65.19, y: 20.6, z: 0}
   ShootConfig: {fileID: 11400000, guid: a13aae88f39b4484e8010b362f8c37ae, type: 2}
@@ -35,4 +39,4 @@ MonoBehaviour:
   AimConfig: {fileID: 11400000, guid: fe29849d7ee5e3e479e2d020bd4196e8, type: 2}
   CamChange: 0
   Model: {fileID: 0}
-  LastShootTime: 41.415173
+  LastShootTime: 12.74762

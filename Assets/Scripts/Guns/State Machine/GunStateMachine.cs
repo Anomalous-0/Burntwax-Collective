@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 [DisallowMultipleComponent]
@@ -14,6 +15,15 @@ public class GunStateMachine : MonoBehaviour {
     [SerializeField] public Transform GunParent;
 
     [Header("Animation")]
+
+    public Transform handIKRight;
+    public Transform handIKLeft;
+
+    public TwoBoneIKConstraint RightRig;
+    public TwoBoneIKConstraint LeftRig;
+
+    Transform leftTarget;
+    Transform rightTarget;
     [HideInInspector] public Animator handAnimator;
     [HideInInspector] public  Animator gunAnimator;
 
@@ -48,6 +58,9 @@ public class GunStateMachine : MonoBehaviour {
 
 
     void Awake() {
+        RightRig.weight = 0;
+        LeftRig.weight = 0;
+        
         handAnimator = GetComponent<Animator>();
         states = new GunStateFactory(this);
         currentState = states.Rest();
@@ -134,10 +147,23 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetAnimator() {
+        RightRig.weight = 1;
+        LeftRig.weight = 1;
 
         gunAnimator = ActiveGun.Model.GetComponent<Animator>();
 
         handAnimator.runtimeAnimatorController = ActiveGun.handController;
+
+        
+        handIKLeft.localPosition = ActiveGun.HandIKLeftPos;
+        handIKLeft.localRotation = ActiveGun.HandIKLeftRot;
+
+        handIKRight.localPosition = ActiveGun.HandIKRightPos;
+        handIKRight.localRotation = ActiveGun.HandIKRightRot;
+       
+        // handIKLeft.data.target.position = ActiveGun.Model.GetComponentInChildren<HandLeft>().transform.position;
+
+        // handIKRight.data.target.position = ActiveGun.Model.GetComponentInChildren<HandRight>().transform.position;
 
         shootHash = Animator.StringToHash("shoot");
         aimShootHash = Animator.StringToHash("aimShoot");
