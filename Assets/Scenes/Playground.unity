@@ -293,24 +293,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 13698270}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &17588932 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5939092527621321270, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
-    type: 3}
-  m_PrefabInstance: {fileID: 811585017}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &17588934
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 17588932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e8898cb020b00642ab8b40eb27450af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &17918375
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16044,7 +16026,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
   currentID: 0
-  GunParent: {fileID: 229109509}
+  GunParent: {fileID: 455773204}
   handIKRight: {fileID: 1751378146}
   handIKLeft: {fileID: 628442974}
   RightRig: {fileID: 1616314814}
@@ -20744,7 +20726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 628442974}
   m_Layer: 12
-  m_Name: test_left
+  m_Name: ref_grip_left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26038,13 +26020,11 @@ PrefabInstance:
       value: -0.0207
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 5876131023437607949, guid: 464d2b315a1ed6b408948cc2fc04e8f7, type: 3}
+    - {fileID: 5939092527621321270, guid: 464d2b315a1ed6b408948cc2fc04e8f7, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5939092527621321270, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 17588934}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 464d2b315a1ed6b408948cc2fc04e8f7, type: 3}
 --- !u!4 &811585018 stripped
 Transform:
@@ -56020,7 +56000,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1751378146}
   m_Layer: 12
-  m_Name: test_right
+  m_Name: ref_grip_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
