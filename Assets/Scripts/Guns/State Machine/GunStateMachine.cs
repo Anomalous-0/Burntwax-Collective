@@ -58,8 +58,8 @@ public class GunStateMachine : MonoBehaviour {
 
 
     void Awake() {
-        RightRig.weight = 0;
-        LeftRig.weight = 0;
+        // RightRig.weight = 0;
+        // LeftRig.weight = 0;
         
         handAnimator = GetComponent<Animator>();
         states = new GunStateFactory(this);
