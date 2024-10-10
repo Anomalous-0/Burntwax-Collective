@@ -98,6 +98,7 @@ public class GunStateMachine : MonoBehaviour {
         ActiveGun.Despawn(this);
         ActiveGun = gun;
         gun.Spawn(GunParent, this);
+        
 
 
 
