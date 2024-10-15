@@ -21,12 +21,13 @@ public class BobAndSway : MonoBehaviour {
     //private float timeAimed;
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         GetInput();
-
         if (input.MoveInput != Vector2.zero && player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() && shouldBob && cam.currentState != cam.states.Aim()) {
             Sway();
+        }
+        else {
+            speedCurve = 0;
         }
         SwayRotation();
         if (cam.currentState != cam.states.Aim()) {
@@ -41,6 +42,7 @@ public class BobAndSway : MonoBehaviour {
             //Debug.Log(bobPosition.x + ", " + bobPosition.y + ", " + bobPosition.z);
             transform.localPosition = Vector3.zero;
             bobPosition = Vector3.zero;
+            speedCurve = 0;
             // if (bobPosition != Vector3.zero) {
                 
                 // if (Time.time - timeAimed <= 1f) {
