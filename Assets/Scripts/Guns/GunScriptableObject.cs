@@ -10,29 +10,29 @@ public class GunScriptableObject : ScriptableObject {
     public GunType Type;
     public string Name;
     public GameObject ModelPrefab;
-    public Vector3 SpawnPoint;
-    public Vector3 SpawnRotation;
+    // public Vector3 SpawnPoint;
+    // public Vector3 SpawnRotation;
 
-    public Vector3 RestPoint;
-    public Vector3 RestRotation;
+    // public Vector3 RestPoint;
+    // public Vector3 RestRotation;
 
-    public Vector3 AimPoint;
-    public Vector3 AimRotation;
+    // public Vector3 AimPoint;
+    // public Vector3 AimRotation;
 
     
 
     [Header("Animation")]
 
-    public RuntimeAnimatorController handController;
-    public Vector3 HandIKRightPos;
-    public Vector3 HandIKLeftPos;
+    // public RuntimeAnimatorController handController;
+    // public Vector3 HandIKRightPos;
+    // public Vector3 HandIKLeftPos;
 
-    public Quaternion HandIKLeftRot;
-    public Quaternion HandIKRightRot;
+    // public Quaternion HandIKLeftRot;
+    // public Quaternion HandIKRightRot;
 
 
-    public Vector3 StowPoint;
-    public Vector3 StowRotation;
+    // public Vector3 StowPoint;
+    // public Vector3 StowRotation;
 
     public ShootConfig ShootConfig;
     public AmmoConfig AmmoConfig;
@@ -60,8 +60,8 @@ public class GunScriptableObject : ScriptableObject {
 
         Model = Instantiate(ModelPrefab);
         Model.transform.SetParent(Parent, false);
-        Model.transform.localPosition = SpawnPoint;
-        Model.transform.localRotation = Quaternion.Euler(SpawnRotation);
+        Model.transform.localPosition = Vector3.zero;
+        Model.transform.localRotation = Quaternion.identity;
         
 
         ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
@@ -120,20 +120,20 @@ public class GunScriptableObject : ScriptableObject {
    
     public void ADS() {
 
-        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimPoint, AimConfig.speed * Time.deltaTime);
-        Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(AimRotation), AimConfig.speed * Time.deltaTime);
+        // Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimPoint, AimConfig.speed * Time.deltaTime);
+        // Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(AimRotation), AimConfig.speed * Time.deltaTime);
 
     }
 
     public void Rest() {
-        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, RestPoint, AimConfig.speed * Time.deltaTime);
-        Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(RestRotation), AimConfig.speed * Time.deltaTime);
+        // Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, RestPoint, AimConfig.speed * Time.deltaTime);
+        // Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(RestRotation), AimConfig.speed * Time.deltaTime);
         
     }
 
     public void Stow() {
-        Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, StowPoint, AimConfig.speed * Time.deltaTime);
-        Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(StowRotation), AimConfig.speed * Time.deltaTime);
+    //     Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, StowPoint, AimConfig.speed * Time.deltaTime);
+    //     Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(StowRotation), AimConfig.speed * Time.deltaTime);
     }
     
 

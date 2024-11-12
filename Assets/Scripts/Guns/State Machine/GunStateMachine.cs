@@ -16,14 +16,10 @@ public class GunStateMachine : MonoBehaviour {
 
     [Header("Animation")]
 
-    public Transform handIKRight;
-    public Transform handIKLeft;
+    public TwoBoneIKConstraint right;
+    public TwoBoneIKConstraint left;
 
-    public TwoBoneIKConstraint RightRig;
-    public TwoBoneIKConstraint LeftRig;
-
-    Transform leftTarget;
-    Transform rightTarget;
+   
     [HideInInspector] public Animator handAnimator;
     [HideInInspector] public  Animator gunAnimator;
 
@@ -58,8 +54,8 @@ public class GunStateMachine : MonoBehaviour {
 
 
     void Awake() {
-        // RightRig.weight = 0;
-        // LeftRig.weight = 0;
+        right.weight = 0;
+        left.weight = 0;
         
         handAnimator = GetComponent<Animator>();
         states = new GunStateFactory(this);
@@ -68,7 +64,7 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     void Start() {
-        // stateMachine = GetComponent<PlayerStateMachine>();
+        stateMachine = GetComponent<PlayerStateMachine>();
     }
 
 
@@ -78,10 +74,12 @@ public class GunStateMachine : MonoBehaviour {
             currentState.UpdateStates();
             
             if(input.mouseScroll != 0 && !isShooting) {
+                Debug.Log("Helo");
                 WeaponSwitch();
             }  
 
         }
+        
 
 
     }
@@ -125,6 +123,10 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void Pickup(GunScriptableObject gun) {
+        if(right.weight == 0 && left.weight == 0) {
+            right.weight = 1;
+            left.weight = 1;
+        }
         if(!Guns.Contains(gun)) {
             Guns.Add(gun);
             if(ActiveGun != null) {
@@ -148,19 +150,19 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetAnimator() {
-        RightRig.weight = 1;
-        LeftRig.weight = 1;
+        // RightRig.weight = 1;
+        // LeftRig.weight = 1;
 
-        gunAnimator = ActiveGun.Model.GetComponent<Animator>();
+        // gunAnimator = ActiveGun.Model.GetComponent<Animator>();
 
-        handAnimator.runtimeAnimatorController = ActiveGun.handController;
+        // handAnimator.runtimeAnimatorController = ActiveGun.handController;
 
         
-        handIKLeft.localPosition = ActiveGun.HandIKLeftPos;
-        handIKLeft.localRotation = ActiveGun.HandIKLeftRot;
+        // handIKLeft.localPosition = ActiveGun.HandIKLeftPos;
+        // handIKLeft.localRotation = ActiveGun.HandIKLeftRot;
 
-        handIKRight.localPosition = ActiveGun.HandIKRightPos;
-        handIKRight.localRotation = ActiveGun.HandIKRightRot;
+        // handIKRight.localPosition = ActiveGun.HandIKRightPos;
+        // handIKRight.localRotation = ActiveGun.HandIKRightRot;
        
         // handIKLeft.data.target.position = ActiveGun.Model.GetComponentInChildren<HandLeft>().transform.position;
 
