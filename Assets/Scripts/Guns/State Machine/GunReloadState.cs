@@ -14,8 +14,8 @@ public class GunReloadState : GunBaseState {
 
     public override void EnterState(){
         Ctx.ActiveGun.StartReload();
-        Ctx.handAnimator.SetTrigger(Ctx.reloadHash);
-        Ctx.gunAnimator.SetTrigger(Ctx.reloadHash);
+        // Ctx.handAnimator.SetTrigger(Ctx.reloadHash);
+        // Ctx.gunAnimator.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
         Ctx.isShooting = false;
         // Debug.Log("Reload State");

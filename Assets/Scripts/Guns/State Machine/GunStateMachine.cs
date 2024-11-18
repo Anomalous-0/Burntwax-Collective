@@ -20,8 +20,8 @@ public class GunStateMachine : MonoBehaviour {
     public TwoBoneIKConstraint left;
 
    
-    [HideInInspector] public Animator handAnimator;
-    [HideInInspector] public  Animator gunAnimator;
+    // [HideInInspector] public Animator handAnimator;
+    // [HideInInspector] public  Animator gunAnimator;
 
     [HideInInspector] public int shootHash, aimShootHash, restingHash, reloadHash;
 
@@ -57,7 +57,7 @@ public class GunStateMachine : MonoBehaviour {
         right.weight = 0;
         left.weight = 0;
         
-        handAnimator = GetComponent<Animator>();
+        // handAnimator = GetComponent<Animator>();
         states = new GunStateFactory(this);
         currentState = states.Rest();
         currentState.EnterState();

@@ -35041,7 +35041,7 @@ Transform:
   m_GameObject: {fileID: 1283830676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.146, z: 0.033}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45207,8 +45207,6 @@ MonoBehaviour:
   GunParent: {fileID: 1283830677}
   right: {fileID: 1623530296}
   left: {fileID: 1982942382}
-  handAnimator: {fileID: 0}
-  gunAnimator: {fileID: 0}
   shootHash: 0
   aimShootHash: 0
   restingHash: 0
@@ -55795,7 +55793,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1949004672
 Transform:
   m_ObjectHideFlags: 0
@@ -62600,7 +62598,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gun
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1568524278}
     - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: aimCam
@@ -62630,7 +62628,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gunSelector
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1568524278}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
