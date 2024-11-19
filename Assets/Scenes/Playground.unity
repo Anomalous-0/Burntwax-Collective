@@ -45205,6 +45205,8 @@ MonoBehaviour:
   input: {fileID: 845597538}
   currentID: 0
   GunParent: {fileID: 1283830677}
+  RightGrip: {fileID: 114700271597397323}
+  LeftGrip: {fileID: 501777474331076441}
   right: {fileID: 1623530296}
   left: {fileID: 1982942382}
   shootHash: 0
@@ -62356,7 +62358,7 @@ Animator:
   m_GameObject: {fileID: 2751027687408197953}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 22100000, guid: 65178ee634cc5784b8820a49b97b035f, type: 2}
+  m_Controller: {fileID: 22100000, guid: 1fd1ef602f3e9164d8bb6911a5eeaa61, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

@@ -23,6 +23,8 @@ public class GunScriptableObject : ScriptableObject {
 
     [Header("Animation")]
 
+    public AnimationClip weaponAnimation;
+
     // public RuntimeAnimatorController handController;
     // public Vector3 HandIKRightPos;
     // public Vector3 HandIKLeftPos;
