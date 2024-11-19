@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
@@ -12,9 +13,12 @@ public class GunStateMachine : MonoBehaviour {
     public InputManager input;
 
     public int currentID;
-    [SerializeField] public Transform GunParent;
+    
 
     [Header("Animation")]
+    [SerializeField] public Transform GunParent;
+    [SerializeField] public Transform RightGrip;
+    [SerializeField] public Transform LeftGrip;
 
     public TwoBoneIKConstraint right;
     public TwoBoneIKConstraint left;
@@ -200,5 +204,16 @@ public class GunStateMachine : MonoBehaviour {
         // return !isReloading && autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
     }
 
+
+    [ContextMenu("Save Weapon Pose")]
+    private void SaveWeaponPose() {
+        GameObjectRecorder recorder = new GameObjectRecorder(gameObject);
+        recorder.BindComponentsOfType<Transform>(GunParent.gameObject, false);
+        recorder.BindComponentsOfType<Transform>(RightGrip.gameObject, false);
+        recorder.BindComponentsOfType<Transform>(LeftGrip.gameObject, false);
+        recorder.TakeSnapshot(0.0f);
+        recorder.SaveToClip(ActiveGun.weaponAnimation);
+
+    }
 
 }

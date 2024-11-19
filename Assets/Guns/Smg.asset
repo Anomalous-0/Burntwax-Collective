@@ -18,19 +18,7 @@ MonoBehaviour:
   Name: Assault Rifle
   ModelPrefab: {fileID: 8445401694592989334, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
     type: 3}
-  SpawnPoint: {x: -0.87, y: -0.97, z: 0}
-  SpawnRotation: {x: 0, y: 0, z: 0}
-  RestPoint: {x: 0.15, y: -0.25, z: 0.16}
-  RestRotation: {x: 0, y: 0, z: 0}
-  AimPoint: {x: 0, y: -0.18, z: 0.16}
-  AimRotation: {x: 0, y: 0, z: 0}
-  handController: {fileID: 22100000, guid: cc59b806eecd2324695b435792315218, type: 2}
-  HandIKRightPos: {x: 0.221, y: -0.289, z: 0.156}
-  HandIKLeftPos: {x: 0.1012, y: -0.2855, z: 0.3292}
-  HandIKLeftRot: {x: 0.51834553, y: 0.42406556, z: -0.514132, w: 0.53586817}
-  HandIKRightRot: {x: 0.508252, y: 0.664747, z: 0.3267722, w: -0.43933046}
-  StowPoint: {x: 0.07, y: -0.22, z: 0.16}
-  StowRotation: {x: 18.65, y: -49.4, z: 11.7}
+  weaponAnimation: {fileID: 7400000, guid: 4827225443837ae4c94ed592b1265365, type: 2}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   AmmoConfig: {fileID: 11400000, guid: d76d9576de864f34189c9ac0bb0d6417, type: 2}
   AudioConfig: {fileID: 11400000, guid: 805805d6808237e4691151f3c4883c6b, type: 2}
