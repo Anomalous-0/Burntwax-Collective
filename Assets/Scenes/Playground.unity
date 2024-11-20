@@ -13423,7 +13423,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568524276}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 853776e4a472d6a4aa4bb6fdd12df6f2, type: 3}
@@ -13435,7 +13435,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568524276}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd23cc99a9c091a4b82c15a9c3be377f, type: 3}
@@ -13447,7 +13447,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568524276}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98b8473b345b6324fb7a52010cc1644f, type: 3}
@@ -35041,7 +35041,7 @@ Transform:
   m_GameObject: {fileID: 1283830676}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.146, z: 0.033}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -45184,41 +45184,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1565173956}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1568524276 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
-    type: 3}
-  m_PrefabInstance: {fileID: 5918461596287933360}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1568524278
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1568524276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1dfead5a010aee34e862cd1c493dd008, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  input: {fileID: 845597538}
-  currentID: 0
-  GunParent: {fileID: 1283830677}
-  RightGrip: {fileID: 114700271597397323}
-  LeftGrip: {fileID: 501777474331076441}
-  right: {fileID: 1623530296}
-  left: {fileID: 1982942382}
-  shootHash: 0
-  aimShootHash: 0
-  restingHash: 0
-  reloadHash: 0
-  Guns: []
-  ActiveGun: {fileID: 0}
-  stateMachine: {fileID: 401126580}
-  camMachine: {fileID: 401126586}
-  isReloading: 0
-  isShooting: 0
 --- !u!1001 &1569243686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -61014,7 +60979,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1283830677}
-  m_LocalEulerAnglesHint: {x: -80.212, y: -95.007, z: 24.073}
+  m_LocalEulerAnglesHint: {x: -80.21154, y: -95.006966, z: 24.073208}
 --- !u!1 &382205478716293782
 GameObject:
   m_ObjectHideFlags: 0
@@ -61060,7 +61025,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1283830677}
-  m_LocalEulerAnglesHint: {x: 71.927, y: -9.539, z: -90.952}
+  m_LocalEulerAnglesHint: {x: 71.92742, y: -9.538604, z: -90.95171}
 --- !u!4 &517406232751561103
 Transform:
   m_ObjectHideFlags: 0
@@ -61591,6 +61556,7 @@ GameObject:
   - component: {fileID: 2748913124830540515}
   - component: {fileID: 5459022606202285613}
   - component: {fileID: 5269383744191300561}
+  - component: {fileID: 5459022606202285614}
   m_Layer: 0
   m_Name: Arms
   m_TagString: Player
@@ -62369,6 +62335,36 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5459022606202285614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2751027687408197953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1dfead5a010aee34e862cd1c493dd008, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: 845597538}
+  currentID: 0
+  GunParent: {fileID: 1283830677}
+  RightGrip: {fileID: 114700271597397323}
+  LeftGrip: {fileID: 501777474331076441}
+  anim: {fileID: 5459022606202285613}
+  right: {fileID: 1623530296}
+  left: {fileID: 1982942382}
+  shootHash: 0
+  aimShootHash: 0
+  restingHash: 0
+  reloadHash: 0
+  Guns: []
+  ActiveGun: {fileID: 0}
+  stateMachine: {fileID: 401126580}
+  camMachine: {fileID: 401126586}
+  isReloading: 0
+  isShooting: 0
 --- !u!1001 &5604445138075287089
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -62600,7 +62596,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gun
       value: 
-      objectReference: {fileID: 1568524278}
+      objectReference: {fileID: 0}
     - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: aimCam
@@ -62630,7 +62626,7 @@ PrefabInstance:
         type: 3}
       propertyPath: gunSelector
       value: 
-      objectReference: {fileID: 1568524278}
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -62638,11 +62634,7 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1858407641}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1568524278}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6b67e5e6b6c2e1b448ac119e473b1316, type: 3}
 --- !u!1 &5984687361993550129
 GameObject:

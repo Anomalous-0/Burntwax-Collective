@@ -20,6 +20,8 @@ public class GunStateMachine : MonoBehaviour {
     [SerializeField] public Transform RightGrip;
     [SerializeField] public Transform LeftGrip;
 
+    public Animator anim;
+    AnimatorOverrideController overrides;
     public TwoBoneIKConstraint right;
     public TwoBoneIKConstraint left;
 
@@ -58,8 +60,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     void Awake() {
-        right.weight = 0;
-        left.weight = 0;
+        
         
         // handAnimator = GetComponent<Animator>();
         states = new GunStateFactory(this);
@@ -68,7 +69,14 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     void Start() {
-        stateMachine = GetComponent<PlayerStateMachine>();
+        right.weight = 0;
+        left.weight = 0;
+
+        //stateMachine = GetComponent<PlayerStateMachine>();
+        
+        overrides = anim.runtimeAnimatorController as AnimatorOverrideController;
+        anim.SetLayerWeight(1,0.0f);
+
     }
 
 
@@ -130,6 +138,7 @@ public class GunStateMachine : MonoBehaviour {
         if(right.weight == 0 && left.weight == 0) {
             right.weight = 1;
             left.weight = 1;
+            anim.SetLayerWeight(1,1f);
         }
         if(!Guns.Contains(gun)) {
             Guns.Add(gun);
@@ -147,13 +156,15 @@ public class GunStateMachine : MonoBehaviour {
 
         }    
         else {
-            // Get ammo;
+            // Get ammo from the gun lying on the floor
         }
             
     }
 
 
     private void SetAnimator() {
+        
+        overrides["empty_rest"] = ActiveGun.weaponAnimation;
         // RightRig.weight = 1;
         // LeftRig.weight = 1;
 
@@ -211,7 +222,7 @@ public class GunStateMachine : MonoBehaviour {
         recorder.BindComponentsOfType<Transform>(GunParent.gameObject, false);
         recorder.BindComponentsOfType<Transform>(RightGrip.gameObject, false);
         recorder.BindComponentsOfType<Transform>(LeftGrip.gameObject, false);
-        recorder.TakeSnapshot(0.0f);
+        recorder.TakeSnapshot(0.01f);
         recorder.SaveToClip(ActiveGun.weaponAnimation);
 
     }

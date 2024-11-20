@@ -61,7 +61,7 @@ public class GunScriptableObject : ScriptableObject {
         //bullets = new ObjectPool<Rigidbody>(InstantiateBullet);
 
         Model = Instantiate(ModelPrefab);
-        Model.transform.SetParent(Parent, false);
+        Model.transform.parent = Parent;
         Model.transform.localPosition = Vector3.zero;
         Model.transform.localRotation = Quaternion.identity;
         
