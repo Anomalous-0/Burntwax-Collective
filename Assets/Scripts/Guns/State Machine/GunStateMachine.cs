@@ -161,7 +161,8 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetAnimator() {
-        
+        anim.Play("equip_" + ActiveGun.Name);     
+
         // overrides["empty_rest"] = ActiveGun.weaponAnimation;
         // RightRig.weight = 1;
         // LeftRig.weight = 1;
