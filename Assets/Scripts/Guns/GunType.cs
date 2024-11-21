@@ -1,6 +1,6 @@
 public enum GunType {
-    Glock,
-    M4A1,
+    Pistol,
+    SMG,
     Shotgun,
 
     Mangum
