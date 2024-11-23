@@ -133,11 +133,6 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void Pickup(GunScriptableObject gun) {
-        // if(right.weight == 0 && left.weight == 0) {
-        //     right.weight = 1;
-        //     left.weight = 1;
-        //     anim.SetLayerWeight(1,1f);
-        // }
         if(!Guns.Contains(gun)) {
             Guns.Add(gun);
             if(ActiveGun != null) {
@@ -163,24 +158,7 @@ public class GunStateMachine : MonoBehaviour {
     private void SetAnimator() {
         anim.Play("equip_" + ActiveGun.Name);     
 
-        // overrides["empty_rest"] = ActiveGun.weaponAnimation;
-        // RightRig.weight = 1;
-        // LeftRig.weight = 1;
-
-        // gunAnimator = ActiveGun.Model.GetComponent<Animator>();
-
-        // handAnimator.runtimeAnimatorController = ActiveGun.handController;
-
-        
-        // handIKLeft.localPosition = ActiveGun.HandIKLeftPos;
-        // handIKLeft.localRotation = ActiveGun.HandIKLeftRot;
-
-        // handIKRight.localPosition = ActiveGun.HandIKRightPos;
-        // handIKRight.localRotation = ActiveGun.HandIKRightRot;
-       
-        // handIKLeft.data.target.position = ActiveGun.Model.GetComponentInChildren<HandLeft>().transform.position;
-
-        // handIKRight.data.target.position = ActiveGun.Model.GetComponentInChildren<HandRight>().transform.position;
+    
 
         shootHash = Animator.StringToHash("shoot");
         aimShootHash = Animator.StringToHash("aimShoot");
@@ -215,15 +193,5 @@ public class GunStateMachine : MonoBehaviour {
     }
 
 
-    // [ContextMenu("Save Weapon Pose")]
-    // private void SaveWeaponPose() {
-    //     GameObjectRecorder recorder = new GameObjectRecorder(gameObject);
-    //     recorder.BindComponentsOfType<Transform>(GunParent.gameObject, false);
-    //     recorder.BindComponentsOfType<Transform>(RightGrip.gameObject, false);
-    //     recorder.BindComponentsOfType<Transform>(LeftGrip.gameObject, false);
-    //     recorder.TakeSnapshot(0.01f);
-    //     recorder.SaveToClip(ActiveGun.weaponAnimation);
-
-    // }
 
 }
