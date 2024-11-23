@@ -23,7 +23,7 @@ public class GunRestState : GunBaseState {
     }
 
     public override void ExitState(){
-        
+                
     }
     
     public override void CheckSwitchStates(){
