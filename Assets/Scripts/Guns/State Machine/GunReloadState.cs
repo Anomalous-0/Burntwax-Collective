@@ -5,7 +5,7 @@ using UnityEngine;
 public class GunReloadState : GunBaseState {
    
 
-    float switchTime;
+    float switchTime = 45f;
     public GunReloadState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
     : base (currentContext, gunStateFactory) {
         IsRootState = true;
@@ -23,39 +23,30 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void UpdateState(){
+        switchTime--;
         // Ctx.ActiveGun.Rest();
         CheckSwitchStates();
         
     }
 
     public override void ExitState(){
-       Ctx.isReloading = false;
+        Ctx.ActiveGun.EndReload();
+        Ctx.isReloading = false;
     }
     
     public override void CheckSwitchStates(){
         
-        if(!Ctx.isReloading) {
-            if(Ctx.input.aimIsPressed) {
-                SwitchState(Factory.Aim());
-            }
-            else if (Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
-                SwitchState(Factory.Stow());
-            }
-            else  {
-                SwitchState(Factory.Rest());
-            }
+        if(Ctx.input.aimIsPressed) {
+            SwitchState(Factory.Aim());
         }
-        else if(Ctx.input.mouseScroll != 0) {
-            if(Ctx.input.aimIsPressed) {
-                SwitchState(Factory.Aim());
-            }
-            else if (Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
-                SwitchState(Factory.Stow());
-            }
-            else  {
-                SwitchState(Factory.Rest());
-            }                  
+        else if (Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+            SwitchState(Factory.Stow());
         }
+        else if(switchTime <= 0) {
+            SwitchState(Factory.Rest());
+        }
+        
+        
     }
 
     private IEnumerator Countdown() {
