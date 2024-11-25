@@ -5728,7 +5728,7 @@ MonoBehaviour:
   bobSway: 1
   step: 0.01
   maxStepDistance: 0.06
-  rotationStep: 4
+  rotationStep: 8
   maxRotationStep: 5
   speedCurve: 0
   travelLimit: {x: 0.025, y: 0.025, z: 0.025}
@@ -11214,6 +11214,8 @@ GameObject:
   - component: {fileID: 324058976}
   - component: {fileID: 324058977}
   - component: {fileID: 324058978}
+  - component: {fileID: 324058980}
+  - component: {fileID: 324058979}
   m_Layer: 6
   m_Name: FPS
   m_TagString: Untagged
@@ -11304,6 +11306,46 @@ MonoBehaviour:
   AutoEnableInputs: 1
   XYAxis: {fileID: -5630151704836100654, guid: ca9f5fa95ffab41fb9a615ab714db018, type: 3}
   ZAxis: {fileID: 0}
+--- !u!114 &324058979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324058975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 729aad4491e915a41bda2b8325cf757a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FocusTracksTarget: 0
+  m_FocusTracking: 0
+  m_FocusTarget: {fileID: 0}
+  m_FocusOffset: 0
+  m_Profile: {fileID: 11400000, guid: 069b2b2a0d94586448b5a830d50e9eff, type: 2}
+--- !u!114 &324058980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 324058975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
+  m_UseCameraSpace: 1
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &326689243 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5195048882033904264, guid: 70704200f6e7a444cb779c2265f4e2d3,
@@ -62381,6 +62423,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
   currentID: 0
+  camShake: {fileID: -3564914741068504541, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
+    type: 3}
   GunParent: {fileID: 1283830677}
   RightGrip: {fileID: 114700271597397323}
   LeftGrip: {fileID: 501777474331076441}
@@ -62652,13 +62696,13 @@ PrefabInstance:
     - target: {fileID: 7593056247257005254, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7593056247257005254, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: gunSelector
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5459022606202285614}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

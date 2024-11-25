@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
@@ -14,11 +15,16 @@ public class GunStateMachine : MonoBehaviour {
 
     public int currentID;
     
+    [Header("Recoil")]
+    public Cinemachine.CinemachineImpulseSource camShake;
+
 
     [Header("Animation")]
     [SerializeField] public Transform GunParent;
     [SerializeField] public Transform RightGrip;
     [SerializeField] public Transform LeftGrip;
+
+
 
     public Animator anim;
     
@@ -157,7 +163,7 @@ public class GunStateMachine : MonoBehaviour {
 
     private void SetAnimator() {
         anim.Play("equip_" + ActiveGun.Name);     
-
+        camShake = ActiveGun.Model.GetComponent<Cinemachine.CinemachineImpulseSource>();
     
 
         shootHash = Animator.StringToHash("shoot");
@@ -178,6 +184,10 @@ public class GunStateMachine : MonoBehaviour {
 
     public void EndShoot() {
         isShooting = false;
+    }
+
+    public void Recoil() {
+        camShake.GenerateImpulse(Camera.main.transform.forward);
     }
 
     public bool ManualReload() {
