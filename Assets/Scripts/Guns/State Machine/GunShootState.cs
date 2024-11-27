@@ -7,7 +7,7 @@ public class GunShootState : GunBaseState {
    
     public GunShootState(GunStateMachine currentContext, GunStateFactory gunStateFactory): base (currentContext, gunStateFactory) {}
 
-    float switchTime = 3f;
+    int switchTime = 3;
     public override void EnterState(){
         Ctx.isShooting = true;
         Ctx.Recoil();

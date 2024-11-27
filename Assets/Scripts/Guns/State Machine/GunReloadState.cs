@@ -5,7 +5,7 @@ using UnityEngine;
 public class GunReloadState : GunBaseState {
    
 
-    float switchTime = 45f;
+    int switchTime = 45;
     public GunReloadState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
     : base (currentContext, gunStateFactory) {
         IsRootState = true;
