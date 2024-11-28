@@ -23,7 +23,7 @@ public class GunScriptableObject : ScriptableObject {
 
     [Header("Animation")]
 
-    public AnimationClip weaponAnimation;
+   
 
     // public RuntimeAnimatorController handController;
     // public Vector3 HandIKRightPos;
@@ -49,14 +49,14 @@ public class GunScriptableObject : ScriptableObject {
     [HideInInspector] public GameObject Model;
     private AudioSource ShootingAudioSource;
 
-    public float LastShootTime = 0;
+    // public float LastShootTime = 0;
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
     private ObjectPool<Rigidbody> bullets;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        LastShootTime = 0; // in editor this will not be properly reset, in build it's fine
+        // LastShootTime = 0; // in editor this will not be properly reset, in build it's fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         //bullets = new ObjectPool<Rigidbody>(InstantiateBullet);
 
