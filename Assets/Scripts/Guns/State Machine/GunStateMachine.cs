@@ -188,6 +188,7 @@ public class GunStateMachine : MonoBehaviour {
 
     public void Recoil() {
         camShake.GenerateImpulse(Camera.main.transform.forward);
+        
     }
 
     public bool ManualReload() {
