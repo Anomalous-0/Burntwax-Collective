@@ -11,6 +11,7 @@ public class GunShootState : GunBaseState {
     public override void EnterState(){
         Ctx.isShooting = true;
         Ctx.Recoil();
+        Ctx.anim.Play("recoil_" + Ctx.ActiveGun.Name, 1, 0.0f);
 
         // if(Ctx.camMachine.currentState == Ctx.camMachine.states.Aim()){
         //     Ctx.gunAnimator.SetTrigger(Ctx.aimShootHash);
@@ -27,7 +28,7 @@ public class GunShootState : GunBaseState {
     }
 
     public override void UpdateState(){
-        switchTime--;
+        // switchTime--;
         if(Ctx.input.shootIsPressed) {
             Ctx.ActiveGun.Shoot();
         }
@@ -41,8 +42,7 @@ public class GunShootState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(!Ctx.isShooting || switchTime <= 0) {
-            Ctx.isShooting = false;
+        if(!Ctx.isShooting) {
             SwitchState(Factory.NoShoot());
         }
         
