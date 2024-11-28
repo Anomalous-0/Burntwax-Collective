@@ -90,7 +90,7 @@ public class GunStateMachine : MonoBehaviour {
             currentState.UpdateStates();
             
             if(input.mouseScroll != 0 && !isShooting) {
-                Debug.Log("Helo");
+                // Debug.Log("Helo");
                 WeaponSwitch();
             }  
 
@@ -173,7 +173,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     public bool CanShoot() {
-        return ActiveGun.AmmoConfig.currentClip > 0;
+        return ActiveGun.AmmoConfig.currentClip > 0 && !isShooting;
     }
 
     public void EndReload() {

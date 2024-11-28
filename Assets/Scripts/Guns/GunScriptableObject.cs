@@ -79,8 +79,8 @@ public class GunScriptableObject : ScriptableObject {
     public void Shoot() {
 
         
-        if (Time.time - LastShootTime > ShootConfig.FireRate) {
-            LastShootTime = Time.time;
+        // if (Time.time - LastShootTime > ShootConfig.FireRate) {
+        //     LastShootTime = Time.time;
             
 
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
@@ -101,8 +101,8 @@ public class GunScriptableObject : ScriptableObject {
             }
             else {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
+            // }
             }
-        }
     }
 
     public bool CanReload() {
