@@ -23,7 +23,7 @@ public class BobAndSway : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         GetInput();
-        if (input.MoveInput != Vector2.zero && player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() && shouldBob && cam.currentState != cam.states.Aim()) {
+        if (input.MoveInput != Vector2.zero && (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun()) && shouldBob && cam.currentState != cam.states.Aim()) {
             Sway();
         }
         else {
