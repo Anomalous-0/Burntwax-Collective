@@ -7,11 +7,11 @@ public class GunShootState : GunBaseState {
    
     public GunShootState(GunStateMachine currentContext, GunStateFactory gunStateFactory): base (currentContext, gunStateFactory) {}
 
-    int switchTime = 3;
+    // int switchTime = 3;
     public override void EnterState(){
         Ctx.isShooting = true;
         Ctx.ActiveGun.Shoot();
-        Ctx.Recoil();
+        Recoil();
 
         Ctx.anim.Play("recoil_" + Ctx.ActiveGun.Name);
 
@@ -59,5 +59,11 @@ public class GunShootState : GunBaseState {
     
     public override void InitializeSubState(){}
 
+
+
+    public void Recoil() {
+        Ctx.camShake.GenerateImpulse(Camera.main.transform.forward);
+        
+    }
     
 }
