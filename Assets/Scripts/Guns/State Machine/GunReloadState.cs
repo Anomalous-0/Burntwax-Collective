@@ -5,7 +5,6 @@ using UnityEngine;
 public class GunReloadState : GunBaseState {
    
 
-    int switchTime = 45;
     public GunReloadState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
     : base (currentContext, gunStateFactory) {
         IsRootState = true;
@@ -13,25 +12,24 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void EnterState(){
-        Ctx.ActiveGun.StartReload();
-        // Ctx.handAnimator.SetTrigger(Ctx.reloadHash);
-        // Ctx.gunAnimator.SetTrigger(Ctx.reloadHash);
+        Ctx.ActiveGun.StartReloadAudio();
+        Ctx.anim.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
-        Ctx.isShooting = false;
+
         // Debug.Log("Reload State");
         InitializeSubState();
     }
 
     public override void UpdateState(){
-        switchTime--;
+   
         // Ctx.ActiveGun.Rest();
         CheckSwitchStates();
         
     }
 
     public override void ExitState(){
-        Ctx.ActiveGun.EndReload();
         Ctx.isReloading = false;
+        
     }
     
     public override void CheckSwitchStates(){
@@ -42,7 +40,7 @@ public class GunReloadState : GunBaseState {
         else if (Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
             SwitchState(Factory.Stow());
         }
-        else if(switchTime <= 0) {
+        else if(!Ctx.isReloading || Ctx.input.mouseScroll != 0) {
             SwitchState(Factory.Rest());
         }
         

@@ -109,7 +109,7 @@ public class GunScriptableObject : ScriptableObject {
         return AmmoConfig.CanReload();
     }
 
-    public void StartReload() {
+    public void StartReloadAudio() {
         AudioConfig.PlayReloadClip(ShootingAudioSource);
     }
 
