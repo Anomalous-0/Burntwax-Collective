@@ -21,8 +21,6 @@ public class GunStateMachine : MonoBehaviour {
 
     [Header("Animation")]
     [SerializeField] public Transform GunParent;
-    [SerializeField] public Transform RightGrip;
-    [SerializeField] public Transform LeftGrip;
 
 
 
