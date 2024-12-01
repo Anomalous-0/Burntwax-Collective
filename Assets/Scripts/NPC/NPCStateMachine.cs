@@ -4,35 +4,35 @@ using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
 
-public class CamStateMachine : MonoBehaviour {
+public class NPCStateMachine : MonoBehaviour {
     public InputManager input;
 
 
     public PlayerStateMachine player;
 
-    //Attracting
+    
+    private NPCBaseState currentState;
     public NPCBaseState CurrentState {get { return currentState; } set { currentState = value; } }
 
-    
-    public Vector3 mouseWorldPosition;
+    public NPCStateFactory states;
 
 
     private void Awake() {
 
         states = new NPCStateFactory(this);
-        currentState = states.Fps();
+        currentState = states.Idle();
         currentState.EnterState();
     }
 
 
     void Update() {
 
-        currentState.UpdateState();
-        Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
-        Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
-            mouseWorldPosition = raycastHit.point;
-        }
+        // currentState.UpdateState();
+        // Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
+        // Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
+        // if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
+        //     mouseWorldPosition = raycastHit.point;
+        // }
         
     }
     
@@ -62,23 +62,23 @@ public class CamStateMachine : MonoBehaviour {
 
     public void Aim() {
     
-            if(activeCam == fpsCam) {
-                SetCameraPriorities(fpsCam, aimCam);
-            }
+            // if(activeCam == fpsCam) {
+            //     SetCameraPriorities(fpsCam, aimCam);
+            // }
     
     }
 
     public void FPS() {
     
-            if(activeCam == aimCam) {
-                SetCameraPriorities(aimCam, fpsCam);
-            }
+            // if(activeCam == aimCam) {
+            //     SetCameraPriorities(aimCam, fpsCam);
+            // }
         
     }
 
-    private void SetCameraPriorities(CinemachineVirtualCamera CurrentCameraMode, CinemachineVirtualCamera NewCameraMode) {
-            CurrentCameraMode.Priority -= activeCameraPriorityModifier;
-            NewCameraMode.Priority += activeCameraPriorityModifier;
-            activeCam = NewCameraMode;
-    }
+    // private void SetCameraPriorities(CinemachineVirtualCamera CurrentCameraMode, CinemachineVirtualCamera NewCameraMode) {
+    //         CurrentCameraMode.Priority -= activeCameraPriorityModifier;
+    //         NewCameraMode.Priority += activeCameraPriorityModifier;
+    //         activeCam = NewCameraMode;
+    // }
 }
