@@ -11456,7 +11456,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 3
+  m_Antialiasing: 1
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 1
@@ -38755,8 +38755,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1377214982}
-  - component: {fileID: 1377214981}
-  - component: {fileID: 1377214980}
+  - component: {fileID: 1377214983}
   m_Layer: 0
   m_Name: NPC
   m_TagString: Untagged
@@ -38764,49 +38763,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1377214980
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377214979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8923cb6268c917248993d7e1083d2ecc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  continuous: 0
-  onInteract:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1377214981}
-        m_TargetAssemblyTypeName: NPCHealth, Assembly-CSharp
-        m_MethodName: TakeDamage
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 20
-          m_FloatArgument: 0
-          m_StringArgument: Hello mf
-          m_BoolArgument: 0
-        m_CallState: 2
-  ID: 0
---- !u!114 &1377214981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377214979}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c718bc717071944489d772ac4d8c4878, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 0
 --- !u!4 &1377214982
 Transform:
   m_ObjectHideFlags: 0
@@ -38823,6 +38779,20 @@ Transform:
   - {fileID: 939880599}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1377214983
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377214979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b4166bbaf84cc8438624211a3bf0c8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: 845597538}
+  player: {fileID: 401126580}
 --- !u!1 &1380523355 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -290750445479886849, guid: 70704200f6e7a444cb779c2265f4e2d3,

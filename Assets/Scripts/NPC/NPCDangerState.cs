@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NPCDangerState : NPCBaseState {
    
-    public NPCAimState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
+    public NPCDangerState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
         IsRootState = true;
 
@@ -26,14 +26,14 @@ public class NPCDangerState : NPCBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {
+        // if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {
 
-            Ctx.input.aimIsPressed = false;
-            SwitchState(Factory.Fps());
-        }
-        else if(!Ctx.input.aimIsPressed  || Ctx.gun.CurrentState == Ctx.gun.states.Reload()){
-            SwitchState(Factory.Fps());
-        }
+        //     Ctx.input.aimIsPressed = false;
+        //     SwitchState(Factory.Fps());
+        // }
+        // else if(!Ctx.input.aimIsPressed  || Ctx.gun.CurrentState == Ctx.gun.states.Reload()){
+        //     SwitchState(Factory.Fps());
+        // }
         
     }
 
