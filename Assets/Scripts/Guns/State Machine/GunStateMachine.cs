@@ -26,8 +26,7 @@ public class GunStateMachine : MonoBehaviour {
 
     public Animator anim;
     
-    public TwoBoneIKConstraint right;
-    public TwoBoneIKConstraint left;
+    public Rig handIK;
 
    
     // [HideInInspector] public Animator handAnimator;
@@ -70,6 +69,7 @@ public class GunStateMachine : MonoBehaviour {
         states = new GunStateFactory(this);
         currentState = states.Rest();
         currentState.EnterState();
+        handIK.weight = 0;
     }
 
     void Start() {
@@ -160,6 +160,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetAnimator() {
+        handIK.weight = 1;
         anim.Play("equip_" + ActiveGun.Name);     
         camShake = ActiveGun.Model.GetComponent<Cinemachine.CinemachineImpulseSource>();
     
