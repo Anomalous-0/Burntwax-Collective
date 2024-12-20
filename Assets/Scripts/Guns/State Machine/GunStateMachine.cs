@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
-using Cinemachine;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.InputSystem;
+
 
 [DisallowMultipleComponent]
 public class GunStateMachine : MonoBehaviour {
@@ -32,7 +29,7 @@ public class GunStateMachine : MonoBehaviour {
     // [HideInInspector] public Animator handAnimator;
     // [HideInInspector] public  Animator gunAnimator;
 
-    [HideInInspector] public int shootHash, aimShootHash, restingHash, reloadHash;
+    [HideInInspector] public int shootHash, aimShootHash, stowHash, aimHash, reloadHash;
 
     public List<GunScriptableObject> Guns;
 
@@ -167,6 +164,8 @@ public class GunStateMachine : MonoBehaviour {
 
         shootHash = Animator.StringToHash("shoot");
         aimShootHash = Animator.StringToHash("aimShoot");
+        aimHash = Animator.StringToHash("shoot");
+        stowHash = Animator.StringToHash("stow");
         reloadHash = Animator.StringToHash("reload");
     }
 
