@@ -16283,9 +16283,9 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
-  m_Radius: 1.35
+  m_Radius: 0.96
   m_Height: 0.4255236
   m_Direction: 1
   m_Center: {x: 0.13230297, y: 0.04054385, z: 0.21590137}
@@ -39999,12 +39999,12 @@ PrefabInstance:
     - target: {fileID: 6454320195760751793, guid: 250145e9ac4074b7bacc130ec1d651df,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7577462065313993933, guid: 250145e9ac4074b7bacc130ec1d651df,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7577462065313993933, guid: 250145e9ac4074b7bacc130ec1d651df,
         type: 3}
