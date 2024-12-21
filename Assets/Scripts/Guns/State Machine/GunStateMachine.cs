@@ -164,7 +164,7 @@ public class GunStateMachine : MonoBehaviour {
 
         shootHash = Animator.StringToHash("shoot");
         aimShootHash = Animator.StringToHash("aimShoot");
-        aimHash = Animator.StringToHash("shoot");
+        aimHash = Animator.StringToHash("aim");
         stowHash = Animator.StringToHash("stow");
         reloadHash = Animator.StringToHash("reload");
     }

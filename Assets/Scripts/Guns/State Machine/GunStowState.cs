@@ -12,7 +12,7 @@ public class GunStowState : GunBaseState {
 
     public override void EnterState(){
         Ctx.input.shootIsPressed = false;
-       
+        Ctx.anim.SetBool(Ctx.stowHash, true);
         // Debug.Log("Stow State");
         InitializeSubState();
     }
@@ -24,7 +24,7 @@ public class GunStowState : GunBaseState {
     }
 
     public override void ExitState(){
-
+        Ctx.anim.SetBool(Ctx.stowHash, false);
         
     }
     

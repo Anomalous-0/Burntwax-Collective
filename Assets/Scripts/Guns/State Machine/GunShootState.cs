@@ -13,7 +13,13 @@ public class GunShootState : GunBaseState {
         Ctx.ActiveGun.Shoot();
         Recoil();
 
-        Ctx.anim.Play("recoil_" + Ctx.ActiveGun.Name);
+        if(Ctx.CurrentState == Ctx.states.Aim()) {
+            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGun.Name);
+        }
+        else {
+            Ctx.anim.Play("recoil_" + Ctx.ActiveGun.Name);
+        }
+        
 
         // if(Ctx.camMachine.currentState == Ctx.camMachine.states.Aim()){
         //     Ctx.gunAnimator.SetTrigger(Ctx.aimShootHash);
