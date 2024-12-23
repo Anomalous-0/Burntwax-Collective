@@ -11,6 +11,10 @@ public class PlayerStateMachine : MonoBehaviour {
     public CapsuleCollider capsuleCollider;
     public CamStateMachine cam;
 
+
+    [Header("State Machines")]
+    public GunStateMachine gunMachine;
+
     [Header("Movement")]
 
     float yRot;
