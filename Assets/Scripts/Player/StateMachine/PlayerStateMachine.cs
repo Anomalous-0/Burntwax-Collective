@@ -210,11 +210,26 @@ public class PlayerStateMachine : MonoBehaviour {
         else { 
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput; 
         }
-        
-        rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
+
+        if (CheckSlope())
+        {
+            rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier, ForceMode.Force);
+            rb.useGravity = false;
+
+            Debug.Log("SLOPING");
+
+            if (rb.velocity.y > 0)
+            {
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            }
+
+        }
+        else
+        {
+            rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
+        }
+
     }
-
-
 
     private bool PlayerGroundCheck(){
         float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
@@ -240,14 +255,28 @@ public class PlayerStateMachine : MonoBehaviour {
    
    
    private void SpeedControl() {
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        
 
-        // limit velocity if needed
-        if(flatVel.magnitude > playerVelocity)
+        if (CheckSlope() && currentState != states.Jump())
         {
-            Vector3 limitedVel = flatVel.normalized * playerVelocity;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            if (rb.velocity.magnitude > playerVelocity)
+            {
+                rb.velocity = rb.velocity.normalized * playerVelocity;
+            }
         }
+
+        else
+        {
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            // limit velocity if needed
+            if (flatVel.magnitude > playerVelocity)
+            {
+                Vector3 limitedVel = flatVel.normalized * playerVelocity;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            }
+        }
+        
     }
 
 
@@ -260,7 +289,8 @@ public class PlayerStateMachine : MonoBehaviour {
         return false;
     }
 
-    private Vector3 SlopeHandle() {
+    private Vector3 GetSlopeMoveDirection()
+    {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
