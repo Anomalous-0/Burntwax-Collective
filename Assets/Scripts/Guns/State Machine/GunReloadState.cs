@@ -38,7 +38,8 @@ public class GunReloadState : GunBaseState {
             SwitchState(Factory.Aim());
 
         }
-        else if (Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+        else if (!Ctx.isReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+            Debug.Log("YO hello u fuckers!");
             SwitchState(Factory.Stow());
 
         }

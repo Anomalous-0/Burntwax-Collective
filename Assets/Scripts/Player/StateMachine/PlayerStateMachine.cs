@@ -11,6 +11,10 @@ public class PlayerStateMachine : MonoBehaviour {
     public CapsuleCollider capsuleCollider;
     public CamStateMachine cam;
 
+
+    [Header("State Machines")]
+    public GunStateMachine gunMachine;
+
     [Header("Movement")]
 
     float yRot;
@@ -77,7 +81,7 @@ public class PlayerStateMachine : MonoBehaviour {
     
 
     [Header("Slope Handling")]
-    public float maxSlopeAngle;
+    [SerializeField] public float maxSlopeAngle;
     RaycastHit slopeHit;
 
     public PlayerBaseState currentState;
@@ -284,7 +288,8 @@ public class PlayerStateMachine : MonoBehaviour {
     private bool CheckSlope() {
         if(Physics.Raycast(playerCenterPoint, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f )) {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            return angle < maxSlopeAngle && angle != 0;
+            Debug.Log("Angle: " + angle + " Max slope angle: " + maxSlopeAngle);
+            return angle < maxSlopeAngle && angle > 1;
         }
         return false;
     }

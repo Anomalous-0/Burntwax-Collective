@@ -34,8 +34,11 @@ public class PlayerSprintState : PlayerBaseState {
         //         SwitchState(Factory.Walk());
         //     }
         // }
-        if((Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) || Ctx.input.shootIsPressed) {
-            Ctx.input.sprintIsPressed = false;
+        if((Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) || Ctx.input.shootIsPressed){ 
+            
+            SwitchState(Factory.Walk());
+        }
+        else if(Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed && Ctx.gunMachine.isReloading) {
             SwitchState(Factory.Walk());
         }
         else if(!Ctx.input.moveIsPressed) {
