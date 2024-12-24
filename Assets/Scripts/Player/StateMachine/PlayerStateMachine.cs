@@ -55,6 +55,7 @@ public class PlayerStateMachine : MonoBehaviour {
     [SerializeField] public bool playerIsGrounded = true;
     [SerializeField] [Range(0.0f, 1.8f)] float groundCheckRadiusMultiplier = 0.9f;
     [SerializeField] [Range(-0.95f, 1.05f)] float groundCheckDistance = 0.01f;
+    [SerializeField] public bool playerIsSlopeStable = true;
         
     public LayerMask heldRigidbody;
     RaycastHit groundCheckHit = new RaycastHit();
@@ -174,6 +175,7 @@ public class PlayerStateMachine : MonoBehaviour {
         currentState.UpdateStates();
         
         playerIsGrounded = PlayerGroundCheck();
+
         GetMoveInput();
 
        
@@ -215,16 +217,17 @@ public class PlayerStateMachine : MonoBehaviour {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput; 
         }
 
+        rb.useGravity = !CheckSlope();
+
         if (CheckSlope())
         {
             rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier, ForceMode.Force);
-            rb.useGravity = false;
 
             Debug.Log("SLOPING");
 
             if (rb.velocity.y > 0)
             {
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force); // Might need to dynamically adjust 80f later
             }
 
         }
@@ -285,11 +288,12 @@ public class PlayerStateMachine : MonoBehaviour {
 
 
 
-    private bool CheckSlope() {
-        if(Physics.Raycast(playerCenterPoint, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f )) {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+    private bool CheckSlope() { 
+        if(playerIsGrounded) {
+            float angle = Vector3.Angle(Vector3.up, groundCheckHit.normal);
             Debug.Log("Angle: " + angle + " Max slope angle: " + maxSlopeAngle);
-            return angle < maxSlopeAngle && angle > 1;
+            playerIsSlopeStable = angle < maxSlopeAngle;
+            return playerIsSlopeStable && angle > 1;
         }
         return false;
     }
