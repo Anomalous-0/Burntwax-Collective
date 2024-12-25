@@ -223,7 +223,7 @@ public class PlayerStateMachine : MonoBehaviour {
         {
             rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier, ForceMode.Force);
 
-            Debug.Log("SLOPING");
+           // Debug.Log("SLOPING");
 
             if (rb.velocity.y > 0)
             {
@@ -291,7 +291,7 @@ public class PlayerStateMachine : MonoBehaviour {
     private bool CheckSlope() { 
         if(playerIsGrounded) {
             float angle = Vector3.Angle(Vector3.up, groundCheckHit.normal);
-            Debug.Log("Angle: " + angle + " Max slope angle: " + maxSlopeAngle);
+            // Debug.Log("Angle: " + angle + " Max slope angle: " + maxSlopeAngle);
             playerIsSlopeStable = angle < maxSlopeAngle;
             return playerIsSlopeStable && angle > 1;
         }
