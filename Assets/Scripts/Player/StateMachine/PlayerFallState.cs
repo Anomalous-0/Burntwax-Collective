@@ -36,7 +36,7 @@ public class PlayerFallState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.playerIsSlopeStable && Ctx.playerIsGrounded) {
+        if(Ctx.playerIsGrounded) {
             SwitchState(Factory.Grounded());
         }
         else if((Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)) {

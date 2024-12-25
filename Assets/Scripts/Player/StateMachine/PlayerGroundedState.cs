@@ -41,7 +41,7 @@ public class PlayerGroundedState : PlayerBaseState {
                 SwitchState(Factory.Jump());
             }
         }
-        else if(!Ctx.playerIsSlopeStable || !Ctx.playerIsGrounded) {
+        else if(!Ctx.playerIsGrounded) {
             SwitchState(Factory.Fall());
         }
     }

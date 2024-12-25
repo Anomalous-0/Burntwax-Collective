@@ -219,11 +219,11 @@ public class PlayerStateMachine : MonoBehaviour {
 
         rb.useGravity = !CheckSlope();
 
+        rb.drag = (playerIsSlopeStable && playerIsGrounded) ? groundDrag : airDrag;
+
         if (CheckSlope())
         {
             rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier, ForceMode.Force);
-
-           // Debug.Log("SLOPING");
 
             if (rb.velocity.y > 0)
             {
@@ -291,7 +291,6 @@ public class PlayerStateMachine : MonoBehaviour {
     private bool CheckSlope() { 
         if(playerIsGrounded) {
             float angle = Vector3.Angle(Vector3.up, groundCheckHit.normal);
-            // Debug.Log("Angle: " + angle + " Max slope angle: " + maxSlopeAngle);
             playerIsSlopeStable = angle < maxSlopeAngle;
             return playerIsSlopeStable && angle > 1;
         }
