@@ -168,7 +168,8 @@ public class GunScriptableObject : ScriptableObject {
         if (Hit.collider != null) {
           
             if(Hit.collider.GetComponent<Rigidbody>()) {
-                Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * ShootConfig.bulletForce, ForceMode.Impulse);
+                Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
+                Debug.Log("Hit object with force: " + DamageConfig.GetDamage(distance));
             }
             // Debug.Log("Hit something");
             // SurfaceManager.Instance.HandleImpact(
@@ -183,9 +184,6 @@ public class GunScriptableObject : ScriptableObject {
         if(Hit.collider.TryGetComponent(out Destructable destructable)) {
            destructable.TakeDamage(DamageConfig.GetDamage(distance));
         }
-        // else if(Hit.collider.TryGetComponent(out Glass glass)) {
-        //     glass.Shatter(DamageConfig.GetDamage(distance));
-        // }
 
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;

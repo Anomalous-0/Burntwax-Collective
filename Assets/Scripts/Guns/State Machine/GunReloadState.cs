@@ -15,6 +15,7 @@ public class GunReloadState : GunBaseState {
         Ctx.ActiveGun.StartReloadAudio();
         Ctx.anim.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
+        Ctx.isShooting = false;
         // Debug.Log("Reload State");
         InitializeSubState();
     }
