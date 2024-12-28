@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8846101969242388851}
   - component: {fileID: 2789920222100286246}
   - component: {fileID: 7639702651337513415}
-  m_Layer: 11
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 8458941798056015761}
   - component: {fileID: 9126220651915141862}
   - component: {fileID: 6312157665160168745}
-  m_Layer: 11
+  m_Layer: 7
   m_Name: Cube_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 8329308907151087028}
   - component: {fileID: 9201293977974158738}
   - component: {fileID: 1872560751080655850}
-  m_Layer: 11
+  m_Layer: 7
   m_Name: Cube_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,10 +260,10 @@ GameObject:
   - component: {fileID: 2534855556683237600}
   - component: {fileID: 3161494543826322948}
   - component: {fileID: 5286035585440516554}
-  - component: {fileID: 1327630242725743083}
   - component: {fileID: 8725762791249871987}
   - component: {fileID: -199172209931897743}
-  m_Layer: 11
+  - component: {fileID: -8838019563089005723}
+  m_Layer: 7
   m_Name: Smg Ammo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -336,18 +336,6 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &1327630242725743083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9176256781164373382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &8725762791249871987
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -383,3 +371,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ammoCount: 10
   gunID: 1
+--- !u!114 &-8838019563089005723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

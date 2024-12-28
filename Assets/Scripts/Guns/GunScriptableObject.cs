@@ -180,9 +180,12 @@ public class GunScriptableObject : ScriptableObject {
             // );
         }
 
-        if(Hit.collider.TryGetComponent(out Damageable damageable)) {
-           damageable.TakeDamage(DamageConfig.GetDamage(distance));
+        if(Hit.collider.TryGetComponent(out Destructable destructable)) {
+           destructable.TakeDamage(DamageConfig.GetDamage(distance));
         }
+        // else if(Hit.collider.TryGetComponent(out Glass glass)) {
+        //     glass.Shatter(DamageConfig.GetDamage(distance));
+        // }
 
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;

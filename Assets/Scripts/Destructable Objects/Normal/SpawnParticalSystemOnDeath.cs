@@ -1,21 +1,21 @@
 using UnityEngine;
-[RequireComponent(typeof(Damageable))]
+[RequireComponent(typeof(Destructable))]
 
 public class SpawnParticalSystemOnDeath : MonoBehaviour {
 
     [SerializeField] private ParticleSystem particles;
-    public Damageable damageable;
+    public Destructable damageable;
 
 
     private void Awake() {
-        damageable = GetComponent<Damageable>();
+        damageable = GetComponent<Destructable>();
 
     }
     private void OnEnable() {
-        damageable.OnDeath += Damageable_OnDeath;
+        damageable.OnDestruct += Destructable_OnDestruct;
     }
 
-    private void Damageable_OnDeath(Vector3 Position) {
+    private void Destructable_OnDestruct(Vector3 Position) {
         Instantiate(particles, Position, Quaternion.identity);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements.Experimental;
 
-public class DestructableObjectHealth : MonoBehaviour, Damageable {
+public class DestructableObjectHealth : MonoBehaviour, Destructable {
 
     [SerializeField] private int maxHealth = 100;
     [SerializeField] int currentHealth;
@@ -12,8 +12,8 @@ public class DestructableObjectHealth : MonoBehaviour, Damageable {
     public int MaxHealth {get => maxHealth; private set => maxHealth = value;}
 
 
-    public event Damageable.TakeDamageEvent OnTakeDamage;
-    public event Damageable.DeathEvent OnDeath;
+    public event Destructable.TakeDamageEvent OnTakeDamage;
+    public event Destructable.Destruct OnDestruct;
 
     private void OnEnable() {
         currentHealth = maxHealth;
@@ -24,12 +24,14 @@ public class DestructableObjectHealth : MonoBehaviour, Damageable {
         currentHealth -= damageTaken; 
 
         if(damageTaken != 0) {
+            Debug.Log("Damage taken: " + damageTaken);
             OnTakeDamage?.Invoke(damageTaken);
         }
 
         if(currentHealth == 0 && damageTaken!= 0) {
-            OnDeath?.Invoke(transform.position);
-            Destroy(gameObject);
+            Debug.Log("Crate destroyed");
+            OnDestruct?.Invoke(transform.position);
+            
         }
     }
 
