@@ -210,31 +210,16 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void PlayerMove() {
-        if(currentState != states.Wallrun()) {
-            moveDirection = player.forward * verticalInput + player.right * horizontalInput;
-        }
-        else { 
-            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput; 
-        }
-
-        rb.useGravity = !CheckSlope();
-
-        rb.drag = (playerIsSlopeStable && playerIsGrounded) ? groundDrag : airDrag;
-
-        if (CheckSlope())
+        if (currentState != states.Wallrun())
         {
-            rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier, ForceMode.Force);
-
-            if (rb.velocity.y > 0)
-            {
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force); // Might need to dynamically adjust 80f later
-            }
-
+            moveDirection = player.forward * verticalInput + player.right * horizontalInput;
         }
         else
         {
-            rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
+            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         }
+
+        rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
 
     }
 
@@ -262,42 +247,30 @@ public class PlayerStateMachine : MonoBehaviour {
    
    
    private void SpeedControl() {
-        
 
-        if (CheckSlope() && currentState != states.Jump())
+        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+        // limit velocity if needed
+        if (flatVel.magnitude > playerVelocity)
         {
-            if (rb.velocity.magnitude > playerVelocity)
-            {
-                rb.velocity = rb.velocity.normalized * playerVelocity;
-            }
-        }
-
-        else
-        {
-            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-            // limit velocity if needed
-            if (flatVel.magnitude > playerVelocity)
-            {
-                Vector3 limitedVel = flatVel.normalized * playerVelocity;
-                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
-            }
+            Vector3 limitedVel = flatVel.normalized * playerVelocity;
+            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
         }
         
     }
 
 
 
-    private bool CheckSlope() { 
-        if(playerIsGrounded) {
-            float angle = Vector3.Angle(Vector3.up, groundCheckHit.normal);
-            playerIsSlopeStable = angle < maxSlopeAngle;
-            return playerIsSlopeStable && angle > 1;
-        }
-        return false;
-    }
+    //private bool CheckSlope() { 
+    //    if(playerIsGrounded) {
+    //        float angle = Vector3.Angle(Vector3.up, groundCheckHit.normal);
+    //        playerIsSlopeStable = angle < maxSlopeAngle;
+    //        return playerIsSlopeStable && angle > 1;
+    //    }
+    //    return false;
+    //}
 
-    private Vector3 GetSlopeMoveDirection()
+    private Vector3 SlopeHandle()
     {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
