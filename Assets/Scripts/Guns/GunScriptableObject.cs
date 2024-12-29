@@ -131,7 +131,7 @@ public class GunScriptableObject : ScriptableObject {
                 EndPoint,
                 Mathf.Clamp01(1 - (remainingDistance / distance))
             );
-            remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
+            remainingDistance -= ShootConfig.bulletSpeed * Time.deltaTime;
 
             yield return null;
         }
@@ -144,14 +144,7 @@ public class GunScriptableObject : ScriptableObject {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
                 // Debug.Log("Hit object with force: " + DamageConfig.GetDamage(distance));
             }
-            // Debug.Log("Hit something");
-            // SurfaceManager.Instance.HandleImpact(
-            //     Hit.transform.gameObject,
-            //     EndPoint,
-            //     Hit.normal,
-            //     ImpactType,
-            //     0
-            // );
+
         }
 
         if(Hit.collider.TryGetComponent(out Destructable destructable)) {

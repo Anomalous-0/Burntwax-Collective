@@ -10,5 +10,5 @@ public class TrailConfig : ScriptableObject
     public Gradient Color;
 
     public float MissDistance = 100f;
-    public float SimulationSpeed = 100f;
+    // public float SimulationSpeed = 100f;
 }

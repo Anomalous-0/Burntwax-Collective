@@ -14,11 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isHitscan: 0
   bulletPrefab: {fileID: 0}
-  bulletForce: 10
   HitMask:
     serializedVersion: 2
     m_Bits: 10751
   Spread: {x: 0, y: 0, z: 0}
-  FireRate: 0.252
   bulletsPerShot: 1
-  bulletSpeed: 20
+  bulletSpeed: 700
