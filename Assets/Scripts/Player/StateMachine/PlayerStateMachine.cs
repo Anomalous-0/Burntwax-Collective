@@ -219,8 +219,19 @@ public class PlayerStateMachine : MonoBehaviour {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         }
 
-        rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
+        if (OnSlope())
+        {
+            rb.AddForce(GetSlopeMoveDirection() * playerVelocity * 20f, ForceMode.Force);
 
+            if (rb.velocity.y > 0)
+                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+        }
+        else
+        {
+            rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
+        }
+
+        rb.useGravity = !OnSlope();
     }
 
     private bool PlayerGroundCheck(){
@@ -248,15 +259,44 @@ public class PlayerStateMachine : MonoBehaviour {
    
    private void SpeedControl() {
 
-        Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
-        // limit velocity if needed
-        if (flatVel.magnitude > playerVelocity)
+        if (OnSlope() && currentState != states.Jump())
         {
-            Vector3 limitedVel = flatVel.normalized * playerVelocity;
-            rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            if (rb.velocity.magnitude > playerVelocity)
+            {
+                rb.velocity = rb.velocity.normalized * playerVelocity;
+            }
+        }
+
+        else
+        {
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+            // limit velocity if needed
+            if (flatVel.magnitude > playerVelocity)
+            {
+                Vector3 limitedVel = flatVel.normalized * playerVelocity;
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
+            }
         }
         
+    }
+
+    private bool OnSlope()
+    {
+        Transform playerPos = gameObject.transform.GetChild(1);
+        if (Physics.Raycast(playerPos.position, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f))
+        {
+            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            Debug.Log("Angle: " + angle + ", " + (angle < maxSlopeAngle && angle != 0));
+            return angle < maxSlopeAngle && angle != 0;
+        }
+
+        return false;
+    }
+
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
 
@@ -270,10 +310,10 @@ public class PlayerStateMachine : MonoBehaviour {
     //    return false;
     //}
 
-    private Vector3 SlopeHandle()
-    {
-        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
-    }
+    //private Vector3 SlopeHandle()
+    //{
+    //    return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+    //}
 
 
 
