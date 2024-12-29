@@ -16264,7 +16264,7 @@ CapsuleCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.96
   m_Height: 0.4255236
@@ -40310,7 +40310,7 @@ PrefabInstance:
     - target: {fileID: 7577462065313993933, guid: 250145e9ac4074b7bacc130ec1d651df,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7577462065313993933, guid: 250145e9ac4074b7bacc130ec1d651df,
         type: 3}
