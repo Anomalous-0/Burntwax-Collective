@@ -78,25 +78,15 @@ public class GunScriptableObject : ScriptableObject {
     }
 
     public void Shoot() {
-
-        
-        // if (Time.time - LastShootTime > ShootConfig.FireRate) {
-        //     LastShootTime = Time.time;
-            
-
+        ShootSystem.Play();
+        AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
+        AmmoConfig.currentClip--;
+        for(int i = 0; i < ShootConfig.bulletsPerShot;i++) {
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
             shootDirection.Normalize();
+
+
             
-            // if(AmmoConfig.currentClip == 0) {
-                
-            //     return; // Empty clip
-            // }
-            
-            
-            ShootSystem.Play();
-            AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
-            
-            AmmoConfig.currentClip--;
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
                 // Debug.Log("Hit something");
@@ -105,6 +95,9 @@ public class GunScriptableObject : ScriptableObject {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
             // }
             }
+        }
+
+            
     }
 
     public bool CanReload() {
@@ -118,28 +111,6 @@ public class GunScriptableObject : ScriptableObject {
     public void EndReload() {
         AmmoConfig.Reload();
     }
-
-
-
-   
-    public void ADS() {
-
-        // Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, AimPoint, AimConfig.speed * Time.deltaTime);
-        // Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(AimRotation), AimConfig.speed * Time.deltaTime);
-
-    }
-
-    public void Rest() {
-        // Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, RestPoint, AimConfig.speed * Time.deltaTime);
-        // Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(RestRotation), AimConfig.speed * Time.deltaTime);
-        
-    }
-
-    public void Stow() {
-    //     Model.transform.localPosition  = Vector3.Lerp(Model.transform.localPosition, StowPoint, AimConfig.speed * Time.deltaTime);
-    //     Model.transform.localRotation = Quaternion.Slerp(Model.transform.localRotation, Quaternion.Euler(StowRotation), AimConfig.speed * Time.deltaTime);
-    }
-    
 
     private IEnumerator InstantiateBullet() {
         yield return null;
