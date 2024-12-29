@@ -10,6 +10,7 @@ public class GunScriptableObject : ScriptableObject {
     public GunType Type;
     public string Name;
     public GameObject ModelPrefab;
+    public GameObject Player;
     // public Vector3 SpawnPoint;
     // public Vector3 SpawnRotation;
 
@@ -86,14 +87,15 @@ public class GunScriptableObject : ScriptableObject {
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
             shootDirection.Normalize();
             
-            if(AmmoConfig.currentClip == 0) {
-                AudioConfig.PlayEmptyClip(ShootingAudioSource);
-                return; // Empty clip
-            }
+            // if(AmmoConfig.currentClip == 0) {
+                
+            //     return; // Empty clip
+            // }
             
             
             ShootSystem.Play();
             AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
+            
             AmmoConfig.currentClip--;
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
@@ -169,7 +171,7 @@ public class GunScriptableObject : ScriptableObject {
           
             if(Hit.collider.GetComponent<Rigidbody>()) {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
-                Debug.Log("Hit object with force: " + DamageConfig.GetDamage(distance));
+                // Debug.Log("Hit object with force: " + DamageConfig.GetDamage(distance));
             }
             // Debug.Log("Hit something");
             // SurfaceManager.Instance.HandleImpact(

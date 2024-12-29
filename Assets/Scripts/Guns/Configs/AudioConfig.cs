@@ -22,8 +22,8 @@ public class AudioConfig : ScriptableObject {
     }
 
     public void PlayEmptyClip(AudioSource audioSource) {
-
-        if(emptyClip!= null) {
+        // Debug.Log("PlayEmptyClip");
+        if(emptyClip != null) {
             audioSource.PlayOneShot(emptyClip, volume);
         }
     }

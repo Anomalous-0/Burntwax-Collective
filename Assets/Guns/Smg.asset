@@ -18,7 +18,7 @@ MonoBehaviour:
   Name: SMG
   ModelPrefab: {fileID: 8445401694592989334, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
     type: 3}
-  weaponAnimation: {fileID: 7400000, guid: 4827225443837ae4c94ed592b1265365, type: 2}
+  Player: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316, type: 3}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   AmmoConfig: {fileID: 11400000, guid: d76d9576de864f34189c9ac0bb0d6417, type: 2}
   AudioConfig: {fileID: 11400000, guid: 805805d6808237e4691151f3c4883c6b, type: 2}
@@ -28,4 +28,3 @@ MonoBehaviour:
   AimConfig: {fileID: 11400000, guid: 922b64436795b7844b7f096d697b5f50, type: 2}
   CamChange: 1
   Model: {fileID: 0}
-  LastShootTime: 32.587914
