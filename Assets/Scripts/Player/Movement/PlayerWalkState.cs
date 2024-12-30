@@ -11,9 +11,7 @@ public class PlayerWalkState : PlayerBaseState {
     
     public override void EnterState(){
         Ctx.PlayerVelocity = Ctx.WalkVelocity;
-        if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {
-            Ctx.input.sprintIsPressed = false;
-        }
+       
         //Debug.Log("WALK STATE");
     }
 
@@ -25,7 +23,7 @@ public class PlayerWalkState : PlayerBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed && !Ctx.gunMachine.isReloading && !Ctx.input.shootIsPressed) {
+        if(Ctx.input.moveIsPressed && Ctx.prioritySorter.SprintIsPriority() && !Ctx.gunMachine.isReloading) {
             SwitchState(Factory.Sprint());
         } else if(!Ctx.input.moveIsPressed) {
             SwitchState(Factory.Idle());

@@ -6,6 +6,7 @@ enum PlayerStates {
     sprint,
     crouch,
     grounded,
+    slope,
     jump,
     fall,
     wallrun,
@@ -23,6 +24,7 @@ public class PlayerStateFactory{
         states[PlayerStates.walk] = new PlayerWalkState(context, this);
         states[PlayerStates.sprint] = new PlayerSprintState(context, this);
         states[PlayerStates.crouch] = new PlayerCrouchState(context, this);
+        states[PlayerStates.slope] = new PlayerSlopeState(context, this);
         states[PlayerStates.jump] = new PlayerJumpState(context, this);
         states[PlayerStates.grounded] = new PlayerGroundedState(context, this);
         states[PlayerStates.fall] = new PlayerFallState(context, this);
@@ -44,6 +46,10 @@ public class PlayerStateFactory{
 
     public PlayerBaseState Crouch () {
         return states[PlayerStates.crouch];
+    }
+
+    public PlayerBaseState Slope () {
+        return states[PlayerStates.slope];
     }
 
     public PlayerBaseState Jump() {

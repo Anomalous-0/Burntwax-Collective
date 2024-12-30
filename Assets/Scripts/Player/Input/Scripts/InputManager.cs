@@ -8,24 +8,28 @@ public class InputManager : MonoBehaviour {
     public bool InvertMouseY { get; private set; } = true;
 
     public bool interactIsPressed = false;
-    public bool aimIsPressed  = false;
+    
     public bool moveIsPressed { get; private set; } = false;
-    public bool sprintIsPressed  = false;
+    
     public bool crouchIsPressed { get; private set; } = false;
     public bool jumpIsPressed /*{ get; private set; }*/ = false;
     
-    public bool shootIsPressed = false;
-
-    public bool reloadIsPressed = false;
+    
     public float mouseScroll = 0;
 
     public bool useGloves = false;
     public bool gloveShootIsPressed { get; private set; } = false;
 
+
+    public bool aimIsPressed  { get; private set; } = false;
+    public bool shootIsPressed { get; private set; } = false;
+    public bool reloadIsPressed { get; private set; } = false;
+    public bool sprintIsPressed  { get; private set; } = false;
+
     PlayerInput input;
 
     private void OnEnable(){
-        // enable things like on foot, swimming, in air, wall climing???
+        
         input = new PlayerInput();
         input.OnFoot.Enable();
         // The increment "subscribes" to the fucntion and plus or minusing it prevents memory leaks

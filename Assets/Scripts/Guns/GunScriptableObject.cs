@@ -53,7 +53,6 @@ public class GunScriptableObject : ScriptableObject {
     // public float LastShootTime = 0;
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
-    private ObjectPool<Rigidbody> bullets;
 
     public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
@@ -73,6 +72,7 @@ public class GunScriptableObject : ScriptableObject {
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
+        TrailPool.Dispose();
         Destroy(Model);
 
     }

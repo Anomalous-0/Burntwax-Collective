@@ -25,12 +25,18 @@ public class CameraAimState : CameraBaseState {
        
     }
     
-    public override void CheckSwitchStates(){
-        if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed  || !Ctx.input.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload()) {
 
-            Ctx.input.aimIsPressed = false;
+    // MUST CONSOLIDATE AIM AND SHOOT PRIORITY INTO ONE QUEABLE
+    public override void CheckSwitchStates(){
+        if(Ctx.player.prioritySorter.SprintIsPriority() || !Ctx.input.aimIsPressed) {
             SwitchState(Factory.Fps());
         }
+         
+        // if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed  || !Ctx.input.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload()) {
+
+        //     Ctx.input.aimIsPressed = false;
+        //     SwitchState(Factory.Fps());
+        // }
        
         
     }

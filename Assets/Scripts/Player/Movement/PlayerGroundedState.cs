@@ -14,7 +14,7 @@ public class PlayerGroundedState : PlayerBaseState {
         
         InitializeSubState();
         if(!Ctx.input.moveIsPressed) {
-            Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, Ctx.rb.velocity.z);
+            Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
         }
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
@@ -40,6 +40,9 @@ public class PlayerGroundedState : PlayerBaseState {
         }
         else if(!Ctx.playerIsGrounded) {
             SwitchState(Factory.Fall());
+        }
+        else if(Ctx.playerIsSloped) {
+            SwitchState(Factory.Slope());
         }
     }
 

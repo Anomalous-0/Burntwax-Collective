@@ -21,7 +21,6 @@ public class PlayerWallRunState : PlayerBaseState {
         Ctx.MoveMultiplier = Ctx.WallMultiplier;
         Ctx.rb.drag = Ctx.WallDrag;
         Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
-        Ctx.WallRunSwitch = 1;
         Ctx.rb.useGravity = false;
         //Debug.Log("WALLRUN STATE");
 
@@ -35,7 +34,6 @@ public class PlayerWallRunState : PlayerBaseState {
     }
 
     public override void ExitState(){
-        Ctx.WallRunSwitch = 0;
         Ctx.rb.useGravity = true; 
     }
     
@@ -49,7 +47,7 @@ public class PlayerWallRunState : PlayerBaseState {
             Ctx.rb.AddForce(force, ForceMode.Impulse);
             SwitchState(Factory.Walljump());
         }
-        else if((!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack)) {
+        else if(!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack) {
             SwitchState(Factory.Fall());
         }
     }
@@ -78,7 +76,7 @@ public class PlayerWallRunState : PlayerBaseState {
         else if(Ctx.WallBack) {
             wallNormal = backWallHit.normal;
         }
-        Vector3 wallForward = Vector3.Cross(wallNormal, Ctx.player.up);
+        // Vector3 wallForward = Vector3.Cross(wallNormal, Ctx.player.up);
        
         //Ctx.rb.velocity = new Vector3((Ctx.orientation.forward - wallForward).magnitude, 0, 0);
 

@@ -15,6 +15,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     [Header("State Machines")]
     public GunStateMachine gunMachine;
+    public InputPrioritySorter prioritySorter;
 
     [Header("Movement")]
 
@@ -56,7 +57,6 @@ public class PlayerStateMachine : MonoBehaviour {
     [SerializeField] public bool playerIsGrounded = true;
     [SerializeField] [Range(0.0f, 1.8f)] float groundCheckRadiusMultiplier = 0.9f;
     [SerializeField] [Range(-0.95f, 1.05f)] float groundCheckDistance = 0.01f;
-    [SerializeField] public bool playerIsSlopeStable = true;
         
     public LayerMask heldRigidbody;
     RaycastHit groundCheckHit = new RaycastHit();
@@ -83,6 +83,7 @@ public class PlayerStateMachine : MonoBehaviour {
     
 
     [Header("Slope Handling")]
+    [SerializeField] public bool playerIsSloped;
     [SerializeField] public float maxSlopeAngle;
     RaycastHit slopeHit;
 
@@ -163,6 +164,7 @@ public class PlayerStateMachine : MonoBehaviour {
         // playerCrouchedHeight = playerFullHeight - crouchAmount;
 
         states = new PlayerStateFactory(this);
+        prioritySorter = GetComponent<InputPrioritySorter>();
         currentState = states.Grounded();
         currentState.EnterState();
         wallRunSwitch = 0;
@@ -176,6 +178,7 @@ public class PlayerStateMachine : MonoBehaviour {
         currentState.UpdateStates();
         
         playerIsGrounded = PlayerGroundCheck();
+        playerIsSloped = PlayerSlopeCheck();
 
         GetMoveInput();
 
@@ -218,7 +221,7 @@ public class PlayerStateMachine : MonoBehaviour {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         }
 
-        if (SlopeCheck()) {
+        if (PlayerSlopeCheck()) {
             moveDirection = GetSlopeMoveDirection();
             // rb.AddForce(GetSlopeMoveDirection() * playerVelocity * 20f);
 
@@ -258,21 +261,17 @@ public class PlayerStateMachine : MonoBehaviour {
    
    private void SpeedControl() {
 
-        if (SlopeCheck() && currentState != states.Jump())
-        {
-            if (rb.velocity.magnitude > playerVelocity)
-            {
+        if (currentState == states.Slope()) {
+            if (rb.velocity.magnitude > playerVelocity) {
                 rb.velocity = rb.velocity.normalized * playerVelocity;
             }
         }
 
-        else
-        {
+        else {
             Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
             // limit velocity if needed
-            if (flatVel.magnitude > playerVelocity)
-            {
+            if (flatVel.magnitude > playerVelocity) {
                 Vector3 limitedVel = flatVel.normalized * playerVelocity;
                 rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
@@ -280,11 +279,11 @@ public class PlayerStateMachine : MonoBehaviour {
         
     }
 
-    private bool SlopeCheck() {
+    private bool PlayerSlopeCheck() {
         Transform playerPos = gameObject.transform.GetChild(1);
         if (Physics.Raycast(playerPos.position, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f)) {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+            // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
             return Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f;
         }
 

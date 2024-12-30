@@ -28,7 +28,8 @@ public class GunAimState : GunBaseState {
     
     public override void CheckSwitchStates(){
         if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()) {
-            Ctx.input.aimIsPressed = false;
+            //FIX THIS 
+            //Ctx.input.aimIsPressed = false;
             SwitchState(Factory.Stow());
         }
         else if(Ctx.camMachine.currentState != Ctx.camMachine.states.Aim()) {

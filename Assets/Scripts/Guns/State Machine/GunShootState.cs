@@ -35,13 +35,7 @@ public class GunShootState : GunBaseState {
         // Debug.Log("Shoot State");
     }
 
-    public override void UpdateState(){
-        // switchTime--;
-        // if(Ctx.input.shootIsPressed) {
-        //     Ctx.ActiveGun.Shoot();
-        // }
-        
-        
+    public override void UpdateState(){     
         CheckSwitchStates();
     }
 
@@ -50,7 +44,7 @@ public class GunShootState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(!Ctx.isShooting) {
+        if(!Ctx.stateMachine.prioritySorter.ShootIsPriority()) {
             SwitchState(Factory.NoShoot());
         }
         

@@ -12,9 +12,7 @@ public class PlayerIdleState : PlayerBaseState {
         
         Ctx.moveDirection.x = 0;
         Ctx.moveDirection.y = 0;
-        if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {
-            Ctx.input.sprintIsPressed = false;
-        }
+       
         //Debug.Log("IDLE STATE");
     }
 

@@ -12,9 +12,7 @@ public class PlayerSprintState : PlayerBaseState {
     public override void EnterState(){
         Ctx.PlayerVelocity = Ctx.SprintVelocity;
         // Ctx.cam.FPS();
-        if(Ctx.input.aimIsPressed) {
-            Ctx.input.aimIsPressed = false;
-        }
+        
         // Debug.Log("SPRINT STATE");
     }
 
@@ -28,18 +26,10 @@ public class PlayerSprintState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        // if(Ctx.input.aimIsPressed) {
-        //     if(Ctx.input.moveIsPressed) {
-        //         Ctx.cam.Aim();
-        //         SwitchState(Factory.Walk());
-        //     }
-        // }
-        if((Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) || Ctx.input.shootIsPressed){ 
-            
-            SwitchState(Factory.Walk());
-        }
-        else if(Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed && Ctx.gunMachine.isReloading) {
-            SwitchState(Factory.Walk());
+        if(Ctx.input.moveIsPressed) {
+            if(!Ctx.prioritySorter.SprintIsPriority() || Ctx.gunMachine.isReloading) {
+                SwitchState(Factory.Walk());
+            }    
         }
         else if(!Ctx.input.moveIsPressed) {
             SwitchState(Factory.Idle());
