@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -210,28 +211,26 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void PlayerMove() {
-        if (currentState != states.Wallrun())
-        {
+        if (currentState != states.Wallrun()) {
             moveDirection = player.forward * verticalInput + player.right * horizontalInput;
         }
-        else
-        {
+        else {
             moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
         }
 
-        if (OnSlope())
-        {
-            rb.AddForce(GetSlopeMoveDirection() * playerVelocity * 20f, ForceMode.Force);
+        if (SlopeCheck()) {
+            moveDirection = GetSlopeMoveDirection();
+            // rb.AddForce(GetSlopeMoveDirection() * playerVelocity * 20f);
 
-            if (rb.velocity.y > 0)
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
+            // if (rb.velocity.y > 0)
+                // rb.AddForce(Vector3.down * 80f);
         }
-        else
-        {
-            rb.AddForce(moveDirection.normalized * 10f * playerVelocity * moveMultiplier);
-        }
+        // else
+        // {
+            rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
+        // }
 
-        rb.useGravity = !OnSlope();
+        // rb.useGravity = !SlopeCheck();
     }
 
     private bool PlayerGroundCheck(){
@@ -259,7 +258,7 @@ public class PlayerStateMachine : MonoBehaviour {
    
    private void SpeedControl() {
 
-        if (OnSlope() && currentState != states.Jump())
+        if (SlopeCheck() && currentState != states.Jump())
         {
             if (rb.velocity.magnitude > playerVelocity)
             {
@@ -281,21 +280,18 @@ public class PlayerStateMachine : MonoBehaviour {
         
     }
 
-    private bool OnSlope()
-    {
+    private bool SlopeCheck() {
         Transform playerPos = gameObject.transform.GetChild(1);
-        if (Physics.Raycast(playerPos.position, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f))
-        {
+        if (Physics.Raycast(playerPos.position, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f)) {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            Debug.Log("Angle: " + angle + ", " + (angle < maxSlopeAngle && angle != 0));
-            return angle < maxSlopeAngle && angle != 0;
+            Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+            return Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f;
         }
 
         return false;
     }
 
-    private Vector3 GetSlopeMoveDirection()
-    {
+    private Vector3 GetSlopeMoveDirection() {
         return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
     }
 
