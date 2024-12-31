@@ -15,7 +15,7 @@ public abstract class NPCBaseState  {
         ctx = currentContext;
         factory = npcStateFactory;
     }
-    public PlayerBaseState CurrentSubstate()
+    public NPCBaseState CurrentSubstate()
     {
         return currentSubState;
     }
