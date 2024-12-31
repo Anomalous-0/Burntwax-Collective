@@ -6,17 +6,15 @@ public class NPCDangerState : NPCBaseState {
    
     public NPCDangerState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
-        IsRootState = true;
 
     }
 
     public override void EnterState(){
-        // Debug.Log("Locked State");
        InitializeSubState();
     }
 
     public override void UpdateState(){
-        Ctx.Aim();
+        
         CheckSwitchStates();
        
     }
@@ -26,14 +24,12 @@ public class NPCDangerState : NPCBaseState {
     }
     
     public override void CheckSwitchStates(){
-        // if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed) {
-
-        //     Ctx.input.aimIsPressed = false;
-        //     SwitchState(Factory.Fps());
-        // }
-        // else if(!Ctx.input.aimIsPressed  || Ctx.gun.CurrentState == Ctx.gun.states.Reload()){
-        //     SwitchState(Factory.Fps());
-        // }
+       
+        if (false/*Danger stops*/)
+        {
+            SwitchState(Factory.Idle());
+        }
+        // There is no switch to interact because there is no scenario in which you should be able to interact with an NPC in danger state
         
     }
 

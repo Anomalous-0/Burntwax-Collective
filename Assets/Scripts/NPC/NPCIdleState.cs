@@ -11,12 +11,10 @@ public class NPCIdleState : NPCBaseState {
     }
 
     public override void EnterState(){
-        // Debug.Log("Locked State");
        InitializeSubState();
     }
 
     public override void UpdateState(){
-        Ctx.FPS();
         CheckSwitchStates();
        
     }
@@ -26,13 +24,12 @@ public class NPCIdleState : NPCBaseState {
     }
     
     public override void CheckSwitchStates(){
-        // if(Ctx.player.currentState.CurrentSubstate() == Ctx.player.states.Sprint() && Ctx.input.aimIsPressed) {
-        //     Ctx.input.sprintIsPressed = false;
-        //     SwitchState(Factory.Aim());
-        // }
-        // else if(Ctx.input.aimIsPressed && Ctx.gun.CurrentState != Ctx.gun.states.Reload()) {
-        //     SwitchState(Factory.Aim());
-        // }
+        if (false/*Interact happnes*/) {
+            SwitchState(Factory.Interact());
+        } else if (false/*danger happens*/){
+            SwitchState(Factory.Danger());
+        }
+
     }
 
 

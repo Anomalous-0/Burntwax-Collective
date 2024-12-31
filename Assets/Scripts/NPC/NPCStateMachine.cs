@@ -5,9 +5,6 @@ using Cinemachine;
 using UnityEngine.InputSystem;
 
 public class NPCStateMachine : MonoBehaviour {
-    public InputManager input;
-
-
     public PlayerStateMachine player;
 
     
@@ -27,58 +24,6 @@ public class NPCStateMachine : MonoBehaviour {
 
     void Update() {
 
-        // currentState.UpdateState();
-        // Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
-        // Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        // if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
-        //     mouseWorldPosition = raycastHit.point;
-        // }
         
     }
-    
-    
-        
-        // if(Physics.Raycast(ray, out raycastHit, 999f, bulletColliderLayerMask)) {
-        //     debug.position = raycastHit.point;
-        // }
-        
-        
-                
-                
-                
-        //         //Useful for moving in any direction for wall running
-                // orientation.forward = transform.forward;
-
-
-        
-
-        // if(input.shootIsPressed) {
-        //     Vector3 aimDir = (debug.position - bulletSpawn.position).normalized;
-        //     Instantiate(bullet, bulletSpawn.position, Quaternion.LookRotation(aimDir, Vector3.up));
-        //     input.shootIsPressed = false;
-        // }
-    
-
-
-    public void Aim() {
-    
-            // if(activeCam == fpsCam) {
-            //     SetCameraPriorities(fpsCam, aimCam);
-            // }
-    
-    }
-
-    public void FPS() {
-    
-            // if(activeCam == aimCam) {
-            //     SetCameraPriorities(aimCam, fpsCam);
-            // }
-        
-    }
-
-    // private void SetCameraPriorities(CinemachineVirtualCamera CurrentCameraMode, CinemachineVirtualCamera NewCameraMode) {
-    //         CurrentCameraMode.Priority -= activeCameraPriorityModifier;
-    //         NewCameraMode.Priority += activeCameraPriorityModifier;
-    //         activeCam = NewCameraMode;
-    // }
 }

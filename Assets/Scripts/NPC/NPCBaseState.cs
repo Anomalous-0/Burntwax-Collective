@@ -15,6 +15,10 @@ public abstract class NPCBaseState  {
         ctx = currentContext;
         factory = npcStateFactory;
     }
+    public PlayerBaseState CurrentSubstate()
+    {
+        return currentSubState;
+    }
 
     public abstract void EnterState();
 

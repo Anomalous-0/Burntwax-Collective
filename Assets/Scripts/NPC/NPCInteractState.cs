@@ -6,17 +6,14 @@ public class NPCInteractState : NPCBaseState {
    
     public NPCInteractState (NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
-        IsRootState = true;
 
     }
 
     public override void EnterState(){
-        // Debug.Log("Locked State");
        InitializeSubState();
     }
 
     public override void UpdateState(){
-        Ctx.FPS();
         CheckSwitchStates();
        
     }
@@ -26,13 +23,13 @@ public class NPCInteractState : NPCBaseState {
     }
     
     public override void CheckSwitchStates(){
-        // if(Ctx.player.currentState.CurrentSubstate() == Ctx.player.states.Sprint() && Ctx.input.aimIsPressed) {
-        //     Ctx.input.sprintIsPressed = false;
-        //     SwitchState(Factory.Aim());
-        // }
-        // else if(Ctx.input.aimIsPressed && Ctx.gun.CurrentState != Ctx.gun.states.Reload()) {
-        //     SwitchState(Factory.Aim());
-        // }
+        if (false/*Danger arises*/)
+        {
+            SwitchState(Factory.Danger());
+        } else if (false/*Interaction stopped*/)
+        {
+            SwitchState(Factory.Idle());
+        }
     }
 
 

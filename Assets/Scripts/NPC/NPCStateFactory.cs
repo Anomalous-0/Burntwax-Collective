@@ -27,6 +27,7 @@ public class NPCStateFactory{
     public NPCBaseState Interact() {
         return states[NPCStates.interact];
     }
+
     public NPCBaseState Danger()
     {
         return states[NPCStates.danger];
