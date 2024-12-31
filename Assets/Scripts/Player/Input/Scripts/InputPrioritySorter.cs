@@ -48,15 +48,19 @@ public class InputPrioritySorter : MonoBehaviour {
             inputPriority.Remove(shoot);
         }
 
-        if(inputPriority.Count == 1) {
-            print(inputPriority[0]);
-        }
-        else if(inputPriority.Count == 2) {
-            print(inputPriority[0] + " " + inputPriority[1]);
-        }
-        else if(inputPriority.Count == 3) {
-            print(inputPriority[0] + " " + inputPriority[1] + " " + inputPriority[2]);   
-        }
+
+        // if(inputPriority.Count == 1) {
+        //     print(inputPriority[0]);
+        // }
+        // else if(inputPriority.Count == 2) {
+        //     print(inputPriority[0] + " " + inputPriority[1]);
+        // }
+        // else if(inputPriority.Count == 3) {
+        //     print(inputPriority[0] + " " + inputPriority[1] + " " + inputPriority[2]);   
+        // }
+        // else {
+        //     print("Empty");
+        // }
 
         
         

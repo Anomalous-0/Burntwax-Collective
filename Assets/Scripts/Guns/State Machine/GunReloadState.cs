@@ -12,10 +12,11 @@ public class GunReloadState : GunBaseState {
     }
 
     public override void EnterState(){
+        // Debug.Log("Enter RELOAD");
         Ctx.ActiveGun.StartReloadAudio();
         Ctx.anim.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
-        Ctx.isShooting = false;
+        // Ctx.isShooting = false;
         // Debug.Log("Reload State");
         InitializeSubState();
     }
@@ -34,10 +35,9 @@ public class GunReloadState : GunBaseState {
     
     public override void CheckSwitchStates(){
         
-        if(Ctx.input.aimIsPressed) {
-            SwitchState(Factory.Aim());
-        }
-        else if (!Ctx.isReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+        
+        if (!Ctx.isReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+            
             SwitchState(Factory.Stow());
         }
         else if(!Ctx.isReloading || Ctx.input.mouseScroll != 0) {

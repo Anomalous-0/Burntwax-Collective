@@ -27,12 +27,13 @@ public class GunAimState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()) {
+        if(Ctx.stateMachine.prioritySorter.SprintIsPriority()) {
+            Debug.Log("AIM TO STOW");
             //FIX THIS 
             //Ctx.input.aimIsPressed = false;
             SwitchState(Factory.Stow());
         }
-        else if(Ctx.camMachine.currentState != Ctx.camMachine.states.Aim()) {
+        else if(!Ctx.input.aimIsPressed) {
             SwitchState(Factory.Rest());
         }
         else if(Ctx.AutoReload()  || Ctx.ManualReload()) {

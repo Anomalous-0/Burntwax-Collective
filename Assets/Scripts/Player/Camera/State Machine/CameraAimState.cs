@@ -28,7 +28,7 @@ public class CameraAimState : CameraBaseState {
 
     // MUST CONSOLIDATE AIM AND SHOOT PRIORITY INTO ONE QUEABLE
     public override void CheckSwitchStates(){
-        if(Ctx.player.prioritySorter.SprintIsPriority() || !Ctx.input.aimIsPressed) {
+        if(Ctx.player.prioritySorter.SprintIsPriority() || !Ctx.input.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload()) {
             SwitchState(Factory.Fps());
         }
          

@@ -44,7 +44,7 @@ public class GunShootState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(!Ctx.stateMachine.prioritySorter.ShootIsPriority()) {
+        if(!Ctx.isShooting) {
             SwitchState(Factory.NoShoot());
         }
         

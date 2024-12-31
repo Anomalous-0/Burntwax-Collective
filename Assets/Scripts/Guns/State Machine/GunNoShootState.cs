@@ -22,9 +22,10 @@ public class GunNoShootState : GunBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload()  && Ctx.CanShoot() && Ctx.stateMachine.prioritySorter.ShootIsPriority() /*&&  !Ctx.isShooting*/) {
+        if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() && Ctx.CanShoot() && Ctx.input.shootIsPressed && !Ctx.isShooting) {
             SwitchState(Factory.Shoot());
         }
+
         else if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() && !Ctx.CanShoot() && Ctx.input.shootIsPressed && !Ctx.isShooting) { 
             Ctx.ActiveGun.AudioConfig.PlayEmptyClip(Ctx.ActiveGun.Model.GetComponent<AudioSource>());
            // FIX THE EMPTY CLIP AUDIO
