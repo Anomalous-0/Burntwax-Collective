@@ -34,6 +34,7 @@ public class PlayerWallRunState : PlayerBaseState {
     }
 
     public override void ExitState(){
+        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
         Ctx.rb.useGravity = true; 
     }
     
@@ -42,7 +43,6 @@ public class PlayerWallRunState : PlayerBaseState {
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.input.jumpIsPressed) {
-            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
             Vector3 force =   4f * wallNormal * Ctx.WallJumpForce;
             Ctx.rb.AddForce(force, ForceMode.Impulse);
             SwitchState(Factory.Walljump());

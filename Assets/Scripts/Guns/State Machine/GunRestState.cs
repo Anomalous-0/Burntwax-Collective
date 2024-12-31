@@ -27,10 +27,10 @@ public class GunRestState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.aimIsPressed) {
+        if(Ctx.input.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
             SwitchState(Factory.Aim());
         }
-        else if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint() && !Ctx.stateMachine.prioritySorter.ShootIsPriority()){
+        else if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint() && !Ctx.isShooting){
             SwitchState(Factory.Stow());
         }
         else if(Ctx.AutoReload()  || Ctx.ManualReload()) {

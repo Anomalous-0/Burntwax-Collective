@@ -448,20 +448,56 @@ MonoBehaviour:
     m_ImpulseType: 3
     m_DissipationRate: 0.25
     m_RawSignal: {fileID: 11400000, guid: e150c297e703ee54183de9acfcbd0c89, type: 2}
-    m_AmplitudeGain: 2
-    m_FrequencyGain: 1
+    m_AmplitudeGain: 10
+    m_FrequencyGain: 0.01
     m_RepeatMode: 0
     m_Randomize: 1
     m_TimeEnvelope:
       m_AttackShape:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 2
+          outSlope: 2
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4
       m_DecayShape:
         serializedVersion: 2
-        m_Curve: []
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: -2.0212266
+          outSlope: -2.0212266
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0.088681445
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: -0.041249536
+          outSlope: -0.041249536
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.057176173
+          outWeight: 0
         m_PreInfinity: 2
         m_PostInfinity: 2
         m_RotationOrder: 4

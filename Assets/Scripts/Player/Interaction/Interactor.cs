@@ -5,12 +5,12 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 
-public class Interactor : MonoBehaviour
-{
+public class Interactor : MonoBehaviour {
 
     [SerializeField] float raycastDistance = 3f;
     [SerializeField] LayerMask interactableLayer;
     public InputManager input;
+    public CamStateMachine cam;
     Interactable interactable;
     [SerializeField] GameObject defaultIcon;
     [SerializeField] GameObject interactIcon;
@@ -67,12 +67,12 @@ public class Interactor : MonoBehaviour
                 }
             }
         } else {
-            if(glove.looking && !input.aimIsPressed) {
+            if(glove.looking && cam.currentState != cam.states.Aim()) {
                 interactIcon.SetActive(true);
                 defaultIcon.SetActive(true);
                 
             }
-            else if (input.aimIsPressed) {
+            else if ( cam.currentState == cam.states.Aim()) {
                 defaultIcon.SetActive(false);
       
                 interactIcon.SetActive(false);

@@ -13,7 +13,7 @@ public class PlayerSlopeState : PlayerBaseState {
         InitializeSubState();
         Ctx.rb.useGravity = false;
         if(!Ctx.input.moveIsPressed) {
-            Ctx.rb.velocity = new Vector3(0,0,0); 
+            Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
         }
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
@@ -25,10 +25,10 @@ public class PlayerSlopeState : PlayerBaseState {
         CheckSwitchStates(); 
     }
 
-    public override void ExitState(){
-        Ctx.rb.useGravity = true;
+   public override void ExitState(){
+
         Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
-        // Debug.Log("EXITING SLOPE STATE");
+        Ctx.rb.useGravity = true;
     }
     
     public override void CheckSwitchStates(){    

@@ -25,7 +25,8 @@ public class BobAndSway : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         GetInput();
-        if (input.MoveInput != Vector2.zero && (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun()) && shouldBob && cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot() ) {
+        // SHOULD I USE PRIORITY QUEUE HERE INSTEAD OF BASIC SHOOTISPRESSED
+        if (input.MoveInput != Vector2.zero && (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun()) || player.currentState == player.states.Slope() && shouldBob && cam.currentState != cam.states.Aim() && !input.shootIsPressed ) {
             Sway();
         }
         else {
@@ -134,11 +135,11 @@ public class BobAndSway : MonoBehaviour {
 
     void BobOffset() {
 
-        if (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun()) {
+        if ((player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() || player.currentState == player.states.Slope()) && !input.shootIsPressed) {
             lastTime = Time.deltaTime;
         }
 
-        speedCurve += 1.5f * lastTime * (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() ? rb.velocity.magnitude : 1f);
+        speedCurve += 1.5f * lastTime * (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() || player.currentState == player.states.Slope()? rb.velocity.magnitude : 1f);
 
         if (bobOffset == false) {
             bobPosition = Vector3.zero;
