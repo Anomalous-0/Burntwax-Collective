@@ -84,7 +84,10 @@ public class PlayerStateMachine : MonoBehaviour {
 
     [Header("Slope Handling")]
     [SerializeField] public bool playerIsSloped;
-    [SerializeField] public float maxSlopeAngle;
+    [SerializeField] float maxSlopeAngle;
+    [SerializeField] bool slopeToSteep;
+    [SerializeField] int downForce;
+
     RaycastHit slopeHit;
 
     public PlayerBaseState currentState;
@@ -149,6 +152,9 @@ public class PlayerStateMachine : MonoBehaviour {
     public bool WallBack {get {return wallBack;} set {wallBack = value; }}
 
 
+
+    public bool SlopeTooSteep {get {return slopeToSteep;}}
+    public int DownForce {get{return downForce;}}
 
     void Start() {
         //rb = GetComponent<Rigidbody>();
@@ -283,8 +289,15 @@ public class PlayerStateMachine : MonoBehaviour {
         Transform playerPos = gameObject.transform.GetChild(1);
         if (Physics.Raycast(playerPos.position, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f)) {
             float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+            Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+            if(angle > maxSlopeAngle) {
+                slopeToSteep = true;
+            }
+            else {
+                slopeToSteep = false;
+            }
             return Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f;
+            
         }
 
         return false;

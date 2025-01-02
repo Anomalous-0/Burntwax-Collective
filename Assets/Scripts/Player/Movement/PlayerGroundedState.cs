@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
 public class PlayerGroundedState : PlayerBaseState {
     
@@ -22,7 +23,7 @@ public class PlayerGroundedState : PlayerBaseState {
     }
 
     public override void UpdateState(){
-        
+        SlideDownSlope();
         CheckSwitchStates();
         
 
@@ -35,7 +36,7 @@ public class PlayerGroundedState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){    
-        if(Ctx.input.jumpIsPressed) {
+        if(Ctx.input.jumpIsPressed && !Ctx.SlopeTooSteep) {
             SwitchState(Factory.Jump());
         }
         else if(!Ctx.playerIsGrounded) {
@@ -44,6 +45,13 @@ public class PlayerGroundedState : PlayerBaseState {
         else if(Ctx.playerIsSloped) {
             SwitchState(Factory.Slope());
         }
+    }
+
+    private void SlideDownSlope() {
+        if(Ctx.SlopeTooSteep) {
+            Ctx.rb.AddForce(Vector3.down * Ctx.DownForce);
+        }
+
     }
 
     public override void InitializeSubState(){
