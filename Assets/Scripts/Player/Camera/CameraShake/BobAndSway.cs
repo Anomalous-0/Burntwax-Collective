@@ -147,7 +147,7 @@ public class BobAndSway : MonoBehaviour {
 
         speedCurve += 1.5f * lastTime * (onSolid ? rb.velocity.magnitude : 1f);
 
-        int shouldBobX = (player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() ? 1 : 0);
+        int shouldBobX = ((onSolid && !input.shootIsPressed) ? 1 : 0);
 
         bobPosition.x = (curveCos * bobLimit.x * shouldBobX) - (walkInput.x * travelLimit.x);
         bobPosition.y = (curveSin * bobLimit.y) - (rb.velocity.y * travelLimit.y);
