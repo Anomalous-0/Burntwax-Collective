@@ -19,13 +19,17 @@ public class PlayerFallState : PlayerBaseState {
     public override void EnterState(){
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.drag = Ctx.AirDrag;
+        Ctx.CoyoteTime = Ctx.CoyoteTimer;
         InitializeSubState();
 
         //Debug.Log("FALL STATE"); 
     }
 
     public override void UpdateState(){
-        
+        Ctx.CoyoteTime--;
+        if(Ctx.CoyoteTime <= 0){
+            Ctx.CoyoteTime = 0;
+        }
         WallCheck();
         CheckSwitchStates();
 
@@ -39,8 +43,13 @@ public class PlayerFallState : PlayerBaseState {
         if(Ctx.playerIsGrounded) {
             SwitchState(Factory.Grounded());
         }
-        else if((Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)) {
+        else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
             SwitchState(Factory.Wallrun());
+        }
+        else if(Ctx.CoyoteTime >= 0 && Ctx.input.jumpIsPressed) {
+            Ctx.CoyoteTime = Ctx.CoyoteTimer;
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+            SwitchState(Factory.Jump());
         }
 
     }

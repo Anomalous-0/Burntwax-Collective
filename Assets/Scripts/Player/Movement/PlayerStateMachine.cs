@@ -48,6 +48,9 @@ public class PlayerStateMachine : MonoBehaviour {
 
     [Header("Jumping")]
     [SerializeField] float jumpForce;
+    [SerializeField] int coyoteTimer;
+    [SerializeField] int coyoteTime;
+
 
     // [SerializeField] float jumpCooldown;
     // float cooldownTime;
@@ -125,6 +128,8 @@ public class PlayerStateMachine : MonoBehaviour {
 
     // Jumping State
     public float JumpForce {get { return jumpForce; }}
+    public int CoyoteTime {get { return coyoteTime;} set {coyoteTime = value; } }
+    public int CoyoteTimer {get { return coyoteTimer;} }
     
 
 
