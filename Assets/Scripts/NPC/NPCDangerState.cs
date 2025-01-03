@@ -6,7 +6,7 @@ public class NPCDangerState : NPCBaseState {
    
     public NPCDangerState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
-
+        IsRootState = true;
     }
 
     public override void EnterState(){

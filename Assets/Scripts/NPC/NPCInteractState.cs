@@ -6,7 +6,7 @@ public class NPCInteractState : NPCBaseState {
    
     public NPCInteractState (NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
-
+        IsRootState = true;
     }
 
     public override void EnterState(){

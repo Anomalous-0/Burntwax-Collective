@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class NPCDeathState : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public NPCDeathState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
+    : base(currentContext, npcStateFactory)
     {
-        
+        IsRootState = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void EnterState()
     {
-        
+        InitializeSubState();
     }
+
+    public override void UpdateState()
+    {
+
+        // Play death animation or something
+
+    }
+
+    // Dead men tell no tales
+    public override void ExitState(){}
+    public override void CheckSwitchStates(){}
+    public override void InitializeSubState() {}
 }

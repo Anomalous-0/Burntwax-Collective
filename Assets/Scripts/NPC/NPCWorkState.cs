@@ -4,15 +4,40 @@ using UnityEngine;
 
 public class NPCWorkState : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public NPCWorkState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
+    : base(currentContext, npcStateFactory)
     {
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void EnterState()
     {
         
     }
+
+    public override void UpdateState()
+    {
+
+        CheckSwitchStates();
+
+    }
+
+    public override void ExitState()
+    {
+
+    }
+
+    public override void CheckSwitchStates()
+    {
+
+        if (false/*Danger stops*/)
+        {
+            SwitchState(Factory.Idle());
+        }
+        // There is no switch to interact because there is no scenario in which you should be able to interact with an NPC in danger state
+
+    }
+
+
+    public override void InitializeSubState() { }
 }
