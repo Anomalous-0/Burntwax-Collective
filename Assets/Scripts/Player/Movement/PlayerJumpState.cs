@@ -37,15 +37,15 @@ public class PlayerJumpState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.playerIsGrounded && !Ctx.playerIsSloped) {
+        if(Ctx.playerIsGrounded ) {
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
             SwitchState(Factory.Wallrun());
         }
-        else if(Ctx.playerIsSloped) {
-            SwitchState(Factory.Slope());
-        }
+        // else if(Ctx.playerIsSloped) {
+        //     SwitchState(Factory.Slope());
+        // }
 
     }
 

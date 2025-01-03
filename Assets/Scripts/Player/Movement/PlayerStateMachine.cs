@@ -184,13 +184,13 @@ public class PlayerStateMachine : MonoBehaviour {
         currentState.UpdateStates();
         
         playerIsGrounded = PlayerGroundCheck();
-        playerIsSloped = PlayerSlopeCheck();
+        
 
         GetMoveInput();
-
-       
-       
         
+       
+       
+        // Debug.Log(currentState);
         
         
         
@@ -202,6 +202,7 @@ public class PlayerStateMachine : MonoBehaviour {
         SetOrientation();
         
         PlayerMove();
+        playerIsSloped = PlayerSlopeCheck();
         SpeedControl();
     
     }
@@ -244,7 +245,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     private bool PlayerGroundCheck(){
         float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
-        Physics.SphereCast(playerCenterPoint, sphereCastRadius, Vector3.down, out groundCheckHit);
+        //Physics.SphereCast(playerCenterPoint, sphereCastRadius, Vector3.down, out groundCheckHit);
 
         float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
         if(Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance)) {
@@ -286,10 +287,16 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private bool PlayerSlopeCheck() {
-        Transform playerPos = gameObject.transform.GetChild(1);
-        if (Physics.Raycast(playerPos.position, Vector3.down, out slopeHit, capsuleCollider.height * 0.5f + 0.3f)) {
-            float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+        float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
+        float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
+        // Transform playerPos = gameObject.transform.GetChild(1);
+        Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal); 
+        //Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)
+            int angle = (int) Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
+        
+        // if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)) {
+            // float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+            // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
             if(angle > maxSlopeAngle) {
                 slopeToSteep = true;
             }
@@ -298,13 +305,40 @@ public class PlayerStateMachine : MonoBehaviour {
             }
             return Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f;
             
+        // }
+
+        
+
+
+        /*
+             Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal); 
+        int angle = (int) Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
+        if(angle == 0) {
+            if(input.moveIsPressed) {
+                RaycastHit rayHit;
+                float rayHeightFromGround = 0.1f;
+                float rayCalculatedRayHeight = rb.position.y - capsuleCollider.bounds.extents.y + rayHeightFromGround;
+                Vector3 rayOrigin = new Vector3(rb.transform.position.x, rayCalculatedRayHeight, rb.position.z);
+
+                if(Physics.Raycast(rayOrigin, rb.transform.TransformDirection(moveDirection), out rayHit, 0.75f)){
+                    if(Vector3.Angle(rayHit.normal, rb.transform.up) > maxSlopeAngle) { 
+                        moveDirection.y = -moveMultiplier;
+                    }
+                }
+                Debug.DrawRay(rayOrigin, rb.transform.TransformDirection(moveDirection));
+            }
+            return false;
         }
 
-        return false;
+        else if(angle < maxSlopeAngle){ 
+            return true;
+        }
+
+        */
     }
 
     private Vector3 GetSlopeMoveDirection() {
-        return Vector3.ProjectOnPlane(moveDirection, slopeHit.normal).normalized;
+        return Vector3.ProjectOnPlane(moveDirection, groundCheckHit.normal).normalized;
     }
 
 
