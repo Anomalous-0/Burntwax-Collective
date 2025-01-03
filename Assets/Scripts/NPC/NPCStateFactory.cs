@@ -5,7 +5,6 @@ enum NPCStates {
     interact, 
     danger,
     death,
-    totalidle,
     patrol,
     work,
     run,
@@ -23,7 +22,6 @@ public class NPCStateFactory{
         states[NPCStates.interact] = new NPCInteractState(context, this);
         states[NPCStates.danger] = new NPCDangerState(context, this);
         states[NPCStates.death] = new NPCDeathState(context, this);
-        states[NPCStates.totalidle] = new NPCTotalIdleState(context, this);
         states[NPCStates.patrol] = new NPCPatrolState(context, this);
         states[NPCStates.work] = new NPCWorkState(context, this);
         states[NPCStates.run] = new NPCRunState(context, this);
@@ -48,11 +46,6 @@ public class NPCStateFactory{
     public NPCBaseState Death()
     {
         return states[NPCStates.death];
-    }
-
-    public NPCBaseState TotalIdle()
-    {
-        return states[NPCStates.totalidle];
     }
 
     public NPCBaseState Patrol()
