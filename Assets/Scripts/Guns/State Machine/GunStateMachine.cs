@@ -88,7 +88,7 @@ public class GunStateMachine : MonoBehaviour {
                 // Debug.Log("Helo");
                 WeaponSwitch();
             }  
-
+            EmptyClip();
         }
         
 
@@ -170,8 +170,23 @@ public class GunStateMachine : MonoBehaviour {
     }
 
 
+
+
+    private void EmptyClip() {
+        if(ClipEmpty() && input.shootIsPressed) {
+            ActiveGun.AudioConfig.PlayEmptyClip(ActiveGun.Model.GetComponent<AudioSource>());
+            //THE ONE TIME I  WILL CHANGE SHOOT IS PRESSED THEN IG
+            input.shootIsPressed = false;
+            
+        }
+    }
+
     public bool CanShoot() {
         return ActiveGun.AmmoConfig.currentClip > 0 && !isShooting;
+    }
+
+    private bool ClipEmpty() {
+        return ActiveGun.AmmoConfig.currentClip == 0;
     }
 
     public void EndReload() {

@@ -26,10 +26,10 @@ public class GunNoShootState : GunBaseState {
             SwitchState(Factory.Shoot());
         }
 
-        else if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() && !Ctx.CanShoot() && Ctx.input.shootIsPressed && !Ctx.isShooting) { 
-            Ctx.ActiveGun.AudioConfig.PlayEmptyClip(Ctx.ActiveGun.Model.GetComponent<AudioSource>());
-           // FIX THE EMPTY CLIP AUDIO
-        }
+        // else if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() && !Ctx.CanShoot() && Ctx.input.shootIsPressed && !Ctx.isShooting) { 
+        //     Ctx.ActiveGun.AudioConfig.PlayEmptyClip(Ctx.ActiveGun.Model.GetComponent<AudioSource>());
+        //    // FIX THE EMPTY CLIP AUDIO
+        // }
     }
 
     public override void InitializeSubState(){}

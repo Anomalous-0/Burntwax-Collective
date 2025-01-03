@@ -22,7 +22,7 @@ public class InputManager : MonoBehaviour {
 
 
     public bool aimIsPressed  { get; private set; } = false;
-    public bool shootIsPressed { get; private set; } = false;
+    public bool shootIsPressed =  false;
     public bool reloadIsPressed { get; private set; } = false;
     public bool sprintIsPressed  { get; private set; } = false;
 

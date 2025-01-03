@@ -10,7 +10,6 @@ public class GunScriptableObject : ScriptableObject {
     public GunType Type;
     public string Name;
     public GameObject ModelPrefab;
-    public GameObject Player;
     // public Vector3 SpawnPoint;
     // public Vector3 SpawnRotation;
 
@@ -43,8 +42,6 @@ public class GunScriptableObject : ScriptableObject {
     public RecoilConfig RecoilConfig;
     public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
-    public AimConfig AimConfig;
-    public bool CamChange;
 
     private MonoBehaviour ActiveMonoBehaviour;
     [HideInInspector] public GameObject Model;

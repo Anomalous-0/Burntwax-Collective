@@ -59,7 +59,7 @@ public class PlayerStateMachine : MonoBehaviour {
     [SerializeField] [Range(-0.95f, 1.05f)] float groundCheckDistance = 0.01f;
         
     public LayerMask heldRigidbody;
-    RaycastHit groundCheckHit = new RaycastHit();
+    public RaycastHit groundCheckHit = new RaycastHit();
     Vector3 playerCenterPoint;
 
     
