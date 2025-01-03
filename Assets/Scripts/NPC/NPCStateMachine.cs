@@ -23,7 +23,6 @@ public class NPCStateMachine : MonoBehaviour {
 
 
     void Update() {
-
-        
+        currentState.UpdateStates();
     }
 }
