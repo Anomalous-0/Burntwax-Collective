@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCWorkState : MonoBehaviour
+public class NPCWorkState : NPCBaseState
 {
     public NPCWorkState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base(currentContext, npcStateFactory)

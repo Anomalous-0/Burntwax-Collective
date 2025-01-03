@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCDeathState : MonoBehaviour
+public class NPCDeathState : NPCBaseState
 {
     public NPCDeathState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base(currentContext, npcStateFactory)

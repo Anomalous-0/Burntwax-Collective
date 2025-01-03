@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCSittingState : MonoBehaviour
+public class NPCTotalIdleState : NPCBaseState
 {
     public NPCTotalIdleState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base(currentContext, npcStateFactory)

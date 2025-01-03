@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCHobbleState : MonoBehaviour
+public class NPCHobbleState : NPCBaseState
 {
     public NPCHobbleState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base(currentContext, npcStateFactory)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPCPatrolState : MonoBehaviour
+public class NPCPatrolState : NPCBaseState
 {
     public NPCPatrolState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base(currentContext, npcStateFactory)
