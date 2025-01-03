@@ -30,11 +30,10 @@ public class NPCPatrolState : NPCBaseState
     public override void CheckSwitchStates()
     {
 
-        if (false/*Danger stops*/)
+        if (false/*Unknown trigger. Do we even want an NPC to be able to switch between patrolling and working?*/)
         {
-            SwitchState(Factory.Idle());
+            SwitchState(Factory.Work());
         }
-        // There is no switch to interact because there is no scenario in which you should be able to interact with an NPC in danger state
 
     }
 

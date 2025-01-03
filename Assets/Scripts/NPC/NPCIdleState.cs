@@ -33,6 +33,15 @@ public class NPCIdleState : NPCBaseState {
     }
 
 
-    public override void InitializeSubState(){}
+    public override void InitializeSubState()
+    {
+        if (/*intiially works when idle*/false)
+        {
+            SetSubState(Factory.Work());
+        } else if (/*initially patrols when idle*/true)
+        {
+            SetSubState(Factory.Patrol());
+        }
+    }
 
 }

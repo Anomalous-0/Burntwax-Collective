@@ -28,12 +28,16 @@ public class NPCDangerState : NPCBaseState {
         if (false/*Danger stops*/)
         {
             SwitchState(Factory.Idle());
+        } else if (false/*if the opps knock bro out*/) {
+            SwitchState(Factory.Death());
         }
-        // There is no switch to interact because there is no scenario in which you should be able to interact with an NPC in danger state
         
     }
 
 
-    public override void InitializeSubState(){}
+    public override void InitializeSubState()
+    {
+        SetSubState(Factory.Run()); // NPC will always start with running
+    }
 
 }

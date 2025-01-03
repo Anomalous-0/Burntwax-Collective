@@ -12,32 +12,13 @@ public class NPCHobbleState : NPCBaseState
 
     public override void EnterState()
     {
-
-    }
-
-    public override void UpdateState()
-    {
-
-        CheckSwitchStates();
-
-    }
-
-    public override void ExitState()
-    {
-
-    }
-
-    public override void CheckSwitchStates()
-    {
-
-        if (false/*Danger stops*/)
-        {
-            SwitchState(Factory.Idle());
-        }
-        // There is no switch to interact because there is no scenario in which you should be able to interact with an NPC in danger state
-
+        // Reduce speed and change animation
     }
 
 
+    // NPCs either be hobbling or be dead no in between
+    public override void UpdateState() {}
+    public override void ExitState(){}
+    public override void CheckSwitchStates() {}
     public override void InitializeSubState() { }
 }

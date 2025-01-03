@@ -12,7 +12,8 @@ public class NPCRunState : NPCBaseState
 
     public override void EnterState()
     {
-
+        // Change speed to increase it
+        // Set a destination
     }
 
     public override void UpdateState()
@@ -24,17 +25,16 @@ public class NPCRunState : NPCBaseState
 
     public override void ExitState()
     {
-
+        
     }
 
     public override void CheckSwitchStates()
     {
 
-        if (false/*Danger stops*/)
+        if (false/*Health is in between 0 and certain limit, maybe 65/100? Maybe it's easier to just have a timer? After first hit?*/)
         {
-            SwitchState(Factory.Idle());
+            SwitchState(Factory.Hobble());
         }
-        // There is no switch to interact because there is no scenario in which you should be able to interact with an NPC in danger state
 
     }
 
