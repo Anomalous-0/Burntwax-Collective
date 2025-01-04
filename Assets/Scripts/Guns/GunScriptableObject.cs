@@ -39,7 +39,6 @@ public class GunScriptableObject : ScriptableObject {
     public ShootConfig ShootConfig;
     public AmmoConfig AmmoConfig;
     public AudioConfig AudioConfig;
-    public RecoilConfig RecoilConfig;
     public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
 

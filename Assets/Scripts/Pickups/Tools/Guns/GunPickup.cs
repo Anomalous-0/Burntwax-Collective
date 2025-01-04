@@ -5,7 +5,7 @@ using UnityEngine;
 public class GunPickup : MonoBehaviour {
 
 
-    [SerializeField] int ammo;
+    [SerializeField] int ammoCount;
 
     [SerializeField] GunScriptableObject gun;
     private GunStateMachine gunSelector;
@@ -15,9 +15,22 @@ public class GunPickup : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         if(other.GetComponentInParent<PlayerHealth>() != false) {
             gunSelector = FindObjectOfType<GunStateMachine>();
-            gunSelector.Pickup(gun);
+            if(!gunSelector.Guns.Contains(gun)) {
+                gunSelector.Pickup(gun);
+            }
+            else {
+                if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {
+                    if(gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount) {
+                        gun.AmmoConfig.currentAmmo += ammoCount;
+                    }
+                    else {
+                        gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
+                    } 
+                     
+                }
+            
             Destroy(gameObject);   
         }
+        }
     }
-
 }
