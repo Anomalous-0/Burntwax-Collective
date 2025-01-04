@@ -36,7 +36,7 @@ public class PlayerGroundedState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){    
-        if(Ctx.input.jumpIsPressed && !Ctx.SlopeTooSteep) {
+        if(Ctx.input.jumpIsPressed /*&& !Ctx.SlopeTooSteep*/) {
             SwitchState(Factory.Jump());
         }
         else if(!Ctx.playerIsGrounded) {

@@ -23,7 +23,7 @@ public class PlayerWalkState : PlayerBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.moveIsPressed && Ctx.prioritySorter.SprintIsPriority() && !Ctx.gunMachine.isReloading) {
+        if(Ctx.input.moveIsPressed && Ctx.prioritySorter.SprintIsPriority() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot()) {
             SwitchState(Factory.Sprint());
         } else if(!Ctx.input.moveIsPressed) {
             SwitchState(Factory.Idle());

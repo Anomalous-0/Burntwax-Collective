@@ -173,11 +173,11 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void EmptyClip() {
-        if(ClipEmpty() && input.shootIsPressed) {
+        if(ClipEmpty() && input.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() &&  CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && input.shootIsPressed) {
             ActiveGun.AudioConfig.PlayEmptyClip(ActiveGun.Model.GetComponent<AudioSource>());
             //THE ONE TIME I  WILL CHANGE SHOOT IS PRESSED THEN IG
             input.shootIsPressed = false;
-            
+            anim.Play("emptyclip_" + ActiveGun.Name);     
         }
     }
 
@@ -186,7 +186,7 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     private bool ClipEmpty() {
-        return ActiveGun.AmmoConfig.currentClip == 0;
+        return ActiveGun.AmmoConfig.currentClip == 0 && ActiveGun.AmmoConfig.currentAmmo == 0;
     }
 
     public void EndReload() {
