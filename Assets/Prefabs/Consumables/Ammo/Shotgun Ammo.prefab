@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b74abe736253f9944b9e76e0163ea35f, type: 2}
+  - {fileID: 2100000, guid: a67dd6e8e81691c4a9cd8944de7896de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -144,7 +144,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b74abe736253f9944b9e76e0163ea35f, type: 2}
+  - {fileID: 2100000, guid: a67dd6e8e81691c4a9cd8944de7896de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -227,7 +227,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b74abe736253f9944b9e76e0163ea35f, type: 2}
+  - {fileID: 2100000, guid: a67dd6e8e81691c4a9cd8944de7896de, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -258,13 +258,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2534855556683237600}
+  - component: {fileID: 3161494543826322948}
   - component: {fileID: 5286035585440516554}
   - component: {fileID: 1327630242725743083}
   - component: {fileID: 8725762791249871987}
   - component: {fileID: -199172209931897743}
-  - component: {fileID: 2573148226408101060}
   m_Layer: 7
-  m_Name: Pistol Ammo
+  m_Name: Shotgun Ammo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -288,6 +288,27 @@ Transform:
   - {fileID: 8329308907151087028}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &3161494543826322948
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.63
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &5286035585440516554
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -361,25 +382,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ammoCount: 10
-  gunID: 0
---- !u!65 &2573148226408101060
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9176256781164373382}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.2, y: 0.82, z: 1.2}
-  m_Center: {x: 0, y: 0, z: 0}
+  gun: {fileID: 11400000, guid: c005e2334a632c24ea68bd9c423e0c72, type: 2}
