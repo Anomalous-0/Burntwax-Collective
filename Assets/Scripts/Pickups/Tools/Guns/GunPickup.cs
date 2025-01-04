@@ -25,12 +25,13 @@ public class GunPickup : MonoBehaviour {
                     }
                     else {
                         gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
-                    } 
-                     
-                }
+                    }
+                   
+                } 
+            }
             
             Destroy(gameObject);   
         }
-        }
     }
+
 }

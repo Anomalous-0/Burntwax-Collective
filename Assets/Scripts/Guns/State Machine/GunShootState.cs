@@ -35,7 +35,8 @@ public class GunShootState : GunBaseState {
         // Debug.Log("Shoot State");
     }
 
-    public override void UpdateState(){     
+    public override void UpdateState(){  
+        Debug.Log(Ctx.isShooting);   
         CheckSwitchStates();
     }
 
