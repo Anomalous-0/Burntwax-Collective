@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 3993751473907198522}
   - component: {fileID: 7593056247257005254}
   - component: {fileID: 4998941023216351194}
+  - component: {fileID: 8238781064172233145}
+  - component: {fileID: 1291508627104210510}
+  - component: {fileID: 5498660762704863293}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -85,9 +88,12 @@ MonoBehaviour:
   rb: {fileID: 1186628176162295092}
   capsuleCollider: {fileID: 5705949197316518625}
   cam: {fileID: 4998941023216351194}
+  gunMachine: {fileID: 0}
+  prioritySorter: {fileID: 0}
   playerVelocity: 4
   groundMultiplier: 1
   airMultiplier: 0.95
+  wallMultiplier: 1.2
   walkVelocity: 4
   sprintVelocity: 6
   groundDrag: 7
@@ -98,7 +104,8 @@ MonoBehaviour:
   crouchVelocity: 2
   crouchYScale: 0.5
   jumpForce: 11
-  readyToJump: 1
+  coyoteTimer: 0
+  coyoteTime: 0
   playerIsGrounded: 1
   groundCheckRadiusMultiplier: 0.9
   groundCheckDistance: 0.02
@@ -109,6 +116,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   wallRunForce: 40
+  wallJumpForce: 0
   wallCheckDistance: 0.45
   sphereCastRadius: 0.05
   minHeight: 1
@@ -117,7 +125,10 @@ MonoBehaviour:
   wallRight: 0
   wallFront: 0
   wallBack: 0
+  playerIsSloped: 0
   maxSlopeAngle: 0
+  slopeToSteep: 0
+  downForce: 0
 --- !u!114 &3993751473907198522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,6 +177,128 @@ MonoBehaviour:
   fpsCam: {fileID: 0}
   aimCam: {fileID: 0}
   mouseWorldPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &8238781064172233145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148579728589637519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3eb2332dde5bfa040bb0f2d90b5a0a5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input: {fileID: 3522338294497473196}
+--- !u!82 &1291508627104210510
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148579728589637519}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &5498660762704863293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148579728589637519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d5937bfdb9413944ba01bb73af2015e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gun: {fileID: 0}
 --- !u!1 &1412537731836723052
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,10 +565,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactIsPressed: 0
-  aimIsPressed: 0
-  sprintIsPressed: 0
   jumpIsPressed: 0
-  shootIsPressed: 0
-  reloadIsPressed: 0
-  mouseScroll: 0
   useGloves: 0
+  shootIsPressed: 0

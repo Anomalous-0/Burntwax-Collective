@@ -11,6 +11,7 @@ public class Interactor : MonoBehaviour {
     [SerializeField] LayerMask interactableLayer;
     public InputManager input;
     public CamStateMachine cam;
+    public bool ableToInteract;
     Interactable interactable;
     [SerializeField] GameObject defaultIcon;
     [SerializeField] GameObject interactIcon;
@@ -27,14 +28,13 @@ public class Interactor : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
 
         RaycastHit hit;
         if (Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, interactableLayer)) {
             
             //Crosshair update         
-            
+                ableToInteract = true;
             
                 interactIcon.SetActive(true);
                 defaultIcon.SetActive(true);
@@ -42,20 +42,11 @@ public class Interactor : MonoBehaviour {
         
 
             //Actual interaction
-            if (hit.collider.GetComponent<Interactable>() != false) {
+            if (hit.collider.GetComponent<Interactable>()) {
                 if (interactable == null || interactable.ID != hit.collider.GetComponent<Interactable>().ID) {
                     interactable = hit.collider.GetComponent<Interactable>();
 
                 }
-
-                
-
-                // if (interactable.interactIcon != null) {
-                //     interactImage.sprite = interactable.interactIcon;
-                // } else {
-                //     interactImage.sprite = defaultInteractIcon;
-                // }
-
                 if (input.interactIsPressed && !input.aimIsPressed){
                     // Debug.Log("Interacted");
                     interactable.onInteract.Invoke();
