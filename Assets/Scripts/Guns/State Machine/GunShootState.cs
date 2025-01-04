@@ -19,24 +19,11 @@ public class GunShootState : GunBaseState {
         else {
             Ctx.anim.Play("recoil_" + Ctx.ActiveGun.Name);
         }
-        
-
-        // if(Ctx.camMachine.currentState == Ctx.camMachine.states.Aim()){
-        //     Ctx.gunAnimator.SetTrigger(Ctx.aimShootHash);
-        //     Ctx.handAnimator.SetTrigger(Ctx.aimShootHash);
-        // }
-        // else {
-            // Ctx.gunAnimator.SetTrigger(Ctx.shootHash);
-            // Ctx.handAnimator.SetTrigger(Ctx.shootHash);
-        // }
-
-        
-        
         // Debug.Log("Shoot State");
     }
 
     public override void UpdateState(){  
-        Debug.Log(Ctx.isShooting);   
+
         CheckSwitchStates();
     }
 
