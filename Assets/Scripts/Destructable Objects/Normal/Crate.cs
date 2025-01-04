@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [DisallowMultipleComponent]
 
@@ -54,11 +56,12 @@ public class Crate : MonoBehaviour, Destructable {
     private void HandleDestruct(Vector3 pos) {
         if(destructParticles) {
             Instantiate(destructParticles, pos, Quaternion.identity);
-            
-
         }
         if(disappear) {
+            SpawnResources(pos);
             Destroy(gameObject);
+            
+            
         }
         
     }
@@ -66,7 +69,8 @@ public class Crate : MonoBehaviour, Destructable {
 
     private void SpawnResources(Vector3 pos) {
         // Instantiate(resourcePrefab, pos, Quaternion.identity);
-   
+        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count-1)], pos, Quaternion.identity);
+            Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count-1)], pos, Quaternion.identity);
     }
 
     private void Start() {
