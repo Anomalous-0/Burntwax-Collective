@@ -3,16 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class NPCStateMachine : MonoBehaviour {
-    public PlayerStateMachine player;
+    public InputManager input;
+    public Transform player;
+    public Transform npc;
+    public Rigidbody rb;
 
-    
+
     private NPCBaseState currentState;
     public NPCBaseState CurrentState {get { return currentState; } set { currentState = value; } }
 
     public NPCStateFactory states;
 
+
+    [Header("Triggers")]
+    //[SerializeField] private UnityEvent allTriggers;
+    public bool interactionHit;
+    public bool dangerHitVisual; // Will be for visual danger cues
+    // public something dangerHitAudio; // Will be for audio danger cues
 
     private void Awake() {
 
@@ -23,6 +33,10 @@ public class NPCStateMachine : MonoBehaviour {
 
 
     void Update() {
+
+        RaycastHit hit;
+        interactionHit = Physics.Raycast(player.position, player.TransformDirection(input.LookInput), out hit, 3f, LayerMask.GetMask("NPC"));
+
         currentState.UpdateStates();
     }
 }

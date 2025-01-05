@@ -3,17 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NPCInteractState : NPCBaseState {
-   
+
     public NPCInteractState (NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
         IsRootState = true;
     }
 
-    public override void EnterState(){
-       InitializeSubState();
+    public override void EnterState()
+    {
+        InitializeSubState();
     }
 
     public override void UpdateState(){
+
+
+
+        Ctx.npc.transform.rotation = Quaternion.Slerp(Ctx.npc.transform.rotation, Quaternion.LookRotation(Ctx.player.transform.position - Ctx.npc.transform.position, Vector3.up), Time.deltaTime * 5f);
+
         CheckSwitchStates();
        
     }
@@ -26,7 +32,7 @@ public class NPCInteractState : NPCBaseState {
         if (false/*Danger arises*/)
         {
             SwitchState(Factory.Danger());
-        } else if (false/*Interaction stopped*/)
+        } else if (Ctx.interactionHit && Ctx.input.interactIsPressed)
         {
             SwitchState(Factory.Idle());
         }

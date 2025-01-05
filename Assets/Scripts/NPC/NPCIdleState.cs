@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NPCIdleState : NPCBaseState {
-   
+
     public NPCIdleState(NPCStateMachine currentContext, NPCStateFactory npcStateFactory)
     : base (currentContext, npcStateFactory) {
         IsRootState = true;
@@ -15,6 +16,7 @@ public class NPCIdleState : NPCBaseState {
     }
 
     public override void UpdateState(){
+
         CheckSwitchStates();
        
     }
@@ -24,7 +26,7 @@ public class NPCIdleState : NPCBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if (false/*Interact happnes*/) {
+        if (Ctx.interactionHit && Ctx.input.interactIsPressed) {
             SwitchState(Factory.Interact());
         } else if (false/*danger happens*/){
             SwitchState(Factory.Danger());
