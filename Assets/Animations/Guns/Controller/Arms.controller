@@ -361,6 +361,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: stow
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: aim
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -8737052312878518334}
   m_Solo: 0
@@ -1698,8 +1701,8 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: stow
     m_EventTreshold: 0
-  - m_ConditionMode: 1
-    m_ConditionEvent: equip
+  - m_ConditionMode: 2
+    m_ConditionEvent: aim
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 8655087805385385859}
@@ -1853,6 +1856,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 2
     m_ConditionEvent: stow
     m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: aim
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -5223597445145814191}
   m_Solo: 0
@@ -1899,6 +1905,9 @@ AnimatorStateTransition:
   m_Conditions:
   - m_ConditionMode: 2
     m_ConditionEvent: stow
+    m_EventTreshold: 0
+  - m_ConditionMode: 2
+    m_ConditionEvent: aim
     m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -7508528517059940333}
