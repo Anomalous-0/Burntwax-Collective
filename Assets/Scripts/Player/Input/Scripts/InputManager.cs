@@ -16,7 +16,7 @@ public class InputManager : MonoBehaviour {
     
     
     public float mouseScroll { get; private set; } = 0;
-    public int weaponSelectID { get; private set; } = 0;
+    public bool weaponSelectID { get; private set; }
 
     public bool useGloves = false;
     public bool gloveShootIsPressed { get; private set; } = false;
@@ -61,7 +61,7 @@ public class InputManager : MonoBehaviour {
         input.OnFoot.WeaponScroll.performed += SetScroll;
         input.OnFoot.WeaponScroll.canceled += SetScroll;
 
-        input.OnFoot.WeaponSelect.performed += SetSelect;
+        input.OnFoot.WeaponSelect.started += SetSelect;
         input.OnFoot.WeaponSelect.canceled += SetSelect;
 
         input.OnFoot.Interact.started += SetInteract;
@@ -105,7 +105,7 @@ public class InputManager : MonoBehaviour {
         input.OnFoot.WeaponScroll.performed -= SetScroll;
         input.OnFoot.WeaponScroll.canceled -= SetScroll;
 
-        input.OnFoot.WeaponSelect.performed -= SetScroll;
+        input.OnFoot.WeaponSelect.started -= SetScroll;
         input.OnFoot.WeaponSelect.canceled -= SetScroll;
 
         input.OnFoot.Interact.started -= SetInteract;
@@ -164,7 +164,7 @@ public class InputManager : MonoBehaviour {
     }
 
     private void SetSelect(InputAction.CallbackContext ctx) {
-        weaponSelectID = ctx.ReadValue<int>();
+        weaponSelectID = ctx.started;
     }
 
     private void SetInteract(InputAction.CallbackContext ctx) {

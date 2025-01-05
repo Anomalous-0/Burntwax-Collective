@@ -29,7 +29,7 @@ public class GunStowState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() || Ctx.stateMachine.prioritySorter.ShootIsPriority()){
+        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() &&  !Ctx.stateMachine.prioritySorter.AimIsPriority()|| Ctx.input.shootIsPressed){
             SwitchState(Factory.Rest());
         } 
         else if(Ctx.AutoReload()  || Ctx.ManualReload()) {
@@ -37,8 +37,9 @@ public class GunStowState : GunBaseState {
         }
 
         else if(!Ctx.isReloading && Ctx.stateMachine.prioritySorter.AimIsPriority()) {
-            // NEED FIX
-            
+
+            //Needed this, otherwise gun goes through equip and then to aim
+        
             SwitchState(Factory.Aim());
         }
        

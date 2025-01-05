@@ -11,6 +11,7 @@ public class GunRestState : GunBaseState {
     }
 
     public override void EnterState(){
+        // Ctx.anim.SetBool(Ctx.equipHash, true);       
        
         // Debug.Log("Rest State");
         InitializeSubState();
@@ -23,11 +24,11 @@ public class GunRestState : GunBaseState {
     }
 
     public override void ExitState(){
-                
+        // Ctx.anim.SetBool(Ctx.equipHash, false);       
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
+        if(Ctx.stateMachine.prioritySorter.AimIsPriority() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
             SwitchState(Factory.Aim());
         }
         else if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint() && !Ctx.isShooting){

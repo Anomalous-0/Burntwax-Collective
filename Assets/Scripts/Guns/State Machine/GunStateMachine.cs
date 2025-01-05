@@ -82,7 +82,7 @@ public class GunStateMachine : MonoBehaviour {
 
     private void Update() {
         if(ActiveGun != null) {
-            Debug.Log(input.weaponSelectID);
+            // Debug.Log(input.weaponSelectID);
             currentState.UpdateStates();
             
             if(input.mouseScroll != 0 && !isShooting) {
@@ -164,6 +164,7 @@ public class GunStateMachine : MonoBehaviour {
     
 
         shootHash = Animator.StringToHash("shoot");
+        // equipHash = Animator.StringToHash("equip");
         aimShootHash = Animator.StringToHash("aimShoot");
         aimHash = Animator.StringToHash("aim");
         stowHash = Animator.StringToHash("stow");
