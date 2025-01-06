@@ -7,24 +7,20 @@ using UnityEngine.Events;
 
 public class Interactor : MonoBehaviour {
 
+    
+    public CamStateMachine cam;
+    public PlayerCrosshair crosshair;
+
     [SerializeField] float raycastDistance = 3f;
     [SerializeField] LayerMask interactableLayer;
     public InputManager input;
-    public CamStateMachine cam;
-    public bool ableToInteract;
-    Interactable interactable;
-    [SerializeField] GameObject defaultIcon;
-    [SerializeField] GameObject interactIcon;
-    [SerializeField] GameObject aimIcon;
+    
 
-    [SerializeField] GloveStateMachine glove;
+    Interactable interactable;
 
     // Start is called before the first frame update
-    void Awake()
-    {
-        defaultIcon.SetActive(true);
-        interactIcon.SetActive(false);
-        aimIcon.SetActive(false);
+    void Awake() {
+       
     }
 
     // Update is called once per frame
@@ -34,7 +30,10 @@ public class Interactor : MonoBehaviour {
         if (cam.currentState != cam.states.Aim() && Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, interactableLayer)) {
             
             //Crosshair update         
-                ableToInteract = true;
+            // Debug.Log("Should turn interact crosshair");
+            // NOT OPTIMIMAL AT ALL MIGHT HAVE TO MAKE INTERACTION STATE MACHINE LMAO
+            crosshair.SetInteractCrosshair();
+
 
             //Actual interaction
             if (hit.collider.GetComponent<Interactable>()) {
@@ -52,25 +51,12 @@ public class Interactor : MonoBehaviour {
                     
                 }
             }
-        } else {
-            if(glove.looking && cam.currentState != cam.states.Aim()) {
-                interactIcon.SetActive(true);
-                defaultIcon.SetActive(true);
-                
-            }
-            else if ( cam.currentState == cam.states.Aim()) {
-                // defaultIcon.SetActive(false);
-      
-                // interactIcon.SetActive(false);
-            } else {
-                defaultIcon.SetActive(true);
-                
-                interactIcon.SetActive(false);
-            }
-            
-            // if (interactImage.sprite != defaultIcon) {
-            //     interactImage.sprite = defaultIcon;
-            // }
+        } 
+        else {
+            crosshair.ResetInteractCrosshair();
         }
+        
+            
+        
     }
 }

@@ -41,6 +41,7 @@ public class GunScriptableObject : ScriptableObject {
     public AudioConfig AudioConfig;
     public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
+    public CrosshairConfig CrosshairConfig;
 
     private MonoBehaviour ActiveMonoBehaviour;
     [HideInInspector] public GameObject Model;

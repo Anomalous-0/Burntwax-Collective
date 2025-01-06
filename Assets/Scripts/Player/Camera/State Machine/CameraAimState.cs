@@ -11,8 +11,9 @@ public class CameraAimState : CameraBaseState {
     }
 
     public override void EnterState(){
+        Ctx.crosshair.SetAimCrosshair();
         // Debug.Log("Locked State");
-       InitializeSubState();
+        InitializeSubState();
     }
 
     public override void UpdateState(){
@@ -22,7 +23,7 @@ public class CameraAimState : CameraBaseState {
     }
 
     public override void ExitState(){
-       
+        Ctx.crosshair.ResetAimCrosshair();
     }
     
 

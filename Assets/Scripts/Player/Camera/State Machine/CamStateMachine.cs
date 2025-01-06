@@ -8,8 +8,12 @@ public class CamStateMachine : MonoBehaviour {
     public InputManager input;
 
 
-    public PlayerStateMachine player;
+    [Header("State Machines")]
+    [HideInInspector] public PlayerStateMachine player;
+
     public GunStateMachine gun;
+    [HideInInspector] public PlayerCrosshair crosshair;
+
     CinemachineVirtualCamera activeCam;
      
     public CinemachineVirtualCamera fpsCam;
@@ -31,6 +35,8 @@ public class CamStateMachine : MonoBehaviour {
 
     private void Awake() {
         activeCam = fpsCam;
+        player = GetComponent<PlayerStateMachine>();
+        crosshair = GetComponent<PlayerCrosshair>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 

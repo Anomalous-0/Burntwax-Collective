@@ -27,9 +27,6 @@ public class GunAimState : GunBaseState {
     
     public override void CheckSwitchStates(){
         if(Ctx.stateMachine.prioritySorter.SprintIsPriority()) {
-           
-            //FIX THIS 
-            //Ctx.input.aimIsPressed = false;
             SwitchState(Factory.Stow());
         }
         else if(!Ctx.input.aimIsPressed) {

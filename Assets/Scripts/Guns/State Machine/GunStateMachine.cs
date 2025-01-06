@@ -6,7 +6,14 @@ using UnityEngine.Animations.Rigging;
 [DisallowMultipleComponent]
 public class GunStateMachine : MonoBehaviour {
 
-   
+    
+
+    [Header("State Machines")]
+    public PlayerStateMachine stateMachine;
+    public CamStateMachine camMachine; 
+    public PlayerCrosshair crosshair;
+
+    [Space]
     
     public InputManager input;
 
@@ -38,9 +45,8 @@ public class GunStateMachine : MonoBehaviour {
 
 
     [Space]
-    public PlayerStateMachine stateMachine;
-    public CamStateMachine camMachine;
-    
+
+  
 
     private GunBaseState currentState;
     public GunStateFactory states;
@@ -132,6 +138,8 @@ public class GunStateMachine : MonoBehaviour {
         ActiveGun.Despawn(this);
         ActiveGun = gun;
         gun.Spawn(GunParent, this);
+
+        crosshair.SetGunCrosshair(gun);
         
 
 

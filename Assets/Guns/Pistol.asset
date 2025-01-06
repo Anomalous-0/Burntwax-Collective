@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea7301d1c341f36478e6140cdbb9ca03, type: 3}
-  m_Name: Glock
+  m_Name: Pistol
   m_EditorClassIdentifier: 
   ID: 0
   ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
@@ -23,4 +23,5 @@ MonoBehaviour:
   AudioConfig: {fileID: 11400000, guid: 5a58e1630be0fb342b792af52d39d5d0, type: 2}
   DamageConfig: {fileID: 11400000, guid: a713da33c2ab2314d92724c9f03e29ba, type: 2}
   TrailConfig: {fileID: 11400000, guid: 43279616a19e5d64ba2a14c9dd8cc67f, type: 2}
+  CrosshairConfig: {fileID: 11400000, guid: 78f4d58183b1a45478d563ee375e76f6, type: 2}
   Model: {fileID: 0}
