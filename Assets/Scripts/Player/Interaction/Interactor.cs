@@ -20,26 +20,18 @@ public class Interactor : MonoBehaviour {
     [SerializeField] GloveStateMachine glove;
 
     // Start is called before the first frame update
-    void Awake()
-    {
-        defaultIcon.SetActive(true);
-        interactIcon.SetActive(false);
-        aimIcon.SetActive(false);
+    void Awake(){
+       
     }
 
     // Update is called once per frame
     void Update() {
 
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, interactableLayer)) {
+        if (cam.currentState != cam.states.Aim() && Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, interactableLayer)) {
             
             //Crosshair update         
                 ableToInteract = true;
-            
-                interactIcon.SetActive(true);
-                defaultIcon.SetActive(true);
-                // aimIcon.SetActive(false);
-        
 
             //Actual interaction
             if (hit.collider.GetComponent<Interactable>()) {
@@ -47,7 +39,7 @@ public class Interactor : MonoBehaviour {
                     interactable = hit.collider.GetComponent<Interactable>();
 
                 }
-                if (input.interactIsPressed && !input.aimIsPressed){
+                if (input.interactIsPressed){
                     // Debug.Log("Interacted");
                     interactable.onInteract.Invoke();
 
@@ -57,25 +49,11 @@ public class Interactor : MonoBehaviour {
                     
                 }
             }
-        } else {
-            if(glove.looking && cam.currentState != cam.states.Aim()) {
-                interactIcon.SetActive(true);
-                defaultIcon.SetActive(true);
-                
-            }
-            else if ( cam.currentState == cam.states.Aim()) {
-                defaultIcon.SetActive(false);
-      
-                interactIcon.SetActive(false);
-            } else {
-                defaultIcon.SetActive(true);
-                
-                interactIcon.SetActive(false);
-            }
+        } 
             
             // if (interactImage.sprite != defaultIcon) {
             //     interactImage.sprite = defaultIcon;
             // }
-        }
+        
     }
 }

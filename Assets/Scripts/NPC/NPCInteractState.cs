@@ -18,7 +18,7 @@ public class NPCInteractState : NPCBaseState {
 
 
 
-        Ctx.npc.transform.rotation = Quaternion.Slerp(Ctx.npc.transform.rotation, Quaternion.LookRotation(Ctx.player.transform.position - Ctx.npc.transform.position, Vector3.up), Time.deltaTime * 5f);
+        // Ctx.npc.transform.rotation = Quaternion.Slerp(Ctx.npc.transform.rotation, Quaternion.LookRotation(Ctx.player.transform.position - Ctx.npc.transform.position, Vector3.up), Time.deltaTime * 5f);
 
         CheckSwitchStates();
        

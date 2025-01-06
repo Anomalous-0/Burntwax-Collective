@@ -7,7 +7,7 @@ using UnityEngine.Events;
 
 public class NPCStateMachine : MonoBehaviour {
     public InputManager input;
-    public Transform player;
+    public PlayerStateMachine player;
     public Transform npc;
     public Rigidbody rb;
 
@@ -35,7 +35,7 @@ public class NPCStateMachine : MonoBehaviour {
     void Update() {
 
         RaycastHit hit;
-        interactionHit = Physics.Raycast(player.position, player.TransformDirection(input.LookInput), out hit, 3f, LayerMask.GetMask("NPC"));
+        interactionHit = Physics.Raycast(player.transform.position, player.transform.TransformDirection(input.LookInput), out hit, 3f, LayerMask.GetMask("NPC"));
 
         currentState.UpdateStates();
     }

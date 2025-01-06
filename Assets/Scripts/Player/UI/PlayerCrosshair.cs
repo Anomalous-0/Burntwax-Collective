@@ -1,24 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerCrosshair : MonoBehaviour {
 
-    [Header("Icon types")]
-    [SerializeField] GameObject outerIcon;
-    [SerializeField] GameObject innerIcon;
+    [Header("Icon Image References")]
+    [SerializeField] Image outerIcon;
+    [SerializeField] Image innerIcon;
+
+
+
+    [Header("Icon Types (Guns, interaction, etc.)")]
+
+    //Outer
+    [SerializeField] Sprite pistolIcon;
+    [SerializeField] Sprite smgIcon;
+    [SerializeField] Sprite shotgunIcon;
+    [SerializeField] Sprite revolverIcon;
+
+
+    //Inner
+    [SerializeField] Sprite interactIcon;
+    Color transparent;
+
+
 
     [Header("State Machines")]
     [SerializeField] GunStateMachine gun;
     [SerializeField] Interactor interactor;
-    [SerializeField] GloveStateMachine glove;
     CamStateMachine cam;
     
     PlayerStateMachine player;
     
     // Start is called before the first frame update
     void Start() {
+        transparent.a = 0;
+
+        outerIcon.sprite = pistolIcon;
+
+
+        innerIcon.sprite = null;
+        innerIcon.color = transparent;
         player = GetComponent<PlayerStateMachine>();
         cam = GetComponent<CamStateMachine>();
     }
@@ -26,15 +51,25 @@ public class PlayerCrosshair : MonoBehaviour {
     // Update is called once per frame
     void Update()  {
         if(cam.currentState == cam.states.Aim()) {
-            // all icons.SetActive(false);
+            outerIcon.sprite = null;
+            outerIcon.color = transparent;
+            innerIcon.sprite = null;
+            innerIcon.color = transparent;
         }
         else {
             if(interactor.ableToInteract) {
                 // Interact "Inside type" icon is active
+                innerIcon.sprite = interactIcon;
+                innerIcon.color = Color.white;  
             }
-            else if(glove.looking) {
-                // GLove indicator "Insider" icon is active
+            else {
+                innerIcon.sprite = null;
+                innerIcon.color = transparent;
             }
+
+            
+            
+           
 
 
             
@@ -45,11 +80,24 @@ public class PlayerCrosshair : MonoBehaviour {
 
 
         }
+
+        
         
     }
-
-
-    private void SelectGunIcon() {
-        // Set the main icon to the icon that will be specific to the current gun, icon will be found in scriptable object
+    public void SetAimCrosshair() {
+        outerIcon.color = transparent;
+        innerIcon.color = transparent;
     }
+
+    public void SetInteractCrosshair() {
+        innerIcon.color = Color.white;
+        innerIcon.sprite = interactIcon;
+    }
+
+    public void SetOuterCrosshair() {
+        // outerIcon.sprite = gun.ActiveGun.CrosshairConfig.icon;
+    }
+
+
+    
 }
