@@ -9,7 +9,7 @@ public class NPCStateMachine : MonoBehaviour {
     public InputManager input;
     public PlayerStateMachine player;
     public Transform npc;
-    public Rigidbody rb;
+    Rigidbody rb;
 
 
     private NPCBaseState currentState;
@@ -25,7 +25,7 @@ public class NPCStateMachine : MonoBehaviour {
     // public something dangerHitAudio; // Will be for audio danger cues
 
     private void Awake() {
-
+        rb = GetComponent<Rigidbody>();
         states = new NPCStateFactory(this);
         currentState = states.Idle();
         currentState.EnterState();
@@ -34,8 +34,6 @@ public class NPCStateMachine : MonoBehaviour {
 
     void Update() {
 
-        RaycastHit hit;
-        interactionHit = Physics.Raycast(player.transform.position, player.transform.TransformDirection(input.LookInput), out hit, 3f, LayerMask.GetMask("NPC"));
 
         currentState.UpdateStates();
     }

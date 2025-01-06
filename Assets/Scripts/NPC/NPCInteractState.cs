@@ -9,8 +9,8 @@ public class NPCInteractState : NPCBaseState {
         IsRootState = true;
     }
 
-    public override void EnterState()
-    {
+    public override void EnterState() {
+        Debug.Log("INTERACT STATE");
         InitializeSubState();
     }
 

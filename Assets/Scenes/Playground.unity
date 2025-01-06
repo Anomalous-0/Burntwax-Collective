@@ -3232,9 +3232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
-  player: {fileID: 0}
-  npc: {fileID: 0}
-  rb: {fileID: 0}
+  player: {fileID: 401126580}
+  npc: {fileID: 1607430987}
   interactionHit: 0
   dangerHitVisual: 0
 --- !u!4 &167143099
@@ -38317,7 +38316,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4777371684598551356, guid: 70704200f6e7a444cb779c2265f4e2d3, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!1001 &1608467438
 PrefabInstance:
   m_ObjectHideFlags: 0
