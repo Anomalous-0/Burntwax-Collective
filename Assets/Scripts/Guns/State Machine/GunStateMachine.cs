@@ -144,7 +144,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
 
-        SetAnimator();
+        SetupGun();
         // restingHash = Animator.StringToHash("resting");
     }
 
@@ -177,8 +177,8 @@ public class GunStateMachine : MonoBehaviour {
             currentID = gun.ID;
             gun.Spawn(GunParent, this);
 
-
-            SetAnimator();
+            crosshair.SetGunCrosshair(gun);
+            SetupGun();
 
 
         }    
@@ -189,7 +189,7 @@ public class GunStateMachine : MonoBehaviour {
     }
 
 
-    private void SetAnimator() {
+    private void SetupGun() {
         handIK.weight = 1;
         anim.Play("equip_" + ActiveGun.Name);     
         camShake = ActiveGun.Model.GetComponent<Cinemachine.CinemachineImpulseSource>();
@@ -201,6 +201,7 @@ public class GunStateMachine : MonoBehaviour {
         aimHash = Animator.StringToHash("aim");
         stowHash = Animator.StringToHash("stow");
         reloadHash = Animator.StringToHash("reload");
+        
     }
 
 
