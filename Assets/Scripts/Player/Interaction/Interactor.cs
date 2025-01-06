@@ -20,8 +20,11 @@ public class Interactor : MonoBehaviour {
     [SerializeField] GloveStateMachine glove;
 
     // Start is called before the first frame update
-    void Awake(){
-       
+    void Awake()
+    {
+        defaultIcon.SetActive(true);
+        interactIcon.SetActive(false);
+        aimIcon.SetActive(false);
     }
 
     // Update is called once per frame
@@ -49,11 +52,25 @@ public class Interactor : MonoBehaviour {
                     
                 }
             }
-        } 
+        } else {
+            if(glove.looking && cam.currentState != cam.states.Aim()) {
+                interactIcon.SetActive(true);
+                defaultIcon.SetActive(true);
+                
+            }
+            else if ( cam.currentState == cam.states.Aim()) {
+                // defaultIcon.SetActive(false);
+      
+                // interactIcon.SetActive(false);
+            } else {
+                defaultIcon.SetActive(true);
+                
+                interactIcon.SetActive(false);
+            }
             
             // if (interactImage.sprite != defaultIcon) {
             //     interactImage.sprite = defaultIcon;
             // }
-        
+        }
     }
 }

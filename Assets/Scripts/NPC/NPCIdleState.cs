@@ -27,7 +27,7 @@ public class NPCIdleState : NPCBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if (Ctx.interactionHit && Ctx.input.interactIsPressed) {
+        if (Ctx.interactionHit) {
             SwitchState(Factory.Interact());
         } else if (false/*danger happens*/){
             SwitchState(Factory.Danger());

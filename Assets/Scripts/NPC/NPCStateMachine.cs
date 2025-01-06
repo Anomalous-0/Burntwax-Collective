@@ -34,6 +34,8 @@ public class NPCStateMachine : MonoBehaviour {
 
     void Update() {
 
+        RaycastHit hit;
+        interactionHit = Physics.Raycast(player.transform.position, player.transform.TransformDirection(input.LookInput), out hit, 3f, LayerMask.GetMask("NPC"));
 
         currentState.UpdateStates();
     }
