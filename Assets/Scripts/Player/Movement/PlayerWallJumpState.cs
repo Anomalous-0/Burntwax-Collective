@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 public class PlayerWallJumpState : PlayerBaseState {
@@ -18,8 +19,9 @@ public class PlayerWallJumpState : PlayerBaseState {
         InitializeSubState(); 
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.drag = Ctx.AirDrag;
+        Ctx.AbleToWallJump = false;
         
-        
+       
         Jump();
         //Debug.Log("WALLJUMP STATE");
         
@@ -42,7 +44,7 @@ public class PlayerWallJumpState : PlayerBaseState {
         if(Ctx.playerIsGrounded && !Ctx.playerIsSloped) {
             SwitchState(Factory.Grounded());
         }
-        else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
+        else if(Ctx.AbleToWallJump && (Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)) {
             SwitchState(Factory.Wallrun());
         }
         else if(Ctx.playerIsSloped) {

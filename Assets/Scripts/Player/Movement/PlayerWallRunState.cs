@@ -23,10 +23,11 @@ public class PlayerWallRunState : PlayerBaseState {
         Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
         Ctx.rb.useGravity = false;
         //Debug.Log("WALLRUN STATE");
-
+        
     }
 
     public override void UpdateState(){
+        Debug.Log(Ctx.AbleToWallJump);
         CheckSwitchStates();
         WallCheck();
         WallRun();
@@ -43,8 +44,9 @@ public class PlayerWallRunState : PlayerBaseState {
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.input.jumpIsPressed) {
-            Vector3 force =   4f * wallNormal * Ctx.WallJumpForce;
+            Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
             Ctx.rb.AddForce(force, ForceMode.Impulse);
+            Ctx.rb.AddForce(3f *wallNormal.normalized, ForceMode.Impulse);
             SwitchState(Factory.Walljump());
         }
         else if(!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack) {

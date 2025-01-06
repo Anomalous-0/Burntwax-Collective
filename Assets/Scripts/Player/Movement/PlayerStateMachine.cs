@@ -63,7 +63,7 @@ public class PlayerStateMachine : MonoBehaviour {
         
     public LayerMask heldRigidbody;
     public RaycastHit groundCheckHit = new RaycastHit();
-    Vector3 playerCenterPoint;
+    
 
     
     [Header("Wall Running")]
@@ -71,6 +71,8 @@ public class PlayerStateMachine : MonoBehaviour {
     [SerializeField] float wallRunForce;
 
     [SerializeField] float wallJumpForce;
+    [SerializeField] float wallJumpGracePeriod;
+    [SerializeField] bool ableToWallJump;
     [SerializeField] float wallCheckDistance;
     [SerializeField] float sphereCastRadius; 
     [SerializeField] float minHeight;
@@ -142,6 +144,8 @@ public class PlayerStateMachine : MonoBehaviour {
 
     public float WallJumpForce {get {return wallJumpForce;} }
     // public float MaxWallRunTime{ get {return maxWallRunTime;} }
+
+    public bool AbleToWallJump {get {return ableToWallJump;} set { ableToWallJump = value; } }
     public float WallCheckDistance { get {return wallCheckDistance;}}
     public float SphereCastRadius {get {return sphereCastRadius;}}
     public float MinHeight {get {return minHeight;}}
@@ -195,11 +199,9 @@ public class PlayerStateMachine : MonoBehaviour {
         
        
        
-        // Debug.Log(currentState);
-        
-        
-        
-        // WallCheck();
+        if(currentState == states.Walljump() && !ableToWallJump) {
+            StartCoroutine(WallJumpGracePeriod());
+        }
     }
 
     private void FixedUpdate(){
@@ -344,6 +346,12 @@ public class PlayerStateMachine : MonoBehaviour {
 
     private Vector3 GetSlopeMoveDirection() {
         return Vector3.ProjectOnPlane(moveDirection, groundCheckHit.normal).normalized;
+    }
+
+
+    public IEnumerator WallJumpGracePeriod() {
+        yield return new WaitForSeconds(wallJumpGracePeriod);
+        ableToWallJump = true;
     }
 
 
