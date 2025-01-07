@@ -30,10 +30,12 @@ public class PlayerCrosshair : MonoBehaviour {
     public void SetGunCrosshair(GunScriptableObject  gun) {
         if(gun != null) {
             outerIcon.sprite = gun.CrosshairConfig.icon;
+            outerIcon.rectTransform.sizeDelta = gun.CrosshairConfig.dimensions;
         }
     }
     public void SetAimCrosshair() {
         outerIcon.gameObject.SetActive(false);
+        
         outerIcon.gameObject.SetActive(false);
         // outerIcon.color = transparent;
         // innerIcon.color = transparent;
