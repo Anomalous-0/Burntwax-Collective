@@ -241,17 +241,10 @@ public class PlayerStateMachine : MonoBehaviour {
 
         if (PlayerSlopeCheck()) {
             moveDirection = GetSlopeMoveDirection();
-            // rb.AddForce(GetSlopeMoveDirection() * playerVelocity * 20f);
-
-            // if (rb.velocity.y > 0)
-                // rb.AddForce(Vector3.down * 80f);
+        
         }
-        // else
-        // {
-            rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
-        // }
-
-        // rb.useGravity = !SlopeCheck();
+        
+        rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
     }
 
     private bool PlayerGroundCheck(){
@@ -270,10 +263,6 @@ public class PlayerStateMachine : MonoBehaviour {
         }
         return false;
     }
-
-   
-   
-   
    
    
    

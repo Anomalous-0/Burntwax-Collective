@@ -26,17 +26,20 @@ public class PlayerSprintState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.input.moveIsPressed) {
-            if(!Ctx.prioritySorter.SprintIsPriority() || Ctx.gunMachine.isReloading) {
-                SwitchState(Factory.Walk());
-            }    
-        }
-        else if(!Ctx.input.moveIsPressed) {
-            SwitchState(Factory.Idle());
-        }
-        else if(Ctx.input.crouchIsPressed) {
-            SwitchState(Factory.Crouch());
-        }
+        if(Ctx.currentState != Ctx.states.Wallcharge()) {
+            if(Ctx.input.moveIsPressed) {
+                if(!Ctx.prioritySorter.SprintIsPriority() || Ctx.gunMachine.isReloading) {
+                    SwitchState(Factory.Walk());
+                }    
+            }
+            else if(!Ctx.input.moveIsPressed) {
+                SwitchState(Factory.Idle());
+            } 
+            else if(Ctx.input.crouchIsPressed) {
+                SwitchState(Factory.Crouch());
+            }
+        }   
+        
     }
 
   
