@@ -44,10 +44,8 @@ public class PlayerWallRunState : PlayerBaseState {
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.input.jumpIsPressed) {
-            Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
-            Ctx.rb.AddForce(force, ForceMode.Impulse);
-            Ctx.rb.AddForce(3f *wallNormal.normalized, ForceMode.Impulse);
-            SwitchState(Factory.Walljump());
+           
+            SwitchState(Factory.Wallcharge());
         }
         else if(!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack) {
             SwitchState(Factory.Fall());

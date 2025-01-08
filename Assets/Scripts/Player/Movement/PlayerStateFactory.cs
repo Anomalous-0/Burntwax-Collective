@@ -10,6 +10,7 @@ enum PlayerStates {
     jump,
     fall,
     wallrun,
+    wallcharge,
     walljump
 }
 
@@ -29,6 +30,7 @@ public class PlayerStateFactory{
         states[PlayerStates.grounded] = new PlayerGroundedState(context, this);
         states[PlayerStates.fall] = new PlayerFallState(context, this);
         states[PlayerStates.wallrun] = new PlayerWallRunState(context, this);
+        states[PlayerStates.wallcharge] = new PlayerWallChargeState(context, this);
         states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
     }
 
@@ -66,6 +68,10 @@ public class PlayerStateFactory{
 
     public PlayerBaseState Wallrun() {
         return states[PlayerStates.wallrun];
+    }
+
+    public PlayerBaseState Wallcharge() {
+        return states[PlayerStates.wallcharge];
     }
     
     public PlayerBaseState Walljump() {
