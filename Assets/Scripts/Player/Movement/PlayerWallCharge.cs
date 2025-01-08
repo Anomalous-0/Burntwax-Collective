@@ -20,14 +20,11 @@ public class PlayerWallChargeState : PlayerBaseState {
         InitializeSubState(); 
         Ctx.MoveMultiplier = Ctx.WallMultiplier;
         Ctx.rb.drag = Ctx.WallDrag;
-        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
-        Ctx.rb.useGravity = false;
         Debug.Log("CHARGE STATE");
         
     }
 
     public override void UpdateState(){
-        Debug.Log(Ctx.AbleToWallJump);
         CheckSwitchStates();
         WallCheck();
         WallRun();

@@ -27,7 +27,7 @@ public class PlayerWallRunState : PlayerBaseState {
     }
 
     public override void UpdateState(){
-        Debug.Log(Ctx.AbleToWallJump);
+
         CheckSwitchStates();
         WallCheck();
         WallRun();
@@ -35,19 +35,32 @@ public class PlayerWallRunState : PlayerBaseState {
     }
 
     public override void ExitState(){
-        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
-        Ctx.rb.useGravity = true; 
+         
     }
     
     public override void CheckSwitchStates(){
         if(Ctx.playerIsGrounded) {
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+            Ctx.rb.useGravity = true;
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.input.jumpIsPressed) {
-           
-            SwitchState(Factory.Wallcharge());
+            if(Ctx.wallChargeEnabled) {
+                SwitchState(Factory.Wallcharge());
+            }
+            else {
+                Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+                Ctx.rb.useGravity = true;
+                Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
+                Ctx.rb.AddForce(force, ForceMode.Impulse);
+                Ctx.rb.AddForce(3f *wallNormal.normalized, ForceMode.Impulse);
+                SwitchState(Factory.Walljump());
+            }
+            
         }
         else if(!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack) {
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+            Ctx.rb.useGravity = true;
             SwitchState(Factory.Fall());
         }
     }

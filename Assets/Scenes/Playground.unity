@@ -1801,6 +1801,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 170323432}
   - {fileID: 920721314}
   - {fileID: 1285042006}
   - {fileID: 1177268969}
@@ -3334,7 +3335,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 99655215}
     m_Modifications:
     - target: {fileID: 2019881249754144703, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
@@ -3374,7 +3375,7 @@ PrefabInstance:
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 11.912
+      value: 12.580135
       objectReference: {fileID: 0}
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
@@ -3384,12 +3385,12 @@ PrefabInstance:
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -6.733
+      value: -3.1917949
       objectReference: {fileID: 0}
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
@@ -3404,7 +3405,7 @@ PrefabInstance:
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
@@ -3419,7 +3420,7 @@ PrefabInstance:
     - target: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 8772033290904586764, guid: 24b77175a566abc418574d1a1688a886,
         type: 3}
@@ -3493,6 +3494,12 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &170323432 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6721750404427844110, guid: 24b77175a566abc418574d1a1688a886,
+    type: 3}
+  m_PrefabInstance: {fileID: 170323426}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &170878757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55055,7 +55062,7 @@ PrefabInstance:
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: wallJumpForce
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
@@ -55069,8 +55076,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: wallChargeEnabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: wallJumpGracePeriod
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3675934927089414449, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
@@ -55862,4 +55874,3 @@ SceneRoots:
   - {fileID: 792148695}
   - {fileID: 1808880160}
   - {fileID: 167143099}
-  - {fileID: 170323426}

@@ -68,6 +68,8 @@ public class PlayerStateMachine : MonoBehaviour {
     
     [Header("Wall Running")]
     [SerializeField] LayerMask wall;
+
+    public bool wallChargeEnabled;
     [SerializeField] float wallRunForce;
 
     [SerializeField] float wallJumpForce;
@@ -228,7 +230,7 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void PlayerMove() {
-        if (currentState != states.Wallrun()) {
+        if (currentState != states.Wallrun() && currentState != states.Wallcharge() ) {
             moveDirection = player.forward * verticalInput + player.right * horizontalInput;
         }
         else {
