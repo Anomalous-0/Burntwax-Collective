@@ -46,6 +46,7 @@ public class PlayerWallJumpState : PlayerBaseState {
         }
         else if(Ctx.AbleToWallJump && (Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)) {
             SwitchState(Factory.Wallrun());
+            Ctx.AbleToWallJump = false;
         }
         else if(Ctx.playerIsSloped) {
             SwitchState(Factory.Slope());

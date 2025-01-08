@@ -73,6 +73,7 @@ public class PlayerStateMachine : MonoBehaviour {
     [SerializeField] float wallRunForce;
 
     [SerializeField] float wallJumpForce;
+    [SerializeField] float maxWallJumpForce;
     [SerializeField] float wallJumpGracePeriod;
     [SerializeField] bool ableToWallJump;
     [SerializeField] float wallCheckDistance;
@@ -144,7 +145,8 @@ public class PlayerStateMachine : MonoBehaviour {
     // public bool PlayerIsWallRunning{ get {return playerIsWallRunning;} set {playerIsWallRunning = value; } }
     public float WallRunForce {get {return wallRunForce;} }
 
-    public float WallJumpForce {get {return wallJumpForce;} }
+    public float WallJumpForce {get {return wallJumpForce;} set {wallJumpForce = value;} }
+    public float MaxWallJumpForce {get {return maxWallJumpForce;} }
     // public float MaxWallRunTime{ get {return maxWallRunTime;} }
 
     public bool AbleToWallJump {get {return ableToWallJump;} set { ableToWallJump = value; } }

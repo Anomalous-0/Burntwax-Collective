@@ -55062,7 +55062,7 @@ PrefabInstance:
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: wallJumpForce
-      value: 10
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
@@ -55076,13 +55076,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: maxWallJumpForce
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: wallChargeEnabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: wallJumpGracePeriod
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3675934927089414449, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
