@@ -25,16 +25,16 @@ public class PlayerIdleState : PlayerBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(Ctx.currentState != Ctx.states.Wallcharge()) {
-            if(Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot()) {
-                SwitchState(Factory.Sprint());
-            } else if(Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
-                SwitchState(Factory.Walk());
-            }
-            else if(Ctx.input.crouchIsPressed) {
-                SwitchState(Factory.Crouch());
-            }
+        
+        if(Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot()) {
+            SwitchState(Factory.Sprint());
+        } else if(Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+            SwitchState(Factory.Walk());
         }
+        else if(Ctx.input.crouchIsPressed) {
+            SwitchState(Factory.Crouch());
+        }
+        
         
     }
 

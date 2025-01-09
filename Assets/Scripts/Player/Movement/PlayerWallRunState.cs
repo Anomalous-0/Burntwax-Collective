@@ -45,17 +45,13 @@ public class PlayerWallRunState : PlayerBaseState {
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.input.jumpIsPressed) {
-            if(Ctx.wallChargeEnabled) {
-                SwitchState(Factory.Wallcharge());
-            }
-            else {
-                Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
-                Ctx.rb.useGravity = true;
-                Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
-                Ctx.rb.AddForce(force, ForceMode.Impulse);
-                Ctx.rb.AddForce(3f *wallNormal.normalized, ForceMode.Impulse);
-                SwitchState(Factory.Walljump());
-            }
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+            Ctx.rb.useGravity = true;
+            Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
+            Ctx.rb.AddForce(force, ForceMode.Impulse);
+            Ctx.rb.AddForce(3f *wallNormal.normalized, ForceMode.Impulse);
+            SwitchState(Factory.Walljump());
+            
             
         }
         else if(!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack) {

@@ -69,7 +69,6 @@ public class PlayerStateMachine : MonoBehaviour {
     [Header("Wall Running")]
     [SerializeField] LayerMask wall;
 
-    public bool wallChargeEnabled;
     [SerializeField] float wallRunForce;
 
     [SerializeField] float wallJumpForce;
@@ -79,7 +78,6 @@ public class PlayerStateMachine : MonoBehaviour {
     [SerializeField] float wallCheckDistance;
     [SerializeField] float sphereCastRadius; 
     [SerializeField] float minHeight;
-    [SerializeField] float wallRunSwitch;
     [SerializeField] RaycastHit leftWallHit;
     [SerializeField] RaycastHit rightWallHit;
     [SerializeField] RaycastHit frontWallHit;
@@ -141,7 +139,6 @@ public class PlayerStateMachine : MonoBehaviour {
 
     // Wall Running State
     public LayerMask Wall {get {return wall;} }
-    public float WallRunSwitch {get {return wallRunSwitch;} set { wallRunSwitch = value; } }
     // public bool PlayerIsWallRunning{ get {return playerIsWallRunning;} set {playerIsWallRunning = value; } }
     public float WallRunForce {get {return wallRunForce;} }
 
@@ -186,7 +183,6 @@ public class PlayerStateMachine : MonoBehaviour {
         prioritySorter = GetComponent<InputPrioritySorter>();
         currentState = states.Grounded();
         currentState.EnterState();
-        wallRunSwitch = 0;
     }
 
     private void LateUpdate() {
@@ -232,7 +228,7 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void PlayerMove() {
-        if (currentState != states.Wallrun() && currentState != states.Wallcharge() ) {
+        if (currentState != states.Wallrun() ) {
             moveDirection = player.forward * verticalInput + player.right * horizontalInput;
         }
         else {
