@@ -7,35 +7,16 @@ public class GunScriptableObject : ScriptableObject {
 
     public int ID;
     public ImpactType ImpactType;
+    
+    
+    [Header("General")]
     public GunType Type;
     public string Name;
-    public GameObject ModelPrefab;
-    // public Vector3 SpawnPoint;
-    // public Vector3 SpawnRotation;
-
-    // public Vector3 RestPoint;
-    // public Vector3 RestRotation;
-
-    // public Vector3 AimPoint;
-    // public Vector3 AimRotation;
-
     
+    public GameObject ModelPrefab;
+    public GameObject Model;
 
-    [Header("Animation")]
-
-   
-
-    // public RuntimeAnimatorController handController;
-    // public Vector3 HandIKRightPos;
-    // public Vector3 HandIKLeftPos;
-
-    // public Quaternion HandIKLeftRot;
-    // public Quaternion HandIKRightRot;
-
-
-    // public Vector3 StowPoint;
-    // public Vector3 StowRotation;
-
+    [Header("Configs")]
     public ShootConfig ShootConfig;
     public AmmoConfig AmmoConfig;
     public AudioConfig AudioConfig;
@@ -43,34 +24,29 @@ public class GunScriptableObject : ScriptableObject {
     public TrailConfig TrailConfig;
     public CrosshairConfig CrosshairConfig;
 
-    private MonoBehaviour ActiveMonoBehaviour;
-    [HideInInspector] public GameObject Model;
-    private AudioSource ShootingAudioSource;
 
-    // public float LastShootTime = 0;
+    private MonoBehaviour ActiveMonoBehaviour;
+    private AudioSource ShootingAudioSource;
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
 
-    public void Spawn(Transform Parent, MonoBehaviour ActiveMonoBehaviour) {
+    public void Spawn(GameObject currentGun, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        // LastShootTime = 0; // in editor this will not be properly reset, in build it's fine
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
-        //bullets = new ObjectPool<Rigidbody>(InstantiateBullet);
-
-        Model = Instantiate(ModelPrefab);
-        Model.transform.parent = Parent;
-        Model.transform.localPosition = Vector3.zero;
-        Model.transform.localRotation = Quaternion.identity;
+        // Model = Instantiate(ModelPrefab);
+        // Model.transform.parent = Parent;
+        // Model.transform.localPosition = Vector3.zero;
+        // Model.transform.localRotation = Quaternion.identity;
         
 
-        ShootSystem = Model.GetComponentInChildren<ParticleSystem>();
-        ShootingAudioSource = Model.GetComponent<AudioSource>();
+        ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
+        ShootingAudioSource = currentGun.GetComponent<AudioSource>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         TrailPool.Clear();
-        Destroy(Model);
+        // Destroy(Model);
 
     }
 
@@ -150,9 +126,9 @@ public class GunScriptableObject : ScriptableObject {
 
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
-        instance.emitting = false;
-        instance.gameObject.SetActive(false);
-        TrailPool.Release(instance);
+        // instance.emitting = false;
+        // instance.gameObject.SetActive(false);
+        // TrailPool.Release(instance);
     }
 
     private TrailRenderer CreateTrail() {

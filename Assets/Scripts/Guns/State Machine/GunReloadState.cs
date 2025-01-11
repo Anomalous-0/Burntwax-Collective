@@ -13,7 +13,7 @@ public class GunReloadState : GunBaseState {
 
     public override void EnterState(){
         // Debug.Log("Enter RELOAD");
-        Ctx.ActiveGun.StartReloadAudio();
+        Ctx.ActiveGunScriptable.StartReloadAudio();
         Ctx.anim.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
         // Ctx.isShooting = false;

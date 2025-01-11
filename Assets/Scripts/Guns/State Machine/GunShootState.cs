@@ -10,14 +10,14 @@ public class GunShootState : GunBaseState {
     // int switchTime = 3;
     public override void EnterState(){
         Ctx.isShooting = true;
-        Ctx.ActiveGun.Shoot();
+        Ctx.ActiveGunScriptable.Shoot();
         Recoil();
 
         if(Ctx.CurrentState == Ctx.states.Aim()) {
-            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGun.Name);
+            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGunScriptable.Name);
         }
         else {
-            Ctx.anim.Play("recoil_" + Ctx.ActiveGun.Name);
+            Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
         }
         // Debug.Log("Shoot State");
     }

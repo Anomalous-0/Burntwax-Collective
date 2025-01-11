@@ -17,7 +17,7 @@ public class AmmoPickup : MonoBehaviour {
         if(other.GetComponentInParent<PlayerHealth>() || other.GetComponent<ConsumableGlovePickup>()) {
             playerGun = FindObjectOfType<GunStateMachine>();
 
-            if(playerGun.Guns.Contains(gun)) {
+            if(playerGun.CurrentGuns.Contains(gun)) {
                 if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {
                     if(gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount) {
                         gun.AmmoConfig.currentAmmo += ammoCount;

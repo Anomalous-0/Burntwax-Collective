@@ -32,16 +32,17 @@ public class GunStateMachine : MonoBehaviour {
     
     public Rig handIK;
 
-   
-    // [HideInInspector] public Animator handAnimator;
-    // [HideInInspector] public  Animator gunAnimator;
-
     [HideInInspector] public int shootHash, aimShootHash, stowHash, aimHash, reloadHash;
 
-    public List<GunScriptableObject> Guns;
+    public List<GunScriptableObject> CurrentGuns;
+    public List<GameObject> OrderedGuns;
 
     [Space]
-    [Header("Runtime Filled")] public GunScriptableObject ActiveGun;
+
+    
+    [Header("Current Gun")] 
+    public GunScriptableObject ActiveGunScriptable;
+    public GameObject CurrentGunModel;
 
 
     [Space]
@@ -76,18 +77,12 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     void Start() {
-       
-
-        //stateMachine = GetComponent<PlayerStateMachine>();
-        
-        
-
     }
 
 
 
     private void Update() {
-        if(ActiveGun != null) {
+        if(ActiveGunScriptable != null) {
             WeaponSelect();
             currentState.UpdateStates();
             
@@ -100,6 +95,20 @@ public class GunStateMachine : MonoBehaviour {
         
 
 
+    }
+
+    private void Despawn(GunScriptableObject activeGun) {
+        // CurrentGunModel = OrderedGuns[currentID];
+        Debug.Log("SET SHIT TO FALSE CUH   ");
+        CurrentGunModel.SetActive(false);
+        activeGun.Despawn(this);
+    }
+
+    private void Spawn(GunScriptableObject activeGun) {
+        CurrentGunModel = OrderedGuns[currentID];
+        CurrentGunModel.SetActive(true);
+        activeGun.Spawn(CurrentGunModel, this);
+        
     }
 
     // NEED TO DO THIS WITH CONTROLLER SUPPORT SOMEHOW
@@ -128,22 +137,22 @@ public class GunStateMachine : MonoBehaviour {
             WeaponSelect();
         }
         
-        GunScriptableObject gun = Guns.Find(gun => gun.ID == currentID);
+        GunScriptableObject gun = CurrentGuns.Find(gun => gun.ID == currentID);
+        
 
         if (gun == null) {
             Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
             return;
         }
             
-        ActiveGun.Despawn(this);
-        ActiveGun = gun;
-        gun.Spawn(GunParent, this);
 
-        crosshair.SetGunCrosshair(gun);
+        Despawn(ActiveGunScriptable);
         
-
-
-
+        ActiveGunScriptable = gun;
+        Spawn(ActiveGunScriptable);
+        
+        // gun.Spawn(GunParent, this);
+        crosshair.SetGunCrosshair(gun);
         SetupGun();
         // restingHash = Animator.StringToHash("resting");
     }
@@ -151,14 +160,14 @@ public class GunStateMachine : MonoBehaviour {
     private void ScrollID() {
         if(input.mouseScroll > 0) {
             currentID++;
-            if(currentID > Guns.Count - 1) {
+            if(currentID > CurrentGuns.Count - 1) {
                 currentID = 0;
             }
         }
         else if(input.mouseScroll < 0) {
             currentID--;
             if(currentID < 0) {
-                currentID = Guns.Count - 1;
+                currentID = CurrentGuns.Count - 1;
             }
         }
 
@@ -167,15 +176,16 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void Pickup(GunScriptableObject gun) {
-        if(!Guns.Contains(gun)) {
-            Guns.Add(gun);
-            if(ActiveGun != null) {
-                ActiveGun.Despawn(this);
+        if(!CurrentGuns.Contains(gun)) {
+            CurrentGuns.Add(gun);
+            if(ActiveGunScriptable != null) {
+                Despawn(ActiveGunScriptable);
             }
                 
-            ActiveGun = gun;
+            ActiveGunScriptable = gun;
             currentID = gun.ID;
-            gun.Spawn(GunParent, this);
+            
+            Spawn(ActiveGunScriptable);
 
             crosshair.SetGunCrosshair(gun);
             SetupGun();
@@ -191,9 +201,9 @@ public class GunStateMachine : MonoBehaviour {
 
     private void SetupGun() {
         handIK.weight = 1;
-        anim.Play("equip_" + ActiveGun.Name);     
-        camShake = ActiveGun.Model.GetComponent<Cinemachine.CinemachineImpulseSource>();
-    
+        anim.Play("equip_" + ActiveGunScriptable.Name);     
+        camShake = CurrentGunModel.GetComponent<Cinemachine.CinemachineImpulseSource>();
+        
 
         shootHash = Animator.StringToHash("shoot");
         // equipHash = Animator.StringToHash("equip");
@@ -209,23 +219,23 @@ public class GunStateMachine : MonoBehaviour {
 
     private void EmptyClip() {
         if(ClipEmpty() && input.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() &&  CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && input.shootIsPressed) {
-            ActiveGun.AudioConfig.PlayEmptyClip(ActiveGun.Model.GetComponent<AudioSource>());
+            ActiveGunScriptable.AudioConfig.PlayEmptyClip(CurrentGunModel.GetComponent<AudioSource>());
             //THE ONE TIME I  WILL CHANGE SHOOT IS PRESSED THEN IG
             input.shootIsPressed = false;
-            anim.Play("emptyclip_" + ActiveGun.Name);     
+            anim.Play("emptyclip_" + ActiveGunScriptable.Name);     
         }
     }
 
     public bool CanShoot() {
-        return ActiveGun.AmmoConfig.currentClip > 0 && !isShooting;
+        return ActiveGunScriptable.AmmoConfig.currentClip > 0 && !isShooting;
     }
 
     private bool ClipEmpty() {
-        return ActiveGun.AmmoConfig.currentClip == 0 && ActiveGun.AmmoConfig.currentAmmo == 0;
+        return ActiveGunScriptable.AmmoConfig.currentClip == 0 && ActiveGunScriptable.AmmoConfig.currentAmmo == 0;
     }
 
     public void EndReload() {
-        ActiveGun.EndReload();
+        ActiveGunScriptable.EndReload();
         isReloading = false;
         
     }
@@ -238,13 +248,13 @@ public class GunStateMachine : MonoBehaviour {
 
     public bool ManualReload() {
 
-        return input.reloadIsPressed && ActiveGun.CanReload();
+        return input.reloadIsPressed && ActiveGunScriptable.CanReload();
         
         // return  !isReloading && input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
     }
 
     public bool AutoReload() {
-        return ActiveGun.CanReload() && ActiveGun.AmmoConfig.currentClip == 0;
+        return ActiveGunScriptable.CanReload() && ActiveGunScriptable.AmmoConfig.currentClip == 0;
         // return !isReloading && autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
     }
 
