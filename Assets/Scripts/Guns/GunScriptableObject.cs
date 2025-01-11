@@ -69,7 +69,7 @@ public class GunScriptableObject : ScriptableObject {
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        TrailPool.Dispose();
+        TrailPool.Clear();
         Destroy(Model);
 
     }
@@ -163,7 +163,7 @@ public class GunScriptableObject : ScriptableObject {
         trail.widthCurve = TrailConfig.WidthCurve;
         trail.time = TrailConfig.Duration;
         trail.minVertexDistance = TrailConfig.MinVertexDistance;
-
+        trail.autodestruct = true;
         trail.emitting = false;
         trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
