@@ -13,7 +13,7 @@ public class PlayerJumpState : PlayerBaseState {
     }
     
     public override void EnterState(){
-        InitializeSubState(); 
+       
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.drag = Ctx.AirDrag;
         

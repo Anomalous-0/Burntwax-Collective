@@ -12,8 +12,8 @@ public class PlayerGroundedState : PlayerBaseState {
     }
     
     public override void EnterState(){
-        
-        InitializeSubState();
+
+        // InitializeSubState();
         // if(!Ctx.input.moveIsPressed) {
         //     Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
         // }

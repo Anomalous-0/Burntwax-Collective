@@ -183,6 +183,8 @@ public class PlayerStateMachine : MonoBehaviour {
         prioritySorter = GetComponent<InputPrioritySorter>();
         currentState = states.Grounded();
         currentState.EnterState();
+        currentState.InitializeSubState();
+        
     }
 
     private void LateUpdate() {

@@ -11,9 +11,9 @@ public class PlayerSprintState : PlayerBaseState {
 
     public override void EnterState(){
         Ctx.PlayerVelocity = Ctx.SprintVelocity;
-        // Ctx.cam.FPS();
         
-        // Debug.Log("SPRINT STATE");
+        
+        Debug.Log("SPRINT STATE");
     }
 
     public override void UpdateState(){
