@@ -98,8 +98,6 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     private void Despawn(GunScriptableObject activeGun) {
-        // CurrentGunModel = OrderedGuns[currentID];
-        Debug.Log("SET SHIT TO FALSE CUH   ");
         CurrentGunModel.SetActive(false);
         activeGun.Despawn(this);
     }

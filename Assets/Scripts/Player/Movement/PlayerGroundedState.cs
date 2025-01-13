@@ -14,9 +14,9 @@ public class PlayerGroundedState : PlayerBaseState {
     public override void EnterState(){
         
         InitializeSubState();
-        if(!Ctx.input.moveIsPressed) {
-            Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
-        }
+        // if(!Ctx.input.moveIsPressed) {
+        //     Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
+        // }
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
         // Debug.Log("GROUNDED STATE");
