@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
-public class GunScriptableObject : ScriptableObject {
+public class GunScriptableObject : ScriptableObject, ICloneable {
 
     public int ID;
     public ImpactType ImpactType;
@@ -14,7 +16,9 @@ public class GunScriptableObject : ScriptableObject {
     public string Name;
     
     public GameObject ModelPrefab;
-    public GameObject Model;
+    public bool incrementalReload;
+    [HideInInspector] public GameObject Model;
+
 
     [Header("Configs")]
     public ShootConfig ShootConfig;
@@ -33,12 +37,6 @@ public class GunScriptableObject : ScriptableObject {
     public void Spawn(GameObject currentGun, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
-        // Model = Instantiate(ModelPrefab);
-        // Model.transform.parent = Parent;
-        // Model.transform.localPosition = Vector3.zero;
-        // Model.transform.localRotation = Quaternion.identity;
-        
-
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = currentGun.GetComponent<AudioSource>();
     }
@@ -46,7 +44,6 @@ public class GunScriptableObject : ScriptableObject {
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         TrailPool.Clear();
-        // Destroy(Model);
 
     }
 
@@ -146,4 +143,23 @@ public class GunScriptableObject : ScriptableObject {
         return trail;
     }
 
+    public object Clone() {
+        GunScriptableObject config = CreateInstance<GunScriptableObject>();
+
+        config.ID = ID;
+        config.ImpactType = ImpactType;
+        config.Type = Type;
+        config.Name = Name;
+        config.ModelPrefab = ModelPrefab;
+        config.incrementalReload = incrementalReload;
+        config.ShootConfig = ShootConfig.Clone() as ShootConfig;
+        config.AmmoConfig = AmmoConfig.Clone() as AmmoConfig;
+        config.AudioConfig = AudioConfig.Clone() as AudioConfig;
+        config.DamageConfig = DamageConfig.Clone() as DamageConfig;
+        config.TrailConfig = TrailConfig.Clone() as TrailConfig;
+        config.CrosshairConfig = CrosshairConfig.Clone() as CrosshairConfig;
+
+        return config;
+
+    }
 }

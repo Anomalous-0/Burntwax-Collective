@@ -11686,6 +11686,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f190b2d06b56142499a04e95d0cc60f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deg: 60
+  gun: {fileID: 0}
 --- !u!1 &385572453
 GameObject:
   m_ObjectHideFlags: 0
@@ -24043,6 +24045,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CastShadows
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2792804624938504718, guid: 5b29320cba632b847b68af94952e1fad,
+        type: 3}
+      propertyPath: m_ImpulseDefinition.m_AmplitudeGain
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -2792804624938504718, guid: 5b29320cba632b847b68af94952e1fad,
+        type: 3}
+      propertyPath: m_ImpulseDefinition.m_FrequencyGain
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: -2459082166433742734, guid: 5b29320cba632b847b68af94952e1fad,
         type: 3}

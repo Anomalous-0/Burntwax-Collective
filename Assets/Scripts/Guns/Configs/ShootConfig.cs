@@ -1,7 +1,9 @@
+using System;
+using Burntwax.Guns;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Shoot Config", menuName = "Guns/Shoot Config", order = 2)]
-public class ShootConfig : ScriptableObject {
+public class ShootConfig : ScriptableObject, ICloneable {
     public bool isHitscan = false; 
     public Bullet bulletPrefab;
     // public float bulletForce;
@@ -12,4 +14,9 @@ public class ShootConfig : ScriptableObject {
     public int bulletsPerShot = 1;
     public float bulletSpeed;
 
+    public object Clone() {
+        ShootConfig config = CreateInstance<ShootConfig>();
+        Utilities.CopyValues(this, config);
+        return config;
+    }
 }

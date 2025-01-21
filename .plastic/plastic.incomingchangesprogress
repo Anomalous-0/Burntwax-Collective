@@ -1,0 +1,116 @@
+[
+  {
+    "MountId": "56e62dd7-241f-41e9-8c6b-dd4ca4513e62",
+    "AncestorCsetIds": [
+      3
+    ],
+    "SourceCsetId": 6,
+    "DestinationCsetId": 3,
+    "FileConflicts": [
+      {
+        "Path": "/.git/COMMIT_EDITMSG",
+        "ItemId": 4905,
+        "ParentItemId": 4893,
+        "BaseRevId": 10796,
+        "SourceRevId": 11085,
+        "DestinationRevId": 10796
+      },
+      {
+        "Path": "/.git/FETCH_HEAD",
+        "ItemId": 4908,
+        "ParentItemId": 4893,
+        "BaseRevId": 10797,
+        "SourceRevId": 11086,
+        "DestinationRevId": 10797
+      },
+      {
+        "Path": "/.git/index",
+        "ItemId": 4912,
+        "ParentItemId": 4893,
+        "BaseRevId": 10798,
+        "SourceRevId": 11111,
+        "DestinationRevId": 10798
+      },
+      {
+        "Path": "/.git/refs/heads/main",
+        "ItemId": 7955,
+        "ParentItemId": 5544,
+        "BaseRevId": 10880,
+        "SourceRevId": 11088,
+        "DestinationRevId": 10880
+      },
+      {
+        "Path": "/.git/refs/remotes/origin/main",
+        "ItemId": 8816,
+        "ParentItemId": 7957,
+        "BaseRevId": 10881,
+        "SourceRevId": 11089,
+        "DestinationRevId": 10881
+      },
+      {
+        "Path": "/Assets/Guns/Recoil/Revolver Recoil Noise.asset",
+        "ItemId": 8114,
+        "ParentItemId": 5592,
+        "BaseRevId": 2630,
+        "SourceRevId": 11114,
+        "DestinationRevId": 2630
+      },
+      {
+        "Path": "/Assets/Guns/Recoil/SMG Recoil Noise.asset",
+        "ItemId": 8118,
+        "ParentItemId": 5592,
+        "BaseRevId": 2634,
+        "SourceRevId": 11115,
+        "DestinationRevId": 2634
+      },
+      {
+        "Path": "/Assets/Animations/Guns/Controller/Arms.controller",
+        "ItemId": 8828,
+        "ParentItemId": 7984,
+        "BaseRevId": 2388,
+        "SourceRevId": 11112,
+        "DestinationRevId": 2388
+      },
+      {
+        "Path": "/Assets/Animations/Guns/General/recoil/default/recoil_Revolver.anim",
+        "ItemId": 10165,
+        "ParentItemId": 9632,
+        "BaseRevId": 10892,
+        "SourceRevId": 11113,
+        "DestinationRevId": 10892
+      },
+      {
+        "Path": "/Assets/Scenes/Playground.unity",
+        "ItemId": 5701,
+        "ParentItemId": 4968,
+        "BaseRevId": 10900,
+        "SourceRevId": 11116,
+        "DestinationRevId": 10900
+      },
+      {
+        "Path": "/Assets/Scripts/Guns/GunScriptableObject.cs",
+        "ItemId": 8382,
+        "ParentItemId": 5712,
+        "BaseRevId": 4256,
+        "SourceRevId": 11118,
+        "DestinationRevId": 4256
+      },
+      {
+        "Path": "/Assets/Scripts/Guns/State Machine/GunStateMachine.cs",
+        "ItemId": 9488,
+        "ParentItemId": 8389,
+        "BaseRevId": 4277,
+        "SourceRevId": 11119,
+        "DestinationRevId": 4277
+      },
+      {
+        "Path": "/Assets/Scripts/Guns/BarrelSpin.cs",
+        "ItemId": 11075,
+        "ParentItemId": 5712,
+        "BaseRevId": 10901,
+        "SourceRevId": 11117,
+        "DestinationRevId": 10901
+      }
+    ]
+  }
+]

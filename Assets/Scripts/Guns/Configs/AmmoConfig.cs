@@ -1,8 +1,9 @@
 using System;
+using Burntwax.Guns;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
-public class AmmoConfig : ScriptableObject {
+public class AmmoConfig : ScriptableObject, ICloneable {
     
     public int maxAmmo;
     public int clipSize;
@@ -29,5 +30,9 @@ public class AmmoConfig : ScriptableObject {
         return currentClip < clipSize && currentAmmo > 0;
     }
 
-
+    public object Clone() {
+        AmmoConfig config = CreateInstance<AmmoConfig>();
+        Utilities.CopyValues(this, config);
+        return config;
+    }
 }

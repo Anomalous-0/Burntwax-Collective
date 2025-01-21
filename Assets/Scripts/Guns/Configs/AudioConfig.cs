@@ -1,9 +1,10 @@
 using System;
+using Burntwax.Guns;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Audio Config", menuName = "Guns/Audio Config", order = 5)]
-public class AudioConfig : ScriptableObject {
+public class AudioConfig : ScriptableObject, ICloneable { 
     
 
     [Range(0,1f)] public float volume = 1f;
@@ -34,5 +35,9 @@ public class AudioConfig : ScriptableObject {
         }
     }
 
-
+    public object Clone() {
+        AudioConfig config = CreateInstance<AudioConfig>();
+        Utilities.CopyValues(this, config);
+        return config;
+    }
 }

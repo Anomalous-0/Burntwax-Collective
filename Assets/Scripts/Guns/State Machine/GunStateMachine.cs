@@ -97,6 +97,8 @@ public class GunStateMachine : MonoBehaviour {
 
     }
 
+
+
     private void Despawn(GunScriptableObject activeGun) {
         CurrentGunModel.SetActive(false);
         activeGun.Despawn(this);
@@ -238,9 +240,15 @@ public class GunStateMachine : MonoBehaviour {
         
     }
 
+    // public void BarrelSpin() {
+    //     barrel.Spin();
+    // }
+
     public void EndShoot() {
         isShooting = false;
     }
+
+
 
 
 
