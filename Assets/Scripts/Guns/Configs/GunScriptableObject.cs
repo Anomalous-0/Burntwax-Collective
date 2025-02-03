@@ -8,14 +8,15 @@ using Random = UnityEngine.Random;
 public class GunScriptableObject : ScriptableObject, ICloneable {
 
     public int ID;
-    public ImpactType ImpactType;
+    
     
     
     [Header("General")]
     public GunType Type;
+    public ImpactType ImpactType;
     public string Name;
     
-    public GameObject ModelPrefab;
+    // public GameObject ModelPrefab;
     public bool incrementalReload;
     [HideInInspector] public GameObject Model;
 
@@ -109,10 +110,15 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
-          
+            SurfaceManager.Instance.HandleImpact(
+                Hit.transform.gameObject,
+                EndPoint,
+                Hit.normal,
+                ImpactType,
+                0
+            );
             if(Hit.collider.GetComponent<Rigidbody>()) {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
-                // Debug.Log("Hit object with force: " + DamageConfig.GetDamage(distance));
             }
 
         }
@@ -150,7 +156,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         config.ImpactType = ImpactType;
         config.Type = Type;
         config.Name = Name;
-        config.ModelPrefab = ModelPrefab;
+        // config.ModelPrefab = ModelPrefab;
         config.incrementalReload = incrementalReload;
         config.ShootConfig = ShootConfig.Clone() as ShootConfig;
         config.AmmoConfig = AmmoConfig.Clone() as AmmoConfig;

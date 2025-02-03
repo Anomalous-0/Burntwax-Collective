@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 
-public class SurfaceManager : MonoBehaviour
-{
+public class SurfaceManager : MonoBehaviour {
     private static SurfaceManager _instance;
-    public static SurfaceManager Instance
-    {
-        get
-        {
+    public static SurfaceManager Instance {
+        get {
             return _instance;
         }
-        private set
-        {
+        private set {
             _instance = value;
         }
     }
 
-    private void Awake()
-    {
-        if (Instance != null)
-        {
+    private void Awake() {
+        if (Instance != null) {
             Debug.LogError("More than one SurfaceManager active in the scene! Destroying latest one: " + name);
             Destroy(gameObject);
             return;
@@ -36,57 +30,42 @@ public class SurfaceManager : MonoBehaviour
     private Surface DefaultSurface;
     private Dictionary<GameObject, ObjectPool<GameObject>> ObjectPools = new();
 
-    public void HandleImpact(GameObject HitObject, Vector3 HitPoint, Vector3 HitNormal, ImpactType Impact, int TriangleIndex)
-    {
-        if (HitObject.TryGetComponent<Terrain>(out Terrain terrain))
-        {
+    public void HandleImpact(GameObject HitObject, Vector3 HitPoint, Vector3 HitNormal, ImpactType Impact, int TriangleIndex) {
+        if (HitObject.TryGetComponent<Terrain>(out Terrain terrain)) {
             List<TextureAlpha> activeTextures = GetActiveTexturesFromTerrain(terrain, HitPoint);
-            foreach (TextureAlpha activeTexture in activeTextures)
-            {
+            foreach (TextureAlpha activeTexture in activeTextures) {
                 SurfaceType surfaceType = Surfaces.Find(surface => surface.Albedo == activeTexture.Texture);
-                if (surfaceType != null)
-                {
-                    foreach (Surface.SurfaceImpactTypeEffect typeEffect in surfaceType.Surface.ImpactTypeEffects)
-                    {
-                        if (typeEffect.ImpactType == Impact)
-                        {
+                if (surfaceType != null) {
+                    foreach (Surface.SurfaceImpactTypeEffect typeEffect in surfaceType.Surface.ImpactTypeEffects) {
+                        if (typeEffect.ImpactType == Impact) {
                             PlayEffects(HitPoint, HitNormal, typeEffect.SurfaceEffect, activeTexture.Alpha);
                         }
                     }
                 }
-                else
-                {
-                    foreach (Surface.SurfaceImpactTypeEffect typeEffect in DefaultSurface.ImpactTypeEffects)
-                    {
-                        if (typeEffect.ImpactType == Impact)
-                        {
+                else {
+                    foreach (Surface.SurfaceImpactTypeEffect typeEffect in DefaultSurface.ImpactTypeEffects){
+                        if (typeEffect.ImpactType == Impact) {
                             PlayEffects(HitPoint, HitNormal, typeEffect.SurfaceEffect, 1);
                         }
                     }
                 }
             }
         }
-        else if (HitObject.TryGetComponent<Renderer>(out Renderer renderer))
-        {
+        else if (HitObject.TryGetComponent<Renderer>(out Renderer renderer)) {
             Texture activeTexture = GetActiveTextureFromRenderer(renderer, TriangleIndex);
 
             SurfaceType surfaceType = Surfaces.Find(surface => surface.Albedo == activeTexture);
-            if (surfaceType != null)
-            {
+            if (surfaceType != null) {
                 foreach (Surface.SurfaceImpactTypeEffect typeEffect in surfaceType.Surface.ImpactTypeEffects)
                 {
-                    if (typeEffect.ImpactType == Impact)
-                    {
+                    if (typeEffect.ImpactType == Impact) {
                         PlayEffects(HitPoint, HitNormal, typeEffect.SurfaceEffect, 1);
                     }
                 }
             }
-            else
-            {
-                foreach (Surface.SurfaceImpactTypeEffect typeEffect in DefaultSurface.ImpactTypeEffects)
-                {
-                    if (typeEffect.ImpactType == Impact)
-                    {
+            else {
+                foreach (Surface.SurfaceImpactTypeEffect typeEffect in DefaultSurface.ImpactTypeEffects) {
+                    if (typeEffect.ImpactType == Impact) {
                         PlayEffects(HitPoint, HitNormal, typeEffect.SurfaceEffect, 1);
                     }
                 }
@@ -94,8 +73,7 @@ public class SurfaceManager : MonoBehaviour
         }
     }
 
-    private List<TextureAlpha> GetActiveTexturesFromTerrain(Terrain Terrain, Vector3 HitPoint)
-    {
+    private List<TextureAlpha> GetActiveTexturesFromTerrain(Terrain Terrain, Vector3 HitPoint) {
         Vector3 terrainPosition = HitPoint - Terrain.transform.position;
         Vector3 splatMapPosition = new Vector3(
             terrainPosition.x / Terrain.terrainData.size.x,
@@ -109,12 +87,9 @@ public class SurfaceManager : MonoBehaviour
         float[,,] alphaMap = Terrain.terrainData.GetAlphamaps(x, z, 1, 1);
 
         List<TextureAlpha> activeTextures = new List<TextureAlpha>();
-        for (int i = 0; i < alphaMap.Length; i++)
-        {
-            if (alphaMap[0, 0, i] > 0)
-            {
-                activeTextures.Add(new TextureAlpha()
-                {
+        for (int i = 0; i < alphaMap.Length; i++) {
+            if (alphaMap[0, 0, i] > 0) {
+                activeTextures.Add(new TextureAlpha() {
                     Texture = Terrain.terrainData.terrainLayers[i].diffuseTexture,
                     Alpha = alphaMap[0, 0, i]
                 });
@@ -124,30 +99,23 @@ public class SurfaceManager : MonoBehaviour
         return activeTextures;
     }
 
-    private Texture GetActiveTextureFromRenderer(Renderer Renderer, int TriangleIndex)
-    {
-        if (Renderer.TryGetComponent<MeshFilter>(out MeshFilter meshFilter))
-        {
+    private Texture GetActiveTextureFromRenderer(Renderer Renderer, int TriangleIndex) {
+        if (Renderer.TryGetComponent<MeshFilter>(out MeshFilter meshFilter)) {
             Mesh mesh = meshFilter.mesh;
 
-            if (mesh.subMeshCount > 1)
-            {
-                int[] hitTriangleIndices = new int[]
-                {
+            if (mesh.subMeshCount > 1) {
+                int[] hitTriangleIndices = new int[] {
                     mesh.triangles[TriangleIndex * 3],
                     mesh.triangles[TriangleIndex * 3 + 1],
                     mesh.triangles[TriangleIndex * 3 + 2]
                 };
 
-                for (int i = 0; i < mesh.subMeshCount; i++)
-                {
+                for (int i = 0; i < mesh.subMeshCount; i++) {
                     int[] submeshTriangles = mesh.GetTriangles(i);
-                    for (int j = 0; j < submeshTriangles.Length; j += 3)
-                    {
+                    for (int j = 0; j < submeshTriangles.Length; j += 3) {
                         if (submeshTriangles[j] == hitTriangleIndices[0]
                             && submeshTriangles[j + 1] == hitTriangleIndices[1]
-                            && submeshTriangles[j + 2] == hitTriangleIndices[2])
-                        {
+                            && submeshTriangles[j + 2] == hitTriangleIndices[2]) {
                             return Renderer.sharedMaterials[i].mainTexture;
                         }
                     }
@@ -163,14 +131,10 @@ public class SurfaceManager : MonoBehaviour
         return null;
     }
 
-    private void PlayEffects(Vector3 HitPoint, Vector3 HitNormal, SurfaceEffect SurfaceEffect, float SoundOffset)
-    {
-        foreach (SpawnObjectEffect spawnObjectEffect in SurfaceEffect.SpawnObjectEffects)
-        {
-            if (spawnObjectEffect.Probability > Random.value)
-            {
-                if (!ObjectPools.ContainsKey(spawnObjectEffect.Prefab))
-                {
+    private void PlayEffects(Vector3 HitPoint, Vector3 HitNormal, SurfaceEffect SurfaceEffect, float SoundOffset) {
+        foreach (SpawnObjectEffect spawnObjectEffect in SurfaceEffect.SpawnObjectEffects) {
+            if (spawnObjectEffect.Probability > Random.value) {
+                if (!ObjectPools.ContainsKey(spawnObjectEffect.Prefab)) {
                     ObjectPools.Add(spawnObjectEffect.Prefab, new ObjectPool<GameObject>(() => Instantiate(spawnObjectEffect.Prefab)));
                 }
 
