@@ -12,7 +12,7 @@ public class NPCIdleState : NPCBaseState {
     }
 
     public override void EnterState(){
-        Debug.Log("IDLE STATE");
+        // Debug.Log("IDLE STATE");
        InitializeSubState();
     }
 

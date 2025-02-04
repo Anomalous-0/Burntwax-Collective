@@ -13,7 +13,7 @@ public class PlayerSprintState : PlayerBaseState {
         Ctx.PlayerVelocity = Ctx.SprintVelocity;
         
         
-        Debug.Log("SPRINT STATE");
+        // Debug.Log("SPRINT STATE");
     }
 
     public override void UpdateState(){

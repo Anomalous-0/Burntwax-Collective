@@ -110,13 +110,13 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
-            SurfaceManager.Instance.HandleImpact(
-                Hit.transform.gameObject,
-                EndPoint,
-                Hit.normal,
-                ImpactType,
-                0
-            );
+            // SurfaceManager.Instance.HandleImpact(
+            //     Hit.transform.gameObject,
+            //     EndPoint,
+            //     Hit.normal,
+            //     ImpactType,
+            //     0
+            // );
             if(Hit.collider.GetComponent<Rigidbody>()) {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
             }
