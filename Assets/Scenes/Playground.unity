@@ -5273,7 +5273,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 229109508}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d5390d609a79bb4c96aba34a0816cf3, type: 3}
   m_Name: 
@@ -5285,7 +5285,7 @@ MonoBehaviour:
   rb: {fileID: 401126577}
   sway: 1
   swayRotation: 1
-  bobOffset: 0
+  bobOffset: 1
   bobSway: 1
   step: 0.01
   maxStepDistance: 0.06
