@@ -16,10 +16,6 @@ public class InputPrioritySorter : MonoBehaviour {
     
     List<string> inputPriority = new List<string>();
     // Start is called before the first frame update
-    void Start() {
-        
-    }
-
     // Update is called once per frame
     void Update(){
         if(input.aimIsPressed && !inputPriority.Contains(aim)) {
@@ -47,20 +43,6 @@ public class InputPrioritySorter : MonoBehaviour {
             // Debug.Log("Deleted shoot from list");
             inputPriority.Remove(shoot);
         }
-
-
-        // if(inputPriority.Count == 1) {
-        //     print(inputPriority[0]);
-        // }
-        // else if(inputPriority.Count == 2) {
-        //     print(inputPriority[0] + " " + inputPriority[1]);
-        // }
-        // else if(inputPriority.Count == 3) {
-        //     print(inputPriority[0] + " " + inputPriority[1] + " " + inputPriority[2]);   
-        // }
-        // else {
-        //     print("Empty");
-        // }
 
         
         

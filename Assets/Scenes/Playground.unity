@@ -8049,7 +8049,7 @@ Light:
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0.2
   m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
+  m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -55578,6 +55578,7 @@ MonoBehaviour:
   stowHash: 0
   aimHash: 0
   reloadHash: 0
+  incrementalReloadHash: 0
   CurrentGuns: []
   OrderedGuns:
   - {fileID: 1658456634}
@@ -55587,6 +55588,7 @@ MonoBehaviour:
   ActiveGunScriptable: {fileID: 0}
   CurrentGunModel: {fileID: 0}
   isReloading: 0
+  isIncrementalReloading: 0
   isShooting: 0
 --- !u!1001 &5604445138075287089
 PrefabInstance:

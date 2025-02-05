@@ -67,7 +67,7 @@ public class BobAndSway : MonoBehaviour {
 
         onSolid = player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() || player.currentState == player.states.Slope();
         // SHOULD I USE PRIORITY QUEUE HERE INSTEAD OF BASIC SHOOTISPRESSED
-        if (input.MoveInput != Vector2.zero && onSolid && cam.currentState != cam.states.Aim() && !player.prioritySorter.ShootIsPriority()) {
+        if (input.MoveInput != Vector2.zero && onSolid && cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot()) {
             Sway();
         }
         else {

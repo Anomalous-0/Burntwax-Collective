@@ -32,7 +32,7 @@ public class GunStateMachine : MonoBehaviour {
     
     public Rig handIK;
 
-    [HideInInspector] public int shootHash, aimShootHash, stowHash, aimHash, reloadHash;
+    [HideInInspector] public int shootHash, aimShootHash, stowHash, aimHash, reloadHash, incrementalReloadHash;
 
     public List<GunScriptableObject> CurrentGuns;
     public List<GameObject> OrderedGuns;
@@ -58,6 +58,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     public bool isReloading = false;
+    public bool isIncrementalReloading = false;
     public bool isShooting = false;
     
 
@@ -149,10 +150,10 @@ public class GunStateMachine : MonoBehaviour {
         Despawn(ActiveGunScriptable);
         
         ActiveGunScriptable = gun;
-        Spawn(ActiveGunScriptable);
+        // Spawn(ActiveGunScriptable);
         
         // gun.Spawn(GunParent, this);
-        crosshair.SetGunCrosshair(gun);
+        // crosshair.SetGunCrosshair(gun);
         SetupGun();
         // restingHash = Animator.StringToHash("resting");
     }
@@ -185,9 +186,7 @@ public class GunStateMachine : MonoBehaviour {
             ActiveGunScriptable = gun;
             currentID = gun.ID;
             
-            Spawn(ActiveGunScriptable);
-
-            crosshair.SetGunCrosshair(gun);
+            
             SetupGun();
 
 
@@ -200,6 +199,9 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetupGun() {
+        Spawn(ActiveGunScriptable);
+        crosshair.SetGunCrosshair(ActiveGunScriptable);
+
         handIK.weight = 1;
         anim.Play("equip_" + ActiveGunScriptable.Name);     
         camShake = CurrentGunModel.GetComponent<Cinemachine.CinemachineImpulseSource>();
@@ -211,6 +213,7 @@ public class GunStateMachine : MonoBehaviour {
         aimHash = Animator.StringToHash("aim");
         stowHash = Animator.StringToHash("stow");
         reloadHash = Animator.StringToHash("reload");
+        incrementalReloadHash = Animator.StringToHash("incrementalReload");
         
     }
 
@@ -237,6 +240,7 @@ public class GunStateMachine : MonoBehaviour {
     public void EndReload() {
         ActiveGunScriptable.EndReload();
         isReloading = false;
+        isIncrementalReloading = false; 
         
     }
 
@@ -253,15 +257,17 @@ public class GunStateMachine : MonoBehaviour {
 
 
     public bool ManualReload() {
-
         return input.reloadIsPressed && ActiveGunScriptable.CanReload();
-        
         // return  !isReloading && input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
+    }
+
+
+    public bool IncrementalReload() {
+        return ActiveGunScriptable.CanReload();
     }
 
     public bool AutoReload() {
         return ActiveGunScriptable.CanReload() && ActiveGunScriptable.AmmoConfig.currentClip == 0;
-        // return !isReloading && autoReload && GunSelector.ActiveGun.CanReload() && GunSelector.ActiveGun.AmmoConfig.currentClip == 0;
     }
 
 

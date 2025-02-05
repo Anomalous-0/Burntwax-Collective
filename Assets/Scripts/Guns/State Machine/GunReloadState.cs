@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Unity.VisualScripting;
 
 public class GunReloadState : GunBaseState {
    
@@ -16,20 +14,16 @@ public class GunReloadState : GunBaseState {
         Ctx.ActiveGunScriptable.StartReloadAudio();
         Ctx.anim.SetTrigger(Ctx.reloadHash);
         Ctx.isReloading = true;
-        // Ctx.isShooting = false;
-        // Debug.Log("Reload State");
         InitializeSubState();
     }
 
     public override void UpdateState(){
-   
-        // Ctx.ActiveGun.Rest();
         CheckSwitchStates();
         
     }
 
     public override void ExitState(){
-        Ctx.isReloading = false;
+       
         
     }
     
@@ -40,22 +34,22 @@ public class GunReloadState : GunBaseState {
             
             SwitchState(Factory.Stow());
         }
+
+        else if(!Ctx.isReloading && Ctx.ActiveGunScriptable.Name == "Shotgun") {
+            SwitchState(Factory.IncrementalReload());
+        }
+        
         else if(!Ctx.isReloading || Ctx.input.mouseScroll != 0) {
 
             SwitchState(Factory.Rest());
         }
+
+        
         
         
     }
-
-    private IEnumerator Countdown() {
-        yield return new WaitForSeconds(5f);
-    }
-
 
     public override void InitializeSubState(){
-        // SetSubState(Factory.NoShoot());
-       
     }
 
 }
