@@ -16,13 +16,13 @@ MonoBehaviour:
   OrientationNoise:
   - X:
       Frequency: 0
-      Amplitude: 0
+      Amplitude: 400
       Constant: 0
     Y:
       Frequency: 0
       Amplitude: 0
       Constant: 0
     Z:
-      Frequency: 0
-      Amplitude: 0
-      Constant: 0
+      Frequency: 0.4
+      Amplitude: 30
+      Constant: 1
