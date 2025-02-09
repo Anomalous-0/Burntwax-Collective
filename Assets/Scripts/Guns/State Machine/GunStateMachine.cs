@@ -7,9 +7,6 @@ using UnityEngine.UIElements;
 [DisallowMultipleComponent]
 public class GunStateMachine : MonoBehaviour {
 
-    public Transform barrel;
-    public bool rotateBarrel = false;
-
     [Header("State Machines")]
     public PlayerStateMachine stateMachine;
     public CamStateMachine camMachine; 
@@ -96,11 +93,7 @@ public class GunStateMachine : MonoBehaviour {
             EmptyClip();
         }
 
-        if(rotateBarrel) {
-            Quaternion targetRotation = Quaternion.Euler(barrel.eulerAngles.x, barrel.eulerAngles.y, barrel.eulerAngles.z-60);
-            barrel.rotation = Quaternion.Slerp(barrel.rotation, targetRotation, Time.deltaTime*2);
-
-        }
+        
         
 
 
@@ -260,9 +253,6 @@ public class GunStateMachine : MonoBehaviour {
         
     }
 
-    public void RotateBarrel() {
-        rotateBarrel = true;
-    }
 
     public void EndIncrementalReload() {
         ActiveGunScriptable.EndIncrementalReload();
@@ -276,7 +266,6 @@ public class GunStateMachine : MonoBehaviour {
 
     public void EndShoot() {
         isShooting = false;
-        rotateBarrel = false;
     }
 
 
