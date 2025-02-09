@@ -26,7 +26,8 @@ public class AmmoConfig : ScriptableObject, ICloneable {
     }
 
     public void IncrementalReload() {
-        
+        currentClip++;
+        currentAmmo--;
     }
 
 

@@ -83,6 +83,10 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         AmmoConfig.Reload();
     }
 
+    public void EndIncrementalReload() {
+        AmmoConfig.IncrementalReload();
+    }
+
     private IEnumerator InstantiateBullet() {
         yield return null;
     }

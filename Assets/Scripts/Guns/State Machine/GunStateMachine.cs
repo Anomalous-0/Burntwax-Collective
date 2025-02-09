@@ -238,10 +238,18 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void EndReload() {
-        ActiveGunScriptable.EndReload();
+        if(!ActiveGunScriptable.incrementalReload) {
+
+            ActiveGunScriptable.EndReload();
+        }
         isReloading = false;
-        isIncrementalReloading = false; 
         
+        
+    }
+
+    public void EndIncrementalReload() {
+        ActiveGunScriptable.EndIncrementalReload();
+        isIncrementalReloading = false;
     }
 
     // public void BarrelSpin() {
