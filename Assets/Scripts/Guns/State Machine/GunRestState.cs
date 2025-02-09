@@ -12,7 +12,9 @@ public class GunRestState : GunBaseState {
 
     public override void EnterState(){
         // Ctx.anim.SetBool(Ctx.equipHash, true);       
-       
+       Ctx.isReloading = false;
+       Ctx.isIncrementalReloading = false;
+       Ctx.isShooting = false;
         // Debug.Log("Rest State");
         InitializeSubState();
     }

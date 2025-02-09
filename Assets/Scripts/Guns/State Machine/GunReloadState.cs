@@ -41,8 +41,8 @@ public class GunReloadState : GunBaseState {
         }
 
         else if(!Ctx.isReloading && Ctx.ActiveGunScriptable.incrementalReload) {
-            Debug.Log("wtf switch now reloading");
-            
+
+
             SwitchState(Factory.IncrementalReload());
         }
         

@@ -32,7 +32,7 @@ public class GunStateMachine : MonoBehaviour {
     
     public Rig handIK;
 
-    [HideInInspector] public int shootHash, aimShootHash, stowHash, aimHash, reloadHash, incrementalReloadHash;
+    [HideInInspector] public int  stowHash, aimHash, reloadHash, incrementalReloadHash, shotWhileIncReloadHash;
 
     public List<GunScriptableObject> CurrentGuns;
     public List<GameObject> OrderedGuns;
@@ -59,7 +59,7 @@ public class GunStateMachine : MonoBehaviour {
 
     public bool isReloading = false;
     public bool isIncrementalReloading = false;
-    public bool isShooting = false;
+        public bool isShooting = false;
     
 
 
@@ -201,19 +201,24 @@ public class GunStateMachine : MonoBehaviour {
     private void SetupGun() {
         Spawn(ActiveGunScriptable);
         crosshair.SetGunCrosshair(ActiveGunScriptable);
-
+        currentState = states.Rest();
         handIK.weight = 1;
         anim.Play("equip_" + ActiveGunScriptable.Name);     
         camShake = CurrentGunModel.GetComponent<Cinemachine.CinemachineImpulseSource>();
         
 
-        shootHash = Animator.StringToHash("shoot");
-        // equipHash = Animator.StringToHash("equip");
-        aimShootHash = Animator.StringToHash("aimShoot");
+       
+        
         aimHash = Animator.StringToHash("aim");
         stowHash = Animator.StringToHash("stow");
         reloadHash = Animator.StringToHash("reload");
         incrementalReloadHash = Animator.StringToHash("incrementalReload");
+        shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+
+        anim.SetBool(aimHash, false);
+        anim.SetBool(stowHash, false);
+        anim.SetBool(reloadHash, false);
+        anim.SetBool(incrementalReloadHash, false);
         
     }
 
@@ -249,8 +254,9 @@ public class GunStateMachine : MonoBehaviour {
 
     public void EndIncrementalReload() {
         ActiveGunScriptable.EndIncrementalReload();
-        isIncrementalReloading = false;
+       
     }
+
 
     // public void BarrelSpin() {
     //     barrel.Spin();
