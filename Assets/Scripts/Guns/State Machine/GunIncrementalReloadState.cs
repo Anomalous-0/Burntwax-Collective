@@ -12,7 +12,7 @@ public class GunIncrementalReloadState : GunBaseState {
     public override void EnterState(){
         Debug.Log("Enter INCREMENTAL STATE");
         Ctx.ActiveGunScriptable.StartReloadAudio();
-        Ctx.anim.SetTrigger(Ctx.incrementalReloadHash);
+        Ctx.anim.SetBool(Ctx.incrementalReloadHash, true);
         Ctx.isIncrementalReloading = true;
         InitializeSubState();
     }
@@ -25,19 +25,22 @@ public class GunIncrementalReloadState : GunBaseState {
     public override void ExitState(){
         Debug.Log("Exit INCREMENTAL STATE");
         Ctx.anim.SetBool(Ctx.incrementalReloadHash, false); 
+        Ctx.isIncrementalReloading = false;
     }
     
     public override void CheckSwitchStates(){
         
-        
-        if (!Ctx.isIncrementalReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
-            
-            SwitchState(Factory.Stow());
-        }
-        else if(!Ctx.isIncrementalReloading || Ctx.input.mouseScroll != 0) {
-
+        if(Ctx.stateMachine.prioritySorter.ShootIsPriority()) {
             SwitchState(Factory.Rest());
         }
+        // if (!Ctx.isIncrementalReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+            
+        //     SwitchState(Factory.Stow());
+        // }
+        // else if(!Ctx.isIncrementalReloading || Ctx.input.mouseScroll != 0) {
+
+        //     SwitchState(Factory.Rest());
+        // }
         
         
     }

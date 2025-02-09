@@ -25,6 +25,10 @@ public class AmmoConfig : ScriptableObject, ICloneable {
         currentAmmo -= reloadAmount;
     }
 
+    public void IncrementalReload() {
+        
+    }
+
 
     public bool CanReload() {
         return currentClip < clipSize && currentAmmo > 0;

@@ -1,4 +1,9 @@
+using System.Diagnostics;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using Unity.VisualScripting;
+using Debug = UnityEngine.Debug;
 
 public class GunReloadState : GunBaseState {
    
@@ -30,12 +35,14 @@ public class GunReloadState : GunBaseState {
     public override void CheckSwitchStates(){
         
         
-        if (!Ctx.isReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
+        if (!Ctx.ActiveGunScriptable.incrementalReload && !Ctx.isReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
             
             SwitchState(Factory.Stow());
         }
 
-        else if(!Ctx.isReloading && Ctx.ActiveGunScriptable.Name == "Shotgun") {
+        else if(!Ctx.isReloading && Ctx.ActiveGunScriptable.incrementalReload) {
+            Debug.Log("wtf switch now reloading");
+            
             SwitchState(Factory.IncrementalReload());
         }
         
