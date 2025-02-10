@@ -9211,12 +9211,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deg: 60
   gun: {fileID: 0}
---- !u!4 &383887815 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -1035275730820000495, guid: 5b29320cba632b847b68af94952e1fad,
-    type: 3}
-  m_PrefabInstance: {fileID: 956713828}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &385572453
 GameObject:
   m_ObjectHideFlags: 0
@@ -41419,8 +41413,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfead5a010aee34e862cd1c493dd008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  barrel: {fileID: 383887815}
-  rotateBarrel: 0
   stateMachine: {fileID: 401126580}
   camMachine: {fileID: 401126586}
   crosshair: {fileID: 1513530040}
