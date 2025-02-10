@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ed85ee6060fec74c945f411b531c1e9, type: 3}
-  m_Name: Orange Surface
+  m_Script: {fileID: 11500000, guid: 8911373888f1199468841498cf6d4f5f, type: 3}
+  m_Name: Concrete Surface Effect
   m_EditorClassIdentifier: 
-  ImpactTypeEffects:
-  - ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
-    SurfaceEffect: {fileID: 11400000, guid: 32a374d01439bdf41a09d4714d444ac7, type: 2}
+  SpawnObjectEffects: []
+  PlayAudioEffects:
+  - {fileID: 11400000, guid: d01c04ec225262d479030d559a4d6ea8, type: 2}

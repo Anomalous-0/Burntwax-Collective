@@ -292,7 +292,15 @@ public class PlayerStateMachine : MonoBehaviour {
         //Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)
             int angle = (int) Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
         
-        // if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)) {
+        if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)) {
+            
+            if(slopeHit.collider.GetComponent<Pickupable>()) {
+                Debug.Log("Shouldn't be any slope");
+                return false;
+            }
+
+        }
+        
             // float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
             if(angle > maxSlopeAngle) {
@@ -301,6 +309,8 @@ public class PlayerStateMachine : MonoBehaviour {
             else {
                 slopeToSteep = false;
             }
+
+            
             return Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f;
             
         // }

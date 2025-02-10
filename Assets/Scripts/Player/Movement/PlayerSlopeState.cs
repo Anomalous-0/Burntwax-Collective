@@ -11,7 +11,7 @@ public class PlayerSlopeState : PlayerBaseState {
     public override void EnterState(){
         // Debug.Log("ENTERING SLOPE STATE");
         InitializeSubState();
-        Ctx.rb.useGravity = false;
+        //Ctx.rb.useGravity = false;
         if(!Ctx.input.moveIsPressed) {
             Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
         }
@@ -21,7 +21,9 @@ public class PlayerSlopeState : PlayerBaseState {
     }
 
     public override void UpdateState(){
-        
+        if(!Ctx.input.moveIsPressed) {
+            Ctx.rb.velocity = new Vector3(0, 0, 0);
+        }
         CheckSwitchStates(); 
     }
 
