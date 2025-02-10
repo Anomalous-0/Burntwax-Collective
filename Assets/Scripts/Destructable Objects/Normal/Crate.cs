@@ -13,8 +13,8 @@ public class Crate : MonoBehaviour, Destructable {
 
     
     [Header("Vfx")]
-    [SerializeField] ParticleSystem damageParticles;
-    [SerializeField] ParticleSystem destructParticles;
+    [SerializeField] GameObject damageParticles;
+    [SerializeField] GameObject destructParticles;
 
 
     
@@ -34,12 +34,12 @@ public class Crate : MonoBehaviour, Destructable {
         currentHealth -= damageTaken; 
 
         if(damageTaken != 0) {
-            Debug.Log("Damage taken: " + damageTaken);
+            
             HandleDamage(transform.position);
         }
 
         if(currentHealth == 0 && damageTaken!= 0) {
-            Debug.Log("Crate destroyed");
+           
             HandleDestruct(transform.position);
             
         }
@@ -69,8 +69,9 @@ public class Crate : MonoBehaviour, Destructable {
 
     private void SpawnResources(Vector3 pos) {
         // Instantiate(resourcePrefab, pos, Quaternion.identity);
-        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count-1)], pos, Quaternion.identity);
-            Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count-1)], pos, Quaternion.identity);
+        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
+        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
+        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
     }
 
     private void Start() {
