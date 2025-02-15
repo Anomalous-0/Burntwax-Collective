@@ -18,7 +18,7 @@ public class PlayerGroundedState : PlayerBaseState {
         //     Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
         // }
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
-        Ctx.rb.drag = Ctx.GroundDrag;
+        Ctx.rb.linearDamping = Ctx.GroundDrag;
         // Debug.Log("GROUNDED STATE");
     }
 
@@ -32,7 +32,7 @@ public class PlayerGroundedState : PlayerBaseState {
     }
 
     public override void ExitState(){
-        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+        Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
     }
     
     public override void CheckSwitchStates(){    

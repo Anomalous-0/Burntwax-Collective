@@ -145,12 +145,12 @@ public class BobAndSway : MonoBehaviour {
             lastTime = Time.deltaTime;
         }
 
-        speedCurve += 1.5f * lastTime * (onSolid ? rb.velocity.magnitude : 1f);
+        speedCurve += 1.5f * lastTime * (onSolid ? rb.linearVelocity.magnitude : 1f);
 
         int shouldBobX = ((onSolid && !input.shootIsPressed) ? 1 : 0);
 
         bobPosition.x = (curveCos * bobLimit.x * shouldBobX) - (walkInput.x * travelLimit.x);
-        bobPosition.y = (curveSin * bobLimit.y) - (rb.velocity.y * travelLimit.y);
+        bobPosition.y = (curveSin * bobLimit.y) - (rb.linearVelocity.y * travelLimit.y);
         bobPosition.z = (walkInput.y * travelLimit.z);
     }
 

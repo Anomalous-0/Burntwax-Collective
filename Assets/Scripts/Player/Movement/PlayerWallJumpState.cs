@@ -18,7 +18,7 @@ public class PlayerWallJumpState : PlayerBaseState {
     public override void EnterState(){
         InitializeSubState(); 
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
-        Ctx.rb.drag = Ctx.AirDrag;
+        Ctx.rb.linearDamping = Ctx.AirDrag;
         Ctx.AbleToWallJump = false;
         
        

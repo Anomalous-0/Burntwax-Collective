@@ -13,23 +13,23 @@ public class PlayerSlopeState : PlayerBaseState {
         InitializeSubState();
         //Ctx.rb.useGravity = false;
         if(!Ctx.input.moveIsPressed) {
-            Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
+            Ctx.rb.linearVelocity = new Vector3(0, Ctx.rb.linearVelocity.y, 0);
         }
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
-        Ctx.rb.drag = Ctx.GroundDrag;
+        Ctx.rb.linearDamping = Ctx.GroundDrag;
         
     }
 
     public override void UpdateState(){
         if(!Ctx.input.moveIsPressed) {
-            Ctx.rb.velocity = new Vector3(0, 0, 0);
+            Ctx.rb.linearVelocity = new Vector3(0, 0, 0);
         }
         CheckSwitchStates(); 
     }
 
    public override void ExitState(){
 
-        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+        Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
         Ctx.rb.useGravity = true;
     }
     

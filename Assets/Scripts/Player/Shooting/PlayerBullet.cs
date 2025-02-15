@@ -15,12 +15,12 @@ public class PlayerBullet : MonoBehaviour {
     }
 
     private void Start() {
-        bulletRb.velocity = transform.forward * speed;
+        bulletRb.linearVelocity = transform.forward * speed;
     }
 
     private void OnTriggerStay(Collider other) {
         if(other.GetComponent<BulletTarget>() != false) {
-            other.GetComponent<Rigidbody>().AddForce(bulletRb.velocity, ForceMode.Impulse);
+            other.GetComponent<Rigidbody>().AddForce(bulletRb.linearVelocity, ForceMode.Impulse);
             Debug.Log("Hit a target");
             //var rb2d = hitinfo.collider.GetComponent<Rigidbody>();
             
