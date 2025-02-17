@@ -23,7 +23,7 @@ public class GunIncrementalReloadState : GunBaseState {
     }
 
     public override void ExitState(){
-        Debug.Log("Exit INCREMENTAL STATE");
+        // Debug.Log("Exit INCREMENTAL STATE");
         Ctx.anim.SetBool(Ctx.incrementalReloadHash, false);
         Ctx.isIncrementalReloading = false; 
         

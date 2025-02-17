@@ -49,7 +49,7 @@ public class PlayerGroundedState : PlayerBaseState {
 
     private void SlideDownSlope() {
         if(Ctx.SlopeTooSteep) {
-
+            
             // Ctx.rb.AddForce(Ctx.groundCheckHit.normal.normalized * Ctx.DownForce);
         }
 
