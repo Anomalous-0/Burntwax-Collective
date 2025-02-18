@@ -281,18 +281,18 @@ public class PlayerStateMachine : MonoBehaviour {
    private void SpeedControl() {
 
         if (currentState == states.Slope()) {
-            if (rb.linearVelocity.magnitude > playerVelocity) {
-                rb.linearVelocity = rb.linearVelocity.normalized * playerVelocity;
+            if (rb.velocity.magnitude > playerVelocity) {
+                rb.velocity = rb.velocity.normalized * playerVelocity;
             }
         }
 
         else {
-            Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
+            Vector3 flatVel = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
             // limit velocity if needed
             if (flatVel.magnitude > playerVelocity) {
                 Vector3 limitedVel = flatVel.normalized * playerVelocity;
-                rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
+                rb.velocity = new Vector3(limitedVel.x, rb.velocity.y, limitedVel.z);
             }
         }
         

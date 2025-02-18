@@ -16,7 +16,7 @@ public class GloveHoldState : GloveBaseState {
         Ctx.input.useGloves = false;
         Ctx.Force = Ctx.AttractForce;
         Ctx.Target.interpolation = RigidbodyInterpolation.None;
-        Ctx.Target.linearVelocity = Vector3.zero;
+        Ctx.Target.velocity = Vector3.zero;
         Ctx.capsule.enabled = false;
         Ctx.BodyHierarchy = Ctx.Target.transform.parent.transform;
         Ctx.Target.transform.SetParent(Ctx.GlovePos.transform);

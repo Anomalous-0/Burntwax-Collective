@@ -19,8 +19,8 @@ public class PlayerWallRunState : PlayerBaseState {
     public override void EnterState(){
         InitializeSubState(); 
         Ctx.MoveMultiplier = Ctx.WallMultiplier;
-        Ctx.rb.linearDamping = Ctx.WallDrag;
-        Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0, Ctx.rb.linearVelocity.z);
+        Ctx.rb.drag = Ctx.WallDrag;
+        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0, Ctx.rb.velocity.z);
         Ctx.rb.useGravity = false;
         //Debug.Log("WALLRUN STATE");
         
@@ -40,12 +40,12 @@ public class PlayerWallRunState : PlayerBaseState {
     
     public override void CheckSwitchStates(){
         if(Ctx.playerIsGrounded) {
-            Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
             Ctx.rb.useGravity = true;
             SwitchState(Factory.Grounded());
         }
         else if(Ctx.input.jumpIsPressed) {
-            Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
             Ctx.rb.useGravity = true;
             Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
             Ctx.rb.AddForce(force, ForceMode.Impulse);
@@ -55,7 +55,7 @@ public class PlayerWallRunState : PlayerBaseState {
             
         }
         else if(!Ctx.WallLeft && !Ctx.WallRight && !Ctx.WallFront && !Ctx.WallBack) {
-            Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
             Ctx.rb.useGravity = true;
             SwitchState(Factory.Fall());
         }

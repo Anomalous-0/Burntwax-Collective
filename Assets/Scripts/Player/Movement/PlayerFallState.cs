@@ -18,7 +18,7 @@ public class PlayerFallState : PlayerBaseState {
 
     public override void EnterState(){
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
-        Ctx.rb.linearDamping = Ctx.AirDrag;
+        Ctx.rb.drag = Ctx.AirDrag;
         Ctx.CoyoteTime = Ctx.CoyoteTimer;
         InitializeSubState();
 
@@ -48,7 +48,7 @@ public class PlayerFallState : PlayerBaseState {
         }
         else if(Ctx.CoyoteTime >= 0 && Ctx.input.jumpIsPressed) {
             Ctx.CoyoteTime = Ctx.CoyoteTimer;
-            Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
+            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
             SwitchState(Factory.Jump());
         }
 

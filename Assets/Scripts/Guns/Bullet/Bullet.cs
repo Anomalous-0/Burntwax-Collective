@@ -44,7 +44,7 @@ public class Bullet : MonoBehaviour {
 
     private void OnDisable() {
         StopAllCoroutines();
-        rb.linearVelocity = Vector3.zero;
+        rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero; 
         OnCollision = null;
     }
