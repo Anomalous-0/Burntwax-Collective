@@ -34,8 +34,8 @@ public class BobAndSway : MonoBehaviour {
 
     [Header("Bobbing")]
     public float speedCurve;
-    float curveSin { get => Mathf.Sin(speedCurve); }
-    float curveCos { get => Mathf.Cos(speedCurve); }
+    float curveSin { get => Mathf.Cos(speedCurve); }
+    float curveCos { get => Mathf.Sin(speedCurve); }
     public Vector3 travelLimit = Vector3.one * 0.025f;
     public Vector3 bobLimit = Vector3.one * 0.01f;
     Vector3 bobPosition;
