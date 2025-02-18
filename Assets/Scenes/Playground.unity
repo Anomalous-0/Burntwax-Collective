@@ -17595,7 +17595,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 2147483647
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &868806532
 Transform:
@@ -17619,7 +17619,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868806531}
-  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
+  m_Material: {fileID: 13400000, guid: 5d42b92f9b004474e941e10dc78e6f94, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -43855,6 +43855,11 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1186628176162295092, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: glove
@@ -44063,7 +44068,7 @@ PrefabInstance:
     - target: {fileID: 5172959541694377658, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5498660762704863293, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
