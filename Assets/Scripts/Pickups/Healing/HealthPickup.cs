@@ -9,8 +9,7 @@ public class NewBehaviourScript : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         
         if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
-            // Debug.Log("COllided");
-            playerHealth = FindObjectOfType<PlayerHealth>();
+            playerHealth = FindFirstObjectByType<PlayerHealth>();
             if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
                 playerHealth.RestoreHealth(heal);
                 Destroy(gameObject);

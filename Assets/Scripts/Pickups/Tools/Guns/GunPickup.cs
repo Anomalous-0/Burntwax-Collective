@@ -14,7 +14,7 @@ public class GunPickup : MonoBehaviour {
 
     void OnTriggerEnter(Collider other) {
         if(other.GetComponentInParent<PlayerHealth>() != false) {
-            gunSelector = FindObjectOfType<GunStateMachine>();
+            gunSelector = FindFirstObjectByType<GunStateMachine>();
             if(!gunSelector.CurrentGuns.Contains(gun)) {
                 gunSelector.Pickup(gun);
             }

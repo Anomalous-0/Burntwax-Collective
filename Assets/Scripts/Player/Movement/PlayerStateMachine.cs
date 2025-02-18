@@ -19,7 +19,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     [Header("Movement")]
 
-    float yRot;
+    [SerializeField] bool disableMovement;
     [SerializeField] float playerVelocity;
     float moveMultiplier;
     [SerializeField] float groundMultiplier = 1f;
@@ -89,7 +89,9 @@ public class PlayerStateMachine : MonoBehaviour {
     
 
     [Header("Slope Handling")]
-    [SerializeField] public bool playerIsSloped;
+    public bool playerIsSloped;
+
+    public int currentAngle;
     [SerializeField] float maxSlopeAngle;
     [SerializeField] bool slopeToSteep;
     [SerializeField] int downForce;
@@ -105,6 +107,8 @@ public class PlayerStateMachine : MonoBehaviour {
     
     
     // Movement
+
+    public bool DisableMovement {get { return disableMovement; } set { disableMovement = value;} }
     public float PlayerVelocity {get { return playerVelocity; } set { playerVelocity = value; } }
     public float MoveMultiplier {get { return moveMultiplier; } set { moveMultiplier = value; } }
     public float VerticalInput {get { return verticalInput; } set { verticalInput = value; } }
@@ -217,8 +221,10 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void GetMoveInput() {
-        horizontalInput = input.MoveInput.x;
-        verticalInput = input.MoveInput.y;
+        
+            horizontalInput = input.MoveInput.x;
+            verticalInput = input.MoveInput.y;
+        
     }
 
     private void SetOrientation() {
@@ -230,19 +236,24 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void PlayerMove() {
-        if (currentState != states.Wallrun() ) {
-            moveDirection = player.forward * verticalInput + player.right * horizontalInput;
+        if(!disableMovement) {
+            if (currentState != states.Wallrun() ) {
+                moveDirection = player.forward * verticalInput + player.right * horizontalInput;
+            }
+            else {
+                moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+            }
+
+            if (PlayerSlopeCheck()) {
+                moveDirection = GetSlopeMoveDirection();
+            
+            }
+            
+            rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
         }
         else {
-            moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+            Debug.Log("Locked");
         }
-
-        if (PlayerSlopeCheck()) {
-            moveDirection = GetSlopeMoveDirection();
-        
-        }
-        
-        rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
     }
 
     private bool PlayerGroundCheck(){
@@ -257,6 +268,9 @@ public class PlayerStateMachine : MonoBehaviour {
                 }
 
             }
+            // else if(slopeToSteep) {
+            //     return false;
+            // }
             return true;
         }
         return false;
@@ -290,12 +304,13 @@ public class PlayerStateMachine : MonoBehaviour {
         // Transform playerPos = gameObject.transform.GetChild(1);
         Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal); 
         //Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)
-            int angle = (int) Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
+        currentAngle = (int) Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
         
         if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)) {
             
             if(slopeHit.collider.GetComponent<Pickupable>()) {
-                Debug.Log("Shouldn't be any slope");
+                // Debug.Log("Shouldn't be any slope");
+                currentAngle = 0;
                 return false;
             }
 
@@ -303,15 +318,16 @@ public class PlayerStateMachine : MonoBehaviour {
         
             // float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
             // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
-            if(angle > maxSlopeAngle) {
+            if(currentAngle > maxSlopeAngle) {
                 slopeToSteep = true;
+    
             }
             else {
                 slopeToSteep = false;
             }
 
             
-            return Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f;
+            return Math.Abs(currentAngle) > 0.03f;
             
         // }
 

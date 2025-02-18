@@ -15,7 +15,7 @@ public class AmmoPickup : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         
         if(other.GetComponentInParent<PlayerHealth>() || other.GetComponent<ConsumableGlovePickup>()) {
-            playerGun = FindObjectOfType<GunStateMachine>();
+            playerGun = FindFirstObjectByType<GunStateMachine>();
 
             if(playerGun.CurrentGuns.Contains(gun)) {
                 if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {

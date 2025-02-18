@@ -29,7 +29,7 @@ public class GunAimState : GunBaseState {
         if(Ctx.stateMachine.prioritySorter.SprintIsPriority()) {
             SwitchState(Factory.Stow());
         }
-        else if(!Ctx.stateMachine.prioritySorter.AimIsPriority() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
+        else if(!Ctx.input.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
             SwitchState(Factory.Rest());
         }
         else if(Ctx.AutoReload()  || Ctx.ManualReload()) {

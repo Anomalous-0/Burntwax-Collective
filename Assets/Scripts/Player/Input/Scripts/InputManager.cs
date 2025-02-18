@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour {
     
-    public Vector2 MoveInput { get; private set; } = Vector2.zero;
+    public Vector2 MoveInput = Vector2.zero;
     public Vector2 LookInput { get; private set; } = Vector2.zero; 
     public bool InvertMouseY { get; private set; } = true;
 

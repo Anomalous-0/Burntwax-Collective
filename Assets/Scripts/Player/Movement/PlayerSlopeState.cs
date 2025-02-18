@@ -21,9 +21,10 @@ public class PlayerSlopeState : PlayerBaseState {
     }
 
     public override void UpdateState(){
-        if(!Ctx.input.moveIsPressed) {
-            Ctx.rb.linearVelocity = new Vector3(0, 0, 0);
-        }
+        // if(!Ctx.input.moveIsPressed) {
+        //     Ctx.rb.linearVelocity = new Vector3(0, 0, 0);
+        // }
+        SlideDownSlope();
         CheckSwitchStates(); 
     }
 
@@ -34,7 +35,7 @@ public class PlayerSlopeState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){    
-        if(Ctx.input.jumpIsPressed) {
+        if(Ctx.input.jumpIsPressed && !Ctx.SlopeTooSteep) {
             SwitchState(Factory.Jump());
         }
         else if(!Ctx.playerIsSloped && !Ctx.playerIsGrounded) {
@@ -42,7 +43,19 @@ public class PlayerSlopeState : PlayerBaseState {
         }
         else if(!Ctx.playerIsSloped) {
             SwitchState(Factory.Grounded());
+        } 
+    }
+
+
+    private void SlideDownSlope() {
+        if(Ctx.SlopeTooSteep) {
+            Ctx.rb.AddForce(Vector3.down * Ctx.DownForce);
+            Ctx.DisableMovement = true;
         }
+        else {
+            Ctx.DisableMovement = false;
+        }
+
     }
 
     public override void InitializeSubState(){

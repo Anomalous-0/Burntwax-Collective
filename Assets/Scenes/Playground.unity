@@ -3306,7 +3306,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 167143099}
-  - component: {fileID: 167143098}
   - component: {fileID: 167143100}
   - component: {fileID: 167143101}
   - component: {fileID: 167143102}
@@ -3317,23 +3316,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &167143098
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 167143097}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b4166bbaf84cc8438624211a3bf0c8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  input: {fileID: 845597538}
-  player: {fileID: 401126580}
-  npc: {fileID: 1607430987}
-  interactionHit: 0
-  dangerHitVisual: 0
 --- !u!4 &167143099
 Transform:
   m_ObjectHideFlags: 0
@@ -3366,7 +3348,7 @@ MonoBehaviour:
   onInteract:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 167143097}
+      - m_Target: {fileID: 401126581}
         m_TargetAssemblyTypeName: PlayerHealth, Assembly-CSharp
         m_MethodName: TakeDamage
         m_Mode: 4
@@ -3374,7 +3356,7 @@ MonoBehaviour:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
-          m_FloatArgument: 0
+          m_FloatArgument: 10
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
@@ -4627,7 +4609,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 229109508}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d5390d609a79bb4c96aba34a0816cf3, type: 3}
   m_Name: 
@@ -14678,7 +14660,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 657260180}
-  m_Material: {fileID: 13400000, guid: 20565e786418cc84ab0d17f5a9950efa, type: 2}
+  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -15944,7 +15926,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774425829}
-  m_Material: {fileID: 13400000, guid: 20565e786418cc84ab0d17f5a9950efa, type: 2}
+  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -17637,7 +17619,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 868806531}
-  m_Material: {fileID: 13400000, guid: 5d42b92f9b004474e941e10dc78e6f94, type: 2}
+  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -25448,7 +25430,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316351408}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -34991,7 +34973,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1781278259}
-  m_Material: {fileID: 13400000, guid: 5d42b92f9b004474e941e10dc78e6f94, type: 2}
+  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -39678,7 +39660,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2003818332}
-  m_Material: {fileID: 13400000, guid: 20565e786418cc84ab0d17f5a9950efa, type: 2}
+  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -43886,7 +43868,7 @@ PrefabInstance:
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: downForce
-      value: 300
+      value: 900
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
@@ -43961,7 +43943,7 @@ PrefabInstance:
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: groundCheckRadiusMultiplier
-      value: 0.61
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 3675934927089414449, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
