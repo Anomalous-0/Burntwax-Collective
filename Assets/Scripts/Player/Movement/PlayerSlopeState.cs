@@ -50,7 +50,7 @@ public class PlayerSlopeState : PlayerBaseState {
     private void SlideDownSlope() {
         if(Ctx.SlopeTooSteep) {
             Ctx.rb.AddForce(Vector3.down * Ctx.DownForce);
-            Ctx.DisableMovement = true;
+            // Ctx.DisableMovement = true;
         }
         else {
             Ctx.DisableMovement = false;

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5961384557908813733}
   - component: {fileID: 6036234228515285273}
   - component: {fileID: 1103281335214843079}
+  - component: {fileID: 2623820374866173274}
   m_Layer: 0
   m_Name: Flower
   m_TagString: Untagged
@@ -59,6 +60,9 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -108,3 +112,15 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 5691666353457927829, guid: 46ceee1e0f8fec547ad8c36842afe15f, type: 3}
+--- !u!114 &2623820374866173274
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5008984729542433618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
