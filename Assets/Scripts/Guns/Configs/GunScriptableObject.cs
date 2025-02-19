@@ -60,7 +60,24 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
             
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
-                // Debug.Log("Hit something");
+
+                try // Just in case it doesn't have a SurfaceType
+                {
+                    Surface surfaceHit = hit.collider.gameObject.GetComponent<Surface>();
+                    
+                    // If sound exists use it
+                    if (surfaceHit.surfaceType.impactSound)
+                    {
+                        AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, hit.point);
+                    }
+
+                    // If vfx exists use it
+                    if (surfaceHit.surfaceType.impactVFX)
+                    {
+                        Instantiate(surfaceHit.surfaceType.impactVFX, hit.point, Quaternion.identity);
+                    }
+
+                } catch (Exception e) { }
             }
             else {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
