@@ -24975,7 +24975,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1642499523}
-  - component: {fileID: 1642499522}
   m_Layer: 0
   m_Name: SurfaceManager
   m_TagString: Untagged
@@ -24983,22 +24982,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1642499522
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1642499521}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e697c7d0ba368044a5f29e060ac37de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Surfaces:
-  - Albedo: {fileID: 2800000, guid: 17198718c5735204999fb13dc36e290f, type: 3}
-    Surface: {fileID: 11400000, guid: 59255d6f38b2906458d488c5eddb9299, type: 2}
-  DefaultSurface: {fileID: 0}
 --- !u!4 &1642499523
 Transform:
   m_ObjectHideFlags: 0
