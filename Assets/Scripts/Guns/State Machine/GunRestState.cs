@@ -36,7 +36,7 @@ public class GunRestState : GunBaseState {
         else if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint() && !Ctx.isShooting){
             SwitchState(Factory.Stow());
         }
-        else if(Ctx.AutoReload()  || Ctx.ManualReload()) {
+        else if((Ctx.AutoReload()  || Ctx.ManualReload()) && Ctx.fullyEquipped) {
             SwitchState(Factory.Reload());
         }
     }

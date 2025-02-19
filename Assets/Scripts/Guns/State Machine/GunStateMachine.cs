@@ -58,7 +58,9 @@ public class GunStateMachine : MonoBehaviour {
 
     public bool isReloading = false;
     public bool isIncrementalReloading = false;
-        public bool isShooting = false;
+    public bool isShooting = false;
+
+    public bool fullyEquipped;
     
 
 
@@ -200,6 +202,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetupGun() {
+        fullyEquipped = false;
         Spawn(ActiveGunScriptable);
         crosshair.SetGunCrosshair(ActiveGunScriptable);
         currentState = states.Rest();
@@ -229,9 +232,7 @@ public class GunStateMachine : MonoBehaviour {
     private void EmptyClip() {
         if(ClipEmpty() && input.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() &&  CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && input.shootIsPressed) {
             ActiveGunScriptable.AudioConfig.PlayEmptyClip(CurrentGunModel.GetComponent<AudioSource>());
-            //THE ONE TIME I  WILL CHANGE SHOOT IS PRESSED THEN IG
-            input.shootIsPressed = false;
-            anim.Play("emptyclip_" + ActiveGunScriptable.Name);     
+            input.shootIsPressed = false;     
         }
     }
 
@@ -251,6 +252,10 @@ public class GunStateMachine : MonoBehaviour {
         isReloading = false;
         
         
+    }
+
+    public void EndEquip() {
+        fullyEquipped = true;
     }
 
 
