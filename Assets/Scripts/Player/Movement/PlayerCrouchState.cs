@@ -31,9 +31,12 @@ public class PlayerCrouchState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        // if raycast upwards hits something (meaning if the player let go of crouch but is still right under stomething, then stay in crouch mode)
         
-        if(!Ctx.input.crouchIsPressed && Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+        RaycastHit hit;
+        if (Physics.Raycast(Ctx.transform.position, Ctx.transform.TransformDirection(Vector3.forward), out hit, 1f)) {
+            // This is to filter everything out before the other checks
+        }
+        else if(!Ctx.input.crouchIsPressed && Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
             SwitchState(Factory.Walk());
         }
         else if(!Ctx.input.crouchIsPressed && !Ctx.input.moveIsPressed) {
