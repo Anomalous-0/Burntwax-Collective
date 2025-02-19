@@ -10,19 +10,12 @@ public class PlayerCrouchState : PlayerBaseState {
 
     public override void EnterState(){
         Ctx.PlayerVelocity = Ctx.CrouchVelocity;
-        // Debug.Log("CROUCH STATE");
+
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.CrouchYScale, Ctx.LocalScale.z);
         Ctx.rb.AddForce(Vector3.down * 15f, ForceMode.Impulse);
     }
 
     public override void UpdateState(){
-        // if(Ctx.input.aimIsPressed) {
-        //     Ctx.cam.Aim();
-    
-        // }
-        // else {
-        //     Ctx.cam.FPS();
-        // }
         CheckSwitchStates();
     }
 
