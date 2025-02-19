@@ -196,6 +196,8 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     private void Update() {
+
+        // MAYBE MOVE THIS TO FIXED UPDATE TO GET RID OF FRAME DEPENDANT MOVEMENT??
         currentState.UpdateStates();
         
         playerIsGrounded = PlayerGroundCheck();

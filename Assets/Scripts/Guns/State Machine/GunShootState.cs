@@ -50,7 +50,10 @@ public class GunShootState : GunBaseState {
 
 
     public void Recoil() {
-        Ctx.camShake.GenerateImpulse(Camera.main.transform.forward);
+        if(Ctx.camShake) {
+            Ctx.camShake.GenerateImpulse(Camera.main.transform.forward);
+        }
+        
         
     }
     

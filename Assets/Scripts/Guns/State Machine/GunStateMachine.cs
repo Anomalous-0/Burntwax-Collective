@@ -86,19 +86,20 @@ public class GunStateMachine : MonoBehaviour {
     private void Update() {
         if(ActiveGunScriptable != null) {
             WeaponSelect();
-            currentState.UpdateStates();
+            
             
             if((input.weaponSelectID || input.mouseScroll != 0) && !isShooting) {
-                // Debug.Log("Helo");
                 WeaponSwitch();
             }  
             EmptyClip();
         }
 
-        
-        
+    }
 
-
+    private void FixedUpdate(){
+        if(ActiveGunScriptable) {
+            currentState.UpdateStates();
+        }
     }
 
 
