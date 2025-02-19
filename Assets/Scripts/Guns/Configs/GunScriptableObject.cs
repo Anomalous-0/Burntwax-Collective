@@ -13,7 +13,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     
     [Header("General")]
     public GunType Type;
-    public ImpactType ImpactType;
+    //public ImpactType ImpactType;
     public string Name;
     
     // public GameObject ModelPrefab;
@@ -157,7 +157,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         GunScriptableObject config = CreateInstance<GunScriptableObject>();
 
         config.ID = ID;
-        config.ImpactType = ImpactType;
+        //config.ImpactType = ImpactType;
         config.Type = Type;
         config.Name = Name;
         // config.ModelPrefab = ModelPrefab;

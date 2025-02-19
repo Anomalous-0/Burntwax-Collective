@@ -33,7 +33,7 @@ public class PlayerCrouchState : PlayerBaseState {
 
         if (Physics.Raycast(Ctx.transform.position, Ctx.transform.TransformDirection(Vector3.up), out hit, 1f))
         {
-            // This is to filter everything out before the other checks
+            // This is to filter everything out before the other checks 
         }
         /*
         //Redefine front back and sides
