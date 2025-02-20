@@ -9,6 +9,7 @@ public class GunStateMachine : MonoBehaviour {
 
     [Header("State Machines")]
     public PlayerStateMachine stateMachine;
+    public GameObject player;
     public CamStateMachine camMachine; 
     public PlayerCrosshair crosshair;
 
@@ -112,7 +113,7 @@ public class GunStateMachine : MonoBehaviour {
     private void Spawn(GunScriptableObject activeGun) {
         CurrentGunModel = OrderedGuns[currentID];
         CurrentGunModel.SetActive(true);
-        activeGun.Spawn(CurrentGunModel, this);
+        activeGun.Spawn(player, CurrentGunModel, this);
         
     }
 

@@ -25,27 +25,27 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     public ShootConfig ShootConfig;
     public AmmoConfig AmmoConfig;
     public AudioConfig AudioConfig;
+    private AudioSource ShootingAudioSource;
     public DamageConfig DamageConfig;
     public TrailConfig TrailConfig;
     public CrosshairConfig CrosshairConfig;
 
 
     private MonoBehaviour ActiveMonoBehaviour;
-    private AudioSource ShootingAudioSource;
+    
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
 
 
 
-    public void Spawn(GameObject currentGun, MonoBehaviour ActiveMonoBehaviour) {
+    public void Spawn(GameObject player, GameObject currentGun, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
         if(TrailPool == null) {
-            Debug.Log("Only time creating trail");
             TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         }
         
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
-        ShootingAudioSource = currentGun.GetComponent<AudioSource>();
+        ShootingAudioSource = player.GetComponent<AudioSource>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {

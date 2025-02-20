@@ -8973,7 +8973,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 853776e4a472d6a4aa4bb6fdd12df6f2, type: 3}
@@ -8985,7 +8985,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd23cc99a9c091a4b82c15a9c3be377f, type: 3}
@@ -8997,7 +8997,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 98b8473b345b6324fb7a52010cc1644f, type: 3}
@@ -11819,6 +11819,12 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!1 &669723134 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+    type: 3}
+  m_PrefabInstance: {fileID: 5918461596287933360}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &673201061
 GameObject:
   m_ObjectHideFlags: 0
@@ -22391,7 +22397,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3d5937bfdb9413944ba01bb73af2015e, type: 3}
@@ -34127,6 +34133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stateMachine: {fileID: 401126580}
+  player: {fileID: 669723134}
   camMachine: {fileID: 401126586}
   crosshair: {fileID: 1513530040}
   input: {fileID: 845597538}
