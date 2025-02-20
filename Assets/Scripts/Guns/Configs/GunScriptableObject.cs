@@ -65,29 +65,12 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
             
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
-                ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, hit.point, hit));
+                ActiveMonoBehaviour.StartCoroutine(PlayTrail(i, ShootSystem.transform.position, hit.point, hit));
 
-                try // Just in case it doesn't have a SurfaceType
-                {
-                    Surface surfaceHit = hit.collider.gameObject.GetComponent<Surface>();
-                    
-                    // If sound exists use it
-                    if (i == 0 && surfaceHit.surfaceType.impactSound) {
-                        AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, hit.point, surfaceHit.surfaceType.volume);
-                    }
-
-                    // If vfx exists use it
-                    if (surfaceHit.surfaceType.impactVFX) {
-                        Debug.Log("Play VFX");
-                        Instantiate(surfaceHit.surfaceType.impactVFX, hit.point, Quaternion.identity);
-                        surfaceHit.surfaceType.impactVFX.Play();
-                        
-                    }
-
-                } catch (Exception e) { }
+                
             }
             else {
-                ActiveMonoBehaviour.StartCoroutine(PlayTrail(ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
+                ActiveMonoBehaviour.StartCoroutine(PlayTrail(i, ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
             // }
             }
         }
@@ -111,7 +94,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         AmmoConfig.IncrementalReload();
     }
     
-    private IEnumerator PlayTrail(Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
+    private IEnumerator PlayTrail(int i, Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
         instance.transform.position = StartPoint;
@@ -135,6 +118,25 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
+
+            try // Just in case it doesn't have a SurfaceType
+                {
+                    Surface surfaceHit = Hit.collider.gameObject.GetComponent<Surface>();
+                    
+                    // If sound exists use it
+                    if (i == 0 && surfaceHit.surfaceType.impactSound) {
+                        AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, Hit.point, surfaceHit.surfaceType.volume);
+                    }
+
+                    // If vfx exists use it
+                    if (surfaceHit.surfaceType.impactVFX) {
+                        Debug.Log("Play VFX");
+                        Instantiate(surfaceHit.surfaceType.impactVFX, Hit.normal, Quaternion.identity);
+                        surfaceHit.surfaceType.impactVFX.Play();
+                        
+                    }
+
+                } catch (Exception e) { }
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
             //     EndPoint,
