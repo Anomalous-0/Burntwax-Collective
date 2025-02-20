@@ -13,8 +13,7 @@ public class Crate : MonoBehaviour, Destructable {
 
     
     [Header("Vfx")]
-    [SerializeField] GameObject damageParticles;
-    [SerializeField] GameObject destructParticles;
+    [SerializeField] ParticleSystem destructParticles;
 
 
     
@@ -46,10 +45,10 @@ public class Crate : MonoBehaviour, Destructable {
     }
 
     private void HandleDamage(Vector3 pos) {
-        if(damageParticles) {
-            Instantiate(damageParticles, pos, Quaternion.identity);
+        // if(damageParticles) {
+        //     Instantiate(damageParticles, pos, Quaternion.identity);
 
-        }
+        // }
         
     }
 
