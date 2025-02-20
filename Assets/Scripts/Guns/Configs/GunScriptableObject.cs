@@ -35,17 +35,23 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
 
+
+
     public void Spawn(GameObject currentGun, MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+        if(TrailPool == null) {
+            Debug.Log("Only time creating trail");
+            TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+        }
+        
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = currentGun.GetComponent<AudioSource>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        TrailPool.Clear();
-
+        // TrailPool.Clear();
+        TrailPool.Dispose();
     }
 
     public void Shoot() {
@@ -66,15 +72,16 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
                     Surface surfaceHit = hit.collider.gameObject.GetComponent<Surface>();
                     
                     // If sound exists use it
-                    if (surfaceHit.surfaceType.impactSound) {
+                    if (i == 0 && surfaceHit.surfaceType.impactSound) {
                         AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, hit.point, surfaceHit.surfaceType.volume);
                     }
 
                     // If vfx exists use it
                     if (surfaceHit.surfaceType.impactVFX) {
                         Debug.Log("Play VFX");
+                        Instantiate(surfaceHit.surfaceType.impactVFX, hit.point, Quaternion.identity);
                         surfaceHit.surfaceType.impactVFX.Play();
-                        // Instantiate(surfaceHit.surfaceType.impactVFX, hit.point, Quaternion.identity);
+                        
                     }
 
                 } catch (Exception e) { }
@@ -103,10 +110,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     public void EndIncrementalReload() {
         AmmoConfig.IncrementalReload();
     }
-
-    private IEnumerator InstantiateBullet() {
-        yield return null;
-    }
+    
     private IEnumerator PlayTrail(Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
@@ -150,9 +154,9 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
-        // instance.emitting = false;
-        // instance.gameObject.SetActive(false);
-        // TrailPool.Release(instance);
+        instance.emitting = false;
+        instance.gameObject.SetActive(false);
+        TrailPool.Release(instance);
     }
 
     private TrailRenderer CreateTrail() {
@@ -163,7 +167,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         trail.widthCurve = TrailConfig.WidthCurve;
         trail.time = TrailConfig.Duration;
         trail.minVertexDistance = TrailConfig.MinVertexDistance;
-        trail.autodestruct = true;
+        // trail.autodestruct = false;
         trail.emitting = false;
         trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
