@@ -21673,7 +21673,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1454278215}
-  - component: {fileID: 1454278216}
   m_Layer: 0
   m_Name: WeaponHolder
   m_TagString: Untagged
@@ -21697,24 +21696,6 @@ Transform:
   - {fileID: 109934803}
   m_Father: {fileID: 2748913124830540515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1454278216
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1454278214}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c86323a228e02a4b82e1efaea6bda62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  recoilX: -2
-  recoilY: 2
-  recoilZ: 7
-  kickBackZ: 0.2
-  snap: 5
-  returnAmount: 8
 --- !u!1001 &1456753434
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25088,7 +25069,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -34209,7 +34191,7 @@ MonoBehaviour:
   - {fileID: 956713830}
   ActiveGunScriptable: {fileID: 0}
   CurrentGunModel: {fileID: 0}
-  recoil: {fileID: 1454278216}
+  recoil: {fileID: 0}
   isReloading: 0
   isIncrementalReloading: 0
   isShooting: 0
