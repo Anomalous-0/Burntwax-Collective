@@ -14,8 +14,6 @@ GameObject:
   - component: {fileID: 7596995332403370238}
   - component: {fileID: 3979902885804987682}
   - component: {fileID: 1334834907356155904}
-  - component: {fileID: 5776457813767250950}
-  - component: {fileID: 599605111945467686}
   m_Layer: 7
   m_Name: Crate
   m_TagString: Untagged
@@ -150,7 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 15
   currentHealth: 0
-  damageParticles: {fileID: 0}
   destructParticles: {fileID: 0}
   disappear: 1
   resources_prefabs:
@@ -159,28 +156,3 @@ MonoBehaviour:
   - {fileID: 9176256781164373382, guid: f311058df1c840c47850ca599af5916b, type: 3}
   - {fileID: 9176256781164373382, guid: 9fde0485f5f62694382fada86f98fb79, type: 3}
   - {fileID: 9176256781164373382, guid: 5bbd075d828004f418d1b2aceacb8e64, type: 3}
---- !u!114 &5776457813767250950
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8785902252915754081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &599605111945467686
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8785902252915754081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cc531b2271604d4aa8b5dfec49990d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  surfaceType: {fileID: 11400000, guid: f344244b39b0ce347965070f250b2f97, type: 2}

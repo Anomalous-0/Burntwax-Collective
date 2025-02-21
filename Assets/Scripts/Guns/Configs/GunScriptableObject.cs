@@ -119,24 +119,24 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         if (Hit.collider != null) {
 
-            try // Just in case it doesn't have a SurfaceType
-                {
-                    Surface surfaceHit = Hit.collider.gameObject.GetComponent<Surface>();
+            // try // Just in case it doesn't have a SurfaceType
+                // {
+                //     Surface surfaceHit = Hit.collider.gameObject.GetComponent<Surface>();
                     
-                    // If sound exists use it
-                    if (i == 0 && surfaceHit.surfaceType.impactSound) {
-                        AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, Hit.point, surfaceHit.surfaceType.volume);
-                    }
+                //     // If sound exists use it
+                //     if (i == 0 && surfaceHit.surfaceType.impactSound) {
+                //         AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, Hit.point, surfaceHit.surfaceType.volume);
+                //     }
 
-                    // If vfx exists use it
-                    if (surfaceHit.surfaceType.impactVFX) {
-                        Debug.Log("Play VFX");
-                        Instantiate(surfaceHit.surfaceType.impactVFX, Hit.normal, Quaternion.identity);
-                        surfaceHit.surfaceType.impactVFX.Play();
+                //     // If vfx exists use it
+                //     if (surfaceHit.surfaceType.impactVFX) {
+                //         Debug.Log("Play VFX");
+                //         Instantiate(surfaceHit.surfaceType.impactVFX, Hit.normal, Quaternion.identity);
+                //         surfaceHit.surfaceType.impactVFX.Play();
                         
-                    }
+                //     }
 
-                } catch (Exception e) { }
+                // } catch (Exception e) { }
             // SurfaceManager.Instance.HandleImpact(
             //     Hit.transform.gameObject,
             //     EndPoint,
