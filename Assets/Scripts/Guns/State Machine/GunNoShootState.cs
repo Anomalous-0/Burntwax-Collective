@@ -22,7 +22,10 @@ public class GunNoShootState : GunBaseState {
     public override void ExitState(){}
     
     public override void CheckSwitchStates(){
-        if(Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() &&  Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() && Ctx.CanShoot() && /*Ctx.input.shootIsPressed*/ Ctx.stateMachine.prioritySorter.ShootIsPriority() && !Ctx.isShooting && Ctx.fullyEquipped) {
+        if((Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() && Ctx.fullyEquipped) 
+        && Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow() 
+        && Ctx.CanShoot() 
+        && Ctx.stateMachine.prioritySorter.ShootIsPriority() && !Ctx.isShooting) {
             SwitchState(Factory.Shoot());
         }
 

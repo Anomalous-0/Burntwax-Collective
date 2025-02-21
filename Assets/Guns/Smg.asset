@@ -13,11 +13,10 @@ MonoBehaviour:
   m_Name: SMG
   m_EditorClassIdentifier: 
   ID: 1
-  ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
   Type: 1
   Name: SMG
-  ModelPrefab: {fileID: 8445401694592989334, guid: 8c7ba79f8ec05794aba7ffdd3d8aba93,
-    type: 3}
+  incrementalReload: 0
+  proceduralRecoil: 1
   Model: {fileID: 0}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   AmmoConfig: {fileID: 11400000, guid: d76d9576de864f34189c9ac0bb0d6417, type: 2}

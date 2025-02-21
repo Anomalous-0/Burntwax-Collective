@@ -76,7 +76,7 @@ public class BobAndSway : MonoBehaviour {
 
         SwayRotation();
 
-        if (cam.currentState != cam.states.Aim() && !player.prioritySorter.ShootIsPriority()) {
+        if (cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot()) {
             BobOffset();
             BobRotation();
             originalBobPos = bobPosition;

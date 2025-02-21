@@ -11,9 +11,9 @@ public class GunStowState : GunBaseState {
     }
 
     public override void EnterState(){
-        
         Ctx.anim.SetBool(Ctx.stowHash, true);
-        // Debug.Log("Stow State");
+        Ctx.fullyEquipped = true;
+        Debug.Log("Stow State");
         InitializeSubState();
     }
 
@@ -25,11 +25,12 @@ public class GunStowState : GunBaseState {
 
     public override void ExitState(){
         Ctx.anim.SetBool(Ctx.stowHash, false);
-        
+         Debug.Log("Leave State");
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() &&  !Ctx.stateMachine.prioritySorter.AimIsPriority()|| Ctx.input.shootIsPressed){
+        if(Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() &&  !Ctx.stateMachine.prioritySorter.AimIsPriority() || Ctx.input.shootIsPressed){
+            
             SwitchState(Factory.Rest());
         } 
         else if(Ctx.AutoReload()  || Ctx.ManualReload()) {
@@ -39,7 +40,7 @@ public class GunStowState : GunBaseState {
         else if(!Ctx.isReloading && Ctx.stateMachine.prioritySorter.AimIsPriority()) {
 
             //Needed this, otherwise gun goes through equip and then to aim
-        
+            
             SwitchState(Factory.Aim());
         }
        

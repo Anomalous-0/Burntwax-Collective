@@ -12,18 +12,21 @@ public class GunShootState : GunBaseState {
         Ctx.isShooting = true;
         Ctx.ActiveGunScriptable.Shoot();
         Recoil();
-
+        if(Ctx.ActiveGunScriptable.proceduralRecoil) {
+            Ctx.recoil.Recoil();
+        }
+            
         if(Ctx.CurrentState == Ctx.states.Aim()) {
             Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGunScriptable.Name);
         }
         else {
             Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
         }
-        // Debug.Log("Shoot State");
+        Debug.Log("Shoot State");
     }
 
     public override void UpdateState(){  
-
+        
         CheckSwitchStates();
     }
 

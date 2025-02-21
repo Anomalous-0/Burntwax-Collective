@@ -12,6 +12,7 @@ public class GunAimState : GunBaseState {
 
     public override void EnterState(){
         Ctx.anim.SetBool(Ctx.aimHash, true);
+        Ctx.fullyEquipped = true;
         InitializeSubState();
     }
 

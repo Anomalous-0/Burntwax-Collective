@@ -43,6 +43,7 @@ public class GunStateMachine : MonoBehaviour {
     [Header("Current Gun")] 
     public GunScriptableObject ActiveGunScriptable;
     public GameObject CurrentGunModel;
+    public ProceduralRecoil recoil;
 
 
     [Space]
@@ -205,6 +206,7 @@ public class GunStateMachine : MonoBehaviour {
 
     private void SetupGun() {
         fullyEquipped = false;
+        isReloading = false; 
         Spawn(ActiveGunScriptable);
         crosshair.SetGunCrosshair(ActiveGunScriptable);
         currentState = states.Rest();
@@ -225,6 +227,8 @@ public class GunStateMachine : MonoBehaviour {
         anim.SetBool(stowHash, false);
         anim.SetBool(reloadHash, false);
         anim.SetBool(incrementalReloadHash, false);
+
+       
         
     }
 

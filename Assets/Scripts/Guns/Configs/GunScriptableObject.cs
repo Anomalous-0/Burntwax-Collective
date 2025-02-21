@@ -18,6 +18,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     
     // public GameObject ModelPrefab;
     public bool incrementalReload;
+    public bool proceduralRecoil;
     [HideInInspector] public GameObject Model;
 
 

@@ -26,6 +26,7 @@ public class GunRestState : GunBaseState {
     }
 
     public override void ExitState(){
+        
         // Ctx.anim.SetBool(Ctx.equipHash, false);       
     }
     
@@ -34,9 +35,11 @@ public class GunRestState : GunBaseState {
             SwitchState(Factory.Aim());
         }
         else if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint() && !Ctx.isShooting){
+            
             SwitchState(Factory.Stow());
         }
         else if((Ctx.AutoReload()  || Ctx.ManualReload()) && Ctx.fullyEquipped) {
+            // Ctx.fullyEquipped = false;
             SwitchState(Factory.Reload());
         }
     }
