@@ -13,7 +13,7 @@ public class GunStowState : GunBaseState {
     public override void EnterState(){
         Ctx.anim.SetBool(Ctx.stowHash, true);
         Ctx.fullyEquipped = true;
-        Debug.Log("Stow State");
+        // Debug.Log("Stow State");
         InitializeSubState();
     }
 
@@ -25,7 +25,7 @@ public class GunStowState : GunBaseState {
 
     public override void ExitState(){
         Ctx.anim.SetBool(Ctx.stowHash, false);
-         Debug.Log("Leave State");
+        //  Debug.Log("Leave State");
     }
     
     public override void CheckSwitchStates(){

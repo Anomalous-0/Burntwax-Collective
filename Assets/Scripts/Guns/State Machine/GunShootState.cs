@@ -22,7 +22,7 @@ public class GunShootState : GunBaseState {
         else {
             Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
         }
-        Debug.Log("Shoot State");
+        // Debug.Log("Shoot State");
     }
 
     public override void UpdateState(){  

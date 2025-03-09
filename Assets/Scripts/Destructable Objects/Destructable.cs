@@ -12,4 +12,6 @@ public interface Destructable  {
     // public event Destruct OnDestruct;
 
     public void TakeDamage(int damage);
+
+    public void Destruct(Vector3 pos);
 }

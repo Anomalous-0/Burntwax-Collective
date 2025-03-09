@@ -5,36 +5,34 @@ using UnityEngine.UIElements;
 
 public class ProceduralRecoil : MonoBehaviour {
     
-    Vector3 currentRotation, targetRotation, targetPosition, currentPosition, initialGunPosition;
+    [Header("Recoil Settings")]
+    public float rotationSpeed = 6f;
+    public float returnSpeed = 25f;
+
+    [Space()]
+
+    [Header("Hipfire")]
+    public Vector3 recoilRotation = new Vector3(2f,2f,2f);
+    [Space()]
+
+    [Header("Aiming")]
+    public Vector3 recoilRotationAim = new Vector3(0.5f,0.5f,1.5f);
+    [Space()]
+
+    [Header("State")]
+    public GunStateMachine gunMachine;
+    private Vector3 currentRotation;
+    private Vector3 rot;
 
 
-    [SerializeField] float recoilX;
-    [SerializeField] float recoilY;
-    [SerializeField] float recoilZ;
-    [SerializeField] float kickBackZ;
-
-    public float snap, returnAmount;
-
-    void Start() {
-        initialGunPosition = transform.localPosition;
+    void LateUpdate() {
+        currentRotation = Vector3.Lerp(currentRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+        // rot = Vector
     }
 
-    void Update() {
-        targetRotation = Vector3.Lerp(targetRotation, Vector3.zero, Time.deltaTime) * returnAmount;
-        currentRotation = Vector3.Slerp(currentRotation, targetRotation,Time.fixedDeltaTime * snap);
-        transform.localRotation = Quaternion.Euler(currentRotation);
-        Back();
-    }
 
-    public void Recoil() {
-        targetPosition -= new Vector3(0,0,kickBackZ);
-        targetRotation += new Vector3(recoilX, Random.Range(-recoilY, recoilY), recoilZ);
-        Debug.Log("Recoil");
-    }
 
-    private void Back() {
-        targetPosition = Vector3.Lerp(targetPosition, initialGunPosition, Time.deltaTime* returnAmount);
-        currentPosition = Vector3.Lerp(currentPosition, targetPosition, Time.fixedDeltaTime * snap);
-        transform.localPosition = currentPosition;
-    }
+    // public void Recoil(){
+        // gunMachine.localRotation = gunMachine.Quaternion.Euler(0,0,0,)
+    // } 
 }

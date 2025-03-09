@@ -39,7 +39,7 @@ public class Crate : MonoBehaviour, Destructable {
 
         if(currentHealth == 0 && damageTaken!= 0) {
            
-            HandleDestruct(transform.position);
+            Destruct(transform.position);
             
         }
     }
@@ -52,18 +52,7 @@ public class Crate : MonoBehaviour, Destructable {
         
     }
 
-    private void HandleDestruct(Vector3 pos) {
-        if(destructParticles) {
-            Instantiate(destructParticles, pos, Quaternion.identity);
-        }
-        if(disappear) {
-            SpawnResources(pos);
-            Destroy(gameObject);
-            
-            
-        }
-        
-    }
+    
 
 
     private void SpawnResources(Vector3 pos) {
@@ -77,6 +66,17 @@ public class Crate : MonoBehaviour, Destructable {
         currentHealth = maxHealth;
     }
 
-
-    
+    public void Destruct(Vector3 pos) {
+        
+        if(destructParticles) {
+            Instantiate(destructParticles, pos, Quaternion.identity);
+        }
+        if(disappear) {
+            SpawnResources(pos);
+            Destroy(gameObject);
+            
+            
+        }
+      
+    }
 }
