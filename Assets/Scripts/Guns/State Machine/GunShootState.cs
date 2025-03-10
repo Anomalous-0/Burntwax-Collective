@@ -35,7 +35,7 @@ public class GunShootState : GunBaseState {
         if(!Ctx.isShooting && !Ctx.input.shootIsPressed) {
             SwitchState(Factory.NoShoot());
         }
-        else if(!Ctx.isShooting && Ctx.input.shootIsPressed) {
+        else if(Ctx.CanShoot() && Ctx.input.shootIsPressed) {
             Shoot();
         }
         

@@ -240,7 +240,7 @@ public class GunStateMachine : MonoBehaviour {
 
     private void EmptyClip() {
         if(ClipEmpty() && input.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() &&  CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && input.shootIsPressed) {
-            ActiveGunScriptable.AudioConfig.PlayEmptyClip(CurrentGunModel.GetComponent<AudioSource>());
+            ActiveGunScriptable.AudioConfig.PlayEmptyClip(stateMachine.GetComponent<AudioSource>());
             input.shootIsPressed = false;     
         }
     }
