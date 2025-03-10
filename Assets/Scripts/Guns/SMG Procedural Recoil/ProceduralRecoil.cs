@@ -25,14 +25,33 @@ public class ProceduralRecoil : MonoBehaviour {
     private Vector3 rot;
 
 
-    void LateUpdate() {
-        currentRotation = Vector3.Lerp(currentRotation, Vector3.zero, returnSpeed * Time.deltaTime);
-        // rot = Vector
+    void FixedUpdate() {
+        if(gunMachine.ActiveGunScriptable) {
+            if(gunMachine.ActiveGunScriptable.proceduralRecoil) {
+                currentRotation = Vector3.Lerp(currentRotation, Vector3.zero, returnSpeed * Time.deltaTime);
+                rot = Vector3.Slerp(rot, currentRotation, rotationSpeed * Time.fixedDeltaTime);
+                transform.localRotation = Quaternion.Euler(rot);
+            }
+            
+        }
+        
+    }
+
+    public void Recoil( ) {
+        if(gunMachine.CurrentState == gunMachine.states.Aim()) {
+            currentRotation += new Vector3(recoilRotationAim.x, 
+            Random.Range(-recoilRotationAim.y, recoilRotationAim.y), 
+            Random.Range(-recoilRotationAim.z, recoilRotationAim.z));
+        }
+        else {
+            currentRotation += new Vector3(recoilRotation.x, 
+            Random.Range(-recoilRotation.y, recoilRotation.y), 
+            Random.Range(-recoilRotation.z, recoilRotation.z));
+        }
     }
 
 
 
-    // public void Recoil(){
-        // gunMachine.localRotation = gunMachine.Quaternion.Euler(0,0,0,)
-    // } 
+
+
 }

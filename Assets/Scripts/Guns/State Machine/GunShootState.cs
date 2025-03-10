@@ -21,6 +21,10 @@ public class GunShootState : GunBaseState {
     public override void UpdateState(){  
         
         CheckSwitchStates();
+        if(Ctx.anim.GetBool(Ctx.proceduralShootHash)) {
+            
+            Ctx.recoil.Recoil();
+        }
     }
 
     public override void ExitState(){
@@ -58,7 +62,7 @@ public class GunShootState : GunBaseState {
             Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
         }
         if(Ctx.ActiveGunScriptable.proceduralRecoil) {
-            Ctx.anim.SetBool(Ctx.shootHash, true);
+            Ctx.anim.SetBool(Ctx.proceduralShootHash, true);
         }
     }
 

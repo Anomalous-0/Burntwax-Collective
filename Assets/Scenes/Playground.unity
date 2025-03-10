@@ -1869,6 +1869,7 @@ GameObject:
   m_Component:
   - component: {fileID: 109934803}
   - component: {fileID: 109934804}
+  - component: {fileID: 109934805}
   m_Layer: 0
   m_Name: WeaponPivot
   m_TagString: Untagged
@@ -1909,6 +1910,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48948dfe9d76b07488dacd46a7955fa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &109934805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 109934802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c86323a228e02a4b82e1efaea6bda62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 6
+  returnSpeed: 25
+  recoilRotation: {x: 2, y: 2, z: 2}
+  recoilRotationAim: {x: 0.5, y: 0.5, z: 1.5}
+  gunMachine: {fileID: 5459022606202285614}
 --- !u!1001 &115132132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34151,7 +34169,7 @@ MonoBehaviour:
   stowHash: 0
   aimHash: 0
   reloadHash: 0
-  shootHash: 0
+  proceduralShootHash: 0
   incrementalReloadHash: 0
   shotWhileIncReloadHash: 0
   CurrentGuns: []
@@ -34162,7 +34180,7 @@ MonoBehaviour:
   - {fileID: 956713830}
   ActiveGunScriptable: {fileID: 0}
   CurrentGunModel: {fileID: 0}
-  recoil: {fileID: 0}
+  recoil: {fileID: 109934805}
   isReloading: 0
   isIncrementalReloading: 0
   isShooting: 0
