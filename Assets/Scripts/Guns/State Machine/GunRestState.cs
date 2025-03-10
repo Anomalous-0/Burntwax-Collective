@@ -42,6 +42,9 @@ public class GunRestState : GunBaseState {
             // Ctx.fullyEquipped = false;
             SwitchState(Factory.Reload());
         }
+        else if (Ctx.ActiveGunScriptable.proceduralRecoil && Ctx.CurrentState == Ctx.states.Shoot()) { 
+            
+        }
     }
 
 

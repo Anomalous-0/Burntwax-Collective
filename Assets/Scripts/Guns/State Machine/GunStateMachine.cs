@@ -32,7 +32,7 @@ public class GunStateMachine : MonoBehaviour {
     
     public Rig handIK;
 
-    [HideInInspector] public int  stowHash, aimHash, reloadHash, incrementalReloadHash, shotWhileIncReloadHash;
+    [HideInInspector] public int  stowHash, aimHash, reloadHash, shootHash, incrementalReloadHash, shotWhileIncReloadHash;
 
     public List<GunScriptableObject> CurrentGuns;
     public List<GameObject> OrderedGuns;
@@ -81,6 +81,12 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     void Start() {
+        aimHash = Animator.StringToHash("aim");
+        stowHash = Animator.StringToHash("stow");
+        reloadHash = Animator.StringToHash("reload");
+        shootHash = Animator.StringToHash("proceduralShoot");
+        incrementalReloadHash = Animator.StringToHash("incrementalReload");
+        shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
     }
 
 
@@ -217,15 +223,12 @@ public class GunStateMachine : MonoBehaviour {
 
        
         
-        aimHash = Animator.StringToHash("aim");
-        stowHash = Animator.StringToHash("stow");
-        reloadHash = Animator.StringToHash("reload");
-        incrementalReloadHash = Animator.StringToHash("incrementalReload");
-        shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+        
 
         anim.SetBool(aimHash, false);
         anim.SetBool(stowHash, false);
         anim.SetBool(reloadHash, false);
+        anim.SetBool(shootHash, false);
         anim.SetBool(incrementalReloadHash, false);
 
        
@@ -276,7 +279,10 @@ public class GunStateMachine : MonoBehaviour {
     // }
 
     public void EndShoot() {
+        Debug.Log("EndShoot");
+        
         isShooting = false;
+        anim.SetBool(shootHash, false);
     }
 
 

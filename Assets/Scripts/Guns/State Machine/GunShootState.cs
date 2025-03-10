@@ -9,19 +9,12 @@ public class GunShootState : GunBaseState {
 
     // int switchTime = 3;
     public override void EnterState(){
-        Ctx.isShooting = true;
-        Ctx.ActiveGunScriptable.Shoot();
-        Recoil();
-        // if(Ctx.ActiveGunScriptable.proceduralRecoil) {
-        //     Ctx.recoil.Recoil();
-        // }
+        Shoot();
+        // else {
             
-        if(Ctx.CurrentState == Ctx.states.Aim()) {
-            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGunScriptable.Name);
-        }
-        else {
-            Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
-        }
+        // }
+          
+        
         // Debug.Log("Shoot State");
     }
 
@@ -31,12 +24,15 @@ public class GunShootState : GunBaseState {
     }
 
     public override void ExitState(){
-
+        
     }
     
     public override void CheckSwitchStates(){
-        if(!Ctx.isShooting) {
+        if(!Ctx.isShooting && !Ctx.input.shootIsPressed) {
             SwitchState(Factory.NoShoot());
+        }
+        else if(!Ctx.isShooting && Ctx.input.shootIsPressed) {
+            Shoot();
         }
         
         
@@ -51,6 +47,20 @@ public class GunShootState : GunBaseState {
     public override void InitializeSubState(){}
 
 
+    private void Shoot() {
+        Ctx.isShooting = true;
+        Ctx.ActiveGunScriptable.Shoot();
+        Recoil();
+        if(Ctx.CurrentState == Ctx.states.Aim()) {
+            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGunScriptable.Name);
+        }
+        else {
+            Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
+        }
+        if(Ctx.ActiveGunScriptable.proceduralRecoil) {
+            Ctx.anim.SetBool(Ctx.shootHash, true);
+        }
+    }
 
     public void Recoil() {
         if(Ctx.camShake) {
