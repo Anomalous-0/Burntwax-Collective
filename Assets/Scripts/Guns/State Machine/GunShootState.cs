@@ -54,6 +54,9 @@ public class GunShootState : GunBaseState {
 
 
     private void Shoot() {
+        /*
+        SOMETHING IN HERE IS MESSING UP THE PROCEDURAL SHOOT GUN, IF COMMENTED OUT THE POSITION DOESN"T CHANGE EVEN WHEN CHANGING ANIMATION TF THATS WHAT I NEED
+        */
         Ctx.isShooting = true;
         Ctx.ActiveGunScriptable.Shoot();
         Recoil();
