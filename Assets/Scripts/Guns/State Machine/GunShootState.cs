@@ -28,16 +28,18 @@ public class GunShootState : GunBaseState {
     }
 
     public override void ExitState(){
-        
+        Ctx.anim.SetBool(Ctx.proceduralShootHash, false);
     }
     
     public override void CheckSwitchStates(){
-        if(!Ctx.isShooting && !Ctx.input.shootIsPressed) {
-            SwitchState(Factory.NoShoot());
-        }
-        else if(Ctx.CanShoot() && Ctx.input.shootIsPressed) {
+        if(Ctx.CanShoot() && Ctx.input.shootIsPressed) {
             Shoot();
         }
+        else if(!Ctx.isShooting) {
+            Debug.Log("leaving shoot");
+            SwitchState(Factory.NoShoot());
+        }
+
         
         
         

@@ -279,10 +279,10 @@ public class GunStateMachine : MonoBehaviour {
     // }
 
     public void EndShoot() {
-        Debug.Log("EndShoot");
+        // Debug.Log("EndShoot");
         
         isShooting = false;
-        anim.SetBool(proceduralShootHash, false);
+        
     }
 
 

@@ -13,7 +13,7 @@ public class GunPickup : MonoBehaviour {
 
 
     void OnTriggerEnter(Collider other) {
-        if(other.GetComponentInParent<PlayerHealth>() != false) {
+        if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
             gunSelector = FindFirstObjectByType<GunStateMachine>();
             if(!gunSelector.CurrentGuns.Contains(gun)) {
                 gunSelector.Pickup(gun);

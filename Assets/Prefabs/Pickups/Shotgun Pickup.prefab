@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -641920475689062137}
   - component: {fileID: -3478815061821974044}
   - component: {fileID: 1378781934921160141}
+  - component: {fileID: -1605729615548632066}
   m_Layer: 0
   m_Name: Shotgun Pickup
   m_TagString: Untagged
@@ -48,7 +49,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4f3f9cda537d64085b446eefd12b0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammo: 0
+  ammoCount: 0
   gun: {fileID: 11400000, guid: c005e2334a632c24ea68bd9c423e0c72, type: 2}
 --- !u!54 &-641920475689062137
 Rigidbody:
@@ -119,6 +120,18 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.9, y: 1.5, z: 1}
   m_Center: {x: -0.95, y: 0.25, z: 0}
+--- !u!114 &-1605729615548632066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7927989591502400544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1888807050842661032
 PrefabInstance:
   m_ObjectHideFlags: 0

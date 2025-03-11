@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8946988713654426791}
   - component: {fileID: 3045520616644016817}
   - component: {fileID: 1516820497999405261}
+  - component: {fileID: -6054215715209605052}
   m_Layer: 0
   m_Name: M4A1 Pickup
   m_TagString: Untagged
@@ -118,8 +119,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4f3f9cda537d64085b446eefd12b0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammo: 0
+  ammoCount: 0
   gun: {fileID: 11400000, guid: cdf736977e88a034280829a6d0d61d7e, type: 2}
+--- !u!114 &-6054215715209605052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 208559763479941086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &640874391757145760
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -8826818129939218197}
   - component: {fileID: 3481915801700513926}
   - component: {fileID: 8234962109053471751}
+  - component: {fileID: -9181913454798725069}
   m_Layer: 0
   m_Name: Glock Pickup
   m_TagString: Untagged
@@ -49,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f4f3f9cda537d64085b446eefd12b0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammo: 0
+  ammoCount: 0
   gun: {fileID: 11400000, guid: c2f1d42b3210893408d68408ee3faee5, type: 2}
 --- !u!65 &-8826818129939218197
 BoxCollider:
@@ -120,6 +121,18 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &-9181913454798725069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 189091626145577203}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2480727008041417461
 GameObject:
   m_ObjectHideFlags: 0

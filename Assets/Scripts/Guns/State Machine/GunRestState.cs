@@ -39,12 +39,11 @@ public class GunRestState : GunBaseState {
             SwitchState(Factory.Stow());
         }
         else if((Ctx.AutoReload()  || Ctx.ManualReload()) && Ctx.fullyEquipped) {
-            // Ctx.fullyEquipped = false;
+            Ctx.fullyEquipped = false;
+            Ctx.anim.SetBool(Ctx.proceduralShootHash, false);
             SwitchState(Factory.Reload());
         }
-        else if (Ctx.ActiveGunScriptable.proceduralRecoil && Ctx.CurrentState == Ctx.states.Shoot()) { 
-            
-        }
+       
     }
 
 
