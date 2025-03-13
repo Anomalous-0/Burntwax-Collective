@@ -36,15 +36,20 @@ public class ProceduralRecoil : MonoBehaviour {
         }
         
     }
+    void Update() {
+        if(gunMachine.input.shootIsPressed) {
+            Recoil();
+        }
+    }
 
     public void Recoil( ) {
         if(gunMachine.CurrentState == gunMachine.states.Aim()) {
-            currentRotation += new Vector3(recoilRotationAim.x, 
+            currentRotation += new Vector3(-recoilRotationAim.x, 
             Random.Range(-recoilRotationAim.y, recoilRotationAim.y), 
             Random.Range(-recoilRotationAim.z, recoilRotationAim.z));
         }
         else {
-            currentRotation += new Vector3(recoilRotation.x, 
+            currentRotation += new Vector3(-recoilRotation.x, 
             Random.Range(-recoilRotation.y, recoilRotation.y), 
             Random.Range(-recoilRotation.z, recoilRotation.z));
         }
