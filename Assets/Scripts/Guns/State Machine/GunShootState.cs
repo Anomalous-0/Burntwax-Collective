@@ -30,6 +30,7 @@ public class GunShootState : GunBaseState {
     public override void CheckSwitchStates(){
         if((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && Ctx.input.shootIsPressed) {
             Shoot();
+            
         }
         else if(!Ctx.isShooting) {
             Debug.Log("leaving shoot");
@@ -50,7 +51,7 @@ public class GunShootState : GunBaseState {
 
 
     private void Shoot() {
-     
+        Ctx.ableToShootInMiddleOfAnimation = false;
         Ctx.isShooting = true;
         Ctx.ActiveGunScriptable.Shoot();
         Recoil();
