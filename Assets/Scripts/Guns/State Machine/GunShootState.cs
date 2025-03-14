@@ -10,11 +10,7 @@ public class GunShootState : GunBaseState {
     // int switchTime = 3;
     public override void EnterState(){
         Shoot();
-        // else {
-            
-        // }
-          
-        
+
         // Debug.Log("Shoot State");
     }
 
@@ -23,7 +19,7 @@ public class GunShootState : GunBaseState {
         CheckSwitchStates();
         if(Ctx.anim.GetBool(Ctx.proceduralShootHash)) {
             
-            //Ctx.recoil.Recoil();
+            Ctx.recoil.Recoil();
         }
     }
 
@@ -32,7 +28,7 @@ public class GunShootState : GunBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.CanShoot() && Ctx.input.shootIsPressed) {
+        if((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && Ctx.input.shootIsPressed) {
             Shoot();
         }
         else if(!Ctx.isShooting) {

@@ -62,6 +62,7 @@ public class GunStateMachine : MonoBehaviour {
     public bool isIncrementalReloading = false;
     public bool isShooting = false;
 
+    public bool ableToShootInMiddleOfAnimation = false;
     public bool fullyEquipped;
     
 
@@ -283,6 +284,10 @@ public class GunStateMachine : MonoBehaviour {
         
         isShooting = false;
         
+    }
+
+    public void AbleToShootInMiddleOfAnimation() {
+        ableToShootInMiddleOfAnimation = true;
     }
 
 

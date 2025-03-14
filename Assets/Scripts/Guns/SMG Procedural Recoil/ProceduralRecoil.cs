@@ -37,9 +37,9 @@ public class ProceduralRecoil : MonoBehaviour {
         
     }
     void Update() {
-        if(gunMachine.input.shootIsPressed) {
-            Recoil();
-        }
+        // if(gunMachine.input.shootIsPressed) {
+        //     Recoil();
+        // }
     }
 
     public void Recoil( ) {
