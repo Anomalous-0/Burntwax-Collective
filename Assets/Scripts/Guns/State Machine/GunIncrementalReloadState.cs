@@ -10,7 +10,7 @@ public class GunIncrementalReloadState : GunBaseState {
     }
 
     public override void EnterState(){
-
+        Ctx.fullyEquipped = true;
         Ctx.ActiveGunScriptable.StartReloadAudio();
         Ctx.anim.SetBool(Ctx.incrementalReloadHash, true);
         Ctx.isIncrementalReloading = true;
