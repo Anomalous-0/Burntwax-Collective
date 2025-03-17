@@ -281,7 +281,7 @@ public class GunStateMachine : MonoBehaviour {
 
     public void EndShoot() {
         // Debug.Log("EndShoot");
-        
+        ableToShootInMiddleOfAnimation = false;
         isShooting = false;
         
     }

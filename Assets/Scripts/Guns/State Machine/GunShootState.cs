@@ -24,11 +24,13 @@ public class GunShootState : GunBaseState {
     }
 
     public override void ExitState(){
+        Ctx.ableToShootInMiddleOfAnimation = false;
         Ctx.anim.SetBool(Ctx.proceduralShootHash, false);
     }
     
     public override void CheckSwitchStates(){
         if((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && Ctx.input.shootIsPressed) {
+            
             Shoot();
             
         }

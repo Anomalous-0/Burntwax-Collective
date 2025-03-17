@@ -29,7 +29,7 @@ public class ProceduralRecoil : MonoBehaviour {
         if(gunMachine.ActiveGunScriptable) {
             if(gunMachine.ActiveGunScriptable.proceduralRecoil) {
                 currentRotation = Vector3.Lerp(currentRotation, Vector3.zero, returnSpeed * Time.deltaTime);
-                rot = Vector3.Slerp(rot, currentRotation, rotationSpeed * Time.fixedDeltaTime);
+                rot = Vector3.Slerp(rot, currentRotation, rotationSpeed * Time.deltaTime);
                 transform.localRotation = Quaternion.Euler(rot);
             }
             
