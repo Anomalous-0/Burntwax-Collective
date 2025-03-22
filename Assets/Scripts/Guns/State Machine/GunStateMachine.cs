@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.UIElements;
@@ -231,7 +232,7 @@ public class GunStateMachine : MonoBehaviour {
         anim.SetBool(reloadHash, false);
         anim.SetBool(proceduralShootHash, false);
         anim.SetBool(incrementalReloadHash, false);
-
+        
        
         
     }
@@ -266,6 +267,7 @@ public class GunStateMachine : MonoBehaviour {
 
     public void EndEquip() {
         fullyEquipped = true;
+        recoil.SetRestingPosition();
     }
 
 
