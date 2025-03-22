@@ -1922,10 +1922,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c86323a228e02a4b82e1efaea6bda62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 6
-  returnSpeed: 35
+  positionalRecoilSpeed: 8
+  rotationalRecoilSpeed: 10
+  positionalReturnSpeed: 18
+  rotationalReturnSpeed: 40
   recoilRotation: {x: 9, y: 2, z: 15}
+  recoilKickBack: {x: 0.015, y: 0, z: 0}
   recoilRotationAim: {x: 3, y: 1, z: 6}
+  recoilKickBackAim: {x: 0.015, y: 0, z: -0.2}
   gunMachine: {fileID: 5459022606202285614}
 --- !u!1001 &115132132
 PrefabInstance:
