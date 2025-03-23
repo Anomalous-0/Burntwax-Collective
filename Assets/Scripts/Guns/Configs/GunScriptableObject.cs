@@ -14,11 +14,19 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     [Header("General")]
     public GunType Type;
     //public ImpactType ImpactType;
-    public string Name;
     
     // public GameObject ModelPrefab;
+
+    [Header("Incremental Reloads (for shotgun types)")]
     public bool incrementalReload;
+
+    [Header("Procedural Recoil (for SMG types)")]
     public bool proceduralRecoil;
+
+    public Vector3 restingRecoilPos;
+
+
+    
     [HideInInspector] public GameObject Model;
 
 
@@ -183,7 +191,6 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         config.ID = ID;
         //config.ImpactType = ImpactType;
         config.Type = Type;
-        config.Name = Name;
         // config.ModelPrefab = ModelPrefab;
         config.incrementalReload = incrementalReload;
         config.ShootConfig = ShootConfig.Clone() as ShootConfig;

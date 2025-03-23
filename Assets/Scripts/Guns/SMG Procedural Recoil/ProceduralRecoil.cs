@@ -40,19 +40,14 @@ public class ProceduralRecoil : MonoBehaviour {
     
     private Vector3 rot;
 
-    public void SetRestingPosition() {
-        restingPosition.x = transform.localPosition.x;
-        restingPosition.y = transform.localPosition.y;
-        restingPosition.z = transform.localPosition.z;
-        // restingRotation = transform.localRotation.eulerAngles;
-    }
+
 
     void FixedUpdate() {
         // Debug.Log(transform.localPosition.x + " " + transform.localPosition.y + " " + transform.localPosition.z);
         if(gunMachine.ActiveGunScriptable) {
             if(gunMachine.ActiveGunScriptable.proceduralRecoil) {
-                rotationalRecoil = Vector3.Lerp(rotationalRecoil, restingRotation, rotationalReturnSpeed*Time.fixedDeltaTime);
-                positionalRecoil = Vector3.Lerp(positionalRecoil, restingPosition, positionalReturnSpeed * Time.fixedDeltaTime);
+                rotationalRecoil = Vector3.Lerp(rotationalRecoil, gunMachine.ActiveGunScriptable.restingRecoilPos, rotationalReturnSpeed*Time.fixedDeltaTime);
+                positionalRecoil = Vector3.Lerp(positionalRecoil, gunMachine.ActiveGunScriptable.restingRecoilPos, positionalReturnSpeed * Time.fixedDeltaTime);
 
                 recoilPosition.localPosition = Vector3.Slerp(recoilPosition.localPosition, positionalRecoil, positionalRecoilSpeed * Time.fixedDeltaTime);
                 rot = Vector3.Slerp(rot, rotationalRecoil, rotationalRecoilSpeed * Time.fixedDeltaTime);

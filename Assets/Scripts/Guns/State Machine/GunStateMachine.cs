@@ -45,6 +45,7 @@ public class GunStateMachine : MonoBehaviour {
     public GunScriptableObject ActiveGunScriptable;
     public GameObject CurrentGunModel;
     public ProceduralRecoil recoil;
+    [SerializeField] bool firstLoad;
 
 
     [Space]
@@ -213,13 +214,14 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetupGun() {
+        firstLoad = true;
         fullyEquipped = false;
         isReloading = false; 
         Spawn(ActiveGunScriptable);
         crosshair.SetGunCrosshair(ActiveGunScriptable);
         currentState = states.Rest();
         handIK.weight = 1;
-        anim.Play("equip_" + ActiveGunScriptable.Name);     
+        anim.Play("equip_" + ActiveGunScriptable.Type);     
         camShake = CurrentGunModel.GetComponent<Cinemachine.CinemachineImpulseSource>();
         
 
@@ -267,7 +269,8 @@ public class GunStateMachine : MonoBehaviour {
 
     public void EndEquip() {
         fullyEquipped = true;
-        recoil.SetRestingPosition();
+
+        
     }
 
 

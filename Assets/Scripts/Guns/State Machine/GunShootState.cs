@@ -34,7 +34,7 @@ public class GunShootState : GunBaseState {
             
         }
         else if(!Ctx.isShooting) {
-            Debug.Log("leaving shoot");
+
             SwitchState(Factory.NoShoot());
         }
 
@@ -57,10 +57,10 @@ public class GunShootState : GunBaseState {
         Ctx.ActiveGunScriptable.Shoot();
         Recoil();
         if(Ctx.CurrentState == Ctx.states.Aim()) {
-            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGunScriptable.Name);
+            Ctx.anim.Play("recoil_aim_" + Ctx.ActiveGunScriptable.Type);
         }
         else {
-            Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Name);
+            Ctx.anim.Play("recoil_" + Ctx.ActiveGunScriptable.Type);
         }
         if(Ctx.ActiveGunScriptable.proceduralRecoil) {
             Ctx.anim.SetBool(Ctx.proceduralShootHash, true);

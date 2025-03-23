@@ -17,6 +17,7 @@ MonoBehaviour:
   Name: SMG
   incrementalReload: 0
   proceduralRecoil: 1
+  restingRecoilPos: {x: 0.075, y: -0.03, z: 0.04}
   Model: {fileID: 0}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   AmmoConfig: {fileID: 11400000, guid: d76d9576de864f34189c9ac0bb0d6417, type: 2}
