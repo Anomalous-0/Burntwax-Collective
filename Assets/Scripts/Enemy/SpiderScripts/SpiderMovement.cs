@@ -14,6 +14,6 @@ public class SpiderMovement : MonoBehaviour
     }
 
     void FixedUpdate() {
-        rb.transform.position = Vector3.MoveTowards(rb.transform.position, player.transform.position, speed);
+        
     }
 }
