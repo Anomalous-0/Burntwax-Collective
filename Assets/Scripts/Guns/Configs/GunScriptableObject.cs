@@ -52,7 +52,6 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         if(TrailPool == null) {
             TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         }
-        
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = player.GetComponent<AudioSource>();
     }
@@ -65,6 +64,8 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
     public void Shoot() {
         ShootSystem.Play();
+        // Instantiate(testPrefab);
+        // testPrefab.
         AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
         AmmoConfig.currentClip--;
         for(int i = 0; i < ShootConfig.bulletsPerShot;i++) {
@@ -127,41 +128,18 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         instance.transform.position = EndPoint;
 
         if (Hit.collider != null) {
-
-            // try // Just in case it doesn't have a SurfaceType
-                // {
-                //     Surface surfaceHit = Hit.collider.gameObject.GetComponent<Surface>();
-                    
-                //     // If sound exists use it
-                //     if (i == 0 && surfaceHit.surfaceType.impactSound) {
-                //         AudioSource.PlayClipAtPoint(surfaceHit.surfaceType.impactSound, Hit.point, surfaceHit.surfaceType.volume);
-                //     }
-
-                //     // If vfx exists use it
-                //     if (surfaceHit.surfaceType.impactVFX) {
-                //         Debug.Log("Play VFX");
-                //         Instantiate(surfaceHit.surfaceType.impactVFX, Hit.normal, Quaternion.identity);
-                //         surfaceHit.surfaceType.impactVFX.Play();
-                        
-                //     }
-
-                // } catch (Exception e) { }
-            // SurfaceManager.Instance.HandleImpact(
-            //     Hit.transform.gameObject,
-            //     EndPoint,
-            //     Hit.normal,
-            //     ImpactType,
-            //     0
-            // );
+            
+            ShootSystem.Play();
             if(Hit.collider.GetComponent<Rigidbody>()) {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
+            }
+            if(Hit.collider.TryGetComponent(out Destructable destructable)) {
+                destructable.TakeDamage(DamageConfig.GetDamage(distance));
             }
 
         }
 
-        if(Hit.collider.TryGetComponent(out Destructable destructable)) {
-           destructable.TakeDamage(DamageConfig.GetDamage(distance));
-        }
+        
 
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
