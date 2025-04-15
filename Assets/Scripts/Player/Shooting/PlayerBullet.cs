@@ -19,20 +19,29 @@ public class PlayerBullet : MonoBehaviour {
     }
 
     private void OnTriggerStay(Collider other) {
-        if(other.GetComponent<BulletTarget>() != false) {
+        if (other.GetComponent<BulletTarget>() != false) {
             other.GetComponent<Rigidbody>().AddForce(bulletRb.velocity, ForceMode.Impulse);
             Debug.Log("Hit a target");
-            //var rb2d = hitinfo.collider.GetComponent<Rigidbody>();
-            
 
-            // if(other.GetComponentInParent<EnemyTarget>() != false) {
-                // Debug.Log("Hit an enemy");
-            //}
-            
-            
-        
-            
-            //Instantiate(vfxHitRed, transform.position, Quaternion.identity);
+            string surfaceTag = other.tag;
+
+            BulletImpactVFX vfxManager = FindObjectOfType<BulletImpactVFX>();
+            if (vfxManager != null)
+            {
+                vfxManager.SpawnImpactVFX(surfaceTag, bulletRb.transform.position, Quaternion.identity);
+            }
+
+            if (other.GetComponent<BulletTarget>() != false)
+            {
+                other.GetComponent<Rigidbody>().AddForce(bulletRb.velocity, ForceMode.Impulse);
+                Debug.Log("Hit a target");
+            }
+
+            Destroy(gameObject);
+
+        } else
+        {
+            Debug.Log("Haven't hit anything");
         }
         Destroy(gameObject);
     }

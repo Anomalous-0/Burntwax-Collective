@@ -20808,7 +20808,7 @@ GameObject:
   - component: {fileID: 1348157523}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Dust Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22256,6 +22256,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1808880160}
     m_Modifications:
+    - target: {fileID: -4287390611789687403, guid: fc436496b631f3a458103d5a80f52290,
+        type: 3}
+      propertyPath: destructParticles
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4799642719689327444, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -24458,7 +24463,7 @@ GameObject:
   - component: {fileID: 1569474926}
   m_Layer: 0
   m_Name: Crouch Testing Area
-  m_TagString: Untagged
+  m_TagString: Metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30559,6 +30564,57 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1881145087}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1892375372
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1892375373}
+  - component: {fileID: 1892375374}
+  m_Layer: 0
+  m_Name: BulletImpactVFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1892375373
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892375372}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.015090331, y: 1.4575946, z: 1.364282}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1892375374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1892375372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56ff7dd4dbcc9de479e252ca407dc971, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  surfaceVFX:
+  - tag: Metal
+    vfxPrefab: {fileID: 3708664472627977393, guid: 2a8d251688280464ca6d327c7f25f768,
+      type: 3}
+  - tag: Dust Floor
+    vfxPrefab: {fileID: 5948452087584883451, guid: e44f3a1490f0fd649af332543b92d9fd,
+      type: 3}
 --- !u!1 &1895854318
 GameObject:
   m_ObjectHideFlags: 0
@@ -34341,3 +34397,5 @@ SceneRoots:
   - {fileID: 1496557550}
   - {fileID: 434014395}
   - {fileID: 1407574279}
+  - {fileID: 452017084}
+  - {fileID: 1892375373}
