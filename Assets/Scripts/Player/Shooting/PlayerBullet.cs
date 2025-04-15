@@ -18,7 +18,10 @@ public class PlayerBullet : MonoBehaviour {
         bulletRb.velocity = transform.forward * speed;
     }
 
-    private void OnTriggerStay(Collider other) {
+    private void OnTriggerEnter(Collider other) {
+
+        Debug.Log("Entered");
+
         if (other.GetComponent<BulletTarget>() != false) {
             other.GetComponent<Rigidbody>().AddForce(bulletRb.velocity, ForceMode.Impulse);
             Debug.Log("Hit a target");
@@ -39,10 +42,8 @@ public class PlayerBullet : MonoBehaviour {
 
             Destroy(gameObject);
 
-        } else
-        {
-            Debug.Log("Haven't hit anything");
         }
+        
         Destroy(gameObject);
     }
 }

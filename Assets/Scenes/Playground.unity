@@ -22258,9 +22258,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -4287390611789687403, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
+      propertyPath: disappear
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4287390611789687403, guid: fc436496b631f3a458103d5a80f52290,
+        type: 3}
       propertyPath: destructParticles
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5434840635950614287, guid: e44f3a1490f0fd649af332543b92d9fd,
+        type: 3}
     - target: {fileID: 4799642719689327444, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -34397,5 +34403,4 @@ SceneRoots:
   - {fileID: 1496557550}
   - {fileID: 434014395}
   - {fileID: 1407574279}
-  - {fileID: 452017084}
   - {fileID: 1892375373}
