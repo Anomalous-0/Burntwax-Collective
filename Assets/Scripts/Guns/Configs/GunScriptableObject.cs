@@ -130,7 +130,16 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         if (Hit.collider != null) {
             
             ShootSystem.Play();
-            if(Hit.collider.GetComponent<Rigidbody>()) {
+
+            string surfaceTag = Hit.collider.tag;
+
+            BulletImpactVFX vfxManager = FindObjectOfType<BulletImpactVFX>();
+            if (vfxManager != null)
+            {
+                vfxManager.SpawnImpactVFX(surfaceTag, instance.transform.position, Quaternion.identity);
+            }
+
+            if (Hit.collider.GetComponent<Rigidbody>()) {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
             }
             if(Hit.collider.TryGetComponent(out Destructable destructable)) {
