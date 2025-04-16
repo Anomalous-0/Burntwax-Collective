@@ -129,7 +129,6 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         if (Hit.collider != null) {
             
-            ShootSystem.Play();
 
             string surfaceTag = Hit.collider.tag;
 
