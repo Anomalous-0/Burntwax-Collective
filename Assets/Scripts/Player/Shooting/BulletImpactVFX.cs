@@ -28,7 +28,7 @@ public class BulletImpactVFX : MonoBehaviour
     }
 
     public void SpawnImpactVFX(string tag, Vector3 position, Quaternion rotation)
-    {
+{
         if (vfxDict.TryGetValue(tag, out var prefab))
         {
             Instantiate(prefab, position, rotation);

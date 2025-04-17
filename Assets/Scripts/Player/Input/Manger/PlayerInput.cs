@@ -113,7 +113,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""cb64076a-e07f-4a6e-b3fb-51ac04cff6f1"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -207,6 +207,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""547586f2-79b5-421c-8171-7badac5a4f59"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -559,6 +568,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": ""Scale(factor=4)"",
                     ""groups"": """",
                     ""action"": ""WeaponSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6356458c-70c8-4615-8e20-f22946527939"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1098,6 +1118,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_GloveShoot = m_OnFoot.FindAction("GloveShoot", throwIfNotFound: true);
         m_OnFoot_WeaponScroll = m_OnFoot.FindAction("WeaponScroll", throwIfNotFound: true);
         m_OnFoot_WeaponSelect = m_OnFoot.FindAction("WeaponSelect", throwIfNotFound: true);
+        m_OnFoot_Pause = m_OnFoot.FindAction("Pause", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1204,6 +1225,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_GloveShoot;
     private readonly InputAction m_OnFoot_WeaponScroll;
     private readonly InputAction m_OnFoot_WeaponSelect;
+    private readonly InputAction m_OnFoot_Pause;
     /// <summary>
     /// Provides access to input actions defined in input action map "OnFoot".
     /// </summary>
@@ -1267,6 +1289,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "OnFoot/WeaponSelect".
         /// </summary>
         public InputAction @WeaponSelect => m_Wrapper.m_OnFoot_WeaponSelect;
+        /// <summary>
+        /// Provides access to the underlying input action "OnFoot/Pause".
+        /// </summary>
+        public InputAction @Pause => m_Wrapper.m_OnFoot_Pause;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -1332,6 +1358,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @WeaponSelect.started += instance.OnWeaponSelect;
             @WeaponSelect.performed += instance.OnWeaponSelect;
             @WeaponSelect.canceled += instance.OnWeaponSelect;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         /// <summary>
@@ -1382,6 +1411,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @WeaponSelect.started -= instance.OnWeaponSelect;
             @WeaponSelect.performed -= instance.OnWeaponSelect;
             @WeaponSelect.canceled -= instance.OnWeaponSelect;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         /// <summary>
@@ -1708,6 +1740,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnWeaponSelect(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Pause" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPause(InputAction.CallbackContext context);
     }
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "UI" which allows adding and removing callbacks.
