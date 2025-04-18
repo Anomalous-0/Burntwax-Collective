@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour {
     
     public Vector2 MoveInput = Vector2.zero;
-    public Vector2 LookInput { get; private set; } = Vector2.zero; 
+    public Vector2 LookInput  = Vector2.zero; 
     public bool InvertMouseY { get; private set; } = true;
 
     public bool interactIsPressed = false;
@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour {
     
     public bool crouchIsPressed { get; private set; } = false;
     public bool jumpIsPressed /*{ get; private set; }*/ = false;
+    public bool pauseIsPressed = false;
     
     
     public float mouseScroll { get; private set; } = 0;
@@ -53,6 +54,9 @@ public class InputManager : MonoBehaviour {
 
         input.OnFoot.Jump.started += SetJump;
         input.OnFoot.Jump.canceled += SetJump;
+
+        input.OnFoot.Pause.started += SetPause;
+        input.OnFoot.Pause.canceled += SetPause;
 
         input.OnFoot.Shoot.started += SetShoot;
         input.OnFoot.Shoot.canceled += SetShoot;
@@ -97,6 +101,9 @@ public class InputManager : MonoBehaviour {
 
         input.OnFoot.Jump.started -= SetJump;
         input.OnFoot.Jump.canceled -= SetJump;
+
+        input.OnFoot.Pause.started -= SetPause;
+        input.OnFoot.Pause.canceled -= SetPause;
 
         input.OnFoot.Shoot.started -= SetShoot;
         input.OnFoot.Shoot.canceled -= SetShoot;
@@ -151,6 +158,10 @@ public class InputManager : MonoBehaviour {
 
     private void SetJump(InputAction.CallbackContext ctx) {
         jumpIsPressed = ctx.started;
+    }
+
+    private void SetPause(InputAction.CallbackContext ctx) {
+        pauseIsPressed = ctx.started;
     }
 
     private void SetShoot(InputAction.CallbackContext ctx) {

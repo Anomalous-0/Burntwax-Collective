@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour {
     //Load Scene
     public void Play() {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        Time.timeScale = 1f;
     }
 
     //Quit Game

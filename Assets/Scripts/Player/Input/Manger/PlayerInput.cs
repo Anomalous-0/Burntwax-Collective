@@ -211,7 +211,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
-                    ""id"": ""547586f2-79b5-421c-8171-7badac5a4f59"",
+                    ""id"": ""009b4953-52ee-41a4-afd3-8a91e24d9cca"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -573,8 +573,8 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""6356458c-70c8-4615-8e20-f22946527939"",
-                    ""path"": ""<Keyboard>/escape"",
+                    ""id"": ""374134e0-0561-45cb-b2e6-1c6a89616a56"",
+                    ""path"": ""<Keyboard>/p"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",

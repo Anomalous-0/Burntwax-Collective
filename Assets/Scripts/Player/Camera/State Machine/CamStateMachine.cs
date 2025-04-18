@@ -37,8 +37,8 @@ public class CamStateMachine : MonoBehaviour {
         activeCam = fpsCam;
         player = GetComponent<PlayerStateMachine>();
         crosshair = GetComponent<PlayerCrosshair>();
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
 
         states = new CameraStateFactory(this);
         currentState = states.Fps();
