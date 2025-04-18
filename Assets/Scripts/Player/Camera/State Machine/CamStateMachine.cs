@@ -13,6 +13,8 @@ public class CamStateMachine : MonoBehaviour {
     [Header("State Machines")]
     [HideInInspector] public PlayerStateMachine player;
 
+    public PauseMenu pauseMenu;
+    
     public GunStateMachine gun;
     [HideInInspector] public PlayerCrosshair crosshair;
 

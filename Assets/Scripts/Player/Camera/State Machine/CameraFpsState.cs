@@ -11,7 +11,7 @@ public class CameraFpsState : CameraBaseState {
     }
 
     public override void EnterState(){
-        // Debug.Log("Locked State");
+        Debug.Log("FPS State");
        InitializeSubState();
     }
 
@@ -28,6 +28,12 @@ public class CameraFpsState : CameraBaseState {
     public override void CheckSwitchStates(){
         if(Ctx.player.prioritySorter.AimIsPriority() && Ctx.gun.CurrentState != Ctx.gun.states.Reload() && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot()) {
             SwitchState(Factory.Aim());
+        }
+        if(Ctx.pauseMenu.Paused) {
+            if(Ctx.pauseMenu.pauseCounterCamThing < 2) {
+                Ctx.pauseMenu.pauseCounterCamThing++;
+                SwitchState(Factory.Aim());
+            }
         }
         
         

@@ -4,10 +4,15 @@ using UnityEngine.SceneManagement;
 public class PauseMenu : MonoBehaviour {
 
     public InputManager input;
-    public Transform cam;
+
+    [Header("Camera stuff")]
+    public CamStateMachine cam;
+    /*[HideInInspector] */public int pauseCounterCamThing = 0;
+
+    Vector3 targetRot;
 
     public GameObject pauseMenuUI;
-    public static bool Paused;
+    public bool Paused;
 
     public void Update() {
         if(input.pauseIsPressed)  {
@@ -15,17 +20,16 @@ public class PauseMenu : MonoBehaviour {
             input.pauseIsPressed = false;
             if(Paused) {
                 Resume();
+                pauseCounterCamThing = 0;
             }
             else{
-                
+              
                 Pause();
             }
 
         }
 
-        if(Paused) {
-            cam.rotation.
-        }
+        
     }
     //Load Scene
     public void Resume() {
@@ -43,10 +47,11 @@ public class PauseMenu : MonoBehaviour {
         Paused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        cam.freezeRotation = true;
+        
         
         
     }
+
 
     //Quit Game
     public void MainMenu() {
