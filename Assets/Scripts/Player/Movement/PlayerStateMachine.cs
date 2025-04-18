@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerStateMachine : MonoBehaviour {
@@ -310,7 +311,8 @@ public class PlayerStateMachine : MonoBehaviour {
         
         if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)) {
             
-            if(slopeHit.collider.GetComponent<Pickupable>()) {
+            //Layer 14 is Slope
+            if(slopeHit.collider.gameObject.layer != 14) {
                 // Debug.Log("Shouldn't be any slope");
                 currentAngle = 0;
                 return false;
