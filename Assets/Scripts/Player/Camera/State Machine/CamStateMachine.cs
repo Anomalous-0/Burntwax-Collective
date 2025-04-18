@@ -7,6 +7,8 @@ using UnityEngine.InputSystem;
 public class CamStateMachine : MonoBehaviour {
     public InputManager input;
 
+    public Transform cam;
+
 
     [Header("State Machines")]
     [HideInInspector] public PlayerStateMachine player;
@@ -37,13 +39,18 @@ public class CamStateMachine : MonoBehaviour {
         activeCam = fpsCam;
         player = GetComponent<PlayerStateMachine>();
         crosshair = GetComponent<PlayerCrosshair>();
-        // Cursor.lockState = CursorLockMode.Locked;
-        // Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         states = new CameraStateFactory(this);
         currentState = states.Fps();
         currentState.EnterState();
+        
     }
+
+    // private void Start() {
+    //     cam.GetComponent<Rigidbody>().freezeRotation = false;
+    // }
 
 
     void Update() {
@@ -56,29 +63,6 @@ public class CamStateMachine : MonoBehaviour {
         }
         
     }
-    
-    
-        
-        // if(Physics.Raycast(ray, out raycastHit, 999f, bulletColliderLayerMask)) {
-        //     debug.position = raycastHit.point;
-        // }
-        
-        
-                
-                
-                
-        //         //Useful for moving in any direction for wall running
-                // orientation.forward = transform.forward;
-
-
-        
-
-        // if(input.shootIsPressed) {
-        //     Vector3 aimDir = (debug.position - bulletSpawn.position).normalized;
-        //     Instantiate(bullet, bulletSpawn.position, Quaternion.LookRotation(aimDir, Vector3.up));
-        //     input.shootIsPressed = false;
-        // }
-    
 
 
     public void Aim() {
