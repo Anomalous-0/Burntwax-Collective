@@ -33,7 +33,6 @@ public class InputManager : MonoBehaviour {
     PlayerInput input;
 
     private void OnEnable(){
-        
         input = new PlayerInput();
         input.OnFoot.Enable();
         // The increment "subscribes" to the fucntion and plus or minusing it prevents memory leaks

@@ -29,6 +29,10 @@ public class PauseMenu : MonoBehaviour {
 
         }
 
+        if(Paused) {
+            input.LookInput = Vector3.zero;
+        }
+
         
     }
     //Load Scene

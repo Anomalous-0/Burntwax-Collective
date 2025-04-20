@@ -135,7 +135,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
             BulletImpactVFX vfxManager = FindObjectOfType<BulletImpactVFX>();
             if (vfxManager != null)
             {
-                vfxManager.SpawnImpactVFX(surfaceTag, instance.transform.position, Quaternion.identity);
+                vfxManager.SpawnImpactVFX(surfaceTag, instance.transform.position, Hit.collider.transform.rotation);
             }
 
             if (Hit.collider.GetComponent<Rigidbody>()) {

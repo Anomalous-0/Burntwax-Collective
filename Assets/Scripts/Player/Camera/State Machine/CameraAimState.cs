@@ -12,7 +12,7 @@ public class CameraAimState : CameraBaseState {
 
     public override void EnterState(){
         Ctx.crosshair.SetAimCrosshair();
-        Debug.Log("Aim State");
+        
         InitializeSubState();
     }
 

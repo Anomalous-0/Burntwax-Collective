@@ -11,7 +11,7 @@ public class CameraFpsState : CameraBaseState {
     }
 
     public override void EnterState(){
-        Debug.Log("FPS State");
+     
        InitializeSubState();
     }
 
