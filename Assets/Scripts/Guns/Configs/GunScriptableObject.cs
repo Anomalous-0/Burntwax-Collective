@@ -44,6 +44,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
+    private BulletImpactVFX vfxManager;
 
 
 
@@ -54,6 +55,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         }
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = player.GetComponent<AudioSource>();
+        vfxManager = FindObjectOfType<BulletImpactVFX>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
@@ -132,10 +134,11 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
             string surfaceTag = Hit.collider.tag;
 
-            BulletImpactVFX vfxManager = FindObjectOfType<BulletImpactVFX>();
             if (vfxManager != null)
             {
-                vfxManager.SpawnImpactVFX(surfaceTag, instance.transform.position, Hit.collider.transform.rotation);
+                Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;
+                Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
+                vfxManager.SpawnImpactVFX(surfaceTag, impactPosition, impactRotation);
             }
 
             if (Hit.collider.GetComponent<Rigidbody>()) {
