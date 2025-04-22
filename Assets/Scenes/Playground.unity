@@ -27580,11 +27580,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   surfaceVFX:
   - tag: Metal
-    vfxPrefab: {fileID: 3708664472627977393, guid: 2a8d251688280464ca6d327c7f25f768,
-      type: 3}
+    vfxPrefab: {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
   - tag: Dust Floor
-    vfxPrefab: {fileID: 5948452087584883451, guid: e44f3a1490f0fd649af332543b92d9fd,
-      type: 3}
+    vfxPrefab: {fileID: 100002, guid: fc7f8379080d0a844ad699b91bfd56f0, type: 3}
 --- !u!1 &1895854318
 GameObject:
   m_ObjectHideFlags: 0
