@@ -145,7 +145,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance)/2, ForceMode.Impulse);
             }
             if(Hit.collider.TryGetComponent(out Destructable destructable)) {
-                destructable.TakeDamage(DamageConfig.GetDamage(distance));
+                destructable.TakeDamage(DamageConfig.GetDamage(distance)/2);
             }
 
         }
