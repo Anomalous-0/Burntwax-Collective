@@ -6,7 +6,6 @@ public class PauseMenu : MonoBehaviour {
     public InputManager input;
 
     [Header("Camera stuff")]
-    public CamStateMachine cam;
     /*[HideInInspector] */public int pauseCounterCamThing = 0;
 
     Vector3 targetRot;
@@ -29,9 +28,9 @@ public class PauseMenu : MonoBehaviour {
 
         }
 
-        if(Paused) {
-            input.LookInput = Vector3.zero;
-        }
+        // if(Paused) {
+        //     input.LookInput = Vector3.zero;
+        // }
 
         
     }

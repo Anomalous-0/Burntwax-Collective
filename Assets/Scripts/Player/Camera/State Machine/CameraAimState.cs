@@ -33,7 +33,9 @@ public class CameraAimState : CameraBaseState {
             SwitchState(Factory.Fps());
         }
         if(Ctx.pauseMenu.Paused) {
-            if(Ctx.pauseMenu.pauseCounterCamThing < 2) {
+            Debug.Log("Switch thing");
+            if (Ctx.pauseMenu.pauseCounterCamThing < 2)
+            {
                 Ctx.pauseMenu.pauseCounterCamThing++;
                 SwitchState(Factory.Fps());
             }

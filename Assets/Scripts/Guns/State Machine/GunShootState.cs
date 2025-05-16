@@ -24,7 +24,6 @@ public class GunShootState : GunBaseState {
 
     public override void ExitState(){
         Ctx.ableToShootInMiddleOfAnimation = false;
-        Debug.Log("Left shoot state");
         Ctx.anim.SetBool(Ctx.proceduralShootHash, false);
     }
     
