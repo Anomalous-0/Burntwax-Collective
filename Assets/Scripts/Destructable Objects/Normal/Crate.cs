@@ -8,8 +8,8 @@ using Random = UnityEngine.Random;
 public class Crate : MonoBehaviour, Destructable {
 
     [Header("Health")]
-    [SerializeField] private int maxHealth = 100;
-    [SerializeField] int currentHealth;
+    [SerializeField] private float maxHealth = 100;
+    [SerializeField] float currentHealth;
 
     
     [Header("Vfx")]
@@ -21,15 +21,15 @@ public class Crate : MonoBehaviour, Destructable {
     [Header("Customizables")]
     [SerializeField] bool disappear;
     public List<GameObject> resources_prefabs;
-    public int CurrentHealth {get => currentHealth; private set => currentHealth = value;}
+    public float CurrentHealth {get => currentHealth; private set => currentHealth = value;}
 
-    public int MaxHealth {get => maxHealth; private set => maxHealth = value;}
+    public float MaxHealth {get => maxHealth; private set => maxHealth = value;}
 
     // public event Destructable.TakeDamageEvent OnTakeDamage;
     // public event Destructable.Destruct OnDestruct;
 
-    public void TakeDamage(int damage) {
-        int damageTaken = Mathf.Clamp(damage, 0, currentHealth);
+    public void TakeDamage(float damage) {
+        float damageTaken = Mathf.Clamp(damage, 0, currentHealth);
         currentHealth -= damageTaken; 
 
         if(damageTaken != 0) {
