@@ -9999,7 +9999,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
-  cam: {fileID: 330585546}
   pauseCounterCamThing: 0
   pauseMenuUI: {fileID: 1791463305}
   Paused: 0
@@ -31335,6 +31334,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Arms
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292489087974050638, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+        type: 3}
+      propertyPath: recoilRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292489087974050638, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+        type: 3}
+      propertyPath: recoilRotation.y
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292489087974050638, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+        type: 3}
+      propertyPath: recoilRotationAim.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292489087974050638, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+        type: 3}
+      propertyPath: recoilRotationAim.y
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6639202333665346892, guid: c53dd13842d19214f8a332f7d4f0a8c7,
         type: 3}

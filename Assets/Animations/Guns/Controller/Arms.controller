@@ -89,7 +89,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: aim_Pistol
-  m_Speed: 1
+  m_Speed: 6
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 471978119051246740}
@@ -318,7 +318,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.24999997
+  m_TransitionDuration: 0.1
   m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 0
@@ -508,7 +508,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: aim_Shotgun
-  m_Speed: 1
+  m_Speed: 6
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 5136586596760525560}
@@ -1141,7 +1141,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
+  m_TransitionDuration: 0.1
   m_TransitionOffset: 2.992948
   m_ExitTime: 0.28571427
   m_HasExitTime: 0
@@ -1316,9 +1316,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.071985126
+  m_TransitionDuration: 0.2582194
   m_TransitionOffset: 0
-  m_ExitTime: 0.79432833
+  m_ExitTime: 0.28641665
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -1448,7 +1448,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25000006
+  m_TransitionDuration: 0.1
   m_TransitionOffset: 0.7243555
   m_ExitTime: 0.2327964
   m_HasExitTime: 0
@@ -1912,7 +1912,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.24999997
+  m_TransitionDuration: 0.1
   m_TransitionOffset: 0
   m_ExitTime: 1
   m_HasExitTime: 0
@@ -2263,7 +2263,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.24999999
+  m_TransitionDuration: 0.1
   m_TransitionOffset: 0.6866519
   m_ExitTime: 0.25000003
   m_HasExitTime: 0
@@ -2490,7 +2490,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: aim_SMG
-  m_Speed: 1
+  m_Speed: 6
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 8556542951038553387}
@@ -2531,7 +2531,7 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25000006
+  m_TransitionDuration: 0.1
   m_TransitionOffset: 0.7243555
   m_ExitTime: 0.2327964
   m_HasExitTime: 0
@@ -2547,7 +2547,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: aim_Revolver
-  m_Speed: 1
+  m_Speed: 6
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: 6239291667686347676}
@@ -2983,9 +2983,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0.724
-  m_ExitTime: 0.25
+  m_TransitionDuration: 0.099999994
+  m_TransitionOffset: 0.73374313
+  m_ExitTime: 0.25000003
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

@@ -319,16 +319,20 @@ public class PlayerStateMachine : MonoBehaviour {
             }
 
         }
-        
-            // float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
-            // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+
+        // float angle = Vector3.Angle(Vector3.up, slopeHit.normal);
+        // Debug.Log("Angle: " + Math.Round(angle) + ", " + (Math.Abs(angle) < maxSlopeAngle && Math.Abs(angle) > 0.03f));
+
+        if (slopeHit.collider){
             if(currentAngle > maxSlopeAngle && currentAngle <90 && slopeHit.collider.GetComponent<Slope>()) {
                 slopeToSteep = true;
     
             }
             else {
                 slopeToSteep = false;
-            }
+            }   
+        }    
+            
 
             
             return Math.Abs(currentAngle) > 0.03f;
