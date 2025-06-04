@@ -6,7 +6,7 @@ public class TempObject : MonoBehaviour {
 
     public float time = 10;
     void Start(){
-        DestroyObject();
+        StartCoroutine(DestroyObject());
     }
 
     
