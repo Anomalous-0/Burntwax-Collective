@@ -259,14 +259,17 @@ public class PlayerStateMachine : MonoBehaviour {
         }
     }
 
+    public void YFlat(){
+        Debug.Log("RESET Y VELOCITY");
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.x);
+    }
     private bool PlayerGroundCheck(){
         float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
         //Physics.SphereCast(playerCenterPoint, sphereCastRadius, Vector3.down, out groundCheckHit);
-
         float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-        if(Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance)) {
-            if(glove.isActiveAndEnabled && glove.currentState == glove.states.Hold()) {
-                if(groundCheckHit.collider.GetComponent<Pickupable>()) {
+        if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance)){
+            if (glove.isActiveAndEnabled && glove.currentState == glove.states.Hold()){
+                if (groundCheckHit.collider.GetComponent<Pickupable>()){
                     return false;
                 }
 

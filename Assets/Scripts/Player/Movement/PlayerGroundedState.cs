@@ -14,16 +14,13 @@ public class PlayerGroundedState : PlayerBaseState {
     public override void EnterState(){
 
         // InitializeSubState();
-        // if(!Ctx.input.moveIsPressed) {
-        //     Ctx.rb.velocity = new Vector3(0, Ctx.rb.velocity.y, 0);
-        // }
+        Ctx.YFlat();
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
         // Debug.Log("GROUNDED STATE");
     }
 
     public override void UpdateState(){
-        SlideDownSlope();
         CheckSwitchStates();
         
 
@@ -32,7 +29,7 @@ public class PlayerGroundedState : PlayerBaseState {
     }
 
     public override void ExitState(){
-        Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+        
     }
     
     public override void CheckSwitchStates(){    
@@ -47,9 +44,7 @@ public class PlayerGroundedState : PlayerBaseState {
         }
     }
 
-    private void SlideDownSlope() {
 
-    }
 
     public override void InitializeSubState(){
         if(!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {

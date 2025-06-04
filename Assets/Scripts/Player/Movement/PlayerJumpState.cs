@@ -16,7 +16,7 @@ public class PlayerJumpState : PlayerBaseState {
        
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.drag = Ctx.AirDrag;
-        
+        Ctx.YFlat();
         
         Jump();
         //Debug.Log("JUMP STATE");
