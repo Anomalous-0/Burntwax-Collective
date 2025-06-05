@@ -261,7 +261,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     public void YFlat(){
         Debug.Log("RESET Y VELOCITY");
-        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.x);
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
     }
     private bool PlayerGroundCheck(){
         float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
