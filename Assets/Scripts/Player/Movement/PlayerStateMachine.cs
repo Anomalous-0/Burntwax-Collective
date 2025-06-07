@@ -201,7 +201,6 @@ public class PlayerStateMachine : MonoBehaviour {
         // MAYBE MOVE THIS TO FIXED UPDATE TO GET RID OF FRAME DEPENDANT MOVEMENT??
         currentState.UpdateStates();
         
-        playerIsGrounded = PlayerGroundCheck();
         
 
         GetMoveInput();
@@ -217,8 +216,10 @@ public class PlayerStateMachine : MonoBehaviour {
         
         SetOrientation();
         
-        PlayerMove();
+        playerIsGrounded = PlayerGroundCheck();
         playerIsSloped = PlayerSlopeCheck();
+        PlayerMove();
+        
         SpeedControl();
     
     }
@@ -260,7 +261,7 @@ public class PlayerStateMachine : MonoBehaviour {
     }
 
     public void YFlat(){
-        Debug.Log("RESET Y VELOCITY");
+       
         rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
     }
     private bool PlayerGroundCheck(){
@@ -338,7 +339,7 @@ public class PlayerStateMachine : MonoBehaviour {
             
 
             
-            return Math.Abs(currentAngle) > 0.03f;
+            return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
             
         // }
 

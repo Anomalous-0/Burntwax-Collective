@@ -14,10 +14,10 @@ public class PlayerGroundedState : PlayerBaseState {
     public override void EnterState(){
 
         // InitializeSubState();
-        Ctx.YFlat();
+        // Ctx.YFlat();
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
-        // Debug.Log("GROUNDED STATE");
+        Debug.Log("GROUNDED STATE");
     }
 
     public override void UpdateState(){
@@ -37,6 +37,7 @@ public class PlayerGroundedState : PlayerBaseState {
             SwitchState(Factory.Jump());
         }
         else if(!Ctx.playerIsGrounded) {
+            Ctx.CoyoteTime = Ctx.CoyoteTimer;
             SwitchState(Factory.Fall());
         }
         else if(Ctx.playerIsSloped) {

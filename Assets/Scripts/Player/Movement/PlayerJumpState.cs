@@ -16,10 +16,10 @@ public class PlayerJumpState : PlayerBaseState {
        
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.drag = Ctx.AirDrag;
-        Ctx.YFlat();
+        
         
         Jump();
-        //Debug.Log("JUMP STATE");
+        Debug.Log("JUMP STATE");
         
     }
 
@@ -37,15 +37,15 @@ public class PlayerJumpState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.playerIsGrounded ) {
-            SwitchState(Factory.Grounded());
+        if(Ctx.rb.velocity.y < 0) {
+            SwitchState(Factory.Fall());
         }
         else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
             SwitchState(Factory.Wallrun());
         }
-        else if(Ctx.playerIsSloped) {
-            SwitchState(Factory.Slope());
-        }
+        // else if(Ctx.playerIsSloped) {
+        //     SwitchState(Factory.Slope());
+        // }
 
     }
 
@@ -63,9 +63,11 @@ public class PlayerJumpState : PlayerBaseState {
 
     private void Jump() {
         // reset y velocity
-        
+
         // Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+        // Debug.Log("Adding jump force NOW");
         Ctx.rb.AddForce(Ctx.player.up * Ctx.JumpForce, ForceMode.Impulse);
+        Ctx.YFlat();
         
     }
 

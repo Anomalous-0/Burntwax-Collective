@@ -8,9 +8,8 @@ OcclusionCullingSettings:
     smallestOccluder: 5
     smallestHole: 0.25
     backfaceThreshold: 100
-  m_SceneGUID: 98772aa96af503e48a3c748f3019d923
-  m_OcclusionCullingData: {fileID: 36300000, guid: 2de6f43f7d911fd4f978841072a1e847,
-    type: 2}
+  m_SceneGUID: 00000000000000000000000000000000
+  m_OcclusionCullingData: {fileID: 0}
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
@@ -31046,7 +31045,7 @@ PrefabInstance:
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: coyoteTime
-      value: 8
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
@@ -31056,7 +31055,7 @@ PrefabInstance:
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: coyoteTimer
-      value: 8
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}

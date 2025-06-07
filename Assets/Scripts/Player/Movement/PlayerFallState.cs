@@ -19,10 +19,10 @@ public class PlayerFallState : PlayerBaseState {
     public override void EnterState(){
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.drag = Ctx.AirDrag;
-        Ctx.CoyoteTime = Ctx.CoyoteTimer;
+        
         InitializeSubState();
 
-        //Debug.Log("FALL STATE"); 
+        Debug.Log("FALL STATE"); 
     }
 
     public override void UpdateState(){
@@ -36,19 +36,25 @@ public class PlayerFallState : PlayerBaseState {
     }
 
     public override void ExitState(){
-        
+        Ctx.CoyoteTime = 0;
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.playerIsGrounded) {
+        if (Ctx.playerIsSloped) {
+            SwitchState(Factory.Slope());
+        }
+        else if (Ctx.playerIsGrounded)
+        {
             SwitchState(Factory.Grounded());
         }
-        else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {
+        else if (Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)
+        {
             SwitchState(Factory.Wallrun());
         }
-        else if(Ctx.CoyoteTime >= 0 && Ctx.input.jumpIsPressed) {
+        else if (Ctx.CoyoteTime > 0 && Ctx.input.jumpIsPressed)
+        {
             Ctx.CoyoteTime = Ctx.CoyoteTimer;
-            Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
+            Ctx.YFlat();
             SwitchState(Factory.Jump());
         }
 
