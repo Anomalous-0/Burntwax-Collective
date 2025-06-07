@@ -199,12 +199,15 @@ public class PlayerStateMachine : MonoBehaviour {
     private void Update() {
 
         // MAYBE MOVE THIS TO FIXED UPDATE TO GET RID OF FRAME DEPENDANT MOVEMENT??
+
+        playerIsGrounded = PlayerGroundCheck();
+        playerIsSloped = PlayerSlopeCheck();
         currentState.UpdateStates();
         
         
-
-        GetMoveInput();
         
+        GetMoveInput();
+
        
        
         if(currentState == states.Walljump() && !ableToWallJump) {
@@ -216,8 +219,7 @@ public class PlayerStateMachine : MonoBehaviour {
         
         SetOrientation();
         
-        playerIsGrounded = PlayerGroundCheck();
-        playerIsSloped = PlayerSlopeCheck();
+        
         PlayerMove();
         
         SpeedControl();
