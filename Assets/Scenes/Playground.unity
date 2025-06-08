@@ -27576,11 +27576,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ff7dd4dbcc9de479e252ca407dc971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  surfaceVFX:
+  surfaceEffects:
+  - tag: Ground
+    vfxPrefab: {fileID: 6320718850798502645, guid: b64c1015384caa34c98a8682983696b6,
+      type: 3}
+    impactSound: {fileID: 8300000, guid: 9c585b4e587adbc4280969e44f037c99, type: 3}
   - tag: Metal
-    vfxPrefab: {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
-  - tag: Dust Floor
-    vfxPrefab: {fileID: 100002, guid: fc7f8379080d0a844ad699b91bfd56f0, type: 3}
+    vfxPrefab: {fileID: 6009651581952384298, guid: d2d7426eb639eb544b7c05468028b334,
+      type: 3}
+    impactSound: {fileID: 8300000, guid: 181ebf0256cf95544a90768e8ca019e3, type: 3}
 --- !u!1 &1895854318
 GameObject:
   m_ObjectHideFlags: 0
