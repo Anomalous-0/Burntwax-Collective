@@ -11,12 +11,12 @@ public class CameraFpsState : CameraBaseState {
     }
 
     public override void EnterState(){
-     
+        Ctx.FPS();
        InitializeSubState();
     }
 
     public override void UpdateState(){
-        Ctx.FPS();
+        
         CheckSwitchStates();
        
     }
@@ -29,13 +29,7 @@ public class CameraFpsState : CameraBaseState {
         if(Ctx.player.prioritySorter.AimIsPriority() && Ctx.gun.CurrentState != Ctx.gun.states.Reload() && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot()) {
             SwitchState(Factory.Aim());
         }
-        if(Ctx.pauseMenu.Paused) {
-            if(Ctx.pauseMenu.pauseCounterCamThing < 2) {
-                Ctx.pauseMenu.pauseCounterCamThing++;
-                SwitchState(Factory.Aim());
-            }
-        }
-        
+ 
         
     }
 

@@ -9998,7 +9998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   input: {fileID: 845597538}
-  pauseCounterCamThing: 0
+  camStateMachine: {fileID: 401126586}
   pauseMenuUI: {fileID: 1791463305}
   Paused: 0
 --- !u!1001 &704806882
@@ -27578,12 +27578,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   surfaceEffects:
   - tag: Ground
-    vfxPrefab: {fileID: 6320718850798502645, guid: b64c1015384caa34c98a8682983696b6,
-      type: 3}
+    vfxPrefab: {fileID: 100002, guid: fc7f8379080d0a844ad699b91bfd56f0, type: 3}
     impactSound: {fileID: 8300000, guid: 9c585b4e587adbc4280969e44f037c99, type: 3}
   - tag: Metal
-    vfxPrefab: {fileID: 6009651581952384298, guid: d2d7426eb639eb544b7c05468028b334,
-      type: 3}
+    vfxPrefab: {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
+    impactSound: {fileID: 8300000, guid: 181ebf0256cf95544a90768e8ca019e3, type: 3}
+  - tag: Enemy
+    vfxPrefab: {fileID: 100002, guid: 3b1513bcb86426b4795879be6a128ed7, type: 3}
+    impactSound: {fileID: 8300000, guid: 181ebf0256cf95544a90768e8ca019e3, type: 3}
+  - tag: Crate
+    vfxPrefab: {fileID: 100002, guid: d39ab699aa314a147969fd483aa55205, type: 3}
     impactSound: {fileID: 8300000, guid: 181ebf0256cf95544a90768e8ca019e3, type: 3}
 --- !u!1 &1895854318
 GameObject:

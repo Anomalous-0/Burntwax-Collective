@@ -6,23 +6,25 @@ public class PauseMenu : MonoBehaviour {
     public InputManager input;
 
     [Header("Camera stuff")]
-    /*[HideInInspector] */public int pauseCounterCamThing = 0;
-
-    Vector3 targetRot;
+    public CamStateMachine camStateMachine;
 
     public GameObject pauseMenuUI;
     public bool Paused;
 
     public void Update() {
-        if(input.pauseIsPressed)  {
-            Debug.Log("Paused");
+        
+
+        if (input.pauseIsPressed) {
+           
             input.pauseIsPressed = false;
-            if(Paused) {
+            if (Paused)
+            {
                 Resume();
-                pauseCounterCamThing = 0;
+                
             }
-            else{
-              
+            else
+            {
+
                 Pause();
             }
 
@@ -41,12 +43,17 @@ public class PauseMenu : MonoBehaviour {
         Paused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        camStateMachine.primaryCam.SetActive(true);
+        camStateMachine.secondaryCam.SetActive(true);
+        
         
     }
 
     private void Pause() {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
+        camStateMachine.secondaryCam.SetActive(false);
+        camStateMachine.primaryCam.SetActive(false);
         Paused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

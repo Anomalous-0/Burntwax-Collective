@@ -12,12 +12,12 @@ public class CameraAimState : CameraBaseState {
 
     public override void EnterState(){
         Ctx.crosshair.SetAimCrosshair();
-        
+        Ctx.Aim();
         InitializeSubState();
     }
 
     public override void UpdateState(){
-        Ctx.Aim();
+        
         CheckSwitchStates();
        
     }
@@ -32,21 +32,7 @@ public class CameraAimState : CameraBaseState {
         if(Ctx.player.prioritySorter.SprintIsPriority() || !Ctx.input.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload() ) {
             SwitchState(Factory.Fps());
         }
-        if(Ctx.pauseMenu.Paused) {
-            Debug.Log("Switch thing");
-            if (Ctx.pauseMenu.pauseCounterCamThing < 2)
-            {
-                Ctx.pauseMenu.pauseCounterCamThing++;
-                SwitchState(Factory.Fps());
-            }
-        }
-
-         
-        // if(Ctx.input.sprintIsPressed && Ctx.input.aimIsPressed  || !Ctx.input.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload()) {
-
-        //     Ctx.input.aimIsPressed = false;
-        //     SwitchState(Factory.Fps());
-        // }
+      
        
         
     }
