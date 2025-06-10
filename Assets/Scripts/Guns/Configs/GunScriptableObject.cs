@@ -65,26 +65,31 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
     }
 
     public void Shoot() {
+        RaycastHit hit = new RaycastHit();
         ShootSystem.Play();
-        // Instantiate(testPrefab);
-        // testPrefab.
         AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
         AmmoConfig.currentClip--;
-        for(int i = 0; i < ShootConfig.bulletsPerShot;i++) {
-            Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y,ShootConfig.Spread.y),Random.Range(-ShootConfig.Spread.z,ShootConfig.Spread.z));
+        for (int i = 0; i < ShootConfig.bulletsPerShot; i++) {
+            Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y, ShootConfig.Spread.y), Random.Range(-ShootConfig.Spread.z, ShootConfig.Spread.z));
             shootDirection.Normalize();
 
 
-            
-            if (Physics.Raycast(Camera.main.transform.position, shootDirection, out RaycastHit hit, float.MaxValue, ShootConfig.HitMask)) {
+
+            if (Physics.Raycast(Camera.main.transform.position, shootDirection, out hit, float.MaxValue, ShootConfig.HitMask)) {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(i, ShootSystem.transform.position, hit.point, hit));
 
-                
+
             }
             else {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(i, ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
-            // }
             }
+        }
+        string surfaceTag = hit.collider.tag;
+        if (impactProcessor != null)
+        {
+            Vector3 impactPosition = hit.point + hit.normal * 0.01f;
+            Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+            impactProcessor.ProcessImpact(surfaceTag, impactPosition, impactRotation);
         }
 
             
@@ -132,14 +137,9 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         if (Hit.collider != null) {
             
 
-            string surfaceTag = Hit.collider.tag;
+            
 
-            if (impactProcessor != null)
-            {
-                Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;
-                Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
-                impactProcessor.ProcessImpact(surfaceTag, impactPosition, impactRotation);
-            }
+            
 
             if (Hit.collider.GetComponent<Rigidbody>()) {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance), ForceMode.Impulse);
