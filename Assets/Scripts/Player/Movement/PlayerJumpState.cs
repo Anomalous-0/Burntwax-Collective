@@ -19,7 +19,7 @@ public class PlayerJumpState : PlayerBaseState {
         
         
         Jump();
-        Debug.Log("JUMP STATE");
+        // Debug.Log("JUMP STATE");
         
     }
 

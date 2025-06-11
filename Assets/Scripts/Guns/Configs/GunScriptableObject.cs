@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -66,30 +67,30 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
     public void Shoot() {
         RaycastHit hit = new RaycastHit();
+        List<string> surfaces = new List<string>();
         ShootSystem.Play();
         AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
         AmmoConfig.currentClip--;
-        for (int i = 0; i < ShootConfig.bulletsPerShot; i++) {
+        for (int i = 0; i < ShootConfig.bulletsPerShot; i++){
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y, ShootConfig.Spread.y), Random.Range(-ShootConfig.Spread.z, ShootConfig.Spread.z));
             shootDirection.Normalize();
 
 
 
             if (Physics.Raycast(Camera.main.transform.position, shootDirection, out hit, float.MaxValue, ShootConfig.HitMask)) {
-                ActiveMonoBehaviour.StartCoroutine(PlayTrail(i, ShootSystem.transform.position, hit.point, hit));
-
-
+                ActiveMonoBehaviour.StartCoroutine(PlayTrail(surfaces, i, ShootSystem.transform.position, hit.point, hit));
             }
             else {
-                ActiveMonoBehaviour.StartCoroutine(PlayTrail(i, ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), new RaycastHit()));
+                ActiveMonoBehaviour.StartCoroutine(PlayTrail(surfaces, i, ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), hit));
             }
         }
-        string surfaceTag = hit.collider.tag;
-        if (impactProcessor != null) {
-            Vector3 impactPosition = hit.point + hit.normal * 0.01f;
-            Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
-            impactProcessor.ProcessImpact(surfaceTag, impactPosition, impactRotation);
-        }
+        // string surfaceTag = hit.collider.tag;
+        // if (impactProcessor != null) {
+        //     Vector3 impactPosition = hit.point + hit.normal * 0.01f;
+        //     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
+        //     impactProcessor.ImpactAudio(surfaceTag, impactPosition, impactRotation);
+        // }
+        
 
             
     }
@@ -110,7 +111,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         AmmoConfig.IncrementalReload();
     }
     
-    private IEnumerator PlayTrail(int i, Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
+    private IEnumerator PlayTrail(List<string> surfaces, int i, Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
         instance.transform.position = StartPoint;
@@ -133,8 +134,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         instance.transform.position = EndPoint;
 
-        if (Hit.collider != null)
-        {
+        if (Hit.collider != null){
 
             if (Hit.collider.GetComponent<Rigidbody>())
             {
@@ -144,9 +144,32 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
             {
                 destructable.TakeDamage(DamageConfig.GetDamage(distance) / 2);
             }
-            if(Hit.collider.TryGetComponent(out Target target)) {
+            if (Hit.collider.TryGetComponent(out Target target))
+            {
                 target.Teleport();
             }
+
+            string surfaceTag = Hit.collider.tag;
+            Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;
+                Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
+                impactProcessor.ImpactVFX(surfaceTag, impactPosition, impactRotation);
+            if (!surfaces.Contains(surfaceTag)){
+                surfaces.Add(surfaceTag);
+                Debug.Log(surfaces);
+
+                impactProcessor.ImpactAudio(surfaceTag, impactPosition, impactRotation);
+            }
+            
+            
+
+            
+            
+        
+
+                // if (i == 0)
+                
+            
+            
 
         }
 
