@@ -155,7 +155,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
                 impactProcessor.ImpactVFX(surfaceTag, impactPosition, impactRotation);
             if (!surfaces.Contains(surfaceTag)){
                 surfaces.Add(surfaceTag);
-                Debug.Log(surfaces);
+
 
                 impactProcessor.ImpactAudio(surfaceTag, impactPosition, impactRotation);
             }

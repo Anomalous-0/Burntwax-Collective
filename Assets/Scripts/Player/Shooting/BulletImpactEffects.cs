@@ -5,8 +5,7 @@ public class BulletImpactEffects : MonoBehaviour
 {
     public List<SurfaceEffectSO> surfaceEffects;
 
-    public void ImpactVFX(string tag, Vector3 position, Quaternion rotation)
-    {
+    public void ImpactVFX(string tag, Vector3 position, Quaternion rotation) {
         var effect = surfaceEffects.Find(effect => effect.surfaceTag == tag);
         if (effect != null) {
             if (effect.vfxPrefab != null)
