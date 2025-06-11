@@ -85,8 +85,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
             }
         }
         string surfaceTag = hit.collider.tag;
-        if (impactProcessor != null)
-        {
+        if (impactProcessor != null) {
             Vector3 impactPosition = hit.point + hit.normal * 0.01f;
             Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
             impactProcessor.ProcessImpact(surfaceTag, impactPosition, impactRotation);
@@ -134,18 +133,19 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         instance.transform.position = EndPoint;
 
-        if (Hit.collider != null) {
-            
+        if (Hit.collider != null)
+        {
 
-            
-
-            
-
-            if (Hit.collider.GetComponent<Rigidbody>()) {
+            if (Hit.collider.GetComponent<Rigidbody>())
+            {
                 Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance), ForceMode.Impulse);
             }
-            if(Hit.collider.TryGetComponent(out Destructable destructable)) {
-                destructable.TakeDamage(DamageConfig.GetDamage(distance)/2);
+            if (Hit.collider.TryGetComponent(out Destructable destructable))
+            {
+                destructable.TakeDamage(DamageConfig.GetDamage(distance) / 2);
+            }
+            if(Hit.collider.TryGetComponent(out Target target)) {
+                target.Teleport();
             }
 
         }
