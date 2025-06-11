@@ -8,5 +8,9 @@ public class SurfaceEffectSO : ScriptableObject
     public string surfaceTag;
     public GameObject vfxPrefab;
     public AudioClip impactSound;
+
+    [Header("Audio Settings")]
+    [Tooltip("Impact sound volume")]
+    [Range(0f, 1f)] public float volume = 1f;
 }
 

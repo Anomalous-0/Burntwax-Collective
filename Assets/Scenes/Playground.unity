@@ -27413,7 +27413,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56ff7dd4dbcc9de479e252ca407dc971, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  effectDatabase: {fileID: 11400000, guid: 7e4cb8ed38f2898478262389f4bc2070, type: 2}
+  surfaceEffects:
+  - {fileID: 11400000, guid: 0b549c06c3ea7064cacd049663e69657, type: 2}
+  - {fileID: 11400000, guid: 21640688147ad8c40b61dee44b94e6b1, type: 2}
+  - {fileID: 11400000, guid: 3516bd33db7f30446bdc4b5c23735af1, type: 2}
+  - {fileID: 11400000, guid: 2fd1acf9a3d5ce444be91dbfcebbd1f6, type: 2}
 --- !u!1 &1895854318
 GameObject:
   m_ObjectHideFlags: 0
