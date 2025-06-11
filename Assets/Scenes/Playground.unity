@@ -23750,7 +23750,7 @@ GameObject:
   - component: {fileID: 1643080437}
   - component: {fileID: 1643080436}
   m_Layer: 0
-  m_Name: Global Volume
+  m_Name: Post Processing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32396,7 +32396,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 254040437}
-  - {fileID: 1643080437}
   - {fileID: 385572456}
   - {fileID: 736951251}
   - {fileID: 5918461596287933360}
@@ -32404,3 +32403,4 @@ SceneRoots:
   - {fileID: 434014395}
   - {fileID: 1892375373}
   - {fileID: 699535639}
+  - {fileID: 1643080437}
