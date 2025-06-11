@@ -99,7 +99,7 @@ public class GunStateMachine : MonoBehaviour {
             WeaponSelect();
             
             
-            if((input.weaponSelectID || input.mouseScroll != 0) && !isShooting) {
+            if((input.weaponSelectID || input.mouseScroll != 0) && !isShooting && currentID != ActiveGunScriptable.ID) {
                 WeaponSwitch();
             }  
             EmptyClip();
