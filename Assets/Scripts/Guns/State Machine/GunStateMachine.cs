@@ -99,7 +99,7 @@ public class GunStateMachine : MonoBehaviour {
             WeaponSelect();
             
             
-            if((input.weaponSelectID || input.mouseScroll != 0) && !isShooting && currentID != ActiveGunScriptable.ID) {
+            if((input.weaponSelectID || input.mouseScroll != 0) && !isShooting) {
                 WeaponSwitch();
             }  
             EmptyClip();
@@ -149,27 +149,33 @@ public class GunStateMachine : MonoBehaviour {
         if(input.mouseScroll != 0) {
             ScrollID();
         }
-        else if(input.weaponSelectID) {
+        else if(input.weaponSelectID ) {
+            
             WeaponSelect();
         }
-        
-        GunScriptableObject gun = CurrentGuns.Find(gun => gun.ID == currentID);
-        
 
-        if (gun == null) {
-            Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
-            return;
-        }
+        if (currentID != ActiveGunScriptable.ID)
+        {
+            GunScriptableObject gun = CurrentGuns.Find(gun => gun.ID == currentID);
+            if (gun == null) {
+                Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+                return;
+            }
             
 
-        Despawn(ActiveGunScriptable);
+            Despawn(ActiveGunScriptable);
+            
+            ActiveGunScriptable = gun;
+            // Spawn(ActiveGunScriptable);
+            
+            // gun.Spawn(GunParent, this);
+            // crosshair.SetGunCrosshair(gun);
+            SetupGun();
+
+
+        }
+
         
-        ActiveGunScriptable = gun;
-        // Spawn(ActiveGunScriptable);
-        
-        // gun.Spawn(GunParent, this);
-        // crosshair.SetGunCrosshair(gun);
-        SetupGun();
         // restingHash = Animator.StringToHash("resting");
     }
 
