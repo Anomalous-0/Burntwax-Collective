@@ -17,7 +17,7 @@ public class PlayerGroundedState : PlayerBaseState {
         // Ctx.YFlat();
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.drag = Ctx.GroundDrag;
-        Debug.Log("GROUNDED STATE");
+        // Debug.Log("GROUNDED STATE");
     }
 
     public override void UpdateState(){

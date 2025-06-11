@@ -22,7 +22,7 @@ public class PlayerFallState : PlayerBaseState {
         
         InitializeSubState();
 
-        Debug.Log("FALL STATE"); 
+        // Debug.Log("FALL STATE"); 
     }
 
     public override void UpdateState(){
