@@ -57,6 +57,11 @@ public class BobAndSway : MonoBehaviour {
     float smooth = 10f;
     float smoothRot = 12f;
 
+    // Velocity sway to make it look better/smoother
+    Vector3 velocitySway;
+    public float velocitySwayIntensity = 0.002f;
+    public float velocitySwaySmooth = 6f;
+
 
     // Booleans that are often used
     bool onSolid;
@@ -85,6 +90,10 @@ public class BobAndSway : MonoBehaviour {
             bobPosition = Vector3.zero;
             speedCurve = 0;
         }
+
+        Vector3 localVelocity = transform.InverseTransformDirection(rb.velocity);
+        Vector3 targetSway = new Vector3(-localVelocity.x, 0f, 0f) * velocitySwayIntensity;
+        velocitySway = Vector3.Lerp(velocitySway, targetSway, Time.deltaTime * velocitySwaySmooth);
 
         CompositePositionRotation();
     }
@@ -169,7 +178,7 @@ public class BobAndSway : MonoBehaviour {
 
     void CompositePositionRotation(){
 
-        Vector3 newPos = swayPos + bobPosition;
+        Vector3 newPos = swayPos + bobPosition + velocitySway;
 
         transform.localPosition = new Vector3(  Mathf.Lerp(transform.localPosition.x, newPos.x, Time.deltaTime * smooth),
                                                 transform.localPosition.y,
