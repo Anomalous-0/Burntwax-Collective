@@ -34,7 +34,7 @@ public class PlayerHealth : MonoBehaviour {
             lerpTimer += Time.deltaTime;
             float percentComplete = lerpTimer / chipSpeed;
             percentComplete = percentComplete * percentComplete; 
-            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete); 
+            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete * Time.deltaTime); 
         }
         if(fillF < hFraction){
             backHealthBar.color = Color.cyan;
@@ -42,7 +42,7 @@ public class PlayerHealth : MonoBehaviour {
             lerpTimer += Time.deltaTime;
             float percentComplete = lerpTimer / chipSpeed;
             percentComplete = percentComplete * percentComplete;
-            frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete);
+            frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete * Time.deltaTime);
         }
     }
 
