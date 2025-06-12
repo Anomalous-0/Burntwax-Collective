@@ -409,7 +409,7 @@ GameObject:
   - component: {fileID: 33148864}
   m_Layer: 8
   m_Name: Cube
-  m_TagString: Wall
+  m_TagString: Glass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -12809,7 +12809,7 @@ GameObject:
   - component: {fileID: 868806533}
   m_Layer: 14
   m_Name: Cube (1)
-  m_TagString: Untagged
+  m_TagString: Glass
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15687,7 +15687,7 @@ GameObject:
   - component: {fileID: 1122760222}
   m_Layer: 7
   m_Name: Damage
-  m_TagString: Untagged
+  m_TagString: Metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -16772,7 +16772,7 @@ GameObject:
   - component: {fileID: 1202960085}
   m_Layer: 7
   m_Name: HealButton
-  m_TagString: Untagged
+  m_TagString: Metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -21047,7 +21047,7 @@ GameObject:
   - component: {fileID: 1495392055}
   m_Layer: 0
   m_Name: Cylinder
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25799,7 +25799,7 @@ GameObject:
   - component: {fileID: 1781278265}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -26937,7 +26937,7 @@ GameObject:
   - component: {fileID: 1830847040}
   m_Layer: 0
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -27534,7 +27534,7 @@ GameObject:
   - component: {fileID: 1867720362}
   m_Layer: 7
   m_Name: DamageButton
-  m_TagString: Untagged
+  m_TagString: Metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -28243,6 +28243,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3516bd33db7f30446bdc4b5c23735af1, type: 2}
   - {fileID: 11400000, guid: 2fd1acf9a3d5ce444be91dbfcebbd1f6, type: 2}
   - {fileID: 11400000, guid: 8fe94b2cad944eb4a9bd638266aa1f0c, type: 2}
+  - {fileID: 11400000, guid: 54b940fb93ad392479303121ac268322, type: 2}
+  - {fileID: 11400000, guid: 15a31222738759b4ea9f8225777eaada, type: 2}
 --- !u!1 &1895854318
 GameObject:
   m_ObjectHideFlags: 0
