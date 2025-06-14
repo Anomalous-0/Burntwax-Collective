@@ -64,9 +64,14 @@ public class BobAndSway : MonoBehaviour
     public float fallSpringReturnSpeed = 4f;
     public float landingBounceIntensity = 0.1f;
     public float maxFallOffset = 0.08f;
-    private float fallTime = 0f;
+
     private Vector3 fallOffset;
     private Vector3 landingVelocityImpulse;
+
+    private bool wasGroundedLastFrame = true;
+    private float airTime = 0f;
+    public float minAirTimeForLandingJolt = 0.15f;  // tweak this threshold for "real" landing
+    public float maxImpactStrength = 10f;          // clamp max impact to avoid huge jolts
 
     Vector2 walkInput;
     Vector2 lookInput;
@@ -80,7 +85,9 @@ public class BobAndSway : MonoBehaviour
     {
         GetInput();
 
-        onSolid = player.currentState == player.states.Grounded() || player.currentState == player.states.Wallrun() || player.currentState == player.states.Slope();
+        onSolid = player.currentState == player.states.Grounded()
+                  || player.currentState == player.states.Wallrun()
+                  || player.currentState == player.states.Slope();
 
         if (input.MoveInput != Vector2.zero && onSolid && cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot())
         {
@@ -110,23 +117,37 @@ public class BobAndSway : MonoBehaviour
         velocitySwaySpring = Vector3.Lerp(velocitySwaySpring, -velocitySway, Time.deltaTime * velocitySwaySmooth);
         lastVelocity = velocity;
 
-        if (!onSolid && rb.velocity.y < -0.1f)
+        // Improved fall and landing jolt logic
+        if (!onSolid)
         {
-            fallTime += Time.deltaTime;
-            float upwardFloat = Mathf.Clamp(fallTime * fallUpOffsetAmount, 0, maxFallOffset);
-            fallOffset = new Vector3(0, upwardFloat, 0);
+            airTime += Time.deltaTime;
+
+            // Rising or falling: add upward floating offset smoothly while in air
+            float upwardFloat = Mathf.Clamp(airTime * fallUpOffsetAmount, 0, maxFallOffset);
+            fallOffset = Vector3.Lerp(fallOffset, new Vector3(0, upwardFloat, 0), Time.deltaTime * fallSpringReturnSpeed);
+
+            // Reset landing impulse gradually (in air)
+            landingVelocityImpulse = Vector3.Lerp(landingVelocityImpulse, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
         }
         else
         {
-            if (fallTime > 0.2f)
+            // Player just landed this frame
+            if (!wasGroundedLastFrame && airTime > minAirTimeForLandingJolt)
             {
                 float impactStrength = Mathf.Abs(rb.velocity.y);
+                impactStrength = Mathf.Min(impactStrength, maxImpactStrength);
+
+                // Apply landing impulse downward, scaled by intensity
                 landingVelocityImpulse = new Vector3(0, -impactStrength * landingBounceIntensity, 0);
             }
-            fallTime = 0f;
+            airTime = 0f;
+
+            // Spring fall offset and landing impulse back to zero smoothly on ground
             fallOffset = Vector3.Lerp(fallOffset, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
+            landingVelocityImpulse = Vector3.Lerp(landingVelocityImpulse, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
         }
-        landingVelocityImpulse = Vector3.Lerp(landingVelocityImpulse, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
+
+        wasGroundedLastFrame = onSolid;
 
         CompositePositionRotation();
     }
@@ -167,35 +188,16 @@ public class BobAndSway : MonoBehaviour
             return;
         }
 
-        // Update step timer based on player speed
         stepTimer += Time.deltaTime * rb.velocity.magnitude * bobBaseFreq;
         if (stepTimer > 1f) stepTimer -= 1f;
 
-        // --- Horizontal: Simple, smooth sine wave ---
         float horizontal = Mathf.Sin(stepTimer * 2 * Mathf.PI);
+        float verticalBase = Mathf.Sin(stepTimer * 4 * Mathf.PI);
+        float amplitude = verticalAmplitudeCurve.Evaluate(stepTimer);
+        float vertical = verticalBase > 0 ? verticalBase * 0.5f : verticalBase * amplitude;
 
-        // --- Vertical: Upside-down V with randomized asymmetry ---
-        float verticalProgress = stepTimer;
-
-        // Create a triangle wave: rises, then falls
-        float verticalBase = verticalProgress < 0.5f ?
-            verticalProgress * 2f : // rising edge
-            (1f - verticalProgress) * 2f; // falling edge
-
-        verticalBase = 1f - verticalBase; // Flip to make it upside-down
-
-        // Add amplitude variation (so one side is sometimes taller)
-        float verticalAmplitude = verticalAmplitudeCurve.Evaluate(stepTimer);
-        float vertical = verticalBase * verticalAmplitude;
-
-        // Apply final bobbing values
-        bobPosition = new Vector3(
-            horizontal * bobLimit.x,
-            vertical * bobLimit.y,
-            0
-        );
+        bobPosition = new Vector3(horizontal * bobLimit.x, vertical * bobLimit.y, 0);
     }
-
 
     void BobRotation()
     {
