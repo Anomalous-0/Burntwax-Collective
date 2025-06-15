@@ -108,7 +108,7 @@ public class BobAndSway : MonoBehaviour
 
         SwayRotation();
 
-        bool shouldBob = cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot() /*&& landingJoltTimer <= 0f*/;
+        bool shouldBob = cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot() && landingJoltTimer <= 0f;
         if (shouldBob)
         {
             BobOffset();
