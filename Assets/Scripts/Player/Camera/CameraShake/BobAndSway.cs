@@ -65,6 +65,14 @@ public class BobAndSway : MonoBehaviour
     public float maxFallOffset = 0.08f;
     public float maxAirTimeForJoltScale = 1.5f;
 
+    [Header("Landing Jolt Curve")]
+    public AnimationCurve landingJoltCurve = new AnimationCurve(
+        new Keyframe(0f, 0f),
+        new Keyframe(0.3f, 0.2f),
+        new Keyframe(0.7f, 0.6f),
+        new Keyframe(1f, 1f)
+    );
+
     private Vector3 fallOffset;
     private Vector3 landingVelocityImpulse;
     private float landingJoltTimer;
@@ -130,7 +138,8 @@ public class BobAndSway : MonoBehaviour
             if (!wasGroundedLastFrame && airTime > 0.05f)
             {
                 float clampedAirTime = Mathf.Clamp(airTime, 0, maxAirTimeForJoltScale);
-                float impactStrength = clampedAirTime / maxAirTimeForJoltScale;
+                float normalizedAirTime = clampedAirTime / maxAirTimeForJoltScale;
+                float impactStrength = landingJoltCurve.Evaluate(normalizedAirTime);
                 landingVelocityImpulse = new Vector3(0, -impactStrength * landingJoltMultiplier, 0);
                 landingJoltTimer = landingJoltDuration;
             }
