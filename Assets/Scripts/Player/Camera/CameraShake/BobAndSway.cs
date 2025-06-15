@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BobAndSway : MonoBehaviour
 {
-
     [Header("External References")]
     [SerializeField] InputManager input;
     [SerializeField] PlayerStateMachine player;
@@ -62,16 +61,17 @@ public class BobAndSway : MonoBehaviour
     [Header("Falling Inertia")]
     public float fallUpOffsetAmount = 0.04f;
     public float fallSpringReturnSpeed = 4f;
-    public float landingBounceIntensity = 0.1f;
+    public float landingJoltMultiplier = 0.2f;
     public float maxFallOffset = 0.08f;
+    public float maxAirTimeForJoltScale = 1.5f;
 
     private Vector3 fallOffset;
     private Vector3 landingVelocityImpulse;
+    private float landingJoltTimer;
+    private float landingJoltDuration = 0.3f;
 
     private bool wasGroundedLastFrame = true;
     private float airTime = 0f;
-    public float minAirTimeForLandingJolt = 0.15f;  // tweak this threshold for "real" landing
-    public float maxImpactStrength = 10f;          // clamp max impact to avoid huge jolts
 
     Vector2 walkInput;
     Vector2 lookInput;
@@ -100,15 +100,16 @@ public class BobAndSway : MonoBehaviour
 
         SwayRotation();
 
-        if (cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot())
+        bool shouldBob = cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot() && landingJoltTimer <= 0f;
+        if (shouldBob)
         {
             BobOffset();
             BobRotation();
         }
         else
         {
-            transform.localPosition = Vector3.zero;
-            bobPosition = Vector3.zero;
+            bobPosition = Vector3.Lerp(bobPosition, Vector3.zero, Time.deltaTime * smooth);
+            bobEulerRotation = Vector3.Lerp(bobEulerRotation, Vector3.zero, Time.deltaTime * smooth);
         }
 
         Vector3 velocity = rb.velocity;
@@ -117,34 +118,31 @@ public class BobAndSway : MonoBehaviour
         velocitySwaySpring = Vector3.Lerp(velocitySwaySpring, -velocitySway, Time.deltaTime * velocitySwaySmooth);
         lastVelocity = velocity;
 
-        // Improved fall and landing jolt logic
         if (!onSolid)
         {
             airTime += Time.deltaTime;
-
-            // Rising or falling: add upward floating offset smoothly while in air
             float upwardFloat = Mathf.Clamp(airTime * fallUpOffsetAmount, 0, maxFallOffset);
             fallOffset = Vector3.Lerp(fallOffset, new Vector3(0, upwardFloat, 0), Time.deltaTime * fallSpringReturnSpeed);
-
-            // Reset landing impulse gradually (in air)
             landingVelocityImpulse = Vector3.Lerp(landingVelocityImpulse, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
         }
         else
         {
-            // Player just landed this frame
-            if (!wasGroundedLastFrame && airTime > minAirTimeForLandingJolt)
+            if (!wasGroundedLastFrame && airTime > 0.05f)
             {
-                float impactStrength = Mathf.Abs(rb.velocity.y);
-                impactStrength = Mathf.Min(impactStrength, maxImpactStrength);
-
-                // Apply landing impulse downward, scaled by intensity
-                landingVelocityImpulse = new Vector3(0, -impactStrength * landingBounceIntensity, 0);
+                float clampedAirTime = Mathf.Clamp(airTime, 0, maxAirTimeForJoltScale);
+                float impactStrength = clampedAirTime / maxAirTimeForJoltScale;
+                landingVelocityImpulse = new Vector3(0, -impactStrength * landingJoltMultiplier, 0);
+                landingJoltTimer = landingJoltDuration;
             }
-            airTime = 0f;
 
-            // Spring fall offset and landing impulse back to zero smoothly on ground
+            airTime = 0f;
             fallOffset = Vector3.Lerp(fallOffset, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
             landingVelocityImpulse = Vector3.Lerp(landingVelocityImpulse, Vector3.zero, Time.deltaTime * fallSpringReturnSpeed);
+        }
+
+        if (landingJoltTimer > 0f)
+        {
+            landingJoltTimer -= Time.deltaTime;
         }
 
         wasGroundedLastFrame = onSolid;

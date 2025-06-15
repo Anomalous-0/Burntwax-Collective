@@ -3074,7 +3074,7 @@ MonoBehaviour:
   maxStepDistance: 0.06
   rotationStep: 8
   maxRotationStep: 5
-  bobBaseFreq: 0.3
+  bobBaseFreq: 0.23
   bobLimit: {x: 0.04, y: 0.02, z: 0.02}
   verticalAmplitudeCurve:
     serializedVersion: 2
@@ -3183,8 +3183,11 @@ MonoBehaviour:
   velocitySwaySmooth: 6
   fallUpOffsetAmount: 0.04
   fallSpringReturnSpeed: 4
-  landingBounceIntensity: 0.1
+  landingBounceIntensity: 0.01
   maxFallOffset: 0.08
+  minAirTimeForLandingJolt: 0
+  maxImpactStrength: 10
+  landingImpulseDuration: 0.2
 --- !u!1001 &253328930
 PrefabInstance:
   m_ObjectHideFlags: 0
