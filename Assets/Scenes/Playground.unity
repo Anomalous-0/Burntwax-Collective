@@ -3183,11 +3183,51 @@ MonoBehaviour:
   velocitySwaySmooth: 6
   fallUpOffsetAmount: 0.04
   fallSpringReturnSpeed: 4
-  landingBounceIntensity: 0.01
+  landingJoltMultiplier: 0.2
   maxFallOffset: 0.08
-  minAirTimeForLandingJolt: 0
-  maxImpactStrength: 10
-  landingImpulseDuration: 0.2
+  maxAirTimeForJoltScale: 1.5
+  landingJoltCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.7
+      value: 0.6
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &253328930
 PrefabInstance:
   m_ObjectHideFlags: 0
