@@ -9121,6 +9121,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 583161715}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &587460096 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2323696852809071307, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7133554028032367342}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &588998270
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17048,6 +17054,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1190083239}
   m_CullTransparentMesh: 1
+--- !u!1 &1202133879 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8228798142283918516, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7133554028032367342}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1202960080
 GameObject:
   m_ObjectHideFlags: 0
@@ -27533,6 +27545,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1835410094}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1840732703 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5688441189662634380, guid: c53dd13842d19214f8a332f7d4f0a8c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 7133554028032367342}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1846026966
 GameObject:
   m_ObjectHideFlags: 0
@@ -33063,6 +33081,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 229109509}
     m_Modifications:
+    - target: {fileID: 1041324406826564433, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 15d8def0843eb844792c5c8d8224932a, type: 2}
     - target: {fileID: 1522108174362513558, guid: 04eec0394ccda5842a86324700fed178,
         type: 3}
       propertyPath: m_Bones.Array.data[37]
@@ -33083,6 +33106,57 @@ PrefabInstance:
       propertyPath: m_Bones.Array.data[40]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: input
+      value: 
+      objectReference: {fileID: 845597538}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 669723134}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: crosshair
+      value: 
+      objectReference: {fileID: 1513530040}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: camMachine
+      value: 
+      objectReference: {fileID: 401126586}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: stateMachine
+      value: 
+      objectReference: {fileID: 401126580}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: OrderedGuns.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: OrderedGuns.Array.data[0]
+      value: 
+      objectReference: {fileID: 189091626145577203, guid: 464d2b315a1ed6b408948cc2fc04e8f7,
+        type: 3}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: OrderedGuns.Array.data[1]
+      value: 
+      objectReference: {fileID: 1840732703}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: OrderedGuns.Array.data[2]
+      value: 
+      objectReference: {fileID: 587460096}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: OrderedGuns.Array.data[3]
+      value: 
+      objectReference: {fileID: 1202133879}
     - target: {fileID: 2671663366023289100, guid: 04eec0394ccda5842a86324700fed178,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -33137,6 +33211,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Arms
+      objectReference: {fileID: 0}
+    - target: {fileID: 3148238339481795515, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4512989240059842663, guid: 04eec0394ccda5842a86324700fed178,
         type: 3}
