@@ -32599,6 +32599,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b56a59ba95c31cf4293dfd6b557a88c9, type: 3}
+--- !u!95 &4297771878052245201 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1041324406826564433, guid: 04eec0394ccda5842a86324700fed178,
+    type: 3}
+  m_PrefabInstance: {fileID: 8738428750995329282}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5459022606202285614 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6639202333665346892, guid: c53dd13842d19214f8a332f7d4f0a8c7,
@@ -33106,6 +33112,11 @@ PrefabInstance:
       propertyPath: m_Bones.Array.data[40]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
+        type: 3}
+      propertyPath: anim
+      value: 
+      objectReference: {fileID: 4297771878052245201}
     - target: {fileID: 2143122986007206421, guid: 04eec0394ccda5842a86324700fed178,
         type: 3}
       propertyPath: input
