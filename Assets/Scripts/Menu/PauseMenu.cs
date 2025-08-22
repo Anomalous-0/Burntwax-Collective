@@ -40,6 +40,7 @@ public class PauseMenu : MonoBehaviour {
     public void Resume() {
         pauseMenuUI.SetActive(false);
         Time.timeScale = 1f;
+        AudioListener.pause = false;
         Paused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -52,6 +53,7 @@ public class PauseMenu : MonoBehaviour {
     private void Pause() {
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
+        AudioListener.pause = true;
         camStateMachine.secondaryCam.SetActive(false);
         camStateMachine.primaryCam.SetActive(false);
         Paused = true;
