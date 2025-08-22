@@ -2717,36 +2717,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2987649246039251351}
     m_Modifications:
-    - target: {fileID: 2973100963633353173, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_ImpulseDefinition.m_AmplitudeGain
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2973100963633353173, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_ImpulseDefinition.m_FrequencyGain
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2973100963633353173, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_ImpulseDefinition.m_TimeEnvelope.m_DecayTime
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.099999994
-      objectReference: {fileID: 0}
-    - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.099999994
-      objectReference: {fileID: 0}
-    - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.099999994
-      objectReference: {fileID: 0}
     - target: {fileID: 4980412898446675385, guid: f9ac767c067999c458f8c954007e5ab3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2801,11 +2771,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Shotgun
-      objectReference: {fileID: 0}
-    - target: {fileID: 7927989591502400544, guid: f9ac767c067999c458f8c954007e5ab3,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

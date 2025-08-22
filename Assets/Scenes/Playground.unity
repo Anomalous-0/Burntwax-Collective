@@ -18331,6 +18331,11 @@ PrefabInstance:
       propertyPath: ammo
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1888807050840504520, guid: 4eeab4f29a0c7384485d075816ddab07,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2715b4cf0ca32444c87c9ed33288343c, type: 2}
     - target: {fileID: 1888807050842695176, guid: 4eeab4f29a0c7384485d075816ddab07,
         type: 3}
       propertyPath: m_Layer
@@ -32320,7 +32325,8 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8912627443121853714, guid: 0251d1c73dc9fca43a691525b2beb6a6, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

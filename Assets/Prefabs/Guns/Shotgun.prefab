@@ -49,7 +49,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4980412898446675385
 Transform:
   m_ObjectHideFlags: 0
@@ -60,7 +60,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.099999994, y: 0.099999994, z: 0.099999994}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3297085744706493440}
@@ -104,8 +104,8 @@ MonoBehaviour:
     m_ImpulseType: 3
     m_DissipationRate: 0.25
     m_RawSignal: {fileID: 11400000, guid: cd420391feb26784ba532f90fe01a901, type: 2}
-    m_AmplitudeGain: 3
-    m_FrequencyGain: 1
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 5
     m_RepeatMode: 0
     m_Randomize: 1
     m_TimeEnvelope:
@@ -159,7 +159,7 @@ MonoBehaviour:
         m_RotationOrder: 4
       m_AttackTime: 0.04
       m_SustainTime: 0.09
-      m_DecayTime: 0.5
+      m_DecayTime: 0.2
       m_ScaleWithImpact: 1
       m_HoldForever: 0
     m_ImpactRadius: 100
