@@ -14,7 +14,7 @@ public class PlayerCrouchState : PlayerBaseState {
         Ctx.PlayerVelocity = Ctx.CrouchVelocity;
 
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.CrouchYScale, Ctx.LocalScale.z);
-        Ctx.rb.AddForce(Vector3.down * 10f, ForceMode.Impulse);
+        Ctx.rb.AddForce(Vector3.down * 8f, ForceMode.Impulse);
     }
 
     public override void UpdateState(){

@@ -32120,6 +32120,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7992028927343891716, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992028927343891716, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7992028927343891716, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 8189567609677785590, guid: 0251d1c73dc9fca43a691525b2beb6a6,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -32316,6 +32331,11 @@ PrefabInstance:
       objectReference: {fileID: 1794737442}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: airDrag
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: gunMachine
       value: 
       objectReference: {fileID: 8999892664573018100}
@@ -32436,4 +32456,3 @@ SceneRoots:
   - {fileID: 699535639}
   - {fileID: 1643080437}
   - {fileID: 963858243}
-  - {fileID: 0}
