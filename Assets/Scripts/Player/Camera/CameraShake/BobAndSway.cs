@@ -73,12 +73,6 @@ public class BobAndSway : MonoBehaviour
         new Keyframe(1f, 1f)
     );
 
-    [Header("ADS Bobbing")]
-    public bool adsBob = true; // Toggle for ADS bobbing
-    public float adsBobMultiplier = 0.03f; // Intensity of bobbing during ADS (smaller movement)
-    public float adsBobFrequencyMultiplier = 0.1f; // Frequency of bobbing during ADS (slower movement)
-    public float adsHorizontalMultiplier = 0.5f; // Horizontal movement multiplier during ADS
-
     private Vector3 fallOffset;
     private Vector3 landingVelocityImpulse;
     private float landingJoltTimer;
@@ -114,8 +108,7 @@ public class BobAndSway : MonoBehaviour
 
         SwayRotation();
 
-        // Adjusted condition to allow bobbing during ADS if adsBob is enabled
-        bool shouldBob = (cam.currentState != cam.states.Aim() || adsBob) && gun.CurrentState != gun.states.Shoot() && landingJoltTimer <= 0f;
+        bool shouldBob = cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot() && landingJoltTimer <= 0f;
         if (shouldBob)
         {
             BobOffset();
@@ -202,10 +195,7 @@ public class BobAndSway : MonoBehaviour
             return;
         }
 
-        // Adjust bobbing frequency for ADS
-        float currentBobFreq = (cam.currentState == cam.states.Aim() && adsBob) ? bobBaseFreq * adsBobFrequencyMultiplier : bobBaseFreq;
-
-        stepTimer += Time.deltaTime * rb.velocity.magnitude * currentBobFreq;
+        stepTimer += Time.deltaTime * rb.velocity.magnitude * bobBaseFreq;
         if (stepTimer > 1f) stepTimer -= 1f;
 
         float horizontal = Mathf.Sin(stepTimer * 2 * Mathf.PI);
@@ -213,11 +203,7 @@ public class BobAndSway : MonoBehaviour
         float amplitude = verticalAmplitudeCurve.Evaluate(stepTimer);
         float vertical = verticalBase > 0 ? verticalBase * 0.5f : verticalBase * amplitude;
 
-        // Adjust bobbing intensity for ADS
-        float bobMultiplier = (cam.currentState == cam.states.Aim() && adsBob) ? adsBobMultiplier : 1f;
-        float horizontalMultiplier = (cam.currentState == cam.states.Aim() && adsBob) ? adsHorizontalMultiplier : 1f;
-
-        bobPosition = new Vector3(horizontal * bobLimit.x * horizontalMultiplier, vertical * bobLimit.y, 0) * bobMultiplier;
+        bobPosition = new Vector3(horizontal * bobLimit.x, vertical * bobLimit.y, 0);
     }
 
     void BobRotation()
@@ -229,10 +215,7 @@ public class BobAndSway : MonoBehaviour
         }
 
         float roll = (rollCurve.Evaluate(stepTimer) - 0.5f) * 2f;
-
-        // Adjust bobbing rotation intensity for ADS
-        float bobMultiplier = (cam.currentState == cam.states.Aim() && adsBob) ? adsBobMultiplier : 1f;
-        bobEulerRotation = new Vector3(0, 0, roll * multiplier.z * bobMultiplier);
+        bobEulerRotation = new Vector3(0, 0, roll * multiplier.z);
     }
 
     void CompositePositionRotation()
