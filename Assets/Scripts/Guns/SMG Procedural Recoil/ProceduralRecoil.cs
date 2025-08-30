@@ -13,22 +13,22 @@ public class ProceduralRecoil : MonoBehaviour {
 
     [Header("Speed Settings")]
 
-    public float positionalRecoilSpeed = 8f;
-    public float rotationalRecoilSpeed = 8f;
+    public float positionalRecoilSpeed = 10f;
+    public float rotationalRecoilSpeed = 10f;
     [Space(10)]
 
-    public float positionalReturnSpeed = 18f;
-    public float rotationalReturnSpeed = 38f;
+    public float positionalReturnSpeed = 20f;
+    public float rotationalReturnSpeed = 40f;
 
     [Space()]
 
     [Header("Recoil Settings")]
     public Transform recoilPosition;
-    public Vector3 recoilRotation = new Vector3(10,5,7);
-    public Vector3 recoilKickBack = new Vector3(0.015f, 0f, 0.2f);
+    public Vector3 recoilRotation = new Vector3(0f,15f,15f);
+    public Vector3 recoilKickBack = new Vector3(0f, 0f, -0.03f);
     [Space()]
-    public Vector3 recoilRotationAim = new Vector3(10,4,0);
-    public Vector3 recoilKickBackAim = new Vector3(0.015f, 0f, -0.2f);
+    public Vector3 recoilRotationAim = new Vector3(0f,5f,6f);
+    public Vector3 recoilKickBackAim = new Vector3(0f, 0f, -0.01f);
     Vector3 rotationalRecoil;
     Vector3 positionalRecoil;
 

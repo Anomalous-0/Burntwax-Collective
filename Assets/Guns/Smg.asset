@@ -14,10 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 1
   Type: 1
-  Name: SMG
   incrementalReload: 0
   proceduralRecoil: 1
-  restingRecoilPos: {x: 0.075, y: -0.03, z: 0.04}
+  restingRecoilPos: {x: 0.07, y: -0.01, z: -0.06}
   Model: {fileID: 0}
   ShootConfig: {fileID: 11400000, guid: 6c671f1a9963542478d1c6440cc1b847, type: 2}
   AmmoConfig: {fileID: 11400000, guid: d76d9576de864f34189c9ac0bb0d6417, type: 2}

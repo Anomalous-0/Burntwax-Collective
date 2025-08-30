@@ -124,6 +124,41 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &3059789 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8391414606950754537, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2295870073434228599}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3059790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3059789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c86323a228e02a4b82e1efaea6bda62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  restingPosition: {x: 0, y: 0, z: 0}
+  positionalRecoilSpeed: 10
+  rotationalRecoilSpeed: 10
+  positionalReturnSpeed: 20
+  rotationalReturnSpeed: 40
+  recoilPosition: {fileID: 3059792}
+  recoilRotation: {x: 0, y: 15, z: 15}
+  recoilKickBack: {x: 0, y: 0, z: -0.03}
+  recoilRotationAim: {x: 0, y: 5, z: 6}
+  recoilKickBackAim: {x: 0, y: 0, z: -0.01}
+  gunMachine: {fileID: 8999892664573018100}
+--- !u!4 &3059792 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1697409477550742075, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2295870073434228599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &17205073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3202,6 +3237,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  adsBob: 1
+  adsBobMultiplier: 0.03
+  adsBobFrequencyMultiplier: 0.1
+  adsHorizontalMultiplier: 0.5
 --- !u!1001 &253328930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -32057,6 +32096,11 @@ PrefabInstance:
       objectReference: {fileID: 669723134}
     - target: {fileID: 2927981629380958902, guid: 0251d1c73dc9fca43a691525b2beb6a6,
         type: 3}
+      propertyPath: recoil
+      value: 
+      objectReference: {fileID: 3059790}
+    - target: {fileID: 2927981629380958902, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 1513530040}
@@ -32153,7 +32197,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8391414606950754537, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3059790}
   m_SourcePrefab: {fileID: 100100000, guid: 0251d1c73dc9fca43a691525b2beb6a6, type: 3}
 --- !u!1001 &3403391712931309175
 PrefabInstance:
