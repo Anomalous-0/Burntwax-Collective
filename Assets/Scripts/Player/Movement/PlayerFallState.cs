@@ -18,7 +18,7 @@ public class PlayerFallState : PlayerBaseState {
 
     public override void EnterState(){
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
-        Ctx.rb.drag = Ctx.AirDrag;
+        Ctx.rb.linearDamping = Ctx.AirDrag;
         
         InitializeSubState();
 

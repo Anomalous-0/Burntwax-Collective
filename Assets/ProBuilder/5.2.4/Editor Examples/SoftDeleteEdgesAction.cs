@@ -47,11 +47,13 @@ namespace UnityEditor.ProBuilder.Actions
 			get { return SelectMode.Edge; }
 		}
 
-		/// <summary>
-		/// Return a pb_ActionResult indicating the success/failure of action.
-		/// </summary>
-		/// <returns></returns>
-		protected override ActionResult PerformActionImplementation()
+        public override string iconPath => throw new System.NotImplementedException();
+
+        /// <summary>
+        /// Return a pb_ActionResult indicating the success/failure of action.
+        /// </summary>
+        /// <returns></returns>
+        protected override ActionResult PerformActionImplementation()
 		{
 			var selection = MeshSelection.top.ToArray();
 			Undo.RecordObjects(selection, "Removing Edges");

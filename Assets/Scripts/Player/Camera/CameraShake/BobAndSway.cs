@@ -127,7 +127,7 @@ public class BobAndSway : MonoBehaviour
             bobEulerRotation = Vector3.Lerp(bobEulerRotation, Vector3.zero, Time.deltaTime * smooth);
         }
 
-        Vector3 velocity = rb.velocity;
+        Vector3 velocity = rb.linearVelocity;
         Vector3 deltaVelocity = velocity - lastVelocity;
         velocitySway = Vector3.Lerp(velocitySway, deltaVelocity * velocitySwayIntensity, Time.deltaTime * velocitySwaySmooth);
         velocitySwaySpring = Vector3.Lerp(velocitySwaySpring, -velocitySway, Time.deltaTime * velocitySwaySmooth);
@@ -205,7 +205,7 @@ public class BobAndSway : MonoBehaviour
         // Adjust bobbing frequency for ADS
         float currentBobFreq = (cam.currentState == cam.states.Aim() && adsBob) ? bobBaseFreq * adsBobFrequencyMultiplier : bobBaseFreq;
 
-        stepTimer += Time.deltaTime * rb.velocity.magnitude * currentBobFreq;
+        stepTimer += Time.deltaTime * rb.linearVelocity.magnitude * currentBobFreq;
         if (stepTimer > 1f) stepTimer -= 1f;
 
         float horizontal = Mathf.Sin(stepTimer * 2 * Mathf.PI);

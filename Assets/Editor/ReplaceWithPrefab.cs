@@ -81,7 +81,7 @@ public class ReplaceWithPrefabFinal : EditorWindow
                 Undo.RecordObject(rb, "Rigidbody Setup");
                 rb.isKinematic = false;
                 rb.useGravity = true;
-                rb.velocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
                 rb.angularVelocity = Vector3.zero;
 
                 // Optional: reset sleep state

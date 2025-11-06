@@ -16,7 +16,7 @@ public class PlayerGroundedState : PlayerBaseState {
         // InitializeSubState();
         // Ctx.YFlat();
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
-        Ctx.rb.drag = Ctx.GroundDrag;
+        Ctx.rb.linearDamping = Ctx.GroundDrag;
         // Debug.Log("GROUNDED STATE");
     }
 

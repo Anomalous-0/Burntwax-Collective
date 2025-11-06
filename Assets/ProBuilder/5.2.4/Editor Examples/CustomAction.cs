@@ -48,11 +48,13 @@ namespace ProBuilder.ExampleActions
 			get { return SelectMode.Face | SelectMode.TextureFace; }
 		}
 
-		/// <summary>
-		/// Return a pb_ActionResult indicating the success/failure of action.
-		/// </summary>
-		/// <returns></returns>
-		protected override ActionResult PerformActionImplementation()
+        public override string iconPath => throw new System.NotImplementedException();
+
+        /// <summary>
+        /// Return a pb_ActionResult indicating the success/failure of action.
+        /// </summary>
+        /// <returns></returns>
+        protected override ActionResult PerformActionImplementation()
 		{
 			var selection = MeshSelection.top.ToArray();
 			Undo.RecordObjects(selection, "Make Double-Sided Faces");

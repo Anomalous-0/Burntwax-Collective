@@ -15,7 +15,7 @@ public class PlayerJumpState : PlayerBaseState {
     public override void EnterState(){
        
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
-        Ctx.rb.drag = Ctx.AirDrag;
+        Ctx.rb.linearDamping = Ctx.AirDrag;
         
         
         Jump();
@@ -37,7 +37,7 @@ public class PlayerJumpState : PlayerBaseState {
     }
     
     public override void CheckSwitchStates(){
-        if(Ctx.rb.velocity.y < 0) {
+        if(Ctx.rb.linearVelocity.y < 0) {
             SwitchState(Factory.Fall());
         }
         else if(Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack) {

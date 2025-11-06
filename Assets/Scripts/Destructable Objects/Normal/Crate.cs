@@ -19,7 +19,7 @@ public class Crate : MonoBehaviour, Destructable {
     
 
     [Header("Customizables")]
-    [SerializeField] bool disappear;
+    [SerializeField] bool destroy;
     public List<GameObject> resources_prefabs;
     public float CurrentHealth {get => currentHealth; private set => currentHealth = value;}
 
@@ -71,7 +71,7 @@ public class Crate : MonoBehaviour, Destructable {
         if(destructParticles) {
             Instantiate(destructParticles, pos, Quaternion.identity);
         }
-        if(disappear) {
+        if(destroy) {
             SpawnResources(pos);
             Destroy(gameObject);
             

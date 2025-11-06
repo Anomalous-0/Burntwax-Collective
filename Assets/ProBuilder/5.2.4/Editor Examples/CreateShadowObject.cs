@@ -55,7 +55,9 @@ namespace ProBuilder.ExampleActions
 			get { return false; }
 		}
 
-		protected override void OnSettingsEnable()
+        public override string iconPath => throw new System.NotImplementedException();
+
+        protected override void OnSettingsEnable()
 		{
 			if( showPreview )
 				PerformAction();
