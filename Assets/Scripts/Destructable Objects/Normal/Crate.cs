@@ -10,13 +10,7 @@ public class Crate : MonoBehaviour, Destructable {
     [Header("Health")]
     [SerializeField] private float maxHealth = 100;
     [SerializeField] float currentHealth;
-
-    
-    [Header("Vfx")]
-    [SerializeField] ParticleSystem destructParticles;
-
-
-    
+   
 
     [Header("Customizables")]
     [SerializeField] bool destroy;
@@ -32,28 +26,12 @@ public class Crate : MonoBehaviour, Destructable {
         float damageTaken = Mathf.Clamp(damage, 0, currentHealth);
         currentHealth -= damageTaken; 
 
-        if(damageTaken != 0) {
-            
-            HandleDamage(transform.position);
-        }
-
         if(currentHealth == 0 && damageTaken!= 0) {
            
             Destruct(transform.position);
             
         }
     }
-
-    private void HandleDamage(Vector3 pos) {
-        // if(damageParticles) {
-        //     Instantiate(damageParticles, pos, Quaternion.identity);
-
-        // }
-        
-    }
-
-    
-
 
     private void SpawnResources(Vector3 pos) {
         // Instantiate(resourcePrefab, pos, Quaternion.identity);
@@ -67,16 +45,11 @@ public class Crate : MonoBehaviour, Destructable {
     }
 
     public void Destruct(Vector3 pos) {
-        
-        if(destructParticles) {
-            Instantiate(destructParticles, pos, Quaternion.identity);
-        }
-        if(destroy) {
             SpawnResources(pos);
             Destroy(gameObject);
-            
-            
-        }
+
+
+        Debug.Log("Why the lag spike");
       
     }
 }
