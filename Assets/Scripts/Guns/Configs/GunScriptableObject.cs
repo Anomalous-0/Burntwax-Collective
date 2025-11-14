@@ -56,7 +56,7 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         }
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = player.GetComponent<AudioSource>();
-        impactProcessor = FindObjectOfType<BulletImpactEffects>();
+        impactProcessor = FindFirstObjectByType<BulletImpactEffects>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour) {

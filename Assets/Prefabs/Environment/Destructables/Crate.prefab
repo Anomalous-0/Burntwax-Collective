@@ -26,17 +26,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 40.257
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.6
+      value: -0.37999997
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: -39.49
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
@@ -46,17 +46,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
@@ -139,10 +139,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5318770071226489326}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 3
-  m_AngularDrag: 0
+  m_LinearDamping: 3
+  m_AngularDamping: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -173,11 +173,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 15
   currentHealth: 0
-  destructParticles: {fileID: 0}
-  disappear: 1
+  destroy: 1
   resources_prefabs:
   - {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777, type: 3}
   - {fileID: 9176256781164373382, guid: 27759b22e5b505a4897caa5593a76b7f, type: 3}
-  - {fileID: 9176256781164373382, guid: f311058df1c840c47850ca599af5916b, type: 3}
+  - {fileID: 9176256781164373382, guid: ee1e7853955903241bc411ff871f5dbc, type: 3}
+  - {fileID: 9176256781164373382, guid: 8940725a50546e144ac6b50b27d99a53, type: 3}
   - {fileID: 9176256781164373382, guid: 5bbd075d828004f418d1b2aceacb8e64, type: 3}
-  - {fileID: 9176256781164373382, guid: 9fde0485f5f62694382fada86f98fb79, type: 3}
