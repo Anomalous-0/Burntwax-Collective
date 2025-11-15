@@ -13,7 +13,6 @@ public class MainMenu : MonoBehaviour {
     //Quit Game
     public void Quit() {
         Application.Quit();
-        Debug.Log("The Player has Quit the game");
     }
 
     public void Options(){

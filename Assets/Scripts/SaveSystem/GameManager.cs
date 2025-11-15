@@ -8,13 +8,14 @@ public class GameManager : MonoBehaviour {
 
     [Header("File Storage Config")]
     [SerializeField] private string fileName;
-    private FileDataHandler dataHandler;
+    public FileDataHandler dataHandler;
     public static GameManager Instance {get; private set;}
-    private GameData gameData;
+    public GameData gameData;
    
     private List<IDataPersistance> gameObjects;
 
     private void Awake() {
+        DontDestroyOnLoad(gameObject);
         if(Instance != null) {
             Debug.LogError("Found more than one Game Manager in the scene");
         }
