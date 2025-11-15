@@ -1,8 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
 
+    public GameManager game;
     public InputManager input;
 
     [Header("Camera stuff")]
@@ -47,6 +49,7 @@ public class PauseMenu : MonoBehaviour {
 
     private void Pause() {
         pauseMenuUI.SetActive(true);
+        game.SaveGame();
         Time.timeScale = 0f;
         AudioListener.pause = true;
         camStateMachine.secondaryCam.SetActive(false);
@@ -63,6 +66,7 @@ public class PauseMenu : MonoBehaviour {
     //Quit Game
     public void MainMenu() {
         SceneManager.LoadScene(0);
+        
     }
 
     public void Options() {

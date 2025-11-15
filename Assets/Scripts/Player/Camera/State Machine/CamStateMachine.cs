@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.InputSystem;
+using Mono.Cecil.Cil;
 
-public class CamStateMachine : MonoBehaviour {
+public class CamStateMachine : MonoBehaviour, IDataPersistance {
     public InputManager input;
 
     public Transform cam;
-
+    CinemachinePOV pov;
 
     [Header("State Machines")]
     [HideInInspector] public PlayerStateMachine player;
@@ -47,6 +48,7 @@ public class CamStateMachine : MonoBehaviour {
         secondaryCam = aimCam.gameObject;
         player = GetComponent<PlayerStateMachine>();
         crosshair = GetComponent<PlayerCrosshair>();
+        pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -94,6 +96,17 @@ public class CamStateMachine : MonoBehaviour {
         CurrentCameraMode.Priority -= activeCameraPriorityModifier;
         NewCameraMode.Priority += activeCameraPriorityModifier;
         activeCam = NewCameraMode;
+        pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
         
+    }
+
+    public void LoadData(GameData data) {
+        pov.m_HorizontalAxis.Value = data.yaw;
+        pov.m_VerticalAxis.Value = data.pitch;  
+    }
+
+    public void SaveData(ref GameData data) {
+        data.yaw = pov.m_HorizontalAxis.Value;
+        data.pitch = pov.m_VerticalAxis.Value;   
     }
 }

@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class PlayerStateMachine : MonoBehaviour
+public class PlayerStateMachine : MonoBehaviour, IDataPersistance
 {
 
-    public Transform orientation;
     public Transform player;
     public InputManager input;
     public Rigidbody rb;
@@ -180,13 +180,7 @@ public class PlayerStateMachine : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-
-
-        // playerFullHeight = capsuleCollider.height;
-        // playerCrouchedHeight = playerFullHeight - crouchAmount;
-
+    private void Awake() {
         states = new PlayerStateFactory(this);
         prioritySorter = GetComponent<InputPrioritySorter>();
         currentState = states.Grounded();
@@ -195,6 +189,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     }
 
+  
+
     private void LateUpdate()
     {
         SetRotation();
@@ -202,8 +198,6 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Update()
     {
-
-        // MAYBE MOVE THIS TO FIXED UPDATE TO GET RID OF FRAME DEPENDANT MOVEMENT??
 
         playerIsGrounded = PlayerGroundCheck();
         playerIsSloped = PlayerSlopeCheck();
@@ -221,11 +215,7 @@ public class PlayerStateMachine : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-
-        SetOrientation();
-
+    private void FixedUpdate() {
 
         PlayerMove();
 
@@ -233,17 +223,14 @@ public class PlayerStateMachine : MonoBehaviour
 
     }
 
+
+
     private void GetMoveInput()
     {
 
         horizontalInput = input.MoveInput.x;
         verticalInput = input.MoveInput.y;
 
-    }
-
-    private void SetOrientation()
-    {
-        orientation = Camera.main.transform;
     }
 
     private void SetRotation()
@@ -261,7 +248,7 @@ public class PlayerStateMachine : MonoBehaviour
             }
             else
             {
-                moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+                moveDirection = Camera.main.transform.forward * verticalInput + Camera.main.transform.right * horizontalInput;
             }
 
             if (PlayerSlopeCheck())
@@ -376,6 +363,17 @@ public class PlayerStateMachine : MonoBehaviour
         ableToWallJump = true;
     }
 
+    public void LoadData(GameData data) {
+    
+        rb.position = data.playerPos;
+        Camera.main.transform.forward = data.playerOrientation;
+    }
+
+    public void SaveData(ref GameData data)
+    {
+        data.playerPos = player.position;
+        data.playerOrientation = Camera.main.transform.forward;
+    }
 }
 
 
