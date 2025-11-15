@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour {
 
-    public GameManager game;
+
     public InputManager input;
 
     [Header("Camera stuff")]
@@ -49,7 +49,7 @@ public class PauseMenu : MonoBehaviour {
 
     private void Pause() {
         pauseMenuUI.SetActive(true);
-        game.SaveGame();
+
         Time.timeScale = 0f;
         AudioListener.pause = true;
         camStateMachine.secondaryCam.SetActive(false);

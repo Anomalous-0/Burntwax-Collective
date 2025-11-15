@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CamStateMachine : MonoBehaviour, IDataPersistance {
+public class CamStateMachine : MonoBehaviour{
     public InputManager input;
 
     public Transform cam;
@@ -98,13 +98,19 @@ public class CamStateMachine : MonoBehaviour, IDataPersistance {
         
     }
 
-    public void LoadData(GameData data) {
+    public void LoadData(CamSaveData data) {
         pov.m_HorizontalAxis.Value = data.yaw;
         pov.m_VerticalAxis.Value = data.pitch;  
     }
 
-    public void SaveData(ref GameData data) {
+    public void SaveData(ref CamSaveData data) {
         data.yaw = pov.m_HorizontalAxis.Value;
         data.pitch = pov.m_VerticalAxis.Value;   
     }
+}
+
+[System.Serializable]
+public struct CamSaveData {
+    public float yaw;
+    public float pitch;
 }

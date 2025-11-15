@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class PlayerStateMachine : MonoBehaviour, IDataPersistance
+public class PlayerStateMachine : MonoBehaviour
 {
 
     public Transform player;
@@ -363,18 +363,19 @@ public class PlayerStateMachine : MonoBehaviour, IDataPersistance
         ableToWallJump = true;
     }
 
-    public void LoadData(GameData data) {
-    
+    public void LoadData(PlayerSaveData data) {
         rb.position = data.playerPos;
-        Camera.main.transform.forward = data.playerOrientation;
     }
 
-    public void SaveData(ref GameData data)
-    {
+    public void SaveData(ref PlayerSaveData data) {
         data.playerPos = player.position;
-        data.playerOrientation = Camera.main.transform.forward;
     }
 }
 
+[System.Serializable]
+public struct PlayerSaveData {
+    public Vector3 playerPos;
+    public Vector3 playerOrientation;
+}
 
 

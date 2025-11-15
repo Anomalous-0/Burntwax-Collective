@@ -30,6 +30,10 @@ public class InputManager : MonoBehaviour {
     public bool reloadIsPressed { get; private set; } = false;
     public bool sprintIsPressed  { get; private set; } = false;
 
+
+    public bool saveIsPressed { get; private set; } = false;
+    public bool loadIsPressed { get; private set; } = false;
+
     PlayerInput input;
 
     private void OnEnable(){
@@ -78,6 +82,12 @@ public class InputManager : MonoBehaviour {
         input.OnFoot.GloveShoot.started += SetGloveShoot;
         input.OnFoot.GloveShoot.canceled += SetGloveShoot;
 
+        input.OnFoot.Save.started += SetSave;
+        input.OnFoot.Save.canceled += SetSave;
+
+        input.OnFoot.Load.started += SetLoad;
+        input.OnFoot.Load.canceled += SetLoad;
+
         
     }
 
@@ -121,6 +131,12 @@ public class InputManager : MonoBehaviour {
 
         input.OnFoot.GloveShoot.started -= SetGloveShoot;
         input.OnFoot.GloveShoot.canceled -= SetGloveShoot;
+
+        input.OnFoot.Save.started -= SetSave;
+        input.OnFoot.Save.canceled -= SetSave;
+
+        input.OnFoot.Load.started -= SetLoad;
+        input.OnFoot.Load.canceled -= SetLoad;
 
 
         input.OnFoot.Disable();
@@ -191,6 +207,14 @@ public class InputManager : MonoBehaviour {
         gloveShootIsPressed = ctx.started;
     }
 
+
+    private void SetSave(InputAction.CallbackContext ctx) {
+        saveIsPressed = ctx.started;
+    }
+
+    private void SetLoad(InputAction.CallbackContext ctx) {
+        loadIsPressed = ctx.started;
+    }
 }
 
 //attract = ctx.ReadValue<float>();

@@ -6,66 +6,32 @@ using System.Runtime.Serialization;
 
 public class GameManager : MonoBehaviour {
 
-    [Header("File Storage Config")]
-    [SerializeField] private string fileName;
-    public FileDataHandler dataHandler;
-    public static GameManager Instance {get; private set;}
-    public GameData gameData;
-   
-    private List<IDataPersistance> gameObjects;
+    public static GameManager Instance;
+    public InputManager input;
+
+    public PlayerStateMachine player;
+    public CamStateMachine cam;
+
+
 
     private void Awake() {
-        DontDestroyOnLoad(gameObject);
         if(Instance != null) {
             Debug.LogError("Found more than one Game Manager in the scene");
         }
         Instance = this;
     }
 
-    private void Start() {
-        dataHandler = new FileDataHandler(Application.persistentDataPath, fileName);
-        gameObjects = FindAllGameObjects();
-        LoadGame();
+    private void Start(){
+        SaveSystem.Load();
     }
 
-    public void NewGame() {
-        this.gameData = new GameData();
-    }
-
-    public void LoadGame() {
-        gameData = dataHandler.Load();
-        if(gameData == null) {
-            Debug.Log("No data was found. Initializing data to defaults");
-            NewGame();
+    private void Update() { 
+        if(input.saveIsPressed) {
+            SaveSystem.Save();
         }
-
-        foreach(IDataPersistance obj in gameObjects)
-        {
-            obj.LoadData(gameData);
+        if(input.loadIsPressed) {
+            SaveSystem.Load();
         }
-
-        // Debug.Log("Loaded pos: " + gameData.playerPos);
+        
     }
-
-    public void SaveGame() {
-        foreach(IDataPersistance obj in gameObjects)
-        {
-            obj.SaveData(ref gameData);
-        }
-        // Debug.Log("Saved pos: " + gameData.playerPos);
-        dataHandler.Save(gameData);
-    }
-
-
-    private void OnApplicationQuit()
-    {
-        SaveGame();
-    }
-
-
-    private List<IDataPersistance> FindAllGameObjects() {
-        IEnumerable<IDataPersistance> gameObjects = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None).OfType<IDataPersistance>();
-        return new List<IDataPersistance>(gameObjects);
-    }
-
 }
