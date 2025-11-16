@@ -59,4 +59,16 @@ public class PlayerHealth : MonoBehaviour {
     public float CurrentHealth() {
         return health;
     }
+
+    public void LoadData(PlayerHealthSaveData data) {
+        health = data.health;
+    }
+    public void SaveData(ref PlayerHealthSaveData data) {
+        data.health = health;
+    }
+}
+
+[System.Serializable]
+public struct PlayerHealthSaveData {
+    public float health;
 }

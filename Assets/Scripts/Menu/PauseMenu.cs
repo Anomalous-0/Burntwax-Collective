@@ -63,6 +63,11 @@ public class PauseMenu : MonoBehaviour {
     }
 
 
+    public void Save() {
+        SaveSystem.Save();
+    }
+
+
     //Quit Game
     public void MainMenu() {
         SceneManager.LoadScene(0);

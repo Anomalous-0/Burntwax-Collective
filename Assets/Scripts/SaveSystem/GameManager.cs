@@ -10,7 +10,9 @@ public class GameManager : MonoBehaviour {
     public InputManager input;
 
     public PlayerStateMachine player;
-    public CamStateMachine cam;
+
+    public GunStateMachine gun;
+
 
 
 
@@ -22,7 +24,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start(){
-        SaveSystem.Load();
+        // SaveSystem.Load();
     }
 
     private void Update() { 

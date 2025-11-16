@@ -22199,7 +22199,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   input: {fileID: 845597538}
   player: {fileID: 401126580}
-  cam: {fileID: 401126586}
+  gun: {fileID: 8999892664573018100}
 --- !u!1001 &1392315078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33435,7 +33435,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 699535641}
         m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: Resume
+        m_MethodName: Save
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

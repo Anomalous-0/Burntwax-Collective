@@ -45,7 +45,6 @@ public class GunStateMachine : MonoBehaviour {
     public GunScriptableObject ActiveGunScriptable;
     public GameObject CurrentGunModel;
     public ProceduralRecoil recoil;
-    [SerializeField] bool firstLoad;
 
 
     [Space]
@@ -220,7 +219,6 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void SetupGun() {
-        firstLoad = true;
         fullyEquipped = false;
         isReloading = false; 
         Spawn(ActiveGunScriptable);
@@ -286,10 +284,6 @@ public class GunStateMachine : MonoBehaviour {
     }
 
 
-    // public void BarrelSpin() {
-    //     barrel.Spin();
-    // }
-
     public void EndShoot() {
         // Debug.Log("EndShoot");
         ableToShootInMiddleOfAnimation = false;
@@ -319,6 +313,44 @@ public class GunStateMachine : MonoBehaviour {
         return ActiveGunScriptable.CanReload() && ActiveGunScriptable.AmmoConfig.currentClip == 0;
     }
 
+    public void SaveData(ref GunSaveData data) {
+        data.CurrentGunModel = CurrentGunModel;
+        data.CurrentGuns = CurrentGuns;
+        data.ActiveGunScriptable = ActiveGunScriptable;
+        data.currentState = currentState;
+        data.currentID = currentID;
+
+
+
+    }
+
+    public void LoadData(GunSaveData data) {
+        Despawn(ActiveGunScriptable);
+        CurrentGuns = data.CurrentGuns;
+        currentID = data.currentID;
+        ActiveGunScriptable = data.ActiveGunScriptable;
+        Spawn(ActiveGunScriptable);
+        SetupGun();
+        
+        currentState = data.currentState;
+        currentState = states.Rest();
+        currentState.EnterState();
+    }
+
+
+
+}
+
+[System.Serializable]
+public struct GunSaveData {
+    public int currentID;
+    public GameObject CurrentGunModel;
+    public List<GunScriptableObject> CurrentGuns;
+    public GunScriptableObject ActiveGunScriptable;
+    public GunBaseState currentState;
+
+    public List<int> currentClip;
+    public List<int> currentAmo;
 
 
 }
