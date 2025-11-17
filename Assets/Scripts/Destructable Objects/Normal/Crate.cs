@@ -49,7 +49,7 @@ public class Crate : MonoBehaviour, Destructable {
             Destroy(gameObject);
 
 
-        Debug.Log("Why the lag spike");
+        // Debug.Log("Why the lag spike");
       
     }
 }

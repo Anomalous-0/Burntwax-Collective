@@ -314,27 +314,51 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void SaveData(ref GunSaveData data) {
-        data.CurrentGunModel = CurrentGunModel;
-        data.CurrentGuns = CurrentGuns;
+        data.GunModel = CurrentGunModel;
         data.ActiveGunScriptable = ActiveGunScriptable;
+        data.ActiveGunScriptable.ID = currentID;
+        data.CurrentGuns = CurrentGuns;
         data.currentState = currentState;
-        data.currentID = currentID;
 
+        data.clipAmmo = new List<int>();
+        data.reserveAmmo = new List<int>();
+        foreach (GunScriptableObject gun in CurrentGuns)
+        {
+            data.clipAmmo.Add(gun.AmmoConfig.currentClip);
+            data.reserveAmmo.Add(gun.AmmoConfig.currentAmmo);
+        }
 
-
+        
+        Debug.Log("Saved Gun: " + data.ActiveGunScriptable.Type + "\n" +
+        "Current Gun Model: " + data.GunModel.name + "\n" +
+        "Current Guns: " + string.Join(", ", data.CurrentGuns.ConvertAll(g => g.Type)) + "\n" +
+        "Saved Gun State: " + data.currentState + "\n" +
+        "Gun Save Data Clip Ammo: " + string.Join(", ", data.clipAmmo) + "\n" +
+        "Gun Save Data Reserve Ammo: " + string.Join(", ", data.reserveAmmo)
+);
     }
 
     public void LoadData(GunSaveData data) {
         Despawn(ActiveGunScriptable);
+        currentID = data.ActiveGunScriptable.ID;
         CurrentGuns = data.CurrentGuns;
-        currentID = data.currentID;
         ActiveGunScriptable = data.ActiveGunScriptable;
+        CurrentGunModel = data.GunModel;
         Spawn(ActiveGunScriptable);
         SetupGun();
         
         currentState = data.currentState;
         currentState = states.Rest();
         currentState.EnterState();
+        fullyEquipped = true;
+
+
+        foreach (GunScriptableObject gun in CurrentGuns) {
+            int index = CurrentGuns.IndexOf(gun);
+            gun.AmmoConfig.currentClip = data.clipAmmo[index];
+            gun.AmmoConfig.currentAmmo = data.reserveAmmo[index];
+        }
+       
     }
 
 
@@ -343,14 +367,12 @@ public class GunStateMachine : MonoBehaviour {
 
 [System.Serializable]
 public struct GunSaveData {
-    public int currentID;
-    public GameObject CurrentGunModel;
     public List<GunScriptableObject> CurrentGuns;
+    public GameObject GunModel;
     public GunScriptableObject ActiveGunScriptable;
+    public List<int> clipAmmo;
+    public List<int> reserveAmmo;
     public GunBaseState currentState;
-
-    public List<int> currentClip;
-    public List<int> currentAmo;
 
 
 }
