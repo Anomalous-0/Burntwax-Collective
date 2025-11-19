@@ -20139,6 +20139,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1277153513}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1277964015 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5039941764307498141, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2295870073434228599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1278471141 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2534855556683237600, guid: 8940725a50546e144ac6b50b27d99a53,
@@ -32686,6 +32692,12 @@ Transform:
   - {fileID: 594371276}
   m_Father: {fileID: 736951251}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1939014575 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1299112155363280253, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 2295870073434228599}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1940083585
 GameObject:
   m_ObjectHideFlags: 0
@@ -35930,6 +35942,16 @@ PrefabInstance:
       propertyPath: stateMachine
       value: 
       objectReference: {fileID: 401126580}
+    - target: {fileID: 2927981629380958902, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
+      propertyPath: 'OrderedGuns.Array.data[1]'
+      value: 
+      objectReference: {fileID: 1939014575}
+    - target: {fileID: 2927981629380958902, guid: 0251d1c73dc9fca43a691525b2beb6a6,
+        type: 3}
+      propertyPath: 'OrderedGuns.Array.data[2]'
+      value: 
+      objectReference: {fileID: 1277964015}
     - target: {fileID: 4005086136499061158, guid: 0251d1c73dc9fca43a691525b2beb6a6,
         type: 3}
       propertyPath: m_IsActive

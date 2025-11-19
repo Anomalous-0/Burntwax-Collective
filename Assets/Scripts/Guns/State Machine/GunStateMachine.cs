@@ -314,6 +314,11 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void SaveData(ref GunSaveData data) {
+        if(ActiveGunScriptable == null)
+        {
+            Debug.LogWarning("No active gun to save.");
+            return;
+        }
         data.GunModel = CurrentGunModel;
         data.ActiveGunScriptable = ActiveGunScriptable;
         data.ActiveGunScriptable.ID = currentID;
@@ -339,6 +344,16 @@ public class GunStateMachine : MonoBehaviour {
     }
 
     public void LoadData(GunSaveData data) {
+        if(data.ActiveGunScriptable == null)
+        {
+            Debug.LogWarning("No active gun to load.");
+            Despawn(ActiveGunScriptable);
+            ActiveGunScriptable = null;
+            CurrentGunModel = null;
+            anim.Play("empty_rest");     
+            CurrentGuns.Clear();
+            return;
+        }
         Despawn(ActiveGunScriptable);
         currentID = data.ActiveGunScriptable.ID;
         CurrentGuns = data.CurrentGuns;
