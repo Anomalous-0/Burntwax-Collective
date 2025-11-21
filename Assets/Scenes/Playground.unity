@@ -22205,8 +22205,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   input: {fileID: 845597538}
+  pauseMenu: {fileID: 699535641}
   player: {fileID: 401126580}
   gun: {fileID: 8999892664573018100}
+  pickupManager: {fileID: 0}
 --- !u!1001 &1392315078
 PrefabInstance:
   m_ObjectHideFlags: 0
