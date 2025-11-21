@@ -94,7 +94,7 @@ public class GunStateMachine : MonoBehaviour {
 
 
     private void Update() {
-        if(ActiveGunScriptable != null) {
+        if(ActiveGunScriptable != null && !GameManager.Instance.pauseMenu.Paused) {
             WeaponSelect();
             
             

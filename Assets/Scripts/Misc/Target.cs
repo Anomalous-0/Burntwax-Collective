@@ -41,11 +41,6 @@ public class Target : MonoBehaviour
 
         float randomHeightOffset = Random.Range(minHeightOffset, maxHeightOffset);
         teleportPosition.y = player.transform.position.y + randomHeightOffset;
-        // Optional: raycast down to adjust for terrain height
-        // if (Physics.Raycast(teleportPosition + Vector3.up * 50f, Vector3.down, out RaycastHit hitInfo, 100f)) {
-        //     teleportPosition.y = hitInfo.point.y;
-        // }
-
 
         transform.position = teleportPosition;
     }

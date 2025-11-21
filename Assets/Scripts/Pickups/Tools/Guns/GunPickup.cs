@@ -4,14 +4,18 @@ using UnityEngine;
 
 public class GunPickup : MonoBehaviour {
 
-
+    [SerializeField] private string guid;
     [SerializeField] int ammoCount;
 
     [SerializeField] GunScriptableObject gun;
     private GunStateMachine gunSelector;
 
 
-
+    void Start()
+    {
+        guid = System.Guid.NewGuid().ToString();
+        PickupManager.Instance.Register(guid);
+    }
     void OnTriggerEnter(Collider other) {
         if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
             gunSelector = FindFirstObjectByType<GunStateMachine>();
@@ -30,7 +34,7 @@ public class GunPickup : MonoBehaviour {
                 } 
             }
             
-            Destroy(gameObject);   
+            gameObject.SetActive(false);  
         }
     }
 
