@@ -14,7 +14,8 @@ public class GunPickup : MonoBehaviour {
     void Start()
     {
         guid = System.Guid.NewGuid().ToString();
-        PickupManager.Instance.Register(guid);
+        
+        ConsumableManager.Instance.Register(gameObject);
     }
     void OnTriggerEnter(Collider other) {
         if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
@@ -34,7 +35,7 @@ public class GunPickup : MonoBehaviour {
                 } 
             }
             
-            gameObject.SetActive(false);  
+            gameObject.SetActive(false);
         }
     }
 

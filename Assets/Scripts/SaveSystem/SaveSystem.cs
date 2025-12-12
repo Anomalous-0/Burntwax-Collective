@@ -12,6 +12,8 @@ public class SaveSystem {
         public GunSaveData GunData;
         public PlayerHealthSaveData PlayerHealthData;
 
+        public SceneConsumableData SceneConsumableData;
+
 
     }
 
@@ -30,6 +32,7 @@ public class SaveSystem {
         GameManager.Instance.player.GetComponent<CamStateMachine>().SaveData(ref _saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
         GameManager.Instance.gun.SaveData(ref _saveData.GunData);
+        GameManager.Instance.consumableManager.SaveData(ref _saveData.SceneConsumableData);
 
     }
 
@@ -44,5 +47,6 @@ public class SaveSystem {
         GameManager.Instance.player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
         GameManager.Instance.gun.LoadData(_saveData.GunData);
+        GameManager.Instance.consumableManager.LoadData(_saveData.SceneConsumableData);
     }
 }

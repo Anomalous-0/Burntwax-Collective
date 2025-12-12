@@ -15,6 +15,7 @@ public class AmmoPickup : MonoBehaviour {
     void Start()
     {
         guid = System.Guid.NewGuid().ToString();
+        ConsumableManager.Instance.Register(gameObject);
     }
 
     void OnTriggerEnter(Collider other) {
@@ -30,7 +31,7 @@ public class AmmoPickup : MonoBehaviour {
                     else {
                         gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
                     }
-                    gameObject.SetActive(false);    
+                    Destroy(gameObject);    
                 }   
             }
             
