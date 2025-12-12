@@ -80,12 +80,3 @@ public struct SceneConsumableData {
 
 
 
-
-// [System.Serializable]
-// public struct ConsumableSaveData {
-//     public Vector3 position;
-//     public Vector3 rotation;
-
-//     public Rigidbody rb;
-//     public GameObject prefab;
-// }
