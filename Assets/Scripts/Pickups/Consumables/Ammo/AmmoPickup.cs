@@ -1,9 +1,8 @@
 using UnityEngine;
 
-public class AmmoPickup : MonoBehaviour {
+[RequireComponent(typeof(Rigidbody))]
+public class AmmoPickup : Consumable {
    
-
-    [SerializeField] private string guid;
     public int ammoCount;
 
 
@@ -14,7 +13,6 @@ public class AmmoPickup : MonoBehaviour {
 
     void Start()
     {
-        guid = System.Guid.NewGuid().ToString();
         ConsumableManager.Instance.Register(gameObject);
     }
 
@@ -31,7 +29,8 @@ public class AmmoPickup : MonoBehaviour {
                     else {
                         gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
                     }
-                    Destroy(gameObject);    
+                    gameObject.SetActive(false);
+                    // Destroy(gameObject);    
                 }   
             }
             
@@ -48,7 +47,6 @@ public class AmmoPickup : MonoBehaviour {
             
         }
     }
-
-
-
 }
+
+

@@ -8,7 +8,7 @@ public class ConsumableManager : MonoBehaviour {
 
     public static ConsumableManager Instance;
 
-    [SerializeField] private SerializableDictionary<GameObject, bool> consumableToSceneMap = new SerializableDictionary<GameObject, bool>();
+    [SerializeField] private SerializableDictionary<GameObject, Rigidbody> consumableToSceneMap = new SerializableDictionary<GameObject, Rigidbody>();
     [SerializeField] private List<GameObject> consumablePickups = new List<GameObject>();
 
 
@@ -21,38 +21,32 @@ public class ConsumableManager : MonoBehaviour {
 
     public void Register(GameObject obj) {
         consumablePickups.Add(obj);
-        //consumableToPrefabMap[obj] = PrefabUtility.GetCorrespondingObjectFromSource(obj);
+        // consumableToSceneMap[obj] = true;
     }
+
     
     public void SaveData(ref SceneConsumableData data) {
         // List<ConsumableSaveData> consumableSaveDataList = new List<ConsumableSaveData>();
 
         for(int i = consumablePickups.Count - 1; i >= 0; i--)  {
-            // if(!consumablePickups[i].activeInHierarchy) {
-                // consumablePickups.RemoveAt(i);    
-            // }
-            // if(consumablePickups[i]) {
-            //     GameObject consumable = consumablePickups[i];
-            //     ConsumableSaveData saveData = new ConsumableSaveData()
-            //     {
-            //         position = consumable.transform.position,
-            //         rotation = consumable.transform.eulerAngles,
-            //         prefab = consumableToPrefabMap[consumable],
-            //         rb = consumable.TryGetComponent<Rigidbody>(out var rb) ? rb : null
-            //     };
-            //     consumableSaveDataList.Add(saveData);
-            // }
-            // else
-            // {
-            //     consumablePickups.RemoveAt(i);
-            // }
-            // data.consumables = consumableSaveDataList;
-            
+            if(!consumablePickups[i].activeInHierarchy) {
+                consumablePickups.RemoveAt(i);  
+                // consumablePickups[i].GetComponent<Consumable>().Save();
+            }
         }
+
+
         data.consumables = consumablePickups;
     }
 
     public void LoadData(SceneConsumableData data) {
+        foreach(GameObject consumable in data.consumables) {
+            consumable.SetActive(true);
+
+        }
+    
+        
+        
         // Try using the ConsumeabbleData struct (and fill those in with the gameobject and active state) and then do the gpt load thing
         
         

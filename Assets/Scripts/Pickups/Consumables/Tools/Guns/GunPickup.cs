@@ -1,10 +1,9 @@
 
 using Unity.VisualScripting;
 using UnityEngine;
+[RequireComponent(typeof(Rigidbody))]
+public class GunPickup : Consumable {
 
-public class GunPickup : MonoBehaviour {
-
-    [SerializeField] private string guid;
     [SerializeField] int ammoCount;
 
     [SerializeField] GunScriptableObject gun;
@@ -13,8 +12,7 @@ public class GunPickup : MonoBehaviour {
 
     void Start()
     {
-        guid = System.Guid.NewGuid().ToString();
-        
+
         ConsumableManager.Instance.Register(gameObject);
     }
     void OnTriggerEnter(Collider other) {
@@ -40,3 +38,4 @@ public class GunPickup : MonoBehaviour {
     }
 
 }
+

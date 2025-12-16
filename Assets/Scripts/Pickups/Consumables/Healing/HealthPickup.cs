@@ -1,15 +1,16 @@
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 
-public class NewBehaviourScript : MonoBehaviour {
-
+[RequireComponent(typeof(Rigidbody))]
+public class NewBehaviourScript : Consumable {
+    
     public int heal;
-    [SerializeField] private string guid;
+
 
     private PlayerHealth playerHealth;
 
     void Start()
     {
-        guid = System.Guid.NewGuid().ToString();
         ConsumableManager.Instance.Register(gameObject);
     }
 
@@ -19,10 +20,15 @@ public class NewBehaviourScript : MonoBehaviour {
             playerHealth = FindFirstObjectByType<PlayerHealth>();
             if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
                 playerHealth.RestoreHealth(heal);
-                Destroy(gameObject);
+                gameObject.SetActive(false);
+                // Destroy(gameObject);
+                
             }
             
         }
     }
    
 }
+
+
+
