@@ -2,7 +2,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
-public class GunPickup : Consumable {
+public class GunPickup : MonoBehaviour {
 
     [SerializeField] int ammoCount;
 

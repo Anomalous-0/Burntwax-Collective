@@ -8,7 +8,7 @@ public class ConsumableManager : MonoBehaviour {
 
     public static ConsumableManager Instance;
 
-    [SerializeField] private SerializableDictionary<GameObject, Rigidbody> consumableToSceneMap = new SerializableDictionary<GameObject, Rigidbody>();
+    [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableToSceneMap = new SerializableDictionary<GameObject, ConsumableData>();
     [SerializeField] private List<GameObject> consumablePickups = new List<GameObject>();
 
 
@@ -21,6 +21,7 @@ public class ConsumableManager : MonoBehaviour {
 
     public void Register(GameObject obj) {
         consumablePickups.Add(obj);
+        consumableToSceneMap[obj] = new ConsumableData();
         // consumableToSceneMap[obj] = true;
     }
 
@@ -29,14 +30,27 @@ public class ConsumableManager : MonoBehaviour {
         // List<ConsumableSaveData> consumableSaveDataList = new List<ConsumableSaveData>();
 
         for(int i = consumablePickups.Count - 1; i >= 0; i--)  {
+
+            
             if(!consumablePickups[i].activeInHierarchy) {
-                consumablePickups.RemoveAt(i);  
-                // consumablePickups[i].GetComponent<Consumable>().Save();
+                consumableToSceneMap.Remove(consumablePickups[i]);
+                consumablePickups.RemoveAt(i);
+                
+            
+               
             }
+
+            var rb = consumablePickups[i].GetComponent<Rigidbody>();
+            consumableToSceneMap[consumablePickups[i]] = new ConsumableData {
+                position = rb.position,
+                rotation = rb.rotation,
+                velocity = rb.linearVelocity
+            };
         }
 
 
         data.consumables = consumablePickups;
+        data.consumableSceneData = consumableToSceneMap;
     }
 
     public void LoadData(SceneConsumableData data) {
@@ -70,7 +84,17 @@ public class ConsumableManager : MonoBehaviour {
 [System.Serializable]
 public struct SceneConsumableData {
     public List<GameObject> consumables;
+    public SerializableDictionary<GameObject, ConsumableData> consumableSceneData;
+
 }
 
 
 
+[System.Serializable]
+
+public struct ConsumableData {
+    public Vector3 position;
+    public Quaternion rotation;
+    public Vector3 velocity;    
+    
+}

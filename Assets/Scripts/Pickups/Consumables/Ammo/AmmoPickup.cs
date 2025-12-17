@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class AmmoPickup : Consumable {
+public class AmmoPickup : MonoBehaviour {
    
     public int ammoCount;
 
@@ -33,18 +33,6 @@ public class AmmoPickup : Consumable {
                     // Destroy(gameObject);    
                 }   
             }
-            
-            
-            
-        
-            // Debug.Log("COllided");
-        
-            
-            // if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
-            //     playerHealth.RestoreHealth(heal);
-            //     Destroy(gameObject);
-            // }
-            
         }
     }
 }

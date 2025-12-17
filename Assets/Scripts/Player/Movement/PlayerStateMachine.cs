@@ -375,7 +375,6 @@ public class PlayerStateMachine : MonoBehaviour
 [System.Serializable]
 public struct PlayerSaveData {
     public Vector3 playerPos;
-    public Vector3 playerOrientation;
 }
 
 

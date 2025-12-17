@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 [RequireComponent(typeof(Rigidbody))]
-public class NewBehaviourScript : Consumable {
+public class HealthPickup : MonoBehaviour {
     
     public int heal;
 
