@@ -29,7 +29,7 @@ public class ConsumableManager : MonoBehaviour {
     public void SaveData(ref SceneConsumableData data) {
         // List<ConsumableSaveData> consumableSaveDataList = new List<ConsumableSaveData>();
 
-        for(int i = consumablePickups.Count - 1; i >= 0; i--)  {
+        for(int i = consumableToSceneMap.Count - 1; i >= 0; i--)  {
 
             
             if(!consumablePickups[i].activeInHierarchy) {
@@ -56,6 +56,11 @@ public class ConsumableManager : MonoBehaviour {
     public void LoadData(SceneConsumableData data) {
         foreach(GameObject consumable in data.consumables) {
             consumable.SetActive(true);
+            dataConsumable = data.consumableSceneData[consumable];
+            consumableToSceneMap[consumable].position = dataConsumable.position;
+            consumableToSceneMap[consumable].rotation = dataConsumable.rotation;
+            consumableToSceneMap[consumable].rotation = dataConsumable.velocity;
+
 
         }
     
