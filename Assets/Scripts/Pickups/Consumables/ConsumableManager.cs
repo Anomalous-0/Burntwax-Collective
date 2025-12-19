@@ -56,10 +56,10 @@ public class ConsumableManager : MonoBehaviour {
     public void LoadData(SceneConsumableData data) {
         foreach(GameObject consumable in data.consumables) {
             consumable.SetActive(true);
-            dataConsumable = data.consumableSceneData[consumable];
-            consumableToSceneMap[consumable].position = dataConsumable.position;
-            consumableToSceneMap[consumable].rotation = dataConsumable.rotation;
-            consumableToSceneMap[consumable].rotation = dataConsumable.velocity;
+            // dataConsumable = data.consumableSceneData[consumable];
+            // consumableToSceneMap[consumable].position = dataConsumable.position;
+            // consumableToSceneMap[consumable].rotation = dataConsumable.rotation;
+            // consumableToSceneMap[consumable].rotation = dataConsumable.velocity;
 
 
         }

@@ -228,6 +228,8 @@ public class GunStateMachine : MonoBehaviour {
         anim.Play("equip_" + ActiveGunScriptable.Type);     
         camShake = CurrentGunModel.GetComponent<Cinemachine.CinemachineImpulseSource>();
         
+        ActiveGunScriptable.AmmoConfig.OnEnable();
+        
 
        
         

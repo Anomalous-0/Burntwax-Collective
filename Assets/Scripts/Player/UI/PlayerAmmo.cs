@@ -17,5 +17,9 @@ public class PlayerAmmo : MonoBehaviour {
         if(gunSelector.ActiveGunScriptable != null) {
             ammoText.SetText($"{gunSelector.ActiveGunScriptable.AmmoConfig.currentClip} / {gunSelector.ActiveGunScriptable.AmmoConfig.currentAmmo}");
         }
+        else
+        {
+            ammoText.SetText("");
+        }
     }
 }

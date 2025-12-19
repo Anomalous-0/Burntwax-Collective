@@ -12,7 +12,7 @@ public class AmmoConfig : ScriptableObject, ICloneable {
     public int currentClip;
 
 
-    void OnEnable() {
+    public void OnEnable() {
         currentClip = clipSize;
         currentAmmo = maxAmmo;
     }

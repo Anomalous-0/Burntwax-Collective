@@ -35,7 +35,7 @@ public class GunRestState : GunBaseState {
         if(Ctx.stateMachine.prioritySorter.AimIsPriority() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
             SwitchState(Factory.Aim());
         }
-        else if(Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint() && !Ctx.isShooting){
+        else if(Ctx.stateMachine.prioritySorter.SprintIsPriority() /*&& !Ctx.isShooting*/) {
             
             SwitchState(Factory.Stow());
         }
