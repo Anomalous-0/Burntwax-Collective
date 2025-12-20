@@ -336,13 +336,13 @@ public class GunStateMachine : MonoBehaviour {
         }
 
         
-        Debug.Log("Saved Gun: " + data.ActiveGunScriptable.Type + "\n" +
-        "Current Gun Model: " + data.GunModel.name + "\n" +
-        "Current Guns: " + string.Join(", ", data.CurrentGuns.ConvertAll(g => g.Type)) + "\n" +
-        "Saved Gun State: " + data.currentState + "\n" +
-        "Gun Save Data Clip Ammo: " + string.Join(", ", data.clipAmmo) + "\n" +
-        "Gun Save Data Reserve Ammo: " + string.Join(", ", data.reserveAmmo)
-);
+        // Debug.Log("Saved Gun: " + data.ActiveGunScriptable.Type + "\n" +
+        // "Current Gun Model: " + data.GunModel.name + "\n" +
+        // "Current Guns: " + string.Join(", ", data.CurrentGuns.ConvertAll(g => g.Type)) + "\n" +
+        // "Saved Gun State: " + data.currentState + "\n" +
+        // "Gun Save Data Clip Ammo: " + string.Join(", ", data.clipAmmo) + "\n" +
+        // "Gun Save Data Reserve Ammo: " + string.Join(", ", data.reserveAmmo)
+        // );
     }
 
     public void LoadData(GunSaveData data) {

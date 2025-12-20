@@ -34,7 +34,9 @@ public class ConsumableManager : MonoBehaviour {
             
             if(!consumablePickups[i].activeInHierarchy) {
                 consumableToSceneMap.Remove(consumablePickups[i]);
+                // Debug.Log("Removing consumable from scene data: " + consumablePickups[i].name);
                 consumablePickups.RemoveAt(i);
+
                 
             
                
