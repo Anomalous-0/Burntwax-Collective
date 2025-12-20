@@ -54,36 +54,25 @@ public class ConsumableManager : MonoBehaviour {
     }
 
     public void LoadData(SceneConsumableData data) {
-        foreach(GameObject consumable in data.consumables) {
-            consumable.SetActive(true);
-            // dataConsumable = data.consumableSceneData[consumable];
-            // consumableToSceneMap[consumable].position = dataConsumable.position;
-            // consumableToSceneMap[consumable].rotation = dataConsumable.rotation;
-            // consumableToSceneMap[consumable].rotation = dataConsumable.velocity;
+        consumablePickups = data.consumables;
+        consumableToSceneMap = data.consumableSceneData;
 
-
-        }
-    
-        
-        
-        // Try using the ConsumeabbleData struct (and fill those in with the gameobject and active state) and then do the gpt load thing
-        
-        
-        // foreach(GameObject consumableData in data.consumables) {
-        //     Debug.Log("Consumable count:: " + consumablePickups.Count);
- 
-                  
-        //         GameObject consumable = Instantiate(consumableData.prefab, consumableData.position, Quaternion.Euler(consumableData.rotation));
-        //         if(consumableData.rb != null) {
-        //             consumable.GetComponent<Rigidbody>().linearVelocity = consumableData.rb.linearVelocity;
-        //         }
-        //         consumablePickups.Add(consumable);
-        //         consumableToPrefabMap[consumable] = consumableData.prefab;
+        foreach(var consumable in consumableToSceneMap) {
+            consumable.Key.SetActive(true);
+            var rb = consumable.Key.GetComponent<Rigidbody>();
+            rb.position = consumable.Value.position;
+            rb.rotation = consumable.Value.rotation;
+            rb.linearVelocity = consumable.Value.velocity;
             
-        // }
+        }  
+
+        foreach(var consumable in consumablePickups) {
+            if(!consumableToSceneMap.ContainsKey(consumable)) {
+                consumable.SetActive(false);
+            }
+        }      
+      
     }
-
-
 }
 
 [System.Serializable]

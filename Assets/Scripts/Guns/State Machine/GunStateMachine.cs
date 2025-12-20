@@ -349,7 +349,6 @@ public class GunStateMachine : MonoBehaviour {
         if(data.ActiveGunScriptable == null)
         {
             Debug.LogWarning("No active gun to load.");
-            Despawn(ActiveGunScriptable);
             ActiveGunScriptable = null;
             CurrentGunModel = null;
             anim.Play("empty_rest");     
