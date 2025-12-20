@@ -58,6 +58,10 @@ public class ConsumableManager : MonoBehaviour {
         consumableToSceneMap = data.consumableSceneData;
 
         foreach(var consumable in consumableToSceneMap) {
+            if(!consumablePickups.Contains(consumable.Key)) {
+                consumable.Key.SetActive(false);
+                continue;
+            }
             consumable.Key.SetActive(true);
             var rb = consumable.Key.GetComponent<Rigidbody>();
             rb.position = consumable.Value.position;
@@ -66,11 +70,7 @@ public class ConsumableManager : MonoBehaviour {
             
         }  
 
-        foreach(var consumable in consumablePickups) {
-            if(!consumableToSceneMap.ContainsKey(consumable)) {
-                consumable.SetActive(false);
-            }
-        }      
+    
       
     }
 }
