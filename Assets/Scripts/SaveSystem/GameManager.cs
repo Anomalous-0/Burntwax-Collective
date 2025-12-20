@@ -32,6 +32,11 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start(){
+        // if(SaveSystem.loadScene) {
+        //     SaveSystem.Load();
+        //     SaveSystem.loadScene = false;
+        // }
+
         // SaveSystem.Load();
     }
 

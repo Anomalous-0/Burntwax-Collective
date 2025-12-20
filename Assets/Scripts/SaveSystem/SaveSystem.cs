@@ -3,9 +3,12 @@ using System.IO;
 public class SaveSystem {
     
     private static SaveData _saveData = new SaveData();
+    public static bool loadScene;
     
     [System.Serializable]
     public struct SaveData {
+
+
         public PlayerSaveData PlayerData;
         public CamSaveData CamData;
 
@@ -43,6 +46,10 @@ public class SaveSystem {
     }
 
     private static void HandleLoadData() {
+        if(!GameManager.Instance.player || !GameManager.Instance.gun || !GameManager.Instance.consumableManager) {
+            loadScene = true;
+            return;
+        }
         GameManager.Instance.player.LoadData(_saveData.PlayerData);
         GameManager.Instance.player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);

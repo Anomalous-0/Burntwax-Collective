@@ -355,7 +355,9 @@ public class GunStateMachine : MonoBehaviour {
             CurrentGuns.Clear();
             return;
         }
-        Despawn(ActiveGunScriptable);
+        if(ActiveGunScriptable != null)
+            Despawn(ActiveGunScriptable);
+            
         currentID = data.ActiveGunScriptable.ID;
         CurrentGuns = data.CurrentGuns;
         ActiveGunScriptable = data.ActiveGunScriptable;
