@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Unity.VisualScripting;
@@ -8,7 +9,7 @@ public class ConsumableManager : MonoBehaviour {
 
     public static ConsumableManager Instance;
 
-    [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableToSceneMap = new SerializableDictionary<GameObject, ConsumableData>();
+    [SerializeField] private SerializableDictionary<GameObject, object> consumableToSceneMap = new SerializableDictionary<GameObject, object>();
     [SerializeField] private List<GameObject> consumablePickups = new List<GameObject>();
 
 
@@ -21,7 +22,7 @@ public class ConsumableManager : MonoBehaviour {
 
     public void Register(GameObject obj) {
         consumablePickups.Add(obj);
-        consumableToSceneMap[obj] = new ConsumableData();
+        consumableToSceneMap[obj] = null;
         // consumableToSceneMap[obj] = true;
     }
 
@@ -67,9 +68,9 @@ public class ConsumableManager : MonoBehaviour {
             }
             consumable.SetActive(true);
             var rb = consumable.GetComponent<Rigidbody>();
-            rb.position = consumableToSceneMap[consumable].position;
-            rb.rotation = consumableToSceneMap[consumable].rotation;
-            rb.linearVelocity = consumableToSceneMap[consumable].velocity;
+            rb.position = ((ConsumableData)consumableToSceneMap[consumable]).position;
+            rb.rotation = ((ConsumableData)consumableToSceneMap[consumable]).rotation;
+            rb.linearVelocity = ((ConsumableData)consumableToSceneMap[consumable]).velocity;
             
         }  
 
@@ -81,7 +82,7 @@ public class ConsumableManager : MonoBehaviour {
 [System.Serializable]
 public struct SceneConsumableData {
     public List<GameObject> consumables;
-    public SerializableDictionary<GameObject, ConsumableData> consumableSceneData;
+    public SerializableDictionary<GameObject, object> consumableSceneData;
 
 }
 
@@ -94,4 +95,13 @@ public struct ConsumableData {
     public Quaternion rotation;
     public Vector3 velocity;    
     
+}
+
+[System.Serializable]
+
+public struct DestructableData {
+    public Vector3 position;
+    public Quaternion rotation;
+    public Vector3 velocity;
+    public float currentHealth;
 }

@@ -41,12 +41,14 @@ public class Crate : MonoBehaviour, Destructable {
     }
 
     private void Start() {
+        ConsumableManager.Instance.Register(gameObject);
         currentHealth = maxHealth;
     }
 
     public void Destruct(Vector3 pos) {
             SpawnResources(pos);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
+            // Destroy(gameObject);
 
 
         // Debug.Log("Why the lag spike");
