@@ -57,12 +57,12 @@ public class ConsumableManager : MonoBehaviour {
     public void LoadData(SceneConsumableData data) {
         // consumablePickups = data.consumables;
         consumableToSceneMap = data.consumableSceneData;
-        Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
+        // Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
         foreach(var consumable in consumablePickups) {
             if(!data.consumables.Contains(consumable)) {
                 consumable.SetActive(false);
                 consumablePickups.Remove(consumable);
-                Debug.Log("Consumable removed from scene: " + consumable.name);
+                // Debug.Log("Consumable removed from scene: " + consumable.name);
                 continue;
             }
             consumable.SetActive(true);
