@@ -31,7 +31,6 @@ public class ConsumableManager : MonoBehaviour {
 
         for(int i = consumableToSceneMap.Count - 1; i >= 0; i--)  {
 
-            
             if(!consumablePickups[i].activeInHierarchy) {
                 consumableToSceneMap.Remove(consumablePickups[i]);
                 // Debug.Log("Removing consumable from scene data: " + consumablePickups[i].name);
@@ -57,19 +56,20 @@ public class ConsumableManager : MonoBehaviour {
 
     public void LoadData(SceneConsumableData data) {
         // consumablePickups = data.consumables;
-        // consumableToSceneMap = data.consumableSceneData;
+        consumableToSceneMap = data.consumableSceneData;
         Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
-        foreach(var consumable in data.consumableSceneData) {
-            if(!data.consumables.Contains(consumable.Key)) {
-                data.consumableSceneData.Remove(consumable.Key);
-                Debug.Log("Consumable not found in scene data: " + consumable.Key.name);
+        foreach(var consumable in consumablePickups) {
+            if(!data.consumables.Contains(consumable)) {
+                consumable.SetActive(false);
+                consumablePickups.Remove(consumable);
+                Debug.Log("Consumable removed from scene: " + consumable.name);
                 continue;
             }
-            consumable.Key.SetActive(true);
-            var rb = consumable.Key.GetComponent<Rigidbody>();
-            rb.position = consumable.Value.position;
-            rb.rotation = consumable.Value.rotation;
-            rb.linearVelocity = consumable.Value.velocity;
+            consumable.SetActive(true);
+            var rb = consumable.GetComponent<Rigidbody>();
+            rb.position = consumableToSceneMap[consumable].position;
+            rb.rotation = consumableToSceneMap[consumable].rotation;
+            rb.linearVelocity = consumableToSceneMap[consumable].velocity;
             
         }  
 
