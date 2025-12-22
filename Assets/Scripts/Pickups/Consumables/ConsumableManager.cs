@@ -55,7 +55,7 @@ public class ConsumableManager : MonoBehaviour {
             
                 consumableToSceneMap[consumablePickups[i]] = new ConsumableData {
                     position = rb.position,
-                    rotation = rb.rotation,
+                    rotation = rb.rotation.normalized,
                     velocity = rb.linearVelocity
                 };
             }
@@ -72,7 +72,7 @@ public class ConsumableManager : MonoBehaviour {
                 var destructable = consumablePickups[i].GetComponent<Crate>();
                 destructableToSceneMap[consumablePickups[i]] = new DestructableData {
                     position = rb.position,
-                    rotation = rb.rotation,
+                    rotation = rb.rotation.normalized,
                     velocity = rb.linearVelocity,
                     currentHealth = destructable.currentHealth
                 };
@@ -103,6 +103,7 @@ public class ConsumableManager : MonoBehaviour {
         // consumablePickups = data.consumables;
         consumableToSceneMap = data.consumableSceneData;
         basicToSceneMap = data.basicSceneData;
+        destructableToSceneMap = data.destructableSceneData;
 
 
         // Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
