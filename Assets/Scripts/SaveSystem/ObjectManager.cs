@@ -2,16 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ConsumableManager : MonoBehaviour {
+public class ObjectManager : MonoBehaviour {
 
-    public static ConsumableManager Instance;
+    public static ObjectManager Instance;
 
     [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableToSceneMap = new SerializableDictionary<GameObject, ConsumableData>();
     [SerializeField] private SerializableDictionary<GameObject, BasicData> basicToSceneMap = new SerializableDictionary<GameObject, BasicData>();
-    
     [SerializeField] private SerializableDictionary<GameObject, DestructableData> destructableToSceneMap = new SerializableDictionary<GameObject, DestructableData>();
 
-    [SerializeField] private List<GameObject> consumablePickups = new List<GameObject>();
+    [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
 
     private void Awake() {
@@ -22,7 +21,7 @@ public class ConsumableManager : MonoBehaviour {
     }
 
     public void Register(GameObject obj) {
-        consumablePickups.Add(obj);
+        objects.Add(obj);
         if(obj.layer == LayerMask.NameToLayer("Consumable"))
             consumableToSceneMap[obj] = new ConsumableData();
         else if(obj.layer == LayerMask.NameToLayer("Basic"))
@@ -32,45 +31,45 @@ public class ConsumableManager : MonoBehaviour {
     
     }
 
-    
-    public void SaveData(ref SceneConsumableData data) {
+
+
+    public void SaveData(ref ObjectConsumableData data) {
         // List<ConsumableSaveData> consumableSaveDataList = new List<ConsumableSaveData>();
 
-        for(int i = consumablePickups.Count - 1; i >= 0; i--)  {
+        for(int i = objects.Count - 1; i >= 0; i--)  {
 
-            if(!consumablePickups[i].activeInHierarchy) {
-                consumableToSceneMap.Remove(consumablePickups[i]);
-                basicToSceneMap.Remove(consumablePickups[i]);
-                destructableToSceneMap.Remove(consumablePickups[i]);
-                // Debug.Log("Removing consumable from scene data: " + consumablePickups[i].name);
-                consumablePickups.RemoveAt(i);
-
+            if(!objects[i].activeInHierarchy) {
+                consumableToSceneMap.Remove(objects[i]);
+                basicToSceneMap.Remove(objects[i]);
+                destructableToSceneMap.Remove(objects[i]);
+                // Debug.Log("Removing consumable from scene data: " + objects[i].name);
+                objects.RemoveAt(i);
                 
             
                
             }
-            if(consumablePickups[i].layer == LayerMask.NameToLayer("Consumable"))
+            if(objects[i].layer == LayerMask.NameToLayer("Consumable"))
             {
-                var rb = consumablePickups[i].GetComponent<Rigidbody>();
-            
-                consumableToSceneMap[consumablePickups[i]] = new ConsumableData {
+                var rb = objects[i].GetComponent<Rigidbody>();
+
+                consumableToSceneMap[objects[i]] = new ConsumableData {
                     position = rb.position,
                     rotation = rb.rotation.normalized,
                     velocity = rb.linearVelocity
                 };
             }
 
-            else if(consumablePickups[i].layer == LayerMask.NameToLayer("Basic")) {
-                basicToSceneMap[consumablePickups[i]] = new BasicData {
-                    position = consumablePickups[i].transform.position,
-                    rotation = consumablePickups[i].transform.rotation
+            else if(objects[i].layer == LayerMask.NameToLayer("Basic")) {
+                basicToSceneMap[objects[i]] = new BasicData {
+                    position = objects[i].transform.position,
+                    rotation = objects[i].transform.rotation
                 };
             }
 
-            else if(consumablePickups[i].layer == LayerMask.NameToLayer("Destructable")) {
-                var rb = consumablePickups[i].GetComponent<Rigidbody>();
-                var destructable = consumablePickups[i].GetComponent<Crate>();
-                destructableToSceneMap[consumablePickups[i]] = new DestructableData {
+            else if(objects[i].layer == LayerMask.NameToLayer("Destructable")) {
+                var rb = objects[i].GetComponent<Rigidbody>();
+                var destructable = objects[i].GetComponent<Crate>();
+                destructableToSceneMap[objects[i]] = new DestructableData {
                     position = rb.position,
                     rotation = rb.rotation.normalized,
                     velocity = rb.linearVelocity,
@@ -78,28 +77,19 @@ public class ConsumableManager : MonoBehaviour {
                 };
             }
             
-            
-            // else if(consumablePickups[i].layer == LayerMask.NameToLayer("Destructable")) {
-            //     var destructable = consumablePickups[i].GetComponent<Crate>();
-            //     consumableToSceneMap[consumablePickups[i]] = new DestructableData {
-            //         position = rb.position,
-            //         rotation = rb.rotation,
-            //         velocity = rb.linearVelocity,
-            //         currentHealth = destructable.CurrentHealth
-            //     };
-            // }
+        
             
         }
 
 
-        data.consumables = consumablePickups;
+        data.objects = objects;
 
         data.consumableSceneData = consumableToSceneMap;
         data.basicSceneData = basicToSceneMap;
         data.destructableSceneData = destructableToSceneMap;
     }
 
-    public void LoadData(SceneConsumableData data) {
+    public void LoadData(ObjectConsumableData data) {
         // consumablePickups = data.consumables;
         consumableToSceneMap = data.consumableSceneData;
         basicToSceneMap = data.basicSceneData;
@@ -107,10 +97,10 @@ public class ConsumableManager : MonoBehaviour {
 
 
         // Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
-        foreach(var consumable in consumablePickups) {
-            if(!data.consumables.Contains(consumable)) {
+        foreach(var consumable in objects) {
+            if(!data.objects.Contains(consumable)) {
                 consumable.SetActive(false);
-                consumablePickups.Remove(consumable);
+                objects.Remove(consumable);
                 // Debug.Log("Consumable removed from scene: " + consumable.name);
                 continue;
             }
@@ -144,8 +134,8 @@ public class ConsumableManager : MonoBehaviour {
 }
 
 [System.Serializable]
-public struct SceneConsumableData {
-    public List<GameObject> consumables;
+public struct ObjectConsumableData {
+    public List<GameObject> objects;
     public SerializableDictionary<GameObject, ConsumableData> consumableSceneData;
     public SerializableDictionary<GameObject, BasicData> basicSceneData;
     public SerializableDictionary<GameObject, DestructableData> destructableSceneData;

@@ -48,7 +48,7 @@ public class Crate : MonoBehaviour, Destructable {
     }
 
     private void Start() {
-        ConsumableManager.Instance.Register(gameObject);
+        ObjectManager.Instance.Register(gameObject);
         currentHealth = maxHealth;
     }
 

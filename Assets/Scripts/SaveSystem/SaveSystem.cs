@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.IO;
+
+//C:\Users\*INSERT USER NAME HERE*\AppData\LocalLow\Burntwax Collective\Burntwax Demo
 public class SaveSystem {
     
     private static SaveData _saveData = new SaveData();
@@ -15,13 +17,13 @@ public class SaveSystem {
         public GunSaveData GunData;
         public PlayerHealthSaveData PlayerHealthData;
 
-        public SceneConsumableData SceneConsumableData;
+        public ObjectConsumableData ObjectConsumableData;
 
 
     }
 
     public static string SaveFileName() {
-        string saveFile = Application.persistentDataPath + "/savefil" + ".save";
+        string saveFile = Application.persistentDataPath + "/save" + ".GAME";
         return saveFile;
     }
 
@@ -35,7 +37,8 @@ public class SaveSystem {
         GameManager.Instance.player.GetComponent<CamStateMachine>().SaveData(ref _saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
         GameManager.Instance.gun.SaveData(ref _saveData.GunData);
-        GameManager.Instance.consumableManager.SaveData(ref _saveData.SceneConsumableData);
+        GameManager.Instance.objectManager.SaveData(ref _saveData.ObjectConsumableData);
+        
 
     }
 
@@ -46,14 +49,11 @@ public class SaveSystem {
     }
 
     private static void HandleLoadData() {
-        if(!GameManager.Instance.player || !GameManager.Instance.gun || !GameManager.Instance.consumableManager) {
-            loadScene = true;
-            return;
-        }
         GameManager.Instance.player.LoadData(_saveData.PlayerData);
         GameManager.Instance.player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
         GameManager.Instance.gun.LoadData(_saveData.GunData);
-        GameManager.Instance.consumableManager.LoadData(_saveData.SceneConsumableData);
+        GameManager.Instance.objectManager.LoadData(_saveData.ObjectConsumableData);
+        
     }
 }

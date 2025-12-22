@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 
     public GunStateMachine gun;
 
-    public ConsumableManager consumableManager;
+    public ObjectManager objectManager;
 
     // public Dictionary<string, bool> gunPickups;
 

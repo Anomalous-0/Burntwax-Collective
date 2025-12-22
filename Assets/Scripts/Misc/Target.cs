@@ -14,7 +14,7 @@ public class Target : MonoBehaviour
     public PlayerStateMachine player;
 
     void Start() {
-        ConsumableManager.Instance.Register(gameObject);
+        ObjectManager.Instance.Register(gameObject);
     }
 
 

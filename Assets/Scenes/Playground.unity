@@ -3687,7 +3687,7 @@ GameObject:
   - component: {fileID: 269428059}
   - component: {fileID: 269428060}
   m_Layer: 0
-  m_Name: ConsumableManager
+  m_Name: ObjectManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3729,7 +3729,7 @@ MonoBehaviour:
   destructableToSceneMap:
     m_Keys: []
     m_Values: []
-  consumablePickups: []
+  objects: []
 --- !u!1 &274336376
 GameObject:
   m_ObjectHideFlags: 0
@@ -22304,7 +22304,7 @@ MonoBehaviour:
   pauseMenu: {fileID: 699535641}
   player: {fileID: 401126580}
   gun: {fileID: 8999892664573018100}
-  consumableManager: {fileID: 269428060}
+  objectManager: {fileID: 269428060}
 --- !u!1001 &1392315078
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -11,7 +11,7 @@ public class HealthPickup : MonoBehaviour {
 
     void Start()
     {
-        ConsumableManager.Instance.Register(gameObject);
+        ObjectManager.Instance.Register(gameObject);
     }
 
     void OnTriggerEnter(Collider other) {
