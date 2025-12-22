@@ -15,7 +15,6 @@ public class GunShootState : GunBaseState {
     }
 
     public override void UpdateState(){  
-        Debug.Log("Updating Shoot State");
         CheckSwitchStates();
         if(Ctx.anim.GetBool(Ctx.proceduralShootHash)) {  
             Ctx.recoil.Recoil();
