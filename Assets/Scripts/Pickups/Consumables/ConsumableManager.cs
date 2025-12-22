@@ -1,15 +1,16 @@
-using System;
+
 using System.Collections.Generic;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
 public class ConsumableManager : MonoBehaviour {
 
     public static ConsumableManager Instance;
 
-    [SerializeField] private SerializableDictionary<GameObject, object> consumableToSceneMap = new SerializableDictionary<GameObject, object>();
+    [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableToSceneMap = new SerializableDictionary<GameObject, ConsumableData>();
+    [SerializeField] private SerializableDictionary<GameObject, BasicData> basicToSceneMap = new SerializableDictionary<GameObject, BasicData>();
+    
+    [SerializeField] private SerializableDictionary<GameObject, DestructableData> destructableToSceneMap = new SerializableDictionary<GameObject, DestructableData>();
+
     [SerializeField] private List<GameObject> consumablePickups = new List<GameObject>();
 
 
@@ -22,18 +23,25 @@ public class ConsumableManager : MonoBehaviour {
 
     public void Register(GameObject obj) {
         consumablePickups.Add(obj);
-        consumableToSceneMap[obj] = null;
-        // consumableToSceneMap[obj] = true;
+        if(obj.layer == LayerMask.NameToLayer("Consumable"))
+            consumableToSceneMap[obj] = new ConsumableData();
+        else if(obj.layer == LayerMask.NameToLayer("Basic"))
+            basicToSceneMap[obj] = new BasicData();
+        else if(obj.layer == LayerMask.NameToLayer("Destructable"))
+            destructableToSceneMap[obj] = new DestructableData();
+    
     }
 
     
     public void SaveData(ref SceneConsumableData data) {
         // List<ConsumableSaveData> consumableSaveDataList = new List<ConsumableSaveData>();
 
-        for(int i = consumableToSceneMap.Count - 1; i >= 0; i--)  {
+        for(int i = consumablePickups.Count - 1; i >= 0; i--)  {
 
             if(!consumablePickups[i].activeInHierarchy) {
                 consumableToSceneMap.Remove(consumablePickups[i]);
+                basicToSceneMap.Remove(consumablePickups[i]);
+                destructableToSceneMap.Remove(consumablePickups[i]);
                 // Debug.Log("Removing consumable from scene data: " + consumablePickups[i].name);
                 consumablePickups.RemoveAt(i);
 
@@ -41,23 +49,62 @@ public class ConsumableManager : MonoBehaviour {
             
                
             }
+            if(consumablePickups[i].layer == LayerMask.NameToLayer("Consumable"))
+            {
+                var rb = consumablePickups[i].GetComponent<Rigidbody>();
+            
+                consumableToSceneMap[consumablePickups[i]] = new ConsumableData {
+                    position = rb.position,
+                    rotation = rb.rotation,
+                    velocity = rb.linearVelocity
+                };
+            }
 
-            var rb = consumablePickups[i].GetComponent<Rigidbody>();
-            consumableToSceneMap[consumablePickups[i]] = new ConsumableData {
-                position = rb.position,
-                rotation = rb.rotation,
-                velocity = rb.linearVelocity
-            };
+            else if(consumablePickups[i].layer == LayerMask.NameToLayer("Basic")) {
+                basicToSceneMap[consumablePickups[i]] = new BasicData {
+                    position = consumablePickups[i].transform.position,
+                    rotation = consumablePickups[i].transform.rotation
+                };
+            }
+
+            else if(consumablePickups[i].layer == LayerMask.NameToLayer("Destructable")) {
+                var rb = consumablePickups[i].GetComponent<Rigidbody>();
+                var destructable = consumablePickups[i].GetComponent<Crate>();
+                destructableToSceneMap[consumablePickups[i]] = new DestructableData {
+                    position = rb.position,
+                    rotation = rb.rotation,
+                    velocity = rb.linearVelocity,
+                    currentHealth = destructable.currentHealth
+                };
+            }
+            
+            
+            // else if(consumablePickups[i].layer == LayerMask.NameToLayer("Destructable")) {
+            //     var destructable = consumablePickups[i].GetComponent<Crate>();
+            //     consumableToSceneMap[consumablePickups[i]] = new DestructableData {
+            //         position = rb.position,
+            //         rotation = rb.rotation,
+            //         velocity = rb.linearVelocity,
+            //         currentHealth = destructable.CurrentHealth
+            //     };
+            // }
+            
         }
 
 
         data.consumables = consumablePickups;
+
         data.consumableSceneData = consumableToSceneMap;
+        data.basicSceneData = basicToSceneMap;
+        data.destructableSceneData = destructableToSceneMap;
     }
 
     public void LoadData(SceneConsumableData data) {
         // consumablePickups = data.consumables;
         consumableToSceneMap = data.consumableSceneData;
+        basicToSceneMap = data.basicSceneData;
+
+
         // Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
         foreach(var consumable in consumablePickups) {
             if(!data.consumables.Contains(consumable)) {
@@ -67,10 +114,26 @@ public class ConsumableManager : MonoBehaviour {
                 continue;
             }
             consumable.SetActive(true);
-            var rb = consumable.GetComponent<Rigidbody>();
-            rb.position = ((ConsumableData)consumableToSceneMap[consumable]).position;
-            rb.rotation = ((ConsumableData)consumableToSceneMap[consumable]).rotation;
-            rb.linearVelocity = ((ConsumableData)consumableToSceneMap[consumable]).velocity;
+            
+            if(consumable.layer == LayerMask.NameToLayer("Consumable")) {
+                var rb = consumable.GetComponent<Rigidbody>();
+                rb.position = consumableToSceneMap[consumable].position;
+                rb.rotation = consumableToSceneMap[consumable].rotation;
+                rb.linearVelocity = consumableToSceneMap[consumable].velocity;
+            }
+            else if(consumable.layer == LayerMask.NameToLayer("Basic")) {
+                consumable.transform.position = basicToSceneMap[consumable].position;
+                consumable.transform.rotation = basicToSceneMap[consumable].rotation;
+            }
+            
+            else if(consumable.layer == LayerMask.NameToLayer("Destructable")) {
+                var rb = consumable.GetComponent<Rigidbody>();
+                rb.position = destructableToSceneMap[consumable].position;
+                rb.rotation = destructableToSceneMap[consumable].rotation;  
+                rb.linearVelocity = destructableToSceneMap[consumable].velocity;
+                var destructable = consumable.GetComponent<Crate>();
+                destructable.currentHealth = destructableToSceneMap[consumable].currentHealth;
+            }
             
         }  
 
@@ -82,11 +145,19 @@ public class ConsumableManager : MonoBehaviour {
 [System.Serializable]
 public struct SceneConsumableData {
     public List<GameObject> consumables;
-    public SerializableDictionary<GameObject, object> consumableSceneData;
+    public SerializableDictionary<GameObject, ConsumableData> consumableSceneData;
+    public SerializableDictionary<GameObject, BasicData> basicSceneData;
+    public SerializableDictionary<GameObject, DestructableData> destructableSceneData;
 
 }
 
 
+[System.Serializable]
+
+public struct BasicData {
+    public Vector3 position;
+    public Quaternion rotation;
+}
 
 [System.Serializable]
 

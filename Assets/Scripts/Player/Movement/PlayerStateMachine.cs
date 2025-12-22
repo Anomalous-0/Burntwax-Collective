@@ -365,16 +365,19 @@ public class PlayerStateMachine : MonoBehaviour
 
     public void LoadData(PlayerSaveData data) {
         rb.position = data.playerPos;
+        rb.linearVelocity = data.playerVelocity;
     }
 
     public void SaveData(ref PlayerSaveData data) {
         data.playerPos = player.position;
+        data.playerVelocity = rb.linearVelocity;
     }
 }
 
 [System.Serializable]
 public struct PlayerSaveData {
     public Vector3 playerPos;
+    public Vector3 playerVelocity;
 }
 
 

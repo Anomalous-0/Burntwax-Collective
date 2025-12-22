@@ -3,21 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-[DisallowMultipleComponent]
+[RequireComponent(typeof(Rigidbody))]
 
 public class Crate : MonoBehaviour, Destructable {
 
     [Header("Health")]
-    [SerializeField] private float maxHealth = 100;
-    [SerializeField] float currentHealth;
+    [SerializeField] public float maxHealth = 100;
+    [SerializeField] public float currentHealth;
    
 
     [Header("Customizables")]
     [SerializeField] bool destroy;
+    [SerializeField] private int itemsToSpawn = 3;
     public List<GameObject> resources_prefabs;
-    public float CurrentHealth {get => currentHealth; private set => currentHealth = value;}
+
+
+    public float CurrentHealth {get => currentHealth;}
 
     public float MaxHealth {get => maxHealth; private set => maxHealth = value;}
+
+    
 
     // public event Destructable.TakeDamageEvent OnTakeDamage;
     // public event Destructable.Destruct OnDestruct;
@@ -35,9 +40,11 @@ public class Crate : MonoBehaviour, Destructable {
 
     private void SpawnResources(Vector3 pos) {
         // Instantiate(resourcePrefab, pos, Quaternion.identity);
-        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
-        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
-        Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
+
+        for(int i = 0; i < itemsToSpawn; i++) {
+            Instantiate(resources_prefabs[Random.Range(0,resources_prefabs.Count)], pos, Quaternion.identity);
+        }
+        
     }
 
     private void Start() {

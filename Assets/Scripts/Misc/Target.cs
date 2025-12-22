@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[RequireComponent(typeof(Rigidbody))]
 public class Target : MonoBehaviour
 {
 
@@ -14,7 +14,7 @@ public class Target : MonoBehaviour
     public PlayerStateMachine player;
 
     void Start() {
-
+        ConsumableManager.Instance.Register(gameObject);
     }
 
 

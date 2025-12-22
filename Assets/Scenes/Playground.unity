@@ -3723,6 +3723,12 @@ MonoBehaviour:
   consumableToSceneMap:
     m_Keys: []
     m_Values: []
+  basicToSceneMap:
+    m_Keys: []
+    m_Values: []
+  destructableToSceneMap:
+    m_Keys: []
+    m_Values: []
   consumablePickups: []
 --- !u!1 &274336376
 GameObject:
@@ -5383,7 +5389,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 32759
+    m_Bits: 131063
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -12414,7 +12420,7 @@ PrefabInstance:
     - target: {fileID: 4799642719689327444, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 83.757
+      value: 35.43
       objectReference: {fileID: 0}
     - target: {fileID: 4799642719689327444, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
@@ -12424,7 +12430,7 @@ PrefabInstance:
     - target: {fileID: 4799642719689327444, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -46.740005
+      value: -60.73
       objectReference: {fileID: 0}
     - target: {fileID: 4799642719689327444, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
@@ -13268,6 +13274,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Target_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5025366186241567507, guid: b56a59ba95c31cf4293dfd6b557a88c9,
+        type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5221853954883131210, guid: b56a59ba95c31cf4293dfd6b557a88c9,
         type: 3}
