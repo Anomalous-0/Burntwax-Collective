@@ -1,24 +1,26 @@
 using System.Collections.Generic;
 
-enum GunStates {
+enum GunStates
+{
     rest,
     shoot,
     noShoot,
     reload,
     incrementalReload,
     aim,
-
     stow
 
 
 }
 
-public class GunStateFactory{
+public class GunStateFactory
+{
 
     GunStateMachine context;
     Dictionary<GunStates, GunBaseState> states = new Dictionary<GunStates, GunBaseState>();
 
-    public GunStateFactory(GunStateMachine currentContext) {
+    public GunStateFactory(GunStateMachine currentContext)
+    {
         context = currentContext;
         states[GunStates.rest] = new GunRestState(context, this);
         states[GunStates.shoot] = new GunShootState(context, this);
@@ -27,34 +29,41 @@ public class GunStateFactory{
         states[GunStates.incrementalReload] = new GunIncrementalReloadState(context, this);
         states[GunStates.aim] = new GunAimState(context, this);
         states[GunStates.stow] = new GunStowState(context, this);
-       
+
     }
 
-    public GunBaseState Rest() {
+    public GunBaseState Rest()
+    {
         return states[GunStates.rest];
     }
 
-    public GunBaseState Shoot() {
+    public GunBaseState Shoot()
+    {
         return states[GunStates.shoot];
     }
 
-    public GunBaseState NoShoot() {
+    public GunBaseState NoShoot()
+    {
         return states[GunStates.noShoot];
     }
 
-    public GunBaseState Reload () {
+    public GunBaseState Reload()
+    {
         return states[GunStates.reload];
     }
 
-    public GunBaseState IncrementalReload () {
+    public GunBaseState IncrementalReload()
+    {
         return states[GunStates.incrementalReload];
     }
 
-    public GunBaseState Aim () {
+    public GunBaseState Aim()
+    {
         return states[GunStates.aim];
     }
 
-    public GunBaseState Stow() {
+    public GunBaseState Stow()
+    {
         return states[GunStates.stow];
-    }   
+    }
 }

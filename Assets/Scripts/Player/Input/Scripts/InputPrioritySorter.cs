@@ -5,7 +5,8 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 
-public class InputPrioritySorter : MonoBehaviour {
+public class InputPrioritySorter : MonoBehaviour
+{
 
     [SerializeField] private InputManager input;
 
@@ -13,51 +14,59 @@ public class InputPrioritySorter : MonoBehaviour {
     String aim = "aim";
     String shoot = "shoot";
 
-    
+
     List<string> inputPriority = new List<string>();
-    // Start is called before the first frame update
-    // Update is called once per frame
-    void Update(){
-        if(input.aimIsPressed && !inputPriority.Contains(aim)) {
+    void Update()
+    {
+        if (input.aimIsPressed && !inputPriority.Contains(aim))
+        {
             // Debug.Log("Should add aim to list");
             inputPriority.Add(aim);
         }
-        else if(!input.aimIsPressed && inputPriority.Contains(aim)) {
+        else if (!input.aimIsPressed && inputPriority.Contains(aim))
+        {
             // Debug.Log("Deleted aim from list");
             inputPriority.Remove(aim);
         }
 
-        if(input.sprintIsPressed && !inputPriority.Contains(sprint)) {
+        if (input.sprintIsPressed && !inputPriority.Contains(sprint))
+        {
             // Debug.Log("Should add sprint to list");
             inputPriority.Add(sprint);
         }
-        else if(!input.sprintIsPressed && inputPriority.Contains(sprint)) {
+        else if (!input.sprintIsPressed && inputPriority.Contains(sprint))
+        {
             // Debug.Log("Deleted sprint from list");
             inputPriority.Remove(sprint);
         }
-        if(input.shootIsPressed && !inputPriority.Contains(shoot)) {
+        if (input.shootIsPressed && !inputPriority.Contains(shoot))
+        {
             // Debug.Log("Should add shoot to list");
             inputPriority.Add(shoot);
         }
-        else if(!input.shootIsPressed && inputPriority.Contains(shoot)) {
+        else if (!input.shootIsPressed && inputPriority.Contains(shoot))
+        {
             // Debug.Log("Deleted shoot from list");
             inputPriority.Remove(shoot);
         }
 
-        
-        
+
+
     }
 
-    public bool SprintIsPriority() {
-        return inputPriority.IndexOf(sprint) == inputPriority.Count-1 && inputPriority.Count >= 1;
+    public bool SprintIsPriority()
+    {
+        return inputPriority.IndexOf(sprint) == inputPriority.Count - 1 && inputPriority.Count >= 1;
     }
 
-    public bool AimIsPriority() {
-        return inputPriority.IndexOf(aim) == inputPriority.Count-1 && inputPriority.Count >= 1;
+    public bool AimIsPriority()
+    {
+        return inputPriority.IndexOf(aim) == inputPriority.Count - 1 && inputPriority.Count >= 1;
     }
 
-    public bool ShootIsPriority() {
-        return inputPriority.IndexOf(shoot) == inputPriority.Count-1 && inputPriority.Count >= 1;
+    public bool ShootIsPriority()
+    {
+        return inputPriority.IndexOf(shoot) == inputPriority.Count - 1 && inputPriority.Count >= 1;
     }
 
 }

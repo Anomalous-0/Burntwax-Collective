@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 
-enum PlayerStates {
+enum PlayerStates
+{
     idle,
     walk,
     sprint,
@@ -14,12 +15,14 @@ enum PlayerStates {
     walljump
 }
 
-public class PlayerStateFactory{
+public class PlayerStateFactory
+{
 
     PlayerStateMachine context;
     Dictionary<PlayerStates, PlayerBaseState> states = new Dictionary<PlayerStates, PlayerBaseState>();
 
-    public PlayerStateFactory(PlayerStateMachine currentContext) {
+    public PlayerStateFactory(PlayerStateMachine currentContext)
+    {
         context = currentContext;
         states[PlayerStates.idle] = new PlayerIdleState(context, this);
         states[PlayerStates.walk] = new PlayerWalkState(context, this);
@@ -33,43 +36,53 @@ public class PlayerStateFactory{
         states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
     }
 
-    public PlayerBaseState Idle() {
+    public PlayerBaseState Idle()
+    {
         return states[PlayerStates.idle];
     }
 
-    public PlayerBaseState Walk() {
+    public PlayerBaseState Walk()
+    {
         return states[PlayerStates.walk];
     }
 
-    public PlayerBaseState Sprint () {
+    public PlayerBaseState Sprint()
+    {
         return states[PlayerStates.sprint];
     }
 
-    public PlayerBaseState Crouch () {
+    public PlayerBaseState Crouch()
+    {
         return states[PlayerStates.crouch];
     }
 
-    public PlayerBaseState Slope () {
+    public PlayerBaseState Slope()
+    {
         return states[PlayerStates.slope];
     }
 
-    public PlayerBaseState Jump() {
+    public PlayerBaseState Jump()
+    {
         return states[PlayerStates.jump];
-    }   
+    }
 
-    public PlayerBaseState Grounded() {
+    public PlayerBaseState Grounded()
+    {
         return states[PlayerStates.grounded];
     }
 
-    public PlayerBaseState Fall() {
+    public PlayerBaseState Fall()
+    {
         return states[PlayerStates.fall];
     }
 
-    public PlayerBaseState Wallrun() {
+    public PlayerBaseState Wallrun()
+    {
         return states[PlayerStates.wallrun];
     }
-    public PlayerBaseState Walljump() {
+    public PlayerBaseState Walljump()
+    {
         return states[PlayerStates.walljump];
     }
- 
+
 }

@@ -1,10 +1,11 @@
 using System;
-using Burntwax.Guns;
+
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
-public class AmmoConfig : ScriptableObject, ICloneable {
-    
+public class AmmoConfig : ScriptableObject
+{
+
     public int maxAmmo;
     public int clipSize;
 
@@ -12,12 +13,14 @@ public class AmmoConfig : ScriptableObject, ICloneable {
     public int currentClip;
 
 
-    public void OnEnable() {
+    public void OnEnable()
+    {
         currentClip = clipSize;
         currentAmmo = maxAmmo;
     }
 
-    public void Reload() {
+    public void Reload()
+    {
         int maxReloadAmount = Mathf.Min(clipSize, currentAmmo);
         int availableBullets = clipSize - currentClip;
         int reloadAmount = Mathf.Min(maxReloadAmount, availableBullets);
@@ -25,19 +28,15 @@ public class AmmoConfig : ScriptableObject, ICloneable {
         currentAmmo -= reloadAmount;
     }
 
-    public void IncrementalReload() {
+    public void IncrementalReload()
+    {
         currentClip++;
         currentAmmo--;
     }
 
 
-    public bool CanReload() {
+    public bool CanReload()
+    {
         return currentClip < clipSize && currentAmmo > 0;
-    }
-
-    public object Clone() {
-        AmmoConfig config = CreateInstance<AmmoConfig>();
-        Utilities.CopyValues(this, config);
-        return config;
     }
 }

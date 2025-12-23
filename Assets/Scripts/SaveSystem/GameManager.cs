@@ -5,7 +5,8 @@ using System;
 using System.Runtime.Serialization;
 using System.Data.Common;
 
-public class GameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 
     public static GameManager Instance;
     public InputManager input;
@@ -17,36 +18,30 @@ public class GameManager : MonoBehaviour {
 
     public ObjectManager objectManager;
 
-    // public Dictionary<string, bool> gunPickups;
-
-    // public List<GunPickup> gunPickupObjects;
-
-
-
-    private void Awake() {
+    private void Awake()
+    {
         DontDestroyOnLoad(gameObject);
-        if(Instance != null) {
+        if (Instance != null)
+        {
             Debug.LogError("Found more than one Game Manager in the scene");
         }
         Instance = this;
     }
 
-    private void Start(){
-        // if(SaveSystem.loadScene) {
-        //     SaveSystem.Load();
-        //     SaveSystem.loadScene = false;
-        // }
-
-        // SaveSystem.Load();
+    private void Start()
+    {
     }
 
-    private void Update() { 
-        if(input.saveIsPressed) {
+    private void Update()
+    {
+        if (input.saveIsPressed)
+        {
             SaveSystem.Save();
         }
-        if(input.loadIsPressed) {
+        if (input.loadIsPressed)
+        {
             SaveSystem.Load();
         }
-        
+
     }
 }

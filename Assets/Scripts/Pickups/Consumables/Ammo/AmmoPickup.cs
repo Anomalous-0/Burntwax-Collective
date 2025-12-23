@@ -1,8 +1,9 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class AmmoPickup : MonoBehaviour {
-   
+public class AmmoPickup : MonoBehaviour
+{
+
     public int ammoCount;
 
 
@@ -16,22 +17,29 @@ public class AmmoPickup : MonoBehaviour {
         ObjectManager.Instance.Register(gameObject);
     }
 
-    void OnTriggerEnter(Collider other) {
-        
-        if(other.GetComponentInParent<PlayerHealth>() || other.GetComponent<ConsumableGlovePickup>()) {
+
+    //Collect ammo
+    void OnTriggerEnter(Collider other)
+    {
+
+        if (other.GetComponentInParent<PlayerHealth>())
+        {
             playerGun = FindFirstObjectByType<GunStateMachine>();
 
-            if(playerGun.CurrentGuns.Contains(gun)) {
-                if(gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo) {
-                    if(gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount) {
+            if (playerGun.CurrentGuns.Contains(gun))
+            {
+                if (gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo)
+                {
+                    if (gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount)
+                    {
                         gun.AmmoConfig.currentAmmo += ammoCount;
                     }
-                    else {
+                    else
+                    {
                         gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
                     }
-                    gameObject.SetActive(false);
-                    // Destroy(gameObject);    
-                }   
+                    gameObject.SetActive(false);  
+                }
             }
         }
     }

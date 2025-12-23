@@ -2,48 +2,45 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerWalkState : PlayerBaseState {
-    
+public class PlayerWalkState : PlayerBaseState
+{
+
     public PlayerWalkState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
-     : base (currentContext, playerStateFactory){
+     : base(currentContext, playerStateFactory)
+    {
 
     }
-    
-    public override void EnterState(){
+
+    public override void EnterState()
+    {
         Ctx.PlayerVelocity = Ctx.WalkVelocity;
-       
-        //Debug.Log("WALK STATE");
     }
 
-    public override void UpdateState(){
-        SwitchCam();
+    public override void UpdateState()
+    {
         CheckSwitchStates();
     }
 
-    public override void ExitState(){}
-    
-    public override void CheckSwitchStates(){
-        
-        if(Ctx.input.moveIsPressed && Ctx.prioritySorter.SprintIsPriority() && !Ctx.gunMachine.isShooting && !Ctx.gunMachine.isReloading && !Ctx.gunMachine.isIncrementalReloading) {
+    public override void ExitState() { }
+
+    public override void CheckSwitchStates()
+    {
+
+        if (Ctx.input.moveIsPressed && Ctx.prioritySorter.SprintIsPriority() && !Ctx.gunMachine.isShooting && !Ctx.gunMachine.isReloading && !Ctx.gunMachine.isIncrementalReloading)
+        {
             SwitchState(Factory.Sprint());
-        } else if(!Ctx.input.moveIsPressed) {
+        }
+        else if (!Ctx.input.moveIsPressed)
+        {
             SwitchState(Factory.Idle());
         }
-        else if(Ctx.input.crouchIsPressed) {
+        else if (Ctx.input.crouchIsPressed)
+        {
             SwitchState(Factory.Crouch());
         }
-        
-        
+
+
     }
 
-    public override void InitializeSubState(){}
-
-    private void SwitchCam() {
-        // if(Ctx.input.aimIsPressed) {
-        //     Ctx.cam.Aim();
-        // }   
-        // else {
-        //     Ctx.cam.FPS();
-        // }
-    }
+    public override void InitializeSubState() { }
 }

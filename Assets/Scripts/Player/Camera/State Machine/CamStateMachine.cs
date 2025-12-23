@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
-public class CamStateMachine : MonoBehaviour{
+public class CamStateMachine : MonoBehaviour
+{
     public InputManager input;
 
     public Transform cam;
@@ -13,34 +14,29 @@ public class CamStateMachine : MonoBehaviour{
     [HideInInspector] public PlayerStateMachine player;
 
     public PauseMenu pauseMenu;
-    
+
     public GunStateMachine gun;
     [HideInInspector] public PlayerCrosshair crosshair;
 
     CinemachineVirtualCamera activeCam;
-     
+
     public CinemachineVirtualCamera fpsCam;
     public CinemachineVirtualCamera aimCam;
 
-    /*[HideInInspector]*/ public GameObject primaryCam;
-    private GameObject temp;
-    /*[HideInInspector]*/ public GameObject secondaryCam;
+    public GameObject primaryCam;
+    public GameObject secondaryCam;
 
     public CameraBaseState currentState;
     public CameraStateFactory states;
 
-    //Attracting
-    public CameraBaseState CurrentState {get { return currentState; } set { currentState = value; } }
+    public CameraBaseState CurrentState { get { return currentState; } set { currentState = value; } }
     int activeCameraPriorityModifier = 2000;
 
-
-    // public Quaternion rotDir;
-    // public Quaternion lookDir;
-    
     public Vector3 mouseWorldPosition;
 
 
-    private void Awake() {
+    private void Awake()
+    {
         activeCam = fpsCam;
         primaryCam = fpsCam.gameObject;
         secondaryCam = aimCam.gameObject;
@@ -53,40 +49,40 @@ public class CamStateMachine : MonoBehaviour{
         states = new CameraStateFactory(this);
         currentState = states.Fps();
         currentState.EnterState();
-        
+
     }
-
-    // private void Start() {
-    //     cam.GetComponent<Rigidbody>().freezeRotation = false;
-    // }
-
-
-    void Update() {
+    void Update()
+    {
 
         currentState.UpdateState();
         Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
         Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
-        if(Physics.Raycast(ray, out RaycastHit raycastHit, 999f)) {
+        if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f))
+        {
             mouseWorldPosition = raycastHit.point;
         }
-        
+
     }
 
 
-    public void Aim() {
-    
-            if(activeCam == fpsCam) {
-                SetCameraPriorities(fpsCam, aimCam);
-            }
-    
+    public void Aim()
+    {
+
+        if (activeCam == fpsCam)
+        {
+            SetCameraPriorities(fpsCam, aimCam);
+        }
+
     }
 
-    public void FPS() {
-    
-            if(activeCam == aimCam) {
-                SetCameraPriorities(aimCam, fpsCam);
-            }
-        
+    public void FPS()
+    {
+
+        if (activeCam == aimCam)
+        {
+            SetCameraPriorities(aimCam, fpsCam);
+        }
+
     }
 
     private void SetCameraPriorities(CinemachineVirtualCamera CurrentCameraMode, CinemachineVirtualCamera NewCameraMode)
@@ -95,22 +91,25 @@ public class CamStateMachine : MonoBehaviour{
         NewCameraMode.Priority += activeCameraPriorityModifier;
         activeCam = NewCameraMode;
         pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
-        
+
     }
 
-    public void LoadData(CamSaveData data) {
+    public void LoadData(CamSaveData data)
+    {
         pov.m_HorizontalAxis.Value = data.yaw;
-        pov.m_VerticalAxis.Value = data.pitch;  
+        pov.m_VerticalAxis.Value = data.pitch;
     }
 
-    public void SaveData(ref CamSaveData data) {
+    public void SaveData(ref CamSaveData data)
+    {
         data.yaw = pov.m_HorizontalAxis.Value;
-        data.pitch = pov.m_VerticalAxis.Value;   
+        data.pitch = pov.m_VerticalAxis.Value;
     }
 }
 
 [System.Serializable]
-public struct CamSaveData {
+public struct CamSaveData
+{
     public float yaw;
     public float pitch;
 }

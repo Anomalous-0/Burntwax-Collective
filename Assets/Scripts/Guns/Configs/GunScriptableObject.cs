@@ -6,17 +6,13 @@ using UnityEngine.Pool;
 using Random = UnityEngine.Random;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
-public class GunScriptableObject : ScriptableObject, ICloneable {
+public class GunScriptableObject : ScriptableObject
+{
 
     public int ID;
-    
-    
-    
+
     [Header("General")]
     public GunType Type;
-    //public ImpactType ImpactType;
-    
-    // public GameObject ModelPrefab;
 
     [Header("Incremental Reloads (for shotgun types)")]
     public bool incrementalReload;
@@ -26,8 +22,6 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
     public Vector3 restingRecoilPos;
 
-
-    
     [HideInInspector] public GameObject Model;
 
 
@@ -42,16 +36,18 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
 
     private MonoBehaviour ActiveMonoBehaviour;
-    
+
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
     private BulletImpactEffects impactProcessor;
 
 
 
-    public void Spawn(GameObject player, GameObject currentGun, MonoBehaviour ActiveMonoBehaviour) {
+    public void Spawn(GameObject player, GameObject currentGun, MonoBehaviour ActiveMonoBehaviour)
+    {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        if(TrailPool == null) {
+        if (TrailPool == null)
+        {
             TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
         }
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
@@ -59,59 +55,60 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         impactProcessor = FindFirstObjectByType<BulletImpactEffects>();
     }
 
-    public void Despawn(MonoBehaviour ActiveMonoBehaviour) {
+    public void Despawn(MonoBehaviour ActiveMonoBehaviour)
+    {
         this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-        // TrailPool.Clear();
         TrailPool.Dispose();
     }
 
-    public void Shoot() {
-        RaycastHit hit = new RaycastHit();
+    public void Shoot()
+    {
+        RaycastHit hit;
         List<string> surfaces = new List<string>();
         ShootSystem.Play();
         AudioConfig.PlayShootingClip(ShootingAudioSource, AmmoConfig.currentClip == 1);
         AmmoConfig.currentClip--;
-        for (int i = 0; i < ShootConfig.bulletsPerShot; i++){
+        for (int i = 0; i < ShootConfig.bulletsPerShot; i++)
+        {
             Vector3 shootDirection = Camera.main.transform.forward + new Vector3(Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x), Random.Range(-ShootConfig.Spread.y, ShootConfig.Spread.y), Random.Range(-ShootConfig.Spread.z, ShootConfig.Spread.z));
             shootDirection.Normalize();
 
 
 
-            if (Physics.Raycast(Camera.main.transform.position, shootDirection, out hit, float.MaxValue, ShootConfig.HitMask)) {
+            if (Physics.Raycast(Camera.main.transform.position, shootDirection, out hit, float.MaxValue, ShootConfig.HitMask))
+            {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(surfaces, i, ShootSystem.transform.position, hit.point, hit));
             }
-            else {
+            else
+            {
                 ActiveMonoBehaviour.StartCoroutine(PlayTrail(surfaces, i, ShootSystem.transform.position, ShootSystem.transform.position + (shootDirection * TrailConfig.MissDistance), hit));
             }
         }
-        // string surfaceTag = hit.collider.tag;
-        // if (impactProcessor != null) {
-        //     Vector3 impactPosition = hit.point + hit.normal * 0.01f;
-        //     Quaternion impactRotation = Quaternion.LookRotation(hit.normal);
-        //     impactProcessor.ImpactAudio(surfaceTag, impactPosition, impactRotation);
-        // }
-        
 
-            
     }
 
-    public bool CanReload() {
+    public bool CanReload()
+    {
         return AmmoConfig.CanReload();
     }
 
-    public void StartReloadAudio() {
+    public void StartReloadAudio()
+    {
         AudioConfig.PlayReloadClip(ShootingAudioSource);
     }
 
-    public void EndReload() {
+    public void EndReload()
+    {
         AmmoConfig.Reload();
     }
 
-    public void EndIncrementalReload() {
+    public void EndIncrementalReload()
+    {
         AmmoConfig.IncrementalReload();
     }
-    
-    private IEnumerator PlayTrail(List<string> surfaces, int i, Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit) {
+
+    private IEnumerator PlayTrail(List<string> surfaces, int i, Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit)
+    {
         TrailRenderer instance = TrailPool.Get();
         instance.gameObject.SetActive(true);
         instance.transform.position = StartPoint;
@@ -121,7 +118,8 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         float distance = Vector3.Distance(StartPoint, EndPoint);
         float remainingDistance = distance;
-        while (remainingDistance > 0) {
+        while (remainingDistance > 0)
+        {
             instance.transform.position = Vector3.Lerp(
                 StartPoint,
                 EndPoint,
@@ -134,7 +132,8 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
         instance.transform.position = EndPoint;
 
-        if (Hit.collider != null){
+        if (Hit.collider != null)
+        {
 
             if (Hit.collider.GetComponent<Rigidbody>())
             {
@@ -151,29 +150,19 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
 
             string surfaceTag = Hit.collider.tag;
             Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;
-                Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
-                impactProcessor.ImpactVFX(surfaceTag, impactPosition, impactRotation);
-            if (!surfaces.Contains(surfaceTag)){
+            Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
+            impactProcessor.ImpactVFX(surfaceTag, impactPosition, impactRotation);
+            if (!surfaces.Contains(surfaceTag))
+            {
                 surfaces.Add(surfaceTag);
-
-
                 impactProcessor.ImpactAudio(surfaceTag, impactPosition, impactRotation);
             }
-            
-            
 
-            
-            
-        
 
-                // if (i == 0)
-                
-            
-            
 
         }
 
-        
+
 
         yield return new WaitForSeconds(TrailConfig.Duration);
         yield return null;
@@ -182,7 +171,8 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         TrailPool.Release(instance);
     }
 
-    private TrailRenderer CreateTrail() {
+    private TrailRenderer CreateTrail()
+    {
         GameObject instance = new GameObject("Bullet Trail");
         TrailRenderer trail = instance.AddComponent<TrailRenderer>();
         trail.colorGradient = TrailConfig.Color;
@@ -190,29 +180,9 @@ public class GunScriptableObject : ScriptableObject, ICloneable {
         trail.widthCurve = TrailConfig.WidthCurve;
         trail.time = TrailConfig.Duration;
         trail.minVertexDistance = TrailConfig.MinVertexDistance;
-        // trail.autodestruct = false;
         trail.emitting = false;
         trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
         return trail;
-    }
-
-    public object Clone() {
-        GunScriptableObject config = CreateInstance<GunScriptableObject>();
-
-        config.ID = ID;
-        //config.ImpactType = ImpactType;
-        config.Type = Type;
-        // config.ModelPrefab = ModelPrefab;
-        config.incrementalReload = incrementalReload;
-        config.ShootConfig = ShootConfig.Clone() as ShootConfig;
-        config.AmmoConfig = AmmoConfig.Clone() as AmmoConfig;
-        config.AudioConfig = AudioConfig.Clone() as AudioConfig;
-        config.DamageConfig = DamageConfig.Clone() as DamageConfig;
-        config.TrailConfig = TrailConfig.Clone() as TrailConfig;
-        config.CrosshairConfig = CrosshairConfig.Clone() as CrosshairConfig;
-
-        return config;
-
     }
 }

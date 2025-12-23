@@ -1,31 +1,36 @@
 using System.Collections.Generic;
 
-enum CameraStates {
-    fps, 
+enum CameraStates
+{
+    fps,
     aim
 }
 
-public class CameraStateFactory{
+public class CameraStateFactory
+{
 
     CamStateMachine context;
     Dictionary<CameraStates, CameraBaseState> states = new Dictionary<CameraStates, CameraBaseState>();
 
-    public CameraStateFactory(CamStateMachine currentContext) {
+    public CameraStateFactory(CamStateMachine currentContext)
+    {
         context = currentContext;
         states[CameraStates.fps] = new CameraFpsState(context, this);
         states[CameraStates.aim] = new CameraAimState(context, this);
-        
+
 
     }
 
-    public CameraBaseState Fps() {
+    public CameraBaseState Fps()
+    {
         return states[CameraStates.fps];
     }
 
-    public CameraBaseState Aim() {
+    public CameraBaseState Aim()
+    {
         return states[CameraStates.aim];
     }
 
 
- 
+
 }

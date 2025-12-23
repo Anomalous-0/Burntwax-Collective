@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour {
+public class PlayerHealth : MonoBehaviour
+{
     private float health;
     private float lerpTimer;
     public float maxHealth = 100;
@@ -11,32 +12,33 @@ public class PlayerHealth : MonoBehaviour {
 
     public Image frontHealthBar;
     public Image backHealthBar;
-    // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
         health = maxHealth;
     }
-
-    // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         health = Mathf.Clamp(health, 0, maxHealth);
         UpdateHealthUI();
-        
+
     }
 
-    public void UpdateHealthUI(){
-        //Debug.Log(health);
+    public void UpdateHealthUI()
+    {
         float fillF = frontHealthBar.fillAmount;
         float fillB = backHealthBar.fillAmount;
-        float hFraction = health/maxHealth;
-        if(fillB > hFraction){
+        float hFraction = health / maxHealth;
+        if (fillB > hFraction)
+        {
             frontHealthBar.fillAmount = hFraction;
             backHealthBar.color = Color.red;
             lerpTimer += Time.deltaTime;
             float percentComplete = lerpTimer / chipSpeed;
-            percentComplete = percentComplete * percentComplete; 
-            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete * Time.deltaTime); 
+            percentComplete = percentComplete * percentComplete;
+            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete * Time.deltaTime);
         }
-        if(fillF < hFraction){
+        if (fillF < hFraction)
+        {
             backHealthBar.color = Color.cyan;
             backHealthBar.fillAmount = hFraction;
             lerpTimer += Time.deltaTime;
@@ -46,29 +48,35 @@ public class PlayerHealth : MonoBehaviour {
         }
     }
 
-    public void TakeDamage(float damage){
+    public void TakeDamage(float damage)
+    {
         health -= damage;
         lerpTimer = 0f;
     }
 
-    public void RestoreHealth(float healAmount){
+    public void RestoreHealth(float healAmount)
+    {
         health += healAmount;
         lerpTimer = 0f;
     }
 
-    public float CurrentHealth() {
+    public float CurrentHealth()
+    {
         return health;
     }
 
-    public void LoadData(PlayerHealthSaveData data) {
+    public void LoadData(PlayerHealthSaveData data)
+    {
         health = data.health;
     }
-    public void SaveData(ref PlayerHealthSaveData data) {
+    public void SaveData(ref PlayerHealthSaveData data)
+    {
         data.health = health;
     }
 }
 
 [System.Serializable]
-public struct PlayerHealthSaveData {
+public struct PlayerHealthSaveData
+{
     public float health;
 }

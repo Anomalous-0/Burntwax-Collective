@@ -38,10 +38,6 @@ public class PlayerStateMachine : MonoBehaviour
     float verticalInput;
     [HideInInspector] public Vector3 moveDirection;
 
-
-    [Header("Glove")]
-    public GloveStateMachine glove;
-
     [Header("Crouching")]
 
     [SerializeField] float crouchVelocity;
@@ -52,10 +48,6 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float jumpForce;
     [SerializeField] int coyoteTimer;
     [SerializeField] int coyoteTime;
-
-
-    // [SerializeField] float jumpCooldown;
-    // float cooldownTime;
 
 
     [Header("Ground Checking")]
@@ -145,19 +137,14 @@ public class PlayerStateMachine : MonoBehaviour
 
     // Wall Running State
     public LayerMask Wall { get { return wall; } }
-    // public bool PlayerIsWallRunning{ get {return playerIsWallRunning;} set {playerIsWallRunning = value; } }
     public float WallRunForce { get { return wallRunForce; } }
 
     public float WallJumpForce { get { return wallJumpForce; } set { wallJumpForce = value; } }
     public float MaxWallJumpForce { get { return maxWallJumpForce; } }
-    // public float MaxWallRunTime{ get {return maxWallRunTime;} }
-
     public bool AbleToWallJump { get { return ableToWallJump; } set { ableToWallJump = value; } }
     public float WallCheckDistance { get { return wallCheckDistance; } }
     public float SphereCastRadius { get { return sphereCastRadius; } }
     public float MinHeight { get { return minHeight; } }
-    // public Vector3 WallNormal {get {return wallNormal;} }
-    // public Vector3 WallForward {get {return wallForward;} }
     public RaycastHit RightWallHit { get { return rightWallHit; } set { rightWallHit = value; } }
     public RaycastHit LeftWallHit { get { return leftWallHit; } set { leftWallHit = value; } }
     public RaycastHit FrontWallHit { get { return frontWallHit; } set { frontWallHit = value; } }
@@ -174,13 +161,13 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Start()
     {
-        //rb = GetComponent<Rigidbody>();
         startYScale = transform.localScale.y;
     }
 
 
 
-    private void Awake() {
+    private void Awake()
+    {
         states = new PlayerStateFactory(this);
         prioritySorter = GetComponent<InputPrioritySorter>();
         currentState = states.Grounded();
@@ -189,7 +176,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     }
 
-  
+
 
     private void LateUpdate()
     {
@@ -198,16 +185,11 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Update()
     {
-
         playerIsGrounded = PlayerGroundCheck();
         playerIsSloped = PlayerSlopeCheck();
         currentState.UpdateStates();
 
-
-
         GetMoveInput();
-
-
 
         if (currentState == states.Walljump() && !ableToWallJump)
         {
@@ -215,22 +197,18 @@ public class PlayerStateMachine : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() {
-
+    private void FixedUpdate()
+    {
         PlayerMove();
-
         SpeedControl();
-
     }
 
 
 
     private void GetMoveInput()
     {
-
         horizontalInput = input.MoveInput.x;
         verticalInput = input.MoveInput.y;
-
     }
 
     private void SetRotation()
@@ -277,17 +255,11 @@ public class PlayerStateMachine : MonoBehaviour
         float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
         if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance))
         {
-            if (glove.isActiveAndEnabled && glove.currentState == glove.states.Hold())
-            {
-                if (groundCheckHit.collider.GetComponent<Pickupable>())
-                {
-                    return false;
-                }
 
+            if (groundCheckHit.collider.GetComponent<Pickupable>())
+            {
+                return false;
             }
-            // else if(slopeToSteep) {
-            //     return false;
-            // }
             return true;
         }
         return false;
@@ -309,8 +281,6 @@ public class PlayerStateMachine : MonoBehaviour
         else
         {
             Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-
-            // limit velocity if needed
             if (flatVel.magnitude > playerVelocity)
             {
                 Vector3 limitedVel = flatVel.normalized * playerVelocity;
@@ -324,58 +294,62 @@ public class PlayerStateMachine : MonoBehaviour
     {
         float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
         float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-        // Transform playerPos = gameObject.transform.GetChild(1);
         Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
-        //Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance)
         currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
 
         if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance))
         {
-
-            //Layer 14 is Slope
-            if (slopeHit.collider.gameObject.layer != 14)
+            if (slopeHit.collider.gameObject.layer != LayerMask.NameToLayer("Slope"))
             {
-              
+
                 currentAngle = 0;
                 return false;
             }
 
         }
-        if (slopeHit.collider) {
-            if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>()) {
+        if (slopeHit.collider)
+        {
+            if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>())
+            {
                 slopeToSteep = true;
 
             }
-            else {
+            else
+            {
                 slopeToSteep = false;
             }
         }
         return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
     }
 
-    private Vector3 GetSlopeMoveDirection() {
+    private Vector3 GetSlopeMoveDirection()
+    {
         return Vector3.ProjectOnPlane(moveDirection, groundCheckHit.normal).normalized;
     }
 
 
-    public IEnumerator WallJumpGracePeriod() {
+    public IEnumerator WallJumpGracePeriod()
+    {
         yield return new WaitForSeconds(wallJumpGracePeriod);
         ableToWallJump = true;
     }
 
-    public void LoadData(PlayerSaveData data) {
+    public void LoadData(PlayerSaveData data)
+    {
         rb.position = data.playerPos;
         rb.linearVelocity = data.playerVelocity;
     }
 
-    public void SaveData(ref PlayerSaveData data) {
+    public void SaveData(ref PlayerSaveData data)
+    {
         data.playerPos = player.position;
         data.playerVelocity = rb.linearVelocity;
     }
 }
 
 [System.Serializable]
-public struct PlayerSaveData {
+public struct PlayerSaveData
+{
     public Vector3 playerPos;
     public Vector3 playerVelocity;
 }

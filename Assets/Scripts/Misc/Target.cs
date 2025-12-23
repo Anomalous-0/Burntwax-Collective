@@ -13,24 +13,28 @@ public class Target : MonoBehaviour
 
     public PlayerStateMachine player;
 
-    void Start() {
+    void Start()
+    {
         ObjectManager.Instance.Register(gameObject);
     }
 
 
-    void Update() {
+    void Update()
+    {
         RotateToPlayer();
 
     }
 
 
-    private void RotateToPlayer() {
+    private void RotateToPlayer()
+    {
         Vector3 direction = (player.transform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, direction.y, direction.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationVelocity);
     }
 
-    public void Teleport() {
+    public void Teleport()
+    {
 
         Vector2 randomDirection2D = Random.insideUnitCircle.normalized;
         Vector3 randomDirection = new Vector3(randomDirection2D.x, 0f, randomDirection2D.y);
@@ -44,6 +48,6 @@ public class Target : MonoBehaviour
 
         transform.position = teleportPosition;
     }
-    
+
 
 }

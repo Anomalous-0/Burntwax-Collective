@@ -20,10 +20,8 @@ public class PlayerWallJumpState : PlayerBaseState {
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.linearDamping = Ctx.AirDrag;
         Ctx.AbleToWallJump = false;
-        
        
         Jump();
-        //Debug.Log("WALLJUMP STATE");
         
     }
 
@@ -66,9 +64,6 @@ public class PlayerWallJumpState : PlayerBaseState {
     }
 
     private void Jump() {
-        // reset y velocity
-        //Ctx.rb.velocity = new Vector3(Ctx.rb.velocity.x, 0f, Ctx.rb.velocity.z);
-        // Ctx.rb.AddForce(Ctx.player.input.MoveInput.normalized * Ctx.WallJumpForce, ForceMode.Impulse);
         Ctx.rb.AddForce(Ctx.player.up * Ctx.WallJumpForce, ForceMode.Impulse);
         
         

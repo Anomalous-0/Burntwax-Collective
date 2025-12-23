@@ -1,4 +1,5 @@
-public abstract class GunBaseState  {
+public abstract class GunBaseState
+{
 
     private bool isRootState = false;
     private GunStateMachine ctx;
@@ -10,18 +11,21 @@ public abstract class GunBaseState  {
     protected GunStateMachine Ctx { get { return ctx; } }
     protected GunStateFactory Factory { get { return factory; } }
 
-    
-    public GunBaseState(GunStateMachine currentContext, GunStateFactory gunStateFactory) {
+
+    public GunBaseState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
+    {
         ctx = currentContext;
         factory = gunStateFactory;
     }
 
 
-    public GunBaseState CurrentSubstate() {
+    public GunBaseState CurrentSubstate()
+    {
         return currentSubState;
     }
 
-    public GunBaseState CurrentSuperstate() {
+    public GunBaseState CurrentSuperstate()
+    {
         return currentSuperState;
     }
     public abstract void EnterState();
@@ -29,40 +33,48 @@ public abstract class GunBaseState  {
     public abstract void UpdateState();
 
     public abstract void ExitState();
-    
+
     public abstract void CheckSwitchStates();
 
     public abstract void InitializeSubState();
 
-    public void UpdateStates() {
+    public void UpdateStates()
+    {
         UpdateState();
-        if(currentSubState != null) {
+        if (currentSubState != null)
+        {
             currentSubState.UpdateStates();
         }
     }
 
-    protected void SwitchState(GunBaseState newState) {
+    protected void SwitchState(GunBaseState newState)
+    {
         // current state exists state
         ExitState();
 
         // new state enters state
         newState.EnterState();
 
-        if(isRootState) {
+        if (isRootState)
+        {
             // switch current state of context
             ctx.CurrentState = newState;
-        } else if(currentSuperState != null) {
+        }
+        else if (currentSuperState != null)
+        {
             // set the current super state's substate to the new state
             currentSuperState.SetSubState(newState);
         }
-        
+
     }
 
-    protected void SetSuperState(GunBaseState newSuperState) {
+    protected void SetSuperState(GunBaseState newSuperState)
+    {
         currentSuperState = newSuperState;
     }
 
-    protected void SetSubState(GunBaseState newSubState) {
+    protected void SetSubState(GunBaseState newSubState)
+    {
         currentSubState = newSubState;
         newSubState.SetSuperState(this);
     }

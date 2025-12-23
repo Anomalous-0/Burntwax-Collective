@@ -2,32 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFallState : PlayerBaseState {
+public class PlayerFallState : PlayerBaseState
+{
 
     private RaycastHit frontWallHit;
     private RaycastHit backWallHit;
     private RaycastHit leftWallHit;
     private RaycastHit rightWallHit;
-    
-    public PlayerFallState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
-    : base (currentContext, playerStateFactory){
+
+    public PlayerFallState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
+    : base(currentContext, playerStateFactory)
+    {
         IsRootState = true;
-        
+
     }
 
 
-    public override void EnterState(){
+    public override void EnterState()
+    {
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.linearDamping = Ctx.AirDrag;
-        
-        InitializeSubState();
 
-        // Debug.Log("FALL STATE"); 
+        InitializeSubState();
     }
 
-    public override void UpdateState(){
+    public override void UpdateState()
+    {
         Ctx.CoyoteTime--;
-        if(Ctx.CoyoteTime <= 0){
+        if (Ctx.CoyoteTime <= 0)
+        {
             Ctx.CoyoteTime = 0;
         }
         WallCheck();
@@ -35,12 +38,15 @@ public class PlayerFallState : PlayerBaseState {
 
     }
 
-    public override void ExitState(){
+    public override void ExitState()
+    {
         Ctx.CoyoteTime = 0;
     }
-    
-    public override void CheckSwitchStates(){
-        if (Ctx.playerIsSloped) {
+
+    public override void CheckSwitchStates()
+    {
+        if (Ctx.playerIsSloped)
+        {
             SwitchState(Factory.Slope());
         }
         else if (Ctx.playerIsGrounded)
@@ -60,19 +66,25 @@ public class PlayerFallState : PlayerBaseState {
 
     }
 
-    public override void InitializeSubState(){
-        if(!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+    public override void InitializeSubState()
+    {
+        if (!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        {
             SetSubState(Factory.Idle());
-        } else if(Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed) {
+        }
+        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        {
             SetSubState(Factory.Walk());
         }
-        else { 
+        else
+        {
             SetSubState(Factory.Sprint());
         }
     }
 
 
-    private void WallCheck() {
+    private void WallCheck()
+    {
         Ctx.WallRight = Physics.SphereCast(Ctx.player.position, Ctx.SphereCastRadius, Ctx.player.right, out rightWallHit, Ctx.WallCheckDistance, Ctx.Wall);
         Ctx.WallLeft = Physics.SphereCast(Ctx.player.position, Ctx.SphereCastRadius, -Ctx.player.right, out leftWallHit, Ctx.WallCheckDistance, Ctx.Wall);
         Ctx.WallFront = Physics.SphereCast(Ctx.player.position, Ctx.SphereCastRadius, Ctx.player.forward, out frontWallHit, Ctx.WallCheckDistance, Ctx.Wall);

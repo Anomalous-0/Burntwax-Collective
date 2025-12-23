@@ -5,13 +5,15 @@ public class BulletImpactEffects : MonoBehaviour
 {
     public List<SurfaceEffectSO> surfaceEffects;
 
-    public void ImpactVFX(string tag, Vector3 position, Quaternion rotation) {
+    public void ImpactVFX(string tag, Vector3 position, Quaternion rotation)
+    {
         var effect = surfaceEffects.Find(effect => effect.surfaceTag == tag);
-        if (effect != null) {
+        if (effect != null)
+        {
             if (effect.vfxPrefab != null)
                 Instantiate(effect.vfxPrefab, position, rotation);
 
-           
+
         }
         else
         {
@@ -19,13 +21,16 @@ public class BulletImpactEffects : MonoBehaviour
         }
     }
 
-    public void ImpactAudio(string tag, Vector3 position, Quaternion rotation) {
+    public void ImpactAudio(string tag, Vector3 position, Quaternion rotation)
+    {
         var effect = surfaceEffects.Find(effect => effect.surfaceTag == tag);
-        if (effect != null) {   
+        if (effect != null)
+        {
             if (effect.impactSound != null)
                 AudioSource.PlayClipAtPoint(effect.impactSound, position, effect.volume);
         }
-        else {
+        else
+        {
             Debug.LogWarning($"No surface effect found for tag: {tag}");
         }
     }

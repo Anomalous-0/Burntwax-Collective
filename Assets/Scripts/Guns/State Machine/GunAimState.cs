@@ -2,44 +2,53 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GunAimState : GunBaseState {
-   
+public class GunAimState : GunBaseState
+{
+
     public GunAimState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
-    : base (currentContext, gunStateFactory) {
+    : base(currentContext, gunStateFactory)
+    {
         IsRootState = true;
 
     }
 
-    public override void EnterState(){
+    public override void EnterState()
+    {
         Ctx.anim.SetBool(Ctx.aimHash, true);
         Ctx.fullyEquipped = true;
         InitializeSubState();
     }
 
-    public override void UpdateState(){
-        // Ctx.ActiveGun.ADS();
+    public override void UpdateState()
+    {
         CheckSwitchStates();
-        
+
     }
 
-    public override void ExitState(){
+    public override void ExitState()
+    {
         Ctx.anim.SetBool(Ctx.aimHash, false);
     }
-    
-    public override void CheckSwitchStates(){
-        if(Ctx.stateMachine.prioritySorter.SprintIsPriority()) {
+
+    public override void CheckSwitchStates()
+    {
+        if (Ctx.stateMachine.prioritySorter.SprintIsPriority())
+        {
             SwitchState(Factory.Stow());
         }
-        else if(!Ctx.input.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot()) {
+        else if (!Ctx.input.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
+        {
             SwitchState(Factory.Rest());
         }
-        else if(Ctx.AutoReload()  || Ctx.ManualReload()) {
+        else if (Ctx.AutoReload() || Ctx.ManualReload())
+        {
             SwitchState(Factory.Reload());
         }
     }
 
 
-    public override void InitializeSubState(){
+    public override void InitializeSubState()
+    {
         SetSubState(Factory.NoShoot());
     }
 

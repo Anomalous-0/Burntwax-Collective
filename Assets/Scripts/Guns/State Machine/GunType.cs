@@ -1,4 +1,5 @@
-public enum GunType {
+public enum GunType
+{
     Pistol,
     SMG,
     Shotgun,

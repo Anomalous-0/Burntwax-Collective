@@ -2,8 +2,9 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
 [RequireComponent(typeof(Rigidbody))]
-public class HealthPickup : MonoBehaviour {
-    
+public class HealthPickup : MonoBehaviour
+{
+
     public int heal;
 
 
@@ -14,20 +15,23 @@ public class HealthPickup : MonoBehaviour {
         ObjectManager.Instance.Register(gameObject);
     }
 
-    void OnTriggerEnter(Collider other) {
-        
-        if(other.GetComponentInParent<PlayerHealth>() != false || other.GetComponent<ConsumableGlovePickup>()) {
+    //Collect health
+    void OnTriggerEnter(Collider other)
+    {
+
+        if (other.GetComponentInParent<PlayerHealth>() != false)
+        {
             playerHealth = FindFirstObjectByType<PlayerHealth>();
-            if(playerHealth.CurrentHealth() < playerHealth.maxHealth) {
+            if (playerHealth.CurrentHealth() < playerHealth.maxHealth)
+            {
                 playerHealth.RestoreHealth(heal);
                 gameObject.SetActive(false);
-                // Destroy(gameObject);
-                
+
             }
-            
+
         }
     }
-   
+
 }
 
 

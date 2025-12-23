@@ -23,7 +23,6 @@ public class GunIncrementalReloadState : GunBaseState {
     }
 
     public override void ExitState(){
-        // Debug.Log("Exit INCREMENTAL STATE");
         Ctx.anim.SetBool(Ctx.incrementalReloadHash, false);
         Ctx.isIncrementalReloading = false; 
         
@@ -38,16 +37,6 @@ public class GunIncrementalReloadState : GunBaseState {
         else if(Ctx.ActiveGunScriptable.AmmoConfig.currentClip == Ctx.ActiveGunScriptable.AmmoConfig.clipSize) {
             SwitchState(Factory.Rest());
         }
-
-        // if (!Ctx.isIncrementalReloading && Ctx.stateMachine.currentState.CurrentSubstate() == Ctx.stateMachine.states.Sprint()){
-            
-        //     SwitchState(Factory.Stow());
-        // }
-        // else if(!Ctx.isIncrementalReloading || Ctx.input.mouseScroll != 0) {
-
-        //     SwitchState(Factory.Rest());
-        // }
-        
         
     }
 
