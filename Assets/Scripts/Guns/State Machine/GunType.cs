@@ -3,7 +3,9 @@ public enum GunType
     Pistol,
     SMG,
     Shotgun,
-    Revolver
+    Revolver,
+
+    Peashooter
 
 
 }
