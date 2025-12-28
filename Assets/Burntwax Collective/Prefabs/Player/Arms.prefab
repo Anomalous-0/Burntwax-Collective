@@ -92,7 +92,7 @@ Transform:
   m_GameObject: {fileID: 158565312321545307}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.205, z: -0.166}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -181,7 +181,6 @@ MonoBehaviour:
   ActiveGunScriptable: {fileID: 0}
   CurrentGunModel: {fileID: 0}
   recoil: {fileID: 6777056460148013827}
-  firstLoad: 0
   isReloading: 0
   isIncrementalReloading: 0
   isShooting: 0
@@ -650,6 +649,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 1
@@ -1974,6 +1974,7 @@ SkinnedMeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   serializedVersion: 2
   m_Quality: 0
   m_UpdateWhenOffscreen: 1

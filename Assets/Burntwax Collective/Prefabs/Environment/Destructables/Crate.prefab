@@ -11,32 +11,32 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 50
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 50
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 50
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 40.257
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.37999997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.49
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
@@ -46,17 +46,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: fb101f2ccfb2c954784a1ac9ced98e6f,
         type: 3}
@@ -174,6 +174,7 @@ MonoBehaviour:
   maxHealth: 15
   currentHealth: 0
   destroy: 1
+  itemsToSpawn: 3
   resources_prefabs:
   - {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777, type: 3}
   - {fileID: 9176256781164373382, guid: 27759b22e5b505a4897caa5593a76b7f, type: 3}
