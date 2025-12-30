@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   surfaceTag: Rock
   vfxPrefab: {fileID: 100014, guid: 5332791ebce075d4a9e56f4581e7fb47, type: 3}
-  impactSound: {fileID: 8300000, guid: 75f8e14a4e177484a92f318e46c9fa34, type: 3}
+  impactSounds:
+  - {fileID: 8300000, guid: 26c5b6d560a62c946accc4e4207b66cc, type: 3}
   volume: 0.316

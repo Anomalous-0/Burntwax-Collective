@@ -26,8 +26,8 @@ public class BulletImpactEffects : MonoBehaviour
         var effect = surfaceEffects.Find(effect => effect.surfaceTag == tag);
         if (effect != null)
         {
-            if (effect.impactSound != null)
-                AudioSource.PlayClipAtPoint(effect.impactSound, position, effect.volume);
+            if (effect.impactSounds != null && effect.impactSounds.Count > 0)
+                AudioSource.PlayClipAtPoint(effect.impactSounds[Random.Range(0, effect.impactSounds.Count)], position, effect.volume);
         }
         else
         {

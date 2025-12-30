@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   surfaceTag: Crate
   vfxPrefab: {fileID: 100002, guid: ac1aa04288fad804ba1cd769f4377aaf, type: 3}
-  impactSound: {fileID: 8300000, guid: 0dcdedb8aa99ec94892804527a73793f, type: 3}
+  impactSounds:
+  - {fileID: 8300000, guid: 0dcdedb8aa99ec94892804527a73793f, type: 3}
+  volume: 1

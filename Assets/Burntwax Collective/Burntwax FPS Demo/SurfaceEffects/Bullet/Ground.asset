@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   surfaceTag: Ground
   vfxPrefab: {fileID: 100002, guid: fc7f8379080d0a844ad699b91bfd56f0, type: 3}
-  impactSound: {fileID: 8300000, guid: 9c585b4e587adbc4280969e44f037c99, type: 3}
+  impactSounds:
+  - {fileID: 8300000, guid: 172f576bc4226094180d5993f9325d57, type: 3}
+  volume: 1
