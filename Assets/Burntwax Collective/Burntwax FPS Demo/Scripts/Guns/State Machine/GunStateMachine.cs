@@ -153,6 +153,26 @@ public class GunStateMachine : MonoBehaviour
             {
                 currentID = 3;
             }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                currentID = 4;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha6))
+            {
+                currentID = 5;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha7))
+            {
+                currentID = 6;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha8))
+            {
+                currentID = 7;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                currentID = 8;
+            }
         }
     }
 

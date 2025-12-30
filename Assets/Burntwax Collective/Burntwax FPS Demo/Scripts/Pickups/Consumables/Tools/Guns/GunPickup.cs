@@ -24,6 +24,7 @@ public class GunPickup : MonoBehaviour
             if (!gunSelector.CurrentGuns.Contains(gun))
             {
                 gunSelector.Pickup(gun);
+                Debug.Log("Picked up new gun!");
             }
             else
             {

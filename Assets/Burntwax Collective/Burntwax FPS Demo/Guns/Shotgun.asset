@@ -12,13 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea7301d1c341f36478e6140cdbb9ca03, type: 3}
   m_Name: Shotgun
   m_EditorClassIdentifier: 
-  ID: 2
-  ImpactType: {fileID: 11400000, guid: c50f6f80c300615438adeba37e2ea508, type: 2}
+  ID: 3
   Type: 2
-  Name: Shotgun
-  ModelPrefab: {fileID: 7927989591502400544, guid: f9ac767c067999c458f8c954007e5ab3,
-    type: 3}
   incrementalReload: 1
+  proceduralRecoil: 0
+  restingRecoilPos: {x: 0, y: 0, z: 0}
   Model: {fileID: 0}
   ShootConfig: {fileID: 11400000, guid: 99ca2a953ce268649a799a91f88cb7f0, type: 2}
   AmmoConfig: {fileID: 11400000, guid: 594cda30dcc736243bb0ce63345b6205, type: 2}

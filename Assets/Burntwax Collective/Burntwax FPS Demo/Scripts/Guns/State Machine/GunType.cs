@@ -5,7 +5,7 @@ public enum GunType
     Shotgun,
     Revolver,
 
-    Peashooter
+    Katana
 
 
 }
