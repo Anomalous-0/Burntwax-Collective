@@ -72,10 +72,10 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float wallCheckDistance;
     [SerializeField] float sphereCastRadius;
     [SerializeField] float minHeight;
-    [SerializeField] RaycastHit leftWallHit;
-    [SerializeField] RaycastHit rightWallHit;
-    [SerializeField] RaycastHit frontWallHit;
-    [SerializeField] RaycastHit backWallHit;
+    RaycastHit leftWallHit;
+    RaycastHit rightWallHit;
+    RaycastHit frontWallHit;
+    RaycastHit backWallHit;
     [SerializeField] bool wallLeft;
     [SerializeField] bool wallRight;
     [SerializeField] bool wallFront;
@@ -186,7 +186,7 @@ public class PlayerStateMachine : MonoBehaviour
     private void Update()
     {
         playerIsGrounded = PlayerGroundCheck();
-        playerIsSloped = PlayerSlopeCheck();
+        // playerIsSloped = PlayerSlopeCheck();
         currentState.UpdateStates();
 
         GetMoveInput();
@@ -229,11 +229,11 @@ public class PlayerStateMachine : MonoBehaviour
                 moveDirection = Camera.main.transform.forward * verticalInput + Camera.main.transform.right * horizontalInput;
             }
 
-            if (PlayerSlopeCheck())
-            {
-                moveDirection = GetSlopeMoveDirection();
+            // if (PlayerSlopeCheck())
+            // {
+            //     moveDirection = GetSlopeMoveDirection();
 
-            }
+            // }
 
             rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
         }
@@ -290,42 +290,39 @@ public class PlayerStateMachine : MonoBehaviour
 
     }
 
-    private bool PlayerSlopeCheck()
-    {
-        float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
-        float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-        Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
-        currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
+    // private bool PlayerSlopeCheck()
+    // {
+    //     float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
+    //     float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
+    //     Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
+    //     currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
 
-        if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance))
-        {
-            if (slopeHit.collider.gameObject.layer != LayerMask.NameToLayer("Slope"))
-            {
+    //     if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance))
+    //     {
+    //         if (slopeHit.collider.gameObject.layer != LayerMask.NameToLayer("Slope"))
+    //         {
 
-                currentAngle = 0;
-                return false;
-            }
+    //             currentAngle = 0;
+    //             return false;
+    //         }
 
-        }
-        if (slopeHit.collider)
-        {
-            if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>())
-            {
-                slopeToSteep = true;
+    //     }
+    //     if (slopeHit.collider)
+    //     {
+    //         if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>())
+    //         {
+    //             slopeToSteep = true;
 
-            }
-            else
-            {
-                slopeToSteep = false;
-            }
-        }
-        return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
-    }
+    //         }
+    //         else
+    //         {
+    //             slopeToSteep = false;
+    //         }
+    //     }
+    //     return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
+    // }
 
-    private Vector3 GetSlopeMoveDirection()
-    {
-        return Vector3.ProjectOnPlane(moveDirection, groundCheckHit.normal).normalized;
-    }
+    
 
 
     public IEnumerator WallJumpGracePeriod()

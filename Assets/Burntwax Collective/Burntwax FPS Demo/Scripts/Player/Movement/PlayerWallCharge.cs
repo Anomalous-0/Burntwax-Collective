@@ -18,7 +18,6 @@ public class PlayerWallChargeState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("Entered Wall Charge State");
         InitializeSubState();
         Ctx.MoveMultiplier = Ctx.CrouchVelocity;
     }
