@@ -60,12 +60,12 @@ public class PlayerStateMachine : MonoBehaviour
     [Header("Floating Capsule Settings")]
     [SerializeField] float rideHeight = 1.5f;
     public float normalHeight = 1.5f;
-    public float crouchHeight = 0.8f;        
+    public float crouchHeight = 0.8f;
     [SerializeField] float rideSpringStrength = 50f; // How hard it pushes up
     [SerializeField] float rideSpringDampener = 5f;  // Prevents infinite bouncing
     [SerializeField] float rayDistance = 2.0f;       // Length of the check ray
 
-    
+
 
 
 
@@ -203,7 +203,7 @@ public class PlayerStateMachine : MonoBehaviour
     private void Update()
     {
         playerIsGrounded = PlayerGroundCheck();
-        // playerIsSloped = PlayerSlopeCheck();
+        playerIsSloped = PlayerSlopeCheck();
         currentState.UpdateStates();
 
         GetMoveInput();
@@ -239,7 +239,7 @@ public class PlayerStateMachine : MonoBehaviour
         // Reuse your groundCheckHit from PlayerGroundCheck()
         if (playerIsGrounded && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
         {
-            
+
             Vector3 vel = rb.linearVelocity;
             Vector3 rayDir = Vector3.down; // Direction of the spring
 
@@ -273,11 +273,11 @@ public class PlayerStateMachine : MonoBehaviour
                 moveDirection = Camera.main.transform.forward * verticalInput + Camera.main.transform.right * horizontalInput;
             }
 
-            // if (PlayerSlopeCheck())
-            // {
-            //     moveDirection = GetSlopeMoveDirection();
+            if (PlayerSlopeCheck())
+            {
+                moveDirection = GetSlopeMoveDirection();
 
-            // }
+            }
 
             rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
         }
@@ -292,26 +292,11 @@ public class PlayerStateMachine : MonoBehaviour
 
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
     }
-    // private bool PlayerGroundCheck()
-    // {
-        // float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
-        // //Physics.SphereCast(playerCenterPoint, sphereCastRadius, Vector3.down, out groundCheckHit);
-        // float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-        // if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance))
-        // {
-
-        //     if (groundCheckHit.collider.GetComponent<Pickupable>())
-        //     {
-        //         return false;
-        //     }
-        //     return true;
-        // }
-    //     return false;
-    // }
 
     private bool PlayerGroundCheck()
     {
-        if (Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rideHeight)) {
+        if (Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rideHeight))
+        {
             return true;
         }
         return false;
@@ -342,38 +327,42 @@ public class PlayerStateMachine : MonoBehaviour
 
     }
 
-    // private bool PlayerSlopeCheck()
-    // {
-    //     float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
-    //     float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-    //     Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
-    //     currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
+    private bool PlayerSlopeCheck()
+    {
+        float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
+        float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
+        Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
+        currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
 
-    //     if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance))
-    //     {
-    //         if (slopeHit.collider.gameObject.layer != LayerMask.NameToLayer("Slope"))
-    //         {
+        if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance))
+        {
+            if (slopeHit.collider.gameObject.layer != LayerMask.NameToLayer("Slope"))
+            {
 
-    //             currentAngle = 0;
-    //             return false;
-    //         }
+                currentAngle = 0;
+                return false;
+            }
 
-    //     }
-    //     if (slopeHit.collider)
-    //     {
-    //         if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>())
-    //         {
-    //             slopeToSteep = true;
+        }
+        if (slopeHit.collider)
+        {
+            if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>())
+            {
+                slopeToSteep = true;
 
-    //         }
-    //         else
-    //         {
-    //             slopeToSteep = false;
-    //         }
-    //     }
-    //     return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
-    // }
+            }
+            else
+            {
+                slopeToSteep = false;
+            }
+        }
+        return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
+    }
 
+    private Vector3 GetSlopeMoveDirection()
+    {
+        return Vector3.ProjectOnPlane(moveDirection, groundCheckHit.normal).normalized;
+    }
 
 
 

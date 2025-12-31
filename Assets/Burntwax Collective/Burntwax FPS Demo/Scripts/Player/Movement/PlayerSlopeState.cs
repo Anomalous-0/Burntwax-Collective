@@ -15,8 +15,8 @@ public class PlayerSlopeState : PlayerBaseState
         // Debug.Log("SLOPE STATE");
         InitializeSubState();
 
-        Ctx.YFlat();
-
+        // Ctx.YFlat();
+        Ctx.RideHeight = 1.4f;
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
         Ctx.rb.linearDamping = Ctx.GroundDrag;
 
@@ -30,6 +30,7 @@ public class PlayerSlopeState : PlayerBaseState
 
     public override void ExitState()
     {
+        Ctx.RideHeight = Ctx.normalHeight;
     }
 
     public override void CheckSwitchStates()
@@ -51,14 +52,7 @@ public class PlayerSlopeState : PlayerBaseState
 
     private void SlideDownSlope()
     {
-        if (Ctx.SlopeTooSteep)
-        {
-            Ctx.rb.AddForce(Vector3.down * Ctx.DownForce);
-        }
-        else
-        {
-            Ctx.DisableMovement = false;
-        }
+        
 
     }
 
