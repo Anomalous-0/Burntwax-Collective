@@ -236,27 +236,14 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void ApplyFloatingForce()
     {
-        // Reuse your groundCheckHit from PlayerGroundCheck()
         if (playerIsGrounded && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
         {
-
             Vector3 vel = rb.linearVelocity;
-            Vector3 rayDir = Vector3.down; // Direction of the spring
-
-            // Calculate the dot product to get velocity along the ray axis
-            float rayDirVel = Vector3.Dot(rayDir, vel);
-
-            // Calculate the displacement from the target ride height
+            Vector3 rayDir = Vector3.down; 
+            float rayDirVel = Vector3.Dot(Vector3.down, vel);
             float x = groundCheckHit.distance - rideHeight;
-
-            // The Spring Formula: F = (x * k) - (v * d)
             float springForce = (x * rideSpringStrength) - (rayDirVel * rideSpringDampener);
-
-            // Apply force only along the ray direction (vertical)
             rb.AddForce(rayDir * springForce);
-
-            // Optional: If the ground hit a Rigidbody (like a moving platform), 
-            // apply the opposite force to it so you actually "push" off it.
         }
     }
 

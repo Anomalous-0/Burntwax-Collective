@@ -29133,7 +29133,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1781278259}
-  m_Material: {fileID: 13400000, guid: a7d36cc2eea00714a81801ea097cbd26, type: 2}
+  m_Material: {fileID: 13400000, guid: 1819ec87dbeb2fc4c8cc8510cad360b3, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -35882,6 +35882,11 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 42627137}
+    - target: {fileID: 3727821689623484817, guid: f65697f85dd502c41822119599570e43,
+        type: 3}
+      propertyPath: m_Lens.FieldOfView
+      value: 70
+      objectReference: {fileID: 0}
     - target: {fileID: 4154007346227459706, guid: f65697f85dd502c41822119599570e43,
         type: 3}
       propertyPath: m_Follow
