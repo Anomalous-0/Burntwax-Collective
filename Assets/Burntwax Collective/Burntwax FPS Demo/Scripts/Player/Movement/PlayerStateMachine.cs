@@ -54,9 +54,18 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] public bool playerIsGrounded = true;
     [SerializeField][Range(0.0f, 1.8f)] float groundCheckRadiusMultiplier = 0.9f;
     [SerializeField][Range(-0.95f, 1.05f)] float groundCheckDistance = 0.01f;
-
     public LayerMask heldRigidbody;
     public RaycastHit groundCheckHit = new RaycastHit();
+
+    [Header("Floating Capsule Settings")]
+    [SerializeField] float rideHeight = 1.5f;
+    public float normalHeight = 1.5f;
+    public float crouchHeight = 0.8f;        
+    [SerializeField] float rideSpringStrength = 50f; // How hard it pushes up
+    [SerializeField] float rideSpringDampener = 5f;  // Prevents infinite bouncing
+    [SerializeField] float rayDistance = 2.0f;       // Length of the check ray
+
+    
 
 
 
@@ -110,6 +119,13 @@ public class PlayerStateMachine : MonoBehaviour
 
     public float GroundMultiplier { get { return groundMultiplier; } }
     public float AirMultiplier { get { return airMultiplier; } }
+
+
+    public float RideHeight { get { return rideHeight; } set { rideHeight = value; } }
+    public float RideSpringStrength { get { return rideSpringStrength; } set { rideSpringStrength = value; } }
+    public float RideSpringDampener { get { return rideSpringDampener; } set { rideSpringDampener = value; } }
+    public float RayDistance { get { return rayDistance; } set { rayDistance = value; } }
+
 
     public float WallMultiplier { get { return wallMultiplier; } }
     public float SprintVelocity { get { return sprintVelocity; } }
@@ -173,6 +189,7 @@ public class PlayerStateMachine : MonoBehaviour
         currentState = states.Grounded();
         currentState.EnterState();
         currentState.InitializeSubState();
+        rideHeight = normalHeight;
 
     }
 
@@ -199,6 +216,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
+        ApplyFloatingForce();
         PlayerMove();
         SpeedControl();
     }
@@ -214,6 +232,32 @@ public class PlayerStateMachine : MonoBehaviour
     private void SetRotation()
     {
         player.transform.forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
+    }
+
+    private void ApplyFloatingForce()
+    {
+        // Reuse your groundCheckHit from PlayerGroundCheck()
+        if (playerIsGrounded && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
+        {
+            
+            Vector3 vel = rb.linearVelocity;
+            Vector3 rayDir = Vector3.down; // Direction of the spring
+
+            // Calculate the dot product to get velocity along the ray axis
+            float rayDirVel = Vector3.Dot(rayDir, vel);
+
+            // Calculate the displacement from the target ride height
+            float x = groundCheckHit.distance - rideHeight;
+
+            // The Spring Formula: F = (x * k) - (v * d)
+            float springForce = (x * rideSpringStrength) - (rayDirVel * rideSpringDampener);
+
+            // Apply force only along the ray direction (vertical)
+            rb.AddForce(rayDir * springForce);
+
+            // Optional: If the ground hit a Rigidbody (like a moving platform), 
+            // apply the opposite force to it so you actually "push" off it.
+        }
     }
 
     private void PlayerMove()
@@ -248,18 +292,26 @@ public class PlayerStateMachine : MonoBehaviour
 
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
     }
+    // private bool PlayerGroundCheck()
+    // {
+        // float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
+        // //Physics.SphereCast(playerCenterPoint, sphereCastRadius, Vector3.down, out groundCheckHit);
+        // float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
+        // if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance))
+        // {
+
+        //     if (groundCheckHit.collider.GetComponent<Pickupable>())
+        //     {
+        //         return false;
+        //     }
+        //     return true;
+        // }
+    //     return false;
+    // }
+
     private bool PlayerGroundCheck()
     {
-        float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
-        //Physics.SphereCast(playerCenterPoint, sphereCastRadius, Vector3.down, out groundCheckHit);
-        float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-        if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out groundCheckHit, sphereCastTravelDistance))
-        {
-
-            if (groundCheckHit.collider.GetComponent<Pickupable>())
-            {
-                return false;
-            }
+        if (Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rideHeight)) {
             return true;
         }
         return false;
@@ -322,7 +374,7 @@ public class PlayerStateMachine : MonoBehaviour
     //     return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
     // }
 
-    
+
 
 
     public IEnumerator WallJumpGracePeriod()

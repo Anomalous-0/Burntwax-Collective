@@ -19,16 +19,20 @@ public class PlayerCrouchState : PlayerBaseState
 
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.CrouchYScale, Ctx.LocalScale.z);
         Ctx.rb.AddForce(Vector3.down * 8f, ForceMode.Impulse);
+        Ctx.RideHeight = Ctx.crouchHeight;
+
     }
 
     public override void UpdateState()
     {
         CheckSwitchStates();
+        
     }
 
     public override void ExitState()
     {
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.StartYScale, Ctx.LocalScale.z);
+        Ctx.RideHeight = Ctx.normalHeight;
     }
 
     public override void CheckSwitchStates()

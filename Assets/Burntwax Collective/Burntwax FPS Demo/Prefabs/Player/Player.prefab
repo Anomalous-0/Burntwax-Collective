@@ -163,10 +163,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1148579728589637519}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -182,7 +182,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 112
-  m_CollisionDetection: 3
+  m_CollisionDetection: 2
 --- !u!114 &2926336376552375138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,7 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853776e4a472d6a4aa4bb6fdd12df6f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  orientation: {fileID: 8241962236364186509}
   player: {fileID: 3675934927089414449}
   input: {fileID: 3522338294497473196}
   rb: {fileID: 1186628176162295092}
@@ -210,11 +209,10 @@ MonoBehaviour:
   wallMultiplier: 0.9
   walkVelocity: 4
   sprintVelocity: 6
-  groundDrag: 7
-  airDrag: 0.2
+  groundDrag: 10
+  airDrag: 0.5
   wallDrag: 6
   moveDirection: {x: 0, y: 0, z: 0}
-  glove: {fileID: 0}
   crouchVelocity: 2
   crouchYScale: 0.5
   jumpForce: 8
@@ -226,6 +224,12 @@ MonoBehaviour:
   heldRigidbody:
     serializedVersion: 2
     m_Bits: 0
+  rideHeight: 0
+  normalHeight: 1.2
+  crouchHeight: 0.73
+  rideSpringStrength: 100
+  rideSpringDampener: 5
+  rayDistance: 2
   wall:
     serializedVersion: 2
     m_Bits: 256
@@ -296,8 +300,7 @@ MonoBehaviour:
   crosshair: {fileID: 0}
   fpsCam: {fileID: 0}
   aimCam: {fileID: 0}
-  primaryCam: {fileID: 0}
-  secondaryCam: {fileID: 0}
+  chargeCam: {fileID: 0}
   mouseWorldPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &8238781064172233145
 MonoBehaviour:
@@ -323,6 +326,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -485,7 +489,7 @@ Transform:
   m_GameObject: {fileID: 1412537731836723052}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.592, z: 0}
+  m_LocalPosition: {x: 0, y: 0.674, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -669,20 +673,23 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 0
+  m_TextWrappingMode: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
+  m_EmojiFallbackSupport: 1
   m_parseCtrlCharacters: 1
   m_isOrthographic: 1
   m_isCullingEnabled: 0
@@ -877,13 +884,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4020645960097849464}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.0031988104, y: 0.00034760818, z: 0.00036623122, w: 0.9999948}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.7, y: 1, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4099128921039393214}
-  m_LocalEulerAnglesHint: {x: 0.367, y: 0.04, z: 0.042}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5523238282675907640
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -909,6 +916,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -930,9 +942,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!136 &5705949197316518625
 CapsuleCollider:
@@ -954,7 +968,7 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.4
-  m_Height: 2
+  m_Height: 1.8
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4488527203696979467
