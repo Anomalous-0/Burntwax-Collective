@@ -37,6 +37,10 @@ public class CameraAimState : CameraBaseState
         {
             SwitchState(Factory.Fps());
         }
+        else if ( Ctx.player.currentState == Ctx.player.states.Wallcharge())
+        {
+            SwitchState(Factory.Wallcharge());
+        }
 
 
 

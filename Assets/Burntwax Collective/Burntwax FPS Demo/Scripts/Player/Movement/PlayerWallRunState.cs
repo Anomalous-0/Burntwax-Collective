@@ -49,12 +49,7 @@ public class PlayerWallRunState : PlayerBaseState
         }
         else if (Ctx.input.jumpIsPressed)
         {
-            Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
-            Ctx.rb.useGravity = true;
-            Vector3 force = Ctx.moveDirection * Ctx.WallJumpForce;
-            Ctx.rb.AddForce(force, ForceMode.Impulse);
-            Ctx.rb.AddForce(3f * wallNormal.normalized, ForceMode.Impulse);
-            SwitchState(Factory.Walljump());
+            SwitchState(Factory.Wallcharge());
 
 
         }

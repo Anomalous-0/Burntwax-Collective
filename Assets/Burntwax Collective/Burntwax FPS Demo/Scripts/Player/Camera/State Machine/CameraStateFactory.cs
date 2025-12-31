@@ -3,7 +3,8 @@ using System.Collections.Generic;
 enum CameraStates
 {
     fps,
-    aim
+    aim,
+    wallcharge
 }
 
 public class CameraStateFactory
@@ -17,6 +18,7 @@ public class CameraStateFactory
         context = currentContext;
         states[CameraStates.fps] = new CameraFpsState(context, this);
         states[CameraStates.aim] = new CameraAimState(context, this);
+        states[CameraStates.wallcharge] = new CameraWallChargeState(context, this);
 
 
     }
@@ -29,6 +31,11 @@ public class CameraStateFactory
     public CameraBaseState Aim()
     {
         return states[CameraStates.aim];
+    }
+
+    public CameraBaseState Wallcharge()
+    {
+        return states[CameraStates.wallcharge];
     }
 
 

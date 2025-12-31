@@ -42,8 +42,9 @@ public class PauseMenu : MonoBehaviour
         Paused = false;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-        camStateMachine.primaryCam.SetActive(true);
-        camStateMachine.secondaryCam.SetActive(true);
+        camStateMachine.fpsCam.gameObject.SetActive(true);
+        camStateMachine.aimCam.gameObject.SetActive(true);
+        camStateMachine.chargeCam.gameObject.SetActive(true);
     }
 
     private void Pause()
@@ -52,8 +53,9 @@ public class PauseMenu : MonoBehaviour
 
         Time.timeScale = 0f;
         AudioListener.pause = true;
-        camStateMachine.secondaryCam.SetActive(false);
-        camStateMachine.primaryCam.SetActive(false);
+        camStateMachine.fpsCam.gameObject.SetActive(false);
+        camStateMachine.aimCam.gameObject.SetActive(false);
+        camStateMachine.chargeCam.gameObject.SetActive(false);
         Paused = true;
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;

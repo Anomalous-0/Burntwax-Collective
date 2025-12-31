@@ -23,9 +23,7 @@ public class CamStateMachine : MonoBehaviour
     public CinemachineVirtualCamera fpsCam;
     public CinemachineVirtualCamera aimCam;
 
-    public GameObject primaryCam;
-    public GameObject secondaryCam;
-
+    public CinemachineVirtualCamera chargeCam;
     public CameraBaseState currentState;
     public CameraStateFactory states;
 
@@ -38,8 +36,6 @@ public class CamStateMachine : MonoBehaviour
     private void Awake()
     {
         activeCam = fpsCam;
-        primaryCam = fpsCam.gameObject;
-        secondaryCam = aimCam.gameObject;
         player = GetComponent<PlayerStateMachine>();
         crosshair = GetComponent<PlayerCrosshair>();
         pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
@@ -67,27 +63,22 @@ public class CamStateMachine : MonoBehaviour
 
     public void Aim()
     {
-
-        if (activeCam == fpsCam)
-        {
-            SetCameraPriorities(fpsCam, aimCam);
-        }
-
+            SetCameraPriorities(aimCam);
     }
 
     public void FPS()
     {
-
-        if (activeCam == aimCam)
-        {
-            SetCameraPriorities(aimCam, fpsCam);
-        }
-
+        SetCameraPriorities(fpsCam);
     }
 
-    private void SetCameraPriorities(CinemachineVirtualCamera CurrentCameraMode, CinemachineVirtualCamera NewCameraMode)
+    public void Charge()
     {
-        CurrentCameraMode.Priority -= activeCameraPriorityModifier;
+        SetCameraPriorities(chargeCam);
+    }
+
+    private void SetCameraPriorities(CinemachineVirtualCamera NewCameraMode)
+    {
+        activeCam.Priority -= activeCameraPriorityModifier;
         NewCameraMode.Priority += activeCameraPriorityModifier;
         activeCam = NewCameraMode;
         pov = activeCam.GetCinemachineComponent<CinemachinePOV>();

@@ -34,6 +34,7 @@ public class PlayerStateFactory
         states[PlayerStates.fall] = new PlayerFallState(context, this);
         states[PlayerStates.wallrun] = new PlayerWallRunState(context, this);
         states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
+        states[PlayerStates.wallcharge] = new PlayerWallChargeState(context, this);
     }
 
     public PlayerBaseState Idle()
@@ -83,6 +84,11 @@ public class PlayerStateFactory
     public PlayerBaseState Walljump()
     {
         return states[PlayerStates.walljump];
+    }
+
+    public PlayerBaseState Wallcharge()
+    {
+        return states[PlayerStates.wallcharge];
     }
 
 }

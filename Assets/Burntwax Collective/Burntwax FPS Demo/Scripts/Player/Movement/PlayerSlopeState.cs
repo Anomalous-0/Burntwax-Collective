@@ -12,7 +12,7 @@ public class PlayerSlopeState : PlayerBaseState
 
     public override void EnterState()
     {
-        Debug.Log("SLOPE STATE");
+        // Debug.Log("SLOPE STATE");
         InitializeSubState();
 
         Ctx.YFlat();
