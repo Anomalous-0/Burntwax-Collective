@@ -35,7 +35,7 @@ public class PlayerGroundedState : PlayerBaseState
         {
             SwitchState(Factory.Jump());
         }
-        else if (!Ctx.playerIsGrounded)
+        else if (!Ctx.playerIsGrounded && !Ctx.input.crouchIsPressed)
         {
             Ctx.CoyoteTime = Ctx.CoyoteTimer;
             SwitchState(Factory.Fall());

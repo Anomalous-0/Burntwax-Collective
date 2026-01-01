@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.AppUI.UI;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -8,6 +9,8 @@ using Random = UnityEngine.Random;
 public class PlayerStateMachine : MonoBehaviour
 {
 
+    public string currentStateText;
+    public string currentSubStateText;
     public Transform player;
     public InputManager input;
     public Rigidbody rb;
@@ -58,9 +61,11 @@ public class PlayerStateMachine : MonoBehaviour
     public RaycastHit groundCheckHit = new RaycastHit();
 
     [Header("Floating Capsule Settings")]
-    [SerializeField] float rideHeight = 1.5f;
-    public float normalHeight = 1.5f;
-    public float crouchHeight = 0.8f;
+    [SerializeField] float rideHeight = 0f;
+    public float normalHeight = 1.2f;
+    public float crouchHeight = 0.73f;
+    public float slopeHeight = 1.4f;
+    public float crouchSlopeHeight = 0.93f;
     [SerializeField] float rideSpringStrength = 50f; // How hard it pushes up
     [SerializeField] float rideSpringDampener = 5f;  // Prevents infinite bouncing
     [SerializeField] float rayDistance = 2.0f;       // Length of the check ray
@@ -202,9 +207,9 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Update()
     {
-        playerIsGrounded = PlayerGroundCheck();
-        playerIsSloped = PlayerSlopeCheck();
-        currentState.UpdateStates();
+
+
+
 
         GetMoveInput();
 
@@ -216,6 +221,11 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
+        currentState.UpdateStates();
+        currentStateText = currentState.GetType().Name;
+        currentSubStateText = currentState.CurrentSubstate().GetType().Name;
+        playerIsSloped = PlayerSlopeCheck();
+        playerIsGrounded = PlayerGroundCheck();
         ApplyFloatingForce();
         PlayerMove();
         SpeedControl();
@@ -236,14 +246,30 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void ApplyFloatingForce()
     {
-        if (playerIsGrounded && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
+        if ((playerIsGrounded || playerIsSloped) && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
         {
             Vector3 vel = rb.linearVelocity;
-            Vector3 rayDir = Vector3.down; 
+            Vector3 rayDir = Vector3.down;
+
+            Vector3 otherVel = Vector3.zero;
+            Rigidbody hitBody = groundCheckHit.rigidbody;
+            if (hitBody != null)
+            {
+                otherVel = hitBody.linearVelocity;
+            }
             float rayDirVel = Vector3.Dot(Vector3.down, vel);
+            float otherDirVel = Vector3.Dot(Vector3.down, otherVel);
+
+            float relVel = rayDirVel - otherDirVel;
             float x = groundCheckHit.distance - rideHeight;
-            float springForce = (x * rideSpringStrength) - (rayDirVel * rideSpringDampener);
+            float springForce = (x * rideSpringStrength) - (relVel * rideSpringDampener);
             rb.AddForce(rayDir * springForce);
+
+            if (hitBody != null)
+            {
+                hitBody.AddForceAtPosition(rayDir * -springForce, groundCheckHit.point);
+            }
+
         }
     }
 
@@ -282,6 +308,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private bool PlayerGroundCheck()
     {
+        Debug.DrawRay(rb.position, Vector3.down * rideHeight, Color.red);
         if (Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rideHeight))
         {
             return true;
@@ -316,34 +343,20 @@ public class PlayerStateMachine : MonoBehaviour
 
     private bool PlayerSlopeCheck()
     {
-        float sphereCastRadius = capsuleCollider.radius * groundCheckRadiusMultiplier;
-        float sphereCastTravelDistance = capsuleCollider.bounds.extents.y - sphereCastRadius + groundCheckDistance;
-        Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
-        currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
-
-        if (Physics.SphereCast(rb.position, sphereCastRadius, Vector3.down, out slopeHit, sphereCastTravelDistance))
+        if (Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rideHeight))
         {
-            if (slopeHit.collider.gameObject.layer != LayerMask.NameToLayer("Slope"))
+            Vector3 localGroundCheckHitNormal = rb.transform.InverseTransformDirection(groundCheckHit.normal);
+            currentAngle = (int)Math.Round(Vector3.Angle(localGroundCheckHitNormal, rb.transform.up));
+            if (groundCheckHit.collider == null)
             {
-
                 currentAngle = 0;
                 return false;
             }
 
+            return Math.Abs(currentAngle) > 0.03f;
         }
-        if (slopeHit.collider)
-        {
-            if (currentAngle > maxSlopeAngle && currentAngle < 90 && slopeHit.collider.GetComponent<Slope>())
-            {
-                slopeToSteep = true;
+        return false;
 
-            }
-            else
-            {
-                slopeToSteep = false;
-            }
-        }
-        return playerIsGrounded && Math.Abs(currentAngle) > 0.03f;
     }
 
     private Vector3 GetSlopeMoveDirection()

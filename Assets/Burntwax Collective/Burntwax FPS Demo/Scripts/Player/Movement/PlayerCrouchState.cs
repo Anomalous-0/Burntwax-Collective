@@ -8,17 +8,26 @@ using UnityEngine.Rendering;
 public class PlayerCrouchState : PlayerBaseState
 {
 
-    public PlayerCrouchState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) : base(currentContext, playerStateFactory)
+    public PlayerCrouchState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
+     : base(currentContext, playerStateFactory)
     {
 
     }
 
     public override void EnterState()
     {
+            
         Ctx.PlayerVelocity = Ctx.CrouchVelocity;
 
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.CrouchYScale, Ctx.LocalScale.z);
         Ctx.rb.AddForce(Vector3.down * 8f, ForceMode.Impulse);
+        
+        if(Ctx.currentState == Ctx.states.Slope())
+        {
+            Debug.Log("Already Crouching");
+            Ctx.RideHeight = Ctx.crouchSlopeHeight;
+            return;
+        }
         Ctx.RideHeight = Ctx.crouchHeight;
 
     }
@@ -32,6 +41,11 @@ public class PlayerCrouchState : PlayerBaseState
     public override void ExitState()
     {
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.StartYScale, Ctx.LocalScale.z);
+        if (Ctx.currentState == Ctx.states.Slope())
+        {
+            Ctx.RideHeight = Ctx.slopeHeight;
+            return;
+        }
         Ctx.RideHeight = Ctx.normalHeight;
     }
 

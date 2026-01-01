@@ -24,10 +24,12 @@ public class PlayerFallState : PlayerBaseState
         Ctx.rb.linearDamping = Ctx.AirDrag;
 
         InitializeSubState();
+        Ctx.currentAngle = 0;
     }
 
     public override void UpdateState()
     {
+        
         Ctx.CoyoteTime--;
         if (Ctx.CoyoteTime <= 0)
         {
@@ -47,10 +49,13 @@ public class PlayerFallState : PlayerBaseState
     {
         if (Ctx.playerIsSloped)
         {
+            // Debug.Log("FALL TO SLOPE");
             SwitchState(Factory.Slope());
+            return;
         }
-        else if (Ctx.playerIsGrounded)
+        else if (Ctx.playerIsGrounded && !Ctx.playerIsSloped)
         {
+            // Debug.Log("FALL TO GROUNDED");
             SwitchState(Factory.Grounded());
         }
         else if (Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)

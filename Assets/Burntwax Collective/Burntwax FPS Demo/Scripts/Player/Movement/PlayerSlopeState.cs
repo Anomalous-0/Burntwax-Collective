@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerSlopeState : PlayerBaseState
@@ -13,37 +14,49 @@ public class PlayerSlopeState : PlayerBaseState
     public override void EnterState()
     {
         // Debug.Log("SLOPE STATE");
-        InitializeSubState();
-
-        // Ctx.YFlat();
-        Ctx.RideHeight = 1.4f;
         Ctx.MoveMultiplier = Ctx.GroundMultiplier;
-        Ctx.rb.linearDamping = Ctx.GroundDrag;
+        Ctx.rb.linearDamping = Ctx.GroundDrag;    
 
+        Ctx.YFlat();
+        InitializeSubState();
+        if(Ctx.currentState.CurrentSubstate() == Ctx.states.Crouch())
+        {
+            Ctx.RideHeight = Ctx.crouchSlopeHeight;
+            return;
+        }
+        Ctx.RideHeight = Ctx.slopeHeight;
+        
+
+        
     }
 
     public override void UpdateState()
     {
-        SlideDownSlope();
         CheckSwitchStates();
     }
 
     public override void ExitState()
     {
+        Ctx.currentAngle = 0;
+        if(Ctx.currentState.CurrentSubstate() == Ctx.states.Crouch())
+        {
+            Ctx.RideHeight = Ctx.crouchHeight;
+            return;
+        }
         Ctx.RideHeight = Ctx.normalHeight;
     }
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.input.jumpIsPressed && !Ctx.SlopeTooSteep)
+        if (Ctx.input.jumpIsPressed)
         {
             SwitchState(Factory.Jump());
         }
-        else if (!Ctx.playerIsSloped && !Ctx.playerIsGrounded)
+        else if (!Ctx.playerIsSloped && !Ctx.playerIsGrounded && !Ctx.input.crouchIsPressed)
         {
             SwitchState(Factory.Fall());
         }
-        else if (!Ctx.input.jumpIsPressed && !Ctx.playerIsSloped)
+        else if (!Ctx.input.jumpIsPressed && !Ctx.playerIsSloped && Math.Abs(Ctx.currentAngle) < 0.03f && Ctx.groundCheckHit.collider.gameObject.layer != LayerMask.NameToLayer("Variable Slope"))
         {
             SwitchState(Factory.Grounded());
         }
@@ -68,9 +81,14 @@ public class PlayerSlopeState : PlayerBaseState
 
             SetSubState(Factory.Walk());
         }
+        else if (Ctx.input.crouchIsPressed)
+        {
+            SwitchState(Factory.Crouch());
+        }
         else
         {
             SetSubState(Factory.Sprint());
         }
+        
     }
 }

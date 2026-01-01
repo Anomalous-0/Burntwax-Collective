@@ -33,7 +33,7 @@ public class PlayerIdleState : PlayerBaseState
         {
             SwitchState(Factory.Walk());
         }
-        else if (Ctx.input.crouchIsPressed)
+        else if (Ctx.input.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
         {
             SwitchState(Factory.Crouch());
         }

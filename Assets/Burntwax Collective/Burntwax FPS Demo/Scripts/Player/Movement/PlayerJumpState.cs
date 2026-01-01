@@ -19,6 +19,8 @@ public class PlayerJumpState : PlayerBaseState
         Ctx.MoveMultiplier = Ctx.AirMultiplier;
         Ctx.rb.linearDamping = Ctx.AirDrag;
         Jump();
+        InitializeSubState();
+        Ctx.currentAngle = 0;
     }
 
     public override void UpdateState()
@@ -34,7 +36,16 @@ public class PlayerJumpState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.rb.linearVelocity.y < 0)
+        if (Ctx.playerIsSloped && !Ctx.playerIsGrounded)
+        {
+            SwitchState(Factory.Slope());
+            return;
+        }
+        else if (Ctx.playerIsGrounded )
+        {
+            SwitchState(Factory.Grounded());
+        }
+        else if (Ctx.rb.linearVelocity.y < 0)
         {
             SwitchState(Factory.Fall());
         }

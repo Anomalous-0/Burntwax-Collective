@@ -39,7 +39,6 @@ public class GunRestState : GunBaseState
         }
         else if (Ctx.stateMachine.prioritySorter.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
         {
-            Debug.Log("Switching to Stow from Rest");
             SwitchState(Factory.Stow());
         }
         else if ((Ctx.AutoReload() || Ctx.ManualReload()) && Ctx.fullyEquipped)
