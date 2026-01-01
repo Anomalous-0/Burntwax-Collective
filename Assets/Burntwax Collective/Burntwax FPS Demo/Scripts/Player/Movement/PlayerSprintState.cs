@@ -5,10 +5,9 @@ using UnityEngine;
 public class PlayerSprintState : PlayerBaseState
 {
 
-    public PlayerSprintState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) : base(currentContext, playerStateFactory)
-    {
-
-    }
+    public PlayerSprintState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
+    : base(currentContext, playerStateFactory)
+    {}
 
     public override void EnterState()
     {

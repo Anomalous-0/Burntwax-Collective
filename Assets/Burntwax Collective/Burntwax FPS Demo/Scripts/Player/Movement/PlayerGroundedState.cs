@@ -10,7 +10,6 @@ public class PlayerGroundedState : PlayerBaseState
     : base(currentContext, playerStateFactory)
     {
         IsRootState = true;
-
     }
 
     public override void EnterState()

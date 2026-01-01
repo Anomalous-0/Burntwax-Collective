@@ -12,6 +12,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMenuUI;
     public bool Paused;
 
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     public void Update()
     {
 
