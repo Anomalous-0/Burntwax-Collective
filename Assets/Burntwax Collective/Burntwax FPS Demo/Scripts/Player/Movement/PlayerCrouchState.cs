@@ -25,10 +25,10 @@ public class PlayerCrouchState : PlayerBaseState
         if(Ctx.currentState == Ctx.states.Slope())
         {
             Debug.Log("Already Crouching");
-            Ctx.RideHeight = Ctx.crouchSlopeHeight;
+            Ctx.RideHeight = Ctx.CrouchSlopeHeight;
             return;
         }
-        Ctx.RideHeight = Ctx.crouchHeight;
+        Ctx.RideHeight = Ctx.CrouchHeight;
 
     }
 
@@ -43,10 +43,10 @@ public class PlayerCrouchState : PlayerBaseState
         Ctx.LocalScale = new Vector3(Ctx.LocalScale.x, Ctx.StartYScale, Ctx.LocalScale.z);
         if (Ctx.currentState == Ctx.states.Slope())
         {
-            Ctx.RideHeight = Ctx.slopeHeight;
+            Ctx.RideHeight = Ctx.SlopeHeight;
             return;
         }
-        Ctx.RideHeight = Ctx.normalHeight;
+        Ctx.RideHeight = Ctx.NormalHeight;
     }
 
     public override void CheckSwitchStates()

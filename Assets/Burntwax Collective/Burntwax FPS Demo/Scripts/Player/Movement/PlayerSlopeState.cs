@@ -21,10 +21,10 @@ public class PlayerSlopeState : PlayerBaseState
         InitializeSubState();
         if(Ctx.currentState.CurrentSubstate() == Ctx.states.Crouch())
         {
-            Ctx.RideHeight = Ctx.crouchSlopeHeight;
+            Ctx.RideHeight = Ctx.CrouchSlopeHeight;
             return;
         }
-        Ctx.RideHeight = Ctx.slopeHeight;
+        Ctx.RideHeight = Ctx.SlopeHeight;
         
 
         
@@ -40,10 +40,10 @@ public class PlayerSlopeState : PlayerBaseState
         Ctx.currentAngle = 0;
         if(Ctx.currentState.CurrentSubstate() == Ctx.states.Crouch())
         {
-            Ctx.RideHeight = Ctx.crouchHeight;
+            Ctx.RideHeight = Ctx.CrouchHeight;
             return;
         }
-        Ctx.RideHeight = Ctx.normalHeight;
+        Ctx.RideHeight = Ctx.NormalHeight;
     }
 
     public override void CheckSwitchStates()
@@ -62,12 +62,6 @@ public class PlayerSlopeState : PlayerBaseState
         }
     }
 
-
-    private void SlideDownSlope()
-    {
-        
-
-    }
 
     public override void InitializeSubState()
     {

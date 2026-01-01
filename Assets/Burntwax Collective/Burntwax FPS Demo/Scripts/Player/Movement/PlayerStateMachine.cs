@@ -9,18 +9,21 @@ using Random = UnityEngine.Random;
 public class PlayerStateMachine : MonoBehaviour
 {
 
+    [Header("Essentials")]
     public string currentStateText;
     public string currentSubStateText;
     public Transform player;
     public InputManager input;
     public Rigidbody rb;
     public CapsuleCollider capsuleCollider;
-    public CamStateMachine cam;
 
 
     [Header("State Machines")]
     public GunStateMachine gunMachine;
+    public CamStateMachine cam;
     public InputPrioritySorter prioritySorter;
+
+    
 
     [Header("Movement")]
 
@@ -28,23 +31,21 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float playerVelocity;
     float moveMultiplier;
     [SerializeField] float groundMultiplier = 1f;
-    [SerializeField] float airMultiplier = .7f;
-    [SerializeField] float wallMultiplier = 1.2f;
+    [SerializeField] float airMultiplier = .85f;
+    [SerializeField] float wallMultiplier = 0.9f;
 
-    [SerializeField] float walkVelocity;
-    [SerializeField] float sprintVelocity;
-    [SerializeField] float groundDrag;
-    [SerializeField] float airDrag;
-    [SerializeField] float wallDrag;
-
+    [SerializeField] float walkVelocity = 4f;
+    [SerializeField] float sprintVelocity = 6f;
+    [SerializeField] float crouchVelocity = 2f;
+    [SerializeField] float groundDrag = 10f;
+    [SerializeField] float airDrag = 0.5f;
+    [SerializeField] float wallDrag = 6f;
     float horizontalInput;
     float verticalInput;
     [HideInInspector] public Vector3 moveDirection;
 
     [Header("Crouching")]
-
-    [SerializeField] float crouchVelocity;
-    [SerializeField] float crouchYScale;
+    [SerializeField] float crouchYScale = 0.5f;
     float startYScale;
 
     [Header("Jumping")]
@@ -54,18 +55,15 @@ public class PlayerStateMachine : MonoBehaviour
 
 
     [Header("Ground Checking")]
-    [SerializeField] public bool playerIsGrounded = true;
-    [SerializeField][Range(0.0f, 1.8f)] float groundCheckRadiusMultiplier = 0.9f;
-    [SerializeField][Range(-0.95f, 1.05f)] float groundCheckDistance = 0.01f;
-    public LayerMask heldRigidbody;
-    public RaycastHit groundCheckHit = new RaycastHit();
+    public bool playerIsGrounded = true;
+    [HideInInspector]public RaycastHit groundCheckHit = new RaycastHit();
 
-    [Header("Floating Capsule Settings")]
+    [Header("Spring Capsule Settings")]
     [SerializeField] float rideHeight = 0f;
-    public float normalHeight = 1.2f;
-    public float crouchHeight = 0.73f;
-    public float slopeHeight = 1.4f;
-    public float crouchSlopeHeight = 0.93f;
+    [SerializeField] float normalHeight = 1.2f;
+    [SerializeField] float crouchHeight = 0.73f;
+    [SerializeField] float slopeHeight = 1.4f;
+    [SerializeField] float crouchSlopeHeight = 0.93f;
     [SerializeField] float rideSpringStrength = 50f; // How hard it pushes up
     [SerializeField] float rideSpringDampener = 5f;  // Prevents infinite bouncing
     [SerializeField] float rayDistance = 2.0f;       // Length of the check ray
@@ -86,10 +84,6 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] float wallCheckDistance;
     [SerializeField] float sphereCastRadius;
     [SerializeField] float minHeight;
-    RaycastHit leftWallHit;
-    RaycastHit rightWallHit;
-    RaycastHit frontWallHit;
-    RaycastHit backWallHit;
     [SerializeField] bool wallLeft;
     [SerializeField] bool wallRight;
     [SerializeField] bool wallFront;
@@ -98,18 +92,10 @@ public class PlayerStateMachine : MonoBehaviour
 
     [Header("Slope Handling")]
     public bool playerIsSloped;
-
     public int currentAngle;
-    [SerializeField] float maxSlopeAngle;
-    [SerializeField] bool slopeToSteep;
-    [SerializeField] int downForce;
-
-    RaycastHit slopeHit;
 
     public PlayerBaseState currentState;
     public PlayerStateFactory states;
-
-
     // For states
     public PlayerBaseState CurrentState { get { return currentState; } set { currentState = value; } }
 
@@ -125,19 +111,23 @@ public class PlayerStateMachine : MonoBehaviour
     public float GroundMultiplier { get { return groundMultiplier; } }
     public float AirMultiplier { get { return airMultiplier; } }
 
-
-    public float RideHeight { get { return rideHeight; } set { rideHeight = value; } }
-    public float RideSpringStrength { get { return rideSpringStrength; } set { rideSpringStrength = value; } }
-    public float RideSpringDampener { get { return rideSpringDampener; } set { rideSpringDampener = value; } }
-    public float RayDistance { get { return rayDistance; } set { rayDistance = value; } }
-
-
     public float WallMultiplier { get { return wallMultiplier; } }
     public float SprintVelocity { get { return sprintVelocity; } }
     public float WalkVelocity { get { return walkVelocity; } }
     public float GroundDrag { get { return groundDrag; } }
     public float AirDrag { get { return airDrag; } }
     public float WallDrag { get { return wallDrag; } }
+
+
+    // Spring Capsule
+    public float NormalHeight { get { return normalHeight; } }
+    public float CrouchHeight { get { return crouchHeight; } }
+    public float SlopeHeight { get { return slopeHeight; } }
+    public float CrouchSlopeHeight { get { return crouchSlopeHeight; } }
+    public float RideHeight { get { return rideHeight; } set { rideHeight = value; } }
+    public float RideSpringStrength { get { return rideSpringStrength; } set { rideSpringStrength = value; } }
+    public float RideSpringDampener { get { return rideSpringDampener; } set { rideSpringDampener = value; } }
+    public float RayDistance { get { return rayDistance; } set { rayDistance = value; } }
 
 
     // Crouching
@@ -166,35 +156,19 @@ public class PlayerStateMachine : MonoBehaviour
     public float WallCheckDistance { get { return wallCheckDistance; } }
     public float SphereCastRadius { get { return sphereCastRadius; } }
     public float MinHeight { get { return minHeight; } }
-    public RaycastHit RightWallHit { get { return rightWallHit; } set { rightWallHit = value; } }
-    public RaycastHit LeftWallHit { get { return leftWallHit; } set { leftWallHit = value; } }
-    public RaycastHit FrontWallHit { get { return frontWallHit; } set { frontWallHit = value; } }
-    public RaycastHit BackWallHit { get { return backWallHit; } set { backWallHit = value; } }
     public bool WallLeft { get { return wallLeft; } set { wallLeft = value; } }
     public bool WallRight { get { return wallRight; } set { wallRight = value; } }
     public bool WallFront { get { return wallFront; } set { wallFront = value; } }
     public bool WallBack { get { return wallBack; } set { wallBack = value; } }
 
-
-
-    public bool SlopeTooSteep { get { return slopeToSteep; } }
-    public int DownForce { get { return downForce; } }
-
-    void Start()
-    {
-        startYScale = transform.localScale.y;
-    }
-
-
-
     private void Awake()
     {
         states = new PlayerStateFactory(this);
-        prioritySorter = GetComponent<InputPrioritySorter>();
         currentState = states.Grounded();
         currentState.EnterState();
         currentState.InitializeSubState();
         rideHeight = normalHeight;
+        startYScale = transform.localScale.y;
 
     }
 
@@ -207,12 +181,12 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Update()
     {
-
-
-
-
         GetMoveInput();
-
+        currentState.UpdateStates();
+        currentStateText = currentState.GetType().Name;
+        currentSubStateText = currentState.CurrentSubstate().GetType().Name;
+        playerIsSloped = PlayerSlopeCheck();
+        playerIsGrounded = PlayerGroundCheck();
         if (currentState == states.Walljump() && !ableToWallJump)
         {
             StartCoroutine(WallJumpGracePeriod());
@@ -221,11 +195,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void FixedUpdate()
     {
-        currentState.UpdateStates();
-        currentStateText = currentState.GetType().Name;
-        currentSubStateText = currentState.CurrentSubstate().GetType().Name;
-        playerIsSloped = PlayerSlopeCheck();
-        playerIsGrounded = PlayerGroundCheck();
+        
         ApplyFloatingForce();
         PlayerMove();
         SpeedControl();
