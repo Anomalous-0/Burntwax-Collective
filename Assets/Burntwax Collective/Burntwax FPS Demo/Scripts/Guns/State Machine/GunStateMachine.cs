@@ -17,8 +17,6 @@ public class GunStateMachine : MonoBehaviour
 
     [Space]
 
-    public InputManager input;
-
     public int currentID;
 
     [Header("Recoil")]
@@ -100,7 +98,7 @@ public class GunStateMachine : MonoBehaviour
             WeaponSelect();
 
 
-            if ((input.weaponSelectID || input.mouseScroll != 0) && !isShooting)
+            if ((InputManager.Instance.weaponSelectID || InputManager.Instance.mouseScroll != 0) && !isShooting)
             {
                 WeaponSwitch();
             }
@@ -135,7 +133,7 @@ public class GunStateMachine : MonoBehaviour
 
     private void WeaponSelect()
     {
-        if (input.weaponSelectID)
+        if (InputManager.Instance.weaponSelectID)
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
@@ -178,11 +176,11 @@ public class GunStateMachine : MonoBehaviour
 
     private void WeaponSwitch()
     {
-        if (input.mouseScroll != 0)
+        if (InputManager.Instance.mouseScroll != 0)
         {
             ScrollID();
         }
-        else if (input.weaponSelectID)
+        else if (InputManager.Instance.weaponSelectID)
         {
 
             WeaponSelect();
@@ -205,7 +203,7 @@ public class GunStateMachine : MonoBehaviour
 
     private void ScrollID()
     {
-        if (input.mouseScroll > 0)
+        if (InputManager.Instance.mouseScroll > 0)
         {
             currentID++;
             if (currentID > CurrentGuns.Count - 1)
@@ -213,7 +211,7 @@ public class GunStateMachine : MonoBehaviour
                 currentID = 0;
             }
         }
-        else if (input.mouseScroll < 0)
+        else if (InputManager.Instance.mouseScroll < 0)
         {
             currentID--;
             if (currentID < 0)
@@ -273,10 +271,10 @@ public class GunStateMachine : MonoBehaviour
 
     private void EmptyClip()
     {
-        if (ClipEmpty() && input.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() && CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && input.shootIsPressed)
+        if (ClipEmpty() && InputManager.Instance.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() && CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && InputManager.Instance.shootIsPressed)
         {
             ActiveGunScriptable.AudioConfig.PlayEmptyClip(stateMachine.GetComponent<AudioSource>());
-            input.shootIsPressed = false;
+            InputManager.Instance.shootIsPressed = false;
         }
     }
 
@@ -335,8 +333,8 @@ public class GunStateMachine : MonoBehaviour
 
     public bool ManualReload()
     {
-        return input.reloadIsPressed && ActiveGunScriptable.CanReload();
-        // return  !isReloading && input.reloadIsPressed && GunSelector.ActiveGun.CanReload();
+        return InputManager.Instance.reloadIsPressed && ActiveGunScriptable.CanReload();
+        // return  !isReloading && InputManager.Instance.reloadIsPressed && GunSelector.ActiveGun.CanReload();
     }
 
 

@@ -23,7 +23,7 @@ public class GunNoShootState : GunBaseState
         if (Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() && Ctx.fullyEquipped
         && Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow()
         && Ctx.CanShoot()
-        && Ctx.stateMachine.prioritySorter.ShootIsPriority() && !Ctx.isShooting)
+        && InputPrioritySorter.Instance.ShootIsPriority() && !Ctx.isShooting)
         {
             SwitchState(Factory.Shoot());
         }

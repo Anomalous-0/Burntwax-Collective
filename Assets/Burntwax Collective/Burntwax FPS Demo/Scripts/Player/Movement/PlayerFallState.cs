@@ -62,7 +62,7 @@ public class PlayerFallState : PlayerBaseState
         {
             SwitchState(Factory.Wallrun());
         }
-        else if (Ctx.CoyoteTime > 0 && Ctx.input.jumpIsPressed)
+        else if (Ctx.CoyoteTime > 0 && InputManager.Instance.jumpIsPressed)
         {
             Ctx.CoyoteTime = Ctx.CoyoteTimer;
             Ctx.YFlat();
@@ -73,11 +73,11 @@ public class PlayerFallState : PlayerBaseState
 
     public override void InitializeSubState()
     {
-        if (!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SetSubState(Factory.Walk());
         }

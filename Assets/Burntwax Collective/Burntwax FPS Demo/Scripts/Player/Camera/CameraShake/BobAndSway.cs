@@ -5,7 +5,6 @@ using UnityEngine;
 public class BobAndSway : MonoBehaviour
 {
     [Header("External References")]
-    [SerializeField] InputManager input;
     [SerializeField] PlayerStateMachine player;
     [SerializeField] GunStateMachine gun;
     [SerializeField] CamStateMachine cam;
@@ -103,7 +102,7 @@ public class BobAndSway : MonoBehaviour
                   || player.currentState == player.states.Wallrun()
                   || player.currentState == player.states.Slope();
 
-        if (input.MoveInput != Vector2.zero && onSolid && cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot())
+        if (InputManager.Instance.MoveInput != Vector2.zero && onSolid && cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot())
         {
             Sway();
         }
@@ -168,12 +167,12 @@ public class BobAndSway : MonoBehaviour
 
     void GetInput()
     {
-        walkInput.x = input.MoveInput.x;
-        walkInput.y = input.MoveInput.y;
+        walkInput.x = InputManager.Instance.MoveInput.x;
+        walkInput.y = InputManager.Instance.MoveInput.y;
         walkInput = walkInput.normalized;
 
-        lookInput.x = input.LookInput.x;
-        lookInput.y = input.LookInput.y;
+        lookInput.x = InputManager.Instance.LookInput.x;
+        lookInput.y = InputManager.Instance.LookInput.y;
     }
 
     void Sway()
@@ -196,7 +195,7 @@ public class BobAndSway : MonoBehaviour
 
     void BobOffset()
     {
-        if (!bobOffset || input.MoveInput == Vector2.zero || !onSolid)
+        if (!bobOffset || InputManager.Instance.MoveInput == Vector2.zero || !onSolid)
         {
             bobPosition = Vector3.Lerp(bobPosition, Vector3.zero, Time.deltaTime * smooth);
             return;
@@ -222,7 +221,7 @@ public class BobAndSway : MonoBehaviour
 
     void BobRotation()
     {
-        if (!bobSway || input.MoveInput == Vector2.zero || !onSolid)
+        if (!bobSway || InputManager.Instance.MoveInput == Vector2.zero || !onSolid)
         {
             bobEulerRotation = Vector3.Lerp(bobEulerRotation, Vector3.zero, Time.deltaTime * smooth);
             return;

@@ -33,11 +33,11 @@ public class GunRestState : GunBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.stateMachine.prioritySorter.AimIsPriority() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
+        if (InputPrioritySorter.Instance.AimIsPriority() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
         {
             SwitchState(Factory.Aim());
         }
-        else if (Ctx.stateMachine.prioritySorter.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
+        else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle() && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
         {
             SwitchState(Factory.Stow());
         }

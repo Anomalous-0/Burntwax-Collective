@@ -9,14 +9,11 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager Instance;
-    public InputManager input;
     public PauseMenu pauseMenu;
 
     public PlayerStateMachine player;
 
     public GunStateMachine gun;
-
-    public ObjectManager objectManager;
 
     private void Awake()
     {
@@ -24,21 +21,23 @@ public class GameManager : MonoBehaviour
         if (Instance != null)
         {
             Debug.LogError("Found more than one Game Manager in the scene");
+            Destroy(gameObject);
         }
         Instance = this;
     }
 
     private void Start()
     {
+
     }
 
     private void Update()
     {
-        if (input.saveIsPressed)
+        if (InputManager.Instance.saveIsPressed)
         {
             SaveSystem.Save();
         }
-        if (input.loadIsPressed)
+        if (InputManager.Instance.loadIsPressed)
         {
             SaveSystem.Load();
         }

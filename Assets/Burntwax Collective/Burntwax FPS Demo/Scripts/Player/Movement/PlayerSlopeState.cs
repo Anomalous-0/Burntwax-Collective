@@ -48,15 +48,15 @@ public class PlayerSlopeState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.input.jumpIsPressed)
+        if (InputManager.Instance.jumpIsPressed)
         {
             SwitchState(Factory.Jump());
         }
-        else if (!Ctx.playerIsSloped && !Ctx.playerIsGrounded && !Ctx.input.crouchIsPressed)
+        else if (!Ctx.playerIsSloped && !Ctx.playerIsGrounded && !InputManager.Instance.crouchIsPressed)
         {
             SwitchState(Factory.Fall());
         }
-        else if (!Ctx.input.jumpIsPressed && !Ctx.playerIsSloped && Math.Abs(Ctx.currentAngle) < 0.03f && Ctx.groundCheckHit.collider.gameObject.layer != LayerMask.NameToLayer("Variable Slope"))
+        else if (!InputManager.Instance.jumpIsPressed && !Ctx.playerIsSloped && Math.Abs(Ctx.currentAngle) < 0.03f && Ctx.groundCheckHit.collider.gameObject.layer != LayerMask.NameToLayer("Variable Slope"))
         {
             SwitchState(Factory.Grounded());
         }
@@ -65,17 +65,17 @@ public class PlayerSlopeState : PlayerBaseState
 
     public override void InitializeSubState()
     {
-        if (!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
 
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
 
             SetSubState(Factory.Walk());
         }
-        else if (Ctx.input.crouchIsPressed)
+        else if (InputManager.Instance.crouchIsPressed)
         {
             SwitchState(Factory.Crouch());
         }

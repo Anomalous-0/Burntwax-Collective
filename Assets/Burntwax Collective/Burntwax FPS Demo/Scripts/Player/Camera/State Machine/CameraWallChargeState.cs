@@ -39,7 +39,7 @@ public class CameraWallChargeState : CameraBaseState
 
             SwitchState(Factory.Fps());
         }
-        if (Ctx.player.prioritySorter.AimIsPriority() && Ctx.gun.CurrentState != Ctx.gun.states.Reload() && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot())
+        if (InputPrioritySorter.Instance.AimIsPriority() && Ctx.gun.CurrentState != Ctx.gun.states.Reload() && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot())
         {
             SwitchState(Factory.Aim());
         }

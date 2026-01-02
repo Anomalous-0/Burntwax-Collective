@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerIdleState : PlayerBaseState
 {
 
@@ -25,15 +21,15 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot())
+        if (InputManager.Instance.moveIsPressed && InputManager.Instance.sprintIsPressed && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot())
         {
             SwitchState(Factory.Sprint());
         }
-        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SwitchState(Factory.Walk());
         }
-        else if (Ctx.input.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
+        else if (InputManager.Instance.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
         {
             SwitchState(Factory.Crouch());
         }

@@ -26,15 +26,15 @@ public class PlayerWalkState : PlayerBaseState
     public override void CheckSwitchStates()
     {
 
-        if (Ctx.input.moveIsPressed && Ctx.prioritySorter.SprintIsPriority() && !Ctx.gunMachine.isShooting && !Ctx.gunMachine.isReloading && !Ctx.gunMachine.isIncrementalReloading)
+        if (InputManager.Instance.moveIsPressed && InputPrioritySorter.Instance.SprintIsPriority() && !Ctx.gunMachine.isShooting && !Ctx.gunMachine.isReloading && !Ctx.gunMachine.isIncrementalReloading)
         {
             SwitchState(Factory.Sprint());
         }
-        else if (!Ctx.input.moveIsPressed)
+        else if (!InputManager.Instance.moveIsPressed)
         {
             SwitchState(Factory.Idle());
         }
-        else if (Ctx.input.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
+        else if (InputManager.Instance.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
         {
             SwitchState(Factory.Crouch());
         }

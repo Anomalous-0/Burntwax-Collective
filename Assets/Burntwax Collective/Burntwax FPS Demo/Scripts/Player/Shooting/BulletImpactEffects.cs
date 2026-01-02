@@ -3,7 +3,20 @@ using UnityEngine;
 
 public class BulletImpactEffects : MonoBehaviour
 {
+
+    public static BulletImpactEffects Instance;
     public List<SurfaceEffectSO> surfaceEffects;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        if (Instance != null)
+        {
+            Debug.LogError("More than one BulletImpact Manager in the scene");
+            Destroy(gameObject);
+        }
+        Instance = this;
+    }
 
     public void ImpactVFX(string tag, Vector3 position, Quaternion rotation)
     {

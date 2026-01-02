@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using System.Threading.Tasks;
 
 //If you need to find the save file --> C:\Users\*INSERT USER NAME HERE*\AppData\LocalLow\Burntwax Collective\Burntwax Demo
 public class SaveSystem
@@ -33,34 +34,76 @@ public class SaveSystem
     public static void Save()
     {
         HandleSaveData();
-        File.WriteAllText(SaveFileName(), JsonUtility.ToJson(_saveData, true));
+        string json = JsonUtility.ToJson(_saveData);
+        string encryptedData = EncryptionUtility.EncryptString(json);
+
+        File.WriteAllText(SaveFileName(), encryptedData);
+    }
+
+
+    public static async Task SaveAsynchronously()
+    {
+        await SaveAsync();
+    }
+
+    private static async Task SaveAsync()
+    {
+        HandleSaveData();
+        string json = JsonUtility.ToJson(_saveData);
+        string encryptedData = EncryptionUtility.EncryptString(json);
+
+        File.WriteAllText(SaveFileName(), encryptedData);
     }
 
     private static void HandleSaveData()
     {
+
+        /*
+        PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>(); 
+        if(player != null)
+            player.SaveData(ref _saveData.PlayerData);
+        */
         GameManager.Instance.player.SaveData(ref _saveData.PlayerData);
         GameManager.Instance.player.GetComponent<CamStateMachine>().SaveData(ref _saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
         GameManager.Instance.gun.SaveData(ref _saveData.GunData);
-        GameManager.Instance.objectManager.SaveData(ref _saveData.ObjectConsumableData);
+        ObjectManager.Instance.SaveData(ref _saveData.ObjectConsumableData);
 
 
     }
 
+
+
+    public static async Task LoadAsync()
+    {
+        string saveData = File.ReadAllText(SaveFileName());
+        string decryptedData = EncryptionUtility.DecryptString(saveData);
+        _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
+
+        await HandleLoadDataAsync();
+
+    }
+
+    private static async Task HandleLoadDataAsync()
+    {
+        // await GameManager.Instance.
+    }
     public static void Load()
     {
-        string saveContent = File.ReadAllText(SaveFileName());
-        _saveData = JsonUtility.FromJson<SaveData>(saveContent);
+        string saveData = File.ReadAllText(SaveFileName());
+        string decryptedData = EncryptionUtility.DecryptString(saveData);
+        _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
         HandleLoadData();
     }
-
     private static void HandleLoadData()
     {
         GameManager.Instance.player.LoadData(_saveData.PlayerData);
         GameManager.Instance.player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
         GameManager.Instance.player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
         GameManager.Instance.gun.LoadData(_saveData.GunData);
-        GameManager.Instance.objectManager.LoadData(_saveData.ObjectConsumableData);
+        ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
 
     }
+
+
 }

@@ -1,10 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.Animations.Rigging;
-using UnityEngine.Rendering;
-
 public class PlayerCrouchState : PlayerBaseState
 {
 
@@ -24,7 +18,6 @@ public class PlayerCrouchState : PlayerBaseState
         
         if(Ctx.currentState == Ctx.states.Slope())
         {
-            Debug.Log("Already Crouching");
             Ctx.RideHeight = Ctx.CrouchSlopeHeight;
             return;
         }
@@ -55,15 +48,15 @@ public class PlayerCrouchState : PlayerBaseState
         {
             return;
         }
-        else if (!Ctx.input.crouchIsPressed && Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (!InputManager.Instance.crouchIsPressed && InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SwitchState(Factory.Walk());
         }
-        else if (!Ctx.input.crouchIsPressed && !Ctx.input.moveIsPressed)
+        else if (!InputManager.Instance.crouchIsPressed && !InputManager.Instance.moveIsPressed)
         {
             SwitchState(Factory.Idle());
         }
-        else if (!Ctx.input.crouchIsPressed && Ctx.input.moveIsPressed && Ctx.input.sprintIsPressed)
+        else if (!InputManager.Instance.crouchIsPressed && InputManager.Instance.moveIsPressed && InputManager.Instance.sprintIsPressed)
         {
             SwitchState(Factory.Sprint());
         }

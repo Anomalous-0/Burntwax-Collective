@@ -39,7 +39,6 @@ public class GunScriptableObject : ScriptableObject
 
     private ParticleSystem ShootSystem;
     private ObjectPool<TrailRenderer> TrailPool;
-    private BulletImpactEffects impactProcessor;
 
 
 
@@ -52,7 +51,7 @@ public class GunScriptableObject : ScriptableObject
         }
         ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
         ShootingAudioSource = player.GetComponent<AudioSource>();
-        impactProcessor = FindFirstObjectByType<BulletImpactEffects>();
+        BulletImpactEffects.Instance = FindFirstObjectByType<BulletImpactEffects>();
     }
 
     public void Despawn(MonoBehaviour ActiveMonoBehaviour)
@@ -151,11 +150,11 @@ public class GunScriptableObject : ScriptableObject
             string surfaceTag = Hit.collider.tag;
             Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;
             Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
-            impactProcessor.ImpactVFX(surfaceTag, impactPosition, impactRotation);
+            BulletImpactEffects.Instance.ImpactVFX(surfaceTag, impactPosition, impactRotation);
             if (!surfaces.Contains(surfaceTag))
             {
                 surfaces.Add(surfaceTag);
-                impactProcessor.ImpactAudio(surfaceTag, impactPosition, impactRotation);
+                BulletImpactEffects.Instance.ImpactAudio(surfaceTag, impactPosition, impactRotation);
             }
 
 

@@ -4,8 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public InputManager input;
-
     [Header("Camera stuff")]
     public CamStateMachine camStateMachine;
 
@@ -14,16 +12,15 @@ public class PauseMenu : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
     }
     public void Update()
     {
 
 
-        if (input.pauseIsPressed)
+        if (InputManager.Instance.pauseIsPressed)
         {
 
-            input.pauseIsPressed = false;
+            InputManager.Instance.pauseIsPressed = false;
             if (Paused)
             {
                 Resume();

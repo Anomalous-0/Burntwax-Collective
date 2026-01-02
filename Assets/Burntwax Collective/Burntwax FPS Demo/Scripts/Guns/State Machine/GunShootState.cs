@@ -31,7 +31,7 @@ public class GunShootState : GunBaseState
 
     public override void CheckSwitchStates()
     {
-        if ((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && Ctx.input.shootIsPressed)
+        if ((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && InputManager.Instance.shootIsPressed)
         {
 
             Shoot();

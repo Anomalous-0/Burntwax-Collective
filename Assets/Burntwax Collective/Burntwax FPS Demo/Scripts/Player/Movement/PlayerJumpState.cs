@@ -57,12 +57,12 @@ public class PlayerJumpState : PlayerBaseState
 
     public override void InitializeSubState()
     {
-        if (!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
 
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SetSubState(Factory.Walk());
         }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWallChargeState : PlayerBaseState
@@ -44,7 +42,7 @@ public class PlayerWallChargeState : PlayerBaseState
             Ctx.rb.useGravity = true;
             SwitchState(Factory.Grounded());
         }
-        else if (!Ctx.input.jumpIsPressed)
+        else if (!InputManager.Instance.jumpIsPressed)
         {
             Ctx.rb.linearVelocity = new Vector3(Ctx.rb.linearVelocity.x, 0f, Ctx.rb.linearVelocity.z);
             Ctx.rb.useGravity = true;
@@ -65,11 +63,11 @@ public class PlayerWallChargeState : PlayerBaseState
 
     public override void InitializeSubState()
     {
-        if (!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
             SetSubState(Factory.Walk());
         }

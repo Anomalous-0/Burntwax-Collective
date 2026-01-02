@@ -32,11 +32,11 @@ public class GunAimState : GunBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.stateMachine.prioritySorter.SprintIsPriority())
+        if (InputPrioritySorter.Instance.SprintIsPriority())
         {
             SwitchState(Factory.Stow());
         }
-        else if (!Ctx.input.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
+        else if (!InputManager.Instance.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
         {
             SwitchState(Factory.Rest());
         }

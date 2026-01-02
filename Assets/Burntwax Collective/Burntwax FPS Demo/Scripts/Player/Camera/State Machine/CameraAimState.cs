@@ -33,7 +33,7 @@ public class CameraAimState : CameraBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.player.prioritySorter.SprintIsPriority() || !Ctx.input.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload())
+        if (InputPrioritySorter.Instance.SprintIsPriority() || !InputManager.Instance.aimIsPressed || Ctx.gun.CurrentState == Ctx.gun.states.Reload())
         {
             SwitchState(Factory.Fps());
         }

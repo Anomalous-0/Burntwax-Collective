@@ -14,7 +14,6 @@ public class Interactor : MonoBehaviour
 
     [SerializeField] float raycastDistance = 3f;
     [SerializeField] LayerMask interactableLayer;
-    public InputManager input;
 
 
     Interactable interactable;
@@ -35,13 +34,13 @@ public class Interactor : MonoBehaviour
                     interactable = hit.collider.GetComponent<Interactable>();
 
                 }
-                if (input.interactIsPressed)
+                if (InputManager.Instance.interactIsPressed)
                 {
                     interactable.onInteract.Invoke();
 
                     if (!interactable.continuous)
                     {
-                        input.interactIsPressed = false;
+                        InputManager.Instance.interactIsPressed = false;
                     }
 
                 }

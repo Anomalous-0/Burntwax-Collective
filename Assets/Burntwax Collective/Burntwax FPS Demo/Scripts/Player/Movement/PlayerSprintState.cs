@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerSprintState : PlayerBaseState
 {
 
@@ -28,18 +24,18 @@ public class PlayerSprintState : PlayerBaseState
     public override void CheckSwitchStates()
     {
 
-        if (Ctx.input.moveIsPressed)
+        if (InputManager.Instance.moveIsPressed)
         {
-            if (!Ctx.prioritySorter.SprintIsPriority() || Ctx.gunMachine.isShooting || Ctx.gunMachine.isReloading || Ctx.gunMachine.isIncrementalReloading)
+            if (!InputPrioritySorter.Instance.SprintIsPriority() || Ctx.gunMachine.isShooting || Ctx.gunMachine.isReloading || Ctx.gunMachine.isIncrementalReloading)
             {
                 SwitchState(Factory.Walk());
             }
         }
-        else if (!Ctx.input.moveIsPressed)
+        else if (!InputManager.Instance.moveIsPressed)
         {
             SwitchState(Factory.Idle());
         }
-        else if (Ctx.input.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
+        else if (InputManager.Instance.crouchIsPressed && Ctx.currentState != Ctx.states.Fall() && Ctx.currentState != Ctx.states.Jump())
         {
             SwitchState(Factory.Crouch());
         }

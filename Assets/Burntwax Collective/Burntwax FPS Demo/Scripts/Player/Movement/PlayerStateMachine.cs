@@ -13,7 +13,6 @@ public class PlayerStateMachine : MonoBehaviour
     public string currentStateText;
     public string currentSubStateText;
     public Transform player;
-    public InputManager input;
     public Rigidbody rb;
     public CapsuleCollider capsuleCollider;
 
@@ -21,7 +20,6 @@ public class PlayerStateMachine : MonoBehaviour
     [Header("State Machines")]
     public GunStateMachine gunMachine;
     public CamStateMachine cam;
-    public InputPrioritySorter prioritySorter;
 
     
 
@@ -206,8 +204,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void GetMoveInput()
     {
-        horizontalInput = input.MoveInput.x;
-        verticalInput = input.MoveInput.y;
+        horizontalInput = InputManager.Instance.MoveInput.x;
+        verticalInput = InputManager.Instance.MoveInput.y;
     }
 
     private void SetRotation()

@@ -16,9 +16,11 @@ public class ObjectManager : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         if (Instance != null)
         {
-            Debug.LogError("More than one Consumable Manager in the scene");
+            Debug.LogError("More than one Object Manager in the scene");
+            Destroy(gameObject);
         }
         Instance = this;
     }

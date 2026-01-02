@@ -52,7 +52,7 @@ public class GunReloadState : GunBaseState
             SwitchState(Factory.IncrementalReload());
         }
 
-        else if (!Ctx.isReloading || Ctx.input.mouseScroll != 0)
+        else if (!Ctx.isReloading || InputManager.Instance.mouseScroll != 0)
         {
 
             SwitchState(Factory.Rest());

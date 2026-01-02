@@ -30,7 +30,7 @@ public class GunStowState : GunBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !Ctx.stateMachine.prioritySorter.AimIsPriority() || Ctx.stateMachine.prioritySorter.ShootIsPriority())
+        if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.ShootIsPriority())
         {
 
             SwitchState(Factory.Rest());
@@ -40,7 +40,7 @@ public class GunStowState : GunBaseState
             SwitchState(Factory.Reload());
         }
 
-        else if (!Ctx.isReloading && Ctx.stateMachine.prioritySorter.AimIsPriority())
+        else if (!Ctx.isReloading && InputPrioritySorter.Instance.AimIsPriority())
         {
             SwitchState(Factory.Aim());
         }

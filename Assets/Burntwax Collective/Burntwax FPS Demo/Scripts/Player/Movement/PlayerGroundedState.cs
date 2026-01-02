@@ -30,11 +30,11 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void CheckSwitchStates()
     {
-        if (Ctx.input.jumpIsPressed)
+        if (InputManager.Instance.jumpIsPressed)
         {
             SwitchState(Factory.Jump());
         }
-        else if (!Ctx.playerIsGrounded && !Ctx.input.crouchIsPressed)
+        else if (!Ctx.playerIsGrounded && !InputManager.Instance.crouchIsPressed)
         {
             Ctx.CoyoteTime = Ctx.CoyoteTimer;
             SwitchState(Factory.Fall());
@@ -49,12 +49,12 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void InitializeSubState()
     {
-        if (!Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
 
             SetSubState(Factory.Idle());
         }
-        else if (Ctx.input.moveIsPressed && !Ctx.input.sprintIsPressed)
+        else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
         {
 
             SetSubState(Factory.Walk());

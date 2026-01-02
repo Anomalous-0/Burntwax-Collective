@@ -5,8 +5,6 @@ using Cinemachine;
 
 public class CamStateMachine : MonoBehaviour
 {
-    public InputManager input;
-
     public Transform cam;
     CinemachinePOV pov;
 

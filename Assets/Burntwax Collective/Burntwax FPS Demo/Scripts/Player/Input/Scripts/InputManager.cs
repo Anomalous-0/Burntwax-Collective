@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
 
+    public static InputManager Instance;
     public Vector2 MoveInput = Vector2.zero;
     public Vector2 LookInput = Vector2.zero;
     public bool InvertMouseY { get; private set; } = true;
@@ -36,6 +37,17 @@ public class InputManager : MonoBehaviour
     public bool loadIsPressed { get; private set; } = false;
 
     PlayerInput input;
+
+    void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+        if (Instance != null)
+        {
+            Debug.LogError("More than one Input Manager in the scene");
+            Destroy(gameObject);
+        }
+        Instance = this;
+    }
 
     private void OnEnable()
     {
