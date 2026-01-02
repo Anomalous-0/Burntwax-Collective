@@ -93,7 +93,7 @@ public class GunStateMachine : MonoBehaviour
 
     private void Update()
     {
-        if (ActiveGunScriptable != null && !GameManager.Instance.pauseMenu.Paused)
+        if (ActiveGunScriptable != null && !PauseMenu.Instance.Paused)
         {
             WeaponSelect();
 
@@ -375,7 +375,9 @@ public class GunStateMachine : MonoBehaviour
         if (data.ActiveGunScriptable == null)
         {
             Debug.LogWarning("No active gun to load.");
+            CurrentGunModel.gameObject.SetActive(false);
             ActiveGunScriptable = null;
+            
             CurrentGunModel = null;
             anim.Play("empty_rest");
             CurrentGuns.Clear();
