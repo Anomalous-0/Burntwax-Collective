@@ -161,7 +161,6 @@ public class PlayerStateMachine : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
         states = new PlayerStateFactory(this);
         currentState = states.Grounded();
         currentState.EnterState();
