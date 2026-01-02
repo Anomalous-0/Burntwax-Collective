@@ -40,12 +40,7 @@ public class InputManager : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        if (Instance != null)
-        {
-            Debug.LogError("More than one Input Manager in the scene");
-            Destroy(gameObject);
-        }
+        
         Instance = this;
     }
 
