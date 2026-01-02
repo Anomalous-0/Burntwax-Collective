@@ -4,6 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+
+    public static PauseMenu Instance;
     [Header("Camera stuff")]
     public CamStateMachine camStateMachine;
 
@@ -12,6 +14,12 @@ public class PauseMenu : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null)
+        {
+            Debug.LogError("Found more than one Pause Menu in the scene");
+            Destroy(gameObject);
+        }
+        Instance = this;
     }
     public void Update()
     {
