@@ -18502,9 +18502,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f6c7c39d122f2c43bbdbfd2bfe2b8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  pauseMenu: {fileID: 699535641}
-  player: {fileID: 401126580}
-  gun: {fileID: 8999892664573018100}
 --- !u!1001 &1392315078
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30898,6 +30895,10 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1389430488}
+  - {fileID: 203905208}
+  - {fileID: 189981003}
+  - {fileID: 927601126}
+  - {fileID: 777850380}
   - {fileID: 2051112947}
   - {fileID: 736951251}
   - {fileID: 5918461596287933360}
@@ -30905,7 +30906,3 @@ SceneRoots:
   - {fileID: 434014395}
   - {fileID: 699535639}
   - {fileID: 1643080437}
-  - {fileID: 203905208}
-  - {fileID: 189981003}
-  - {fileID: 927601126}
-  - {fileID: 777850380}
