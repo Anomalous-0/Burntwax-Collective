@@ -9,7 +9,11 @@ public class GameManager : MonoBehaviour
 {
 
     public static GameManager Instance;
-    
+    public PauseMenu pauseMenu;
+
+    public PlayerStateMachine player;
+
+    public GunStateMachine gun;
 
     private void Awake()
     {
