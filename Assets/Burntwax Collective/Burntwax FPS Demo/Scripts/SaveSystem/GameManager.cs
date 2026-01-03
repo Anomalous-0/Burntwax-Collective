@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (InputManager.Instance.saveIsPressed)
         {

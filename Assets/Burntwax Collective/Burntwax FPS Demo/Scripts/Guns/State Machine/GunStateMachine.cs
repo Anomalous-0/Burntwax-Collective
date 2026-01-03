@@ -374,8 +374,8 @@ public class GunStateMachine : MonoBehaviour
     {
         if (data.ActiveGunScriptable == null)
         {
-            Debug.LogWarning("No active gun to load.");
-            CurrentGunModel.gameObject.SetActive(false);
+            if(CurrentGunModel) 
+                CurrentGunModel.gameObject.SetActive(false);
             ActiveGunScriptable = null;
             CurrentGunModel = null;
             anim.Play("empty_rest");
