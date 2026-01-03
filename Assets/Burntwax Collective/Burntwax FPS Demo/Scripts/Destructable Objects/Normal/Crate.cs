@@ -18,10 +18,8 @@ public class Crate : MonoBehaviour, Destructable
     [SerializeField] private int itemsToSpawn = 3;
     public List<GameObject> resources_prefabs;
 
-
-    public float CurrentHealth { get => currentHealth; }
-
     public float MaxHealth { get => maxHealth; private set => maxHealth = value; }
+    public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
 
     public void TakeDamage(float damage)
     {

@@ -352,7 +352,6 @@ public class GunStateMachine : MonoBehaviour
     {
         if (ActiveGunScriptable == null)
         {
-            Debug.LogWarning("No active gun to save.");
             return;
         }
         data.GunModel = CurrentGunModel;
