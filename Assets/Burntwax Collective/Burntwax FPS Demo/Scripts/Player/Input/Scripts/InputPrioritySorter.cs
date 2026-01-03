@@ -16,7 +16,12 @@ public class InputPrioritySorter : MonoBehaviour
 
     void Awake()
     {
-        
+        DontDestroyOnLoad(gameObject);
+        if (Instance != null)
+        {
+            Debug.LogError("More than one Input Priority Manager in the scene");
+            Destroy(gameObject);
+        }
         Instance = this;
     }
     List<string> inputPriority = new List<string>();

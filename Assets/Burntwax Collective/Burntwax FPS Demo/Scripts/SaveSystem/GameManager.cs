@@ -12,7 +12,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-       
+        DontDestroyOnLoad(gameObject);
+        if (Instance != null)
+        {
+            Debug.LogError("Found more than one Game Manager in the scene");
+            Destroy(gameObject);
+        }
         Instance = this;
     }
 
