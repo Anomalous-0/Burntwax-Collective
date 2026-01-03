@@ -13,6 +13,7 @@ public class HealthPickup : MonoBehaviour
     void Start()
     {
         ObjectManager.Instance.Register(gameObject);
+        gameObject.layer = LayerMask.NameToLayer("Consumable");
     }
 
     //Collect health

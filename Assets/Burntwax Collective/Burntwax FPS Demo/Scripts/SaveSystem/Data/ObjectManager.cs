@@ -16,7 +16,7 @@ public class ObjectManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+       
         if (Instance != null)
         {
             Debug.LogError("More than one Object Manager in the scene");
@@ -114,9 +114,10 @@ public class ObjectManager : MonoBehaviour
         {
             if (!data.objects.Contains(consumable))
             {
-                consumable.SetActive(false);
+                // consumable.SetActive(false);
+                Destroy(consumable);
                 objects.Remove(consumable);
-                // Debug.Log("Consumable removed from scene: " + consumable.name);
+                Debug.Log("Consumable removed from scene: " + consumable.name);
                 continue;
             }
             consumable.SetActive(true);

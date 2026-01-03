@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -3478815061821974044}
   - component: {fileID: 1378781934921160141}
   - component: {fileID: -1605729615548632066}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Shotgun Pickup
   m_TagString: Metal
   m_Icon: {fileID: 0}
@@ -140,9 +140,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4980412898446675385}
     m_Modifications:
+    - target: {fileID: 100000, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       propertyPath: m_Name
       value: MARMO3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
       propertyPath: m_LocalPosition.x

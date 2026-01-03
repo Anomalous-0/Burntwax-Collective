@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3481915801700513926}
   - component: {fileID: 8234962109053471751}
   - component: {fileID: -9181913454798725069}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Glock Pickup
   m_TagString: Metal
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2341362728168022686}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Default
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -174,7 +174,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8479960646203171795}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: hammer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4419723567681200437}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Eject_C
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -236,7 +236,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5846705959730171120}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Grip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -268,7 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3096324689520865588}
   - component: {fileID: 1809990191309560703}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SM_Handgun_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,7 +374,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9085936682259476271}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Laser
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -405,7 +405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3333915836771314634}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Scope
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,7 +436,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2755229761263451782}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -469,7 +469,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6904026142542336016}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Eject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -501,7 +501,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3868722571998742277}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Muzzle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -532,7 +532,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2938772341281745010}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SKEL_Handgun_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -564,7 +564,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3859091320368278112}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -602,7 +602,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1390537257902647228}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: slide
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -635,7 +635,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3999555416438985170}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: SOCKET_Magazine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -735,7 +735,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 446803998811ff04ea871c8f2a4be03c,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -824,7 +824,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8931d8712849cae45b5d761cd9ec7838,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
