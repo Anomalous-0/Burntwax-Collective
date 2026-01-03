@@ -15,7 +15,7 @@ public class MainMenu : MonoBehaviour
     public void Resume()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        SaveSystem.Load();
+        // SaveSystem.Load();
         Time.timeScale = 1f;
 
     }
