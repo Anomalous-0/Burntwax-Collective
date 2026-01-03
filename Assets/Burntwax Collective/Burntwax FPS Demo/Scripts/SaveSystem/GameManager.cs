@@ -12,7 +12,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-       
+        DontDestroyOnLoad(gameObject);
+        if (Instance != null)
+        {
+            
+            Destroy(gameObject);
+        }
         Instance = this;
     }
 
@@ -23,14 +28,18 @@ public class GameManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (InputManager.Instance.saveIsPressed)
+        if (InputManager.Instance)
         {
-            SaveSystem.Save();
+            if (InputManager.Instance.saveIsPressed)
+            {
+                SaveSystem.Save();
+            }
+            if (InputManager.Instance.loadIsPressed)
+            {
+                SaveSystem.Load();
+            }
         }
-        if (InputManager.Instance.loadIsPressed)
-        {
-            SaveSystem.Load();
-        }
+
 
     }
 }
