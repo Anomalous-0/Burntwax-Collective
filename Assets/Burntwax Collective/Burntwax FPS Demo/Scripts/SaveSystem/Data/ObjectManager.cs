@@ -17,11 +17,6 @@ public class ObjectManager : MonoBehaviour
     private void Awake()
     {
 
-        if (Instance != null)
-        {
-            Debug.LogError("More than one Object Manager in the scene");
-            Destroy(gameObject);
-        }
         Instance = this;
     }
 
