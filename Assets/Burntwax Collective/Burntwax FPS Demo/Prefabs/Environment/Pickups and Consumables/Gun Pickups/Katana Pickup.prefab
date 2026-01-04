@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7648119084050051925}
   - component: {fileID: 8985918862513628963}
   - component: {fileID: 3648688381585944607}
-  - component: {fileID: 4594024781928237974}
+  - component: {fileID: 4094284204253179254}
   m_Layer: 11
   m_Name: Katana Pickup
   m_TagString: Metal
@@ -121,7 +121,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04, y: 1.22, z: 0.14}
   m_Center: {x: 0, y: 0.59, z: -0.06}
---- !u!114 &4594024781928237974
+--- !u!114 &4094284204253179254
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,9 +130,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 147172}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Pickupable
+  m_EditorClassIdentifier: Assembly-CSharp::Prefab
+  guid: 8eab9d5e-6730-4f30-862c-b089c7546e96
 --- !u!1 &2336039094093127757
 GameObject:
   m_ObjectHideFlags: 0

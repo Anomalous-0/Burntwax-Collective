@@ -101,10 +101,10 @@ GameObject:
   - component: {fileID: 2534855556683237600}
   - component: {fileID: 1927820067518834455}
   - component: {fileID: 3161494543826322948}
-  - component: {fileID: 1327630242725743083}
   - component: {fileID: 8630092187043240614}
   - component: {fileID: -377070453218575813}
   - component: {fileID: 7638077797522175570}
+  - component: {fileID: 5758259747828505683}
   m_Layer: 11
   m_Name: Health Pickup
   m_TagString: Metal
@@ -162,18 +162,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.9
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1327630242725743083
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9176256781164373382}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &8630092187043240614
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -243,3 +231,16 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5758259747828505683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Prefab
+  guid: 8ca83e1f-3fe2-428f-9efe-28532cceeff3

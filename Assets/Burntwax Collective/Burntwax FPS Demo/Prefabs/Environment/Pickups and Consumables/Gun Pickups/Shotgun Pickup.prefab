@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: -641920475689062137}
   - component: {fileID: -3478815061821974044}
   - component: {fileID: 1378781934921160141}
-  - component: {fileID: -1605729615548632066}
+  - component: {fileID: -6960977610114791289}
   m_Layer: 11
   m_Name: Shotgun Pickup
   m_TagString: Metal
@@ -120,7 +120,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 7.9, y: 1.5, z: 1}
   m_Center: {x: -0.95, y: 0.25, z: 0}
---- !u!114 &-1605729615548632066
+--- !u!114 &-6960977610114791289
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,9 +129,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 7927989591502400544}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Prefab
+  guid: 9f6d4c5e-f9b8-4093-ac7e-fb571c19b7d3
 --- !u!1001 &1888807050842661032
 PrefabInstance:
   m_ObjectHideFlags: 0

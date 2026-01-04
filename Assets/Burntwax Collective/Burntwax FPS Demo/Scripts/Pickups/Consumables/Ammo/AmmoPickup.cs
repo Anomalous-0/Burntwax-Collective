@@ -39,6 +39,7 @@ public class AmmoPickup : MonoBehaviour
                         gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
                     }
                     gameObject.SetActive(false);  
+                    Destroy(gameObject);
                 }
             }
         }

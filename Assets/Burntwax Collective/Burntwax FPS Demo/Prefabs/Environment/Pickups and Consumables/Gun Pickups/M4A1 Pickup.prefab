@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8946988713654426791}
   - component: {fileID: 3045520616644016817}
   - component: {fileID: 1516820497999405261}
-  - component: {fileID: -6054215715209605052}
+  - component: {fileID: 8651195504924992964}
   m_Layer: 11
   m_Name: M4A1 Pickup
   m_TagString: Metal
@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ammoCount: 0
   gun: {fileID: 11400000, guid: cdf736977e88a034280829a6d0d61d7e, type: 2}
---- !u!114 &-6054215715209605052
+--- !u!114 &8651195504924992964
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,9 +130,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 208559763479941086}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8a7bef7e659027b49a28037a49846e12, type: 3}
+  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::Prefab
+  guid: f435af8f-cef4-4dd9-9ff7-844078c7c074
 --- !u!1 &640874391757145760
 GameObject:
   m_ObjectHideFlags: 0

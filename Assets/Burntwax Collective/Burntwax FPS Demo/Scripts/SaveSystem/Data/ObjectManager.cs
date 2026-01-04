@@ -7,6 +7,10 @@ public class ObjectManager : MonoBehaviour
 
     public static ObjectManager Instance;
 
+    [SerializeField] private List<GameObject> prefabs;
+
+    [SerializeField] private SerializableDictionary<GameObject, string> prefabToIDMap = new SerializableDictionary<GameObject, string>();
+
     [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableToSceneMap = new SerializableDictionary<GameObject, ConsumableData>();
     [SerializeField] private SerializableDictionary<GameObject, BasicData> basicToSceneMap = new SerializableDictionary<GameObject, BasicData>();
     [SerializeField] private SerializableDictionary<GameObject, DestructableData> destructableToSceneMap = new SerializableDictionary<GameObject, DestructableData>();
@@ -18,6 +22,15 @@ public class ObjectManager : MonoBehaviour
     {
 
         Instance = this;
+        consumableToSceneMap.Clear();
+        basicToSceneMap.Clear();
+        destructableToSceneMap.Clear();
+        objects.Clear();
+
+        foreach (var prefab in prefabs)
+        {
+            var id = prefab.GetComponent<PrefabGuid>().guid;
+        }
     }
 
     public void Register(GameObject obj)

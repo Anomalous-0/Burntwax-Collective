@@ -42,6 +42,7 @@ public class GunPickup : MonoBehaviour
             }
 
             gameObject.SetActive(false);
+            Destroy(gameObject);
         }
     }
 

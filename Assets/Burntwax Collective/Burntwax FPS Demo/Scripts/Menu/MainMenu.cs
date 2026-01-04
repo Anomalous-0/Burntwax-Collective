@@ -4,7 +4,19 @@ using UnityEngine.SceneManagement;
 public class MainMenu : MonoBehaviour
 {
 
+    public static MainMenu Instance;
+    public bool loadScene;
     //Load Scene
+
+    void Awake()
+    {
+        if (Instance != null)
+        {
+            Debug.LogError("Found more than one Main Menu in the scene");
+            Destroy(gameObject);
+        }
+        Instance = this;
+    }
     public void NewGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -15,7 +27,7 @@ public class MainMenu : MonoBehaviour
     public void Resume()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        SaveSystem.Load();
+        loadScene = true;
         Time.timeScale = 1f;
 
     }

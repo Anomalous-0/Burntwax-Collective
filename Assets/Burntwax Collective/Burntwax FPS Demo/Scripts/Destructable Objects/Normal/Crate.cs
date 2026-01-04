@@ -51,5 +51,6 @@ public class Crate : MonoBehaviour, Destructable
     {
         SpawnResources(pos);
         gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

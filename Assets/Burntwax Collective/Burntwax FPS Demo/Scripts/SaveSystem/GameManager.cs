@@ -1,9 +1,4 @@
 using UnityEngine;
-using System.Linq;
-using System.Collections.Generic;
-using System;
-using System.Runtime.Serialization;
-using System.Data.Common;
 
 public class GameManager : MonoBehaviour
 {
@@ -25,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (InputManager.Instance)
         {
@@ -37,6 +32,11 @@ public class GameManager : MonoBehaviour
             {
                 SaveSystem.Load();
             }
+        }
+        if(MainMenu.Instance.loadScene)
+        {
+            MainMenu.Instance.loadScene = false;
+            SaveSystem.Load();
         }
 
 
