@@ -15,6 +15,7 @@ public class Target : MonoBehaviour
 
     void Start()
     {
+        player = FindFirstObjectByType<PlayerStateMachine>();
         ObjectManager.Instance.Register(gameObject);
     }
 

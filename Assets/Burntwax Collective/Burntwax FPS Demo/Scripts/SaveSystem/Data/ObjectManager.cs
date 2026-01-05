@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class ObjectManager : MonoBehaviour
 
     [SerializeField] private List<GameObject> prefabs;
 
-    [SerializeField] private SerializableDictionary<GameObject, string> prefabToIDMap = new SerializableDictionary<GameObject, string>();
+    [SerializeField] private SerializableDictionary<string, GameObject> prefabToIDMap = new SerializableDictionary<string, GameObject>();
+
 
     [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableToSceneMap = new SerializableDictionary<GameObject, ConsumableData>();
     [SerializeField] private SerializableDictionary<GameObject, BasicData> basicToSceneMap = new SerializableDictionary<GameObject, BasicData>();
@@ -22,14 +24,11 @@ public class ObjectManager : MonoBehaviour
     {
 
         Instance = this;
-        consumableToSceneMap.Clear();
-        basicToSceneMap.Clear();
-        destructableToSceneMap.Clear();
-        objects.Clear();
 
         foreach (var prefab in prefabs)
         {
             var id = prefab.GetComponent<PrefabGuid>().guid;
+            prefabToIDMap[id] = prefab;
         }
     }
 
@@ -38,10 +37,13 @@ public class ObjectManager : MonoBehaviour
         objects.Add(obj);
         if (obj.layer == LayerMask.NameToLayer("Consumable"))
             consumableToSceneMap[obj] = new ConsumableData();
+        else if(obj.layer == LayerMask.NameToLayer("Default") && obj.GetComponent<Rigidbody>())
+            consumableToSceneMap[obj] = new ConsumableData();
         else if (obj.layer == LayerMask.NameToLayer("Basic"))
             basicToSceneMap[obj] = new BasicData();
         else if (obj.layer == LayerMask.NameToLayer("Destructable"))
             destructableToSceneMap[obj] = new DestructableData();
+
 
     }
 
@@ -53,23 +55,30 @@ public class ObjectManager : MonoBehaviour
         for (int i = objects.Count - 1; i >= 0; i--)
         {
 
-            if (!objects[i].activeInHierarchy)
+            if (objects[i] == null)
             {
                 consumableToSceneMap.Remove(objects[i]);
                 basicToSceneMap.Remove(objects[i]);
                 destructableToSceneMap.Remove(objects[i]);
                 // Debug.Log("Removing consumable from scene data: " + objects[i].name);
                 objects.RemoveAt(i);
+                continue;
 
 
 
             }
-            if (objects[i].layer == LayerMask.NameToLayer("Consumable"))
+
+            var prefab = objects[i].GetComponent<PrefabGuid>();
+            string id = prefab.guid;
+
+
+            if (objects[i].layer == LayerMask.NameToLayer("Consumable") || objects[i].layer == LayerMask.NameToLayer("Default"))
             {
                 var rb = objects[i].GetComponent<Rigidbody>();
 
                 consumableToSceneMap[objects[i]] = new ConsumableData
                 {
+                    guid = id,
                     position = rb.position,
                     rotation = rb.rotation.normalized,
                     velocity = rb.linearVelocity
@@ -80,6 +89,7 @@ public class ObjectManager : MonoBehaviour
             {
                 basicToSceneMap[objects[i]] = new BasicData
                 {
+                    guid = id,
                     position = objects[i].transform.position,
                     rotation = objects[i].transform.rotation
                 };
@@ -91,6 +101,7 @@ public class ObjectManager : MonoBehaviour
                 var destructable = objects[i].GetComponent<Crate>();
                 destructableToSceneMap[objects[i]] = new DestructableData
                 {
+                    guid = id,
                     position = rb.position,
                     rotation = rb.rotation.normalized,
                     velocity = rb.linearVelocity,
@@ -116,48 +127,45 @@ public class ObjectManager : MonoBehaviour
         basicToSceneMap = data.basicSceneData;
         destructableToSceneMap = data.destructableSceneData;
 
-
-        // Debug.Log("Loading Consumables. Total consumables in scene data: " + data.consumableSceneData.Count);
-        for (int i = objects.Count - 1; i >= 0; i--)
+        foreach (var obj in objects)
         {
-            var consumable = objects[i];
-
-
-            if (!data.objects.Contains(consumable))
-            {
-                // consumable.SetActive(false);
-                Destroy(consumable);
-                objects.Remove(consumable);
-                // Debug.Log("Consumable removed from scene: " + consumable.name);
-                continue;
-            }
-            consumable.SetActive(true);
-
-            if (consumable.layer == LayerMask.NameToLayer("Consumable"))
-            {
-                var rb = consumable.GetComponent<Rigidbody>();
-                rb.position = consumableToSceneMap[consumable].position;
-                rb.rotation = consumableToSceneMap[consumable].rotation;
-                rb.linearVelocity = consumableToSceneMap[consumable].velocity;
-            }
-            else if (consumable.layer == LayerMask.NameToLayer("Basic"))
-            {
-                consumable.transform.position = basicToSceneMap[consumable].position;
-                consumable.transform.rotation = basicToSceneMap[consumable].rotation;
-            }
-
-            else if (consumable.layer == LayerMask.NameToLayer("Destructable"))
-            {
-                var rb = consumable.GetComponent<Rigidbody>();
-                rb.position = destructableToSceneMap[consumable].position;
-                rb.rotation = destructableToSceneMap[consumable].rotation;
-                rb.linearVelocity = destructableToSceneMap[consumable].velocity;
-                var destructable = consumable.GetComponent<Crate>();
-                destructable.currentHealth = destructableToSceneMap[consumable].currentHealth;
-            }
-
+            if (obj != null)
+                Destroy(obj);
         }
 
+        foreach (var obj in consumableToSceneMap)
+        {
+            if (prefabToIDMap.TryGetValue(obj.Value.guid, out GameObject prefab))
+            {
+                GameObject newObj = Instantiate(prefab, obj.Value.position, obj.Value.rotation);
+                newObj.GetComponent<Rigidbody>().linearVelocity = obj.Value.velocity;
+                objects.Add(newObj);
+
+            }
+        }
+
+        foreach (var obj in basicToSceneMap)
+        {
+            if (prefabToIDMap.TryGetValue(obj.Value.guid, out GameObject prefab))
+            {
+                GameObject newObj = Instantiate(prefab, obj.Value.position, obj.Value.rotation);
+                objects.Add(newObj);
+
+            }
+        }
+
+        foreach (var obj in destructableToSceneMap)
+        {
+            if(prefabToIDMap.TryGetValue(obj.Value.guid, out GameObject prefab)) 
+            {
+                GameObject newObj = Instantiate(prefab, obj.Value.position, obj.Value.rotation);
+                newObj.GetComponent<Rigidbody>().linearVelocity = obj.Value.velocity;
+
+                newObj.GetComponent<Destructable>().CurrentHealth = obj.Value.currentHealth;
+                objects.Add(newObj);
+                
+            }
+        }
 
 
     }
@@ -178,6 +186,7 @@ public struct ObjectConsumableData
 
 public struct BasicData
 {
+    public string guid;
     public Vector3 position;
     public Quaternion rotation;
 }
@@ -186,6 +195,7 @@ public struct BasicData
 
 public struct ConsumableData
 {
+    public string guid;
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 velocity;
@@ -196,6 +206,7 @@ public struct ConsumableData
 
 public struct DestructableData
 {
+    public string guid;
     public Vector3 position;
     public Quaternion rotation;
     public Vector3 velocity;

@@ -132,7 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Prefab
-  guid: 9f6d4c5e-f9b8-4093-ac7e-fb571c19b7d3
+  guid: 3cc8b6df-6b5a-4ad0-bb39-a34b84b348ed
 --- !u!1001 &1888807050842661032
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -193,6 +193,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: e870f12990348ad4b94b4cdb8f09b7a0, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2715b4cf0ca32444c87c9ed33288343c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

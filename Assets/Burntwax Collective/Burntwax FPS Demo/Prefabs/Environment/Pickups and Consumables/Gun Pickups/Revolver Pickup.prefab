@@ -1018,8 +1018,8 @@ GameObject:
   - component: {fileID: 3305618134474923061}
   - component: {fileID: 6150324823632955113}
   - component: {fileID: 8772033290904586764}
-  - component: {fileID: 6924845671999265814}
   - component: {fileID: -6572766593157695850}
+  - component: {fileID: 2284273309233806591}
   m_Layer: 11
   m_Name: Revolver Pickup
   m_TagString: Metal
@@ -1072,12 +1072,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 0.05, y: 0.16, z: 0.34}
+  m_Center: {x: 0, y: -0.075, z: 0.08}
 --- !u!65 &8772033290904586764
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1093,13 +1093,26 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6924845671999265814
+  m_Size: {x: 0.15, y: 0.32, z: 0.64}
+  m_Center: {x: 0, y: -0.075, z: 0.08}
+--- !u!114 &-6572766593157695850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019881249754144703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Prefab
+  guid: 41041802-14ff-4d94-9586-44081187fb48
+--- !u!54 &2284273309233806591
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1123,22 +1136,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 1
+  m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
---- !u!114 &-6572766593157695850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2019881249754144703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Prefab
-  guid: 97db8a8f-defc-4b4c-83a8-c53eb362750e
+  m_CollisionDetection: 0
 --- !u!1 &2986807112246738141
 GameObject:
   m_ObjectHideFlags: 0
