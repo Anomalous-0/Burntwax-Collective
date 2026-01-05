@@ -32926,17 +32926,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableManager
   prefabs:
-  - {fileID: 189091626145577203, guid: 7ee7a870c60546241ba7e375fd9d96a0, type: 3}
-  - {fileID: 208559763479941086, guid: f86c573b64a6b9d4280cfb5da6877ed0, type: 3}
-  - {fileID: 7927989591502400544, guid: 4eeab4f29a0c7384485d075816ddab07, type: 3}
-  - {fileID: 2019881249754144703, guid: 24b77175a566abc418574d1a1688a886, type: 3}
-  - {fileID: 9176256781164373382, guid: 27759b22e5b505a4897caa5593a76b7f, type: 3}
-  - {fileID: 9176256781164373382, guid: ee1e7853955903241bc411ff871f5dbc, type: 3}
-  - {fileID: 9176256781164373382, guid: 8940725a50546e144ac6b50b27d99a53, type: 3}
-  - {fileID: 9176256781164373382, guid: 5bbd075d828004f418d1b2aceacb8e64, type: 3}
-  - {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777, type: 3}
-  - {fileID: 5318770071226489326, guid: fc436496b631f3a458103d5a80f52290, type: 3}
-  - {fileID: 1135734128863475178, guid: b56a59ba95c31cf4293dfd6b557a88c9, type: 3}
+  - prefabAsset: {fileID: 189091626145577203, guid: 7ee7a870c60546241ba7e375fd9d96a0,
+      type: 3}
+    parent: {fileID: 99655214}
+  - prefabAsset: {fileID: 208559763479941086, guid: f86c573b64a6b9d4280cfb5da6877ed0,
+      type: 3}
+    parent: {fileID: 99655214}
+  - prefabAsset: {fileID: 7927989591502400544, guid: 4eeab4f29a0c7384485d075816ddab07,
+      type: 3}
+    parent: {fileID: 99655214}
+  - prefabAsset: {fileID: 2019881249754144703, guid: 24b77175a566abc418574d1a1688a886,
+      type: 3}
+    parent: {fileID: 99655214}
+  - prefabAsset: {fileID: 9176256781164373382, guid: 27759b22e5b505a4897caa5593a76b7f,
+      type: 3}
+    parent: {fileID: 1949004671}
+  - prefabAsset: {fileID: 9176256781164373382, guid: ee1e7853955903241bc411ff871f5dbc,
+      type: 3}
+    parent: {fileID: 1949004671}
+  - prefabAsset: {fileID: 9176256781164373382, guid: 8940725a50546e144ac6b50b27d99a53,
+      type: 3}
+    parent: {fileID: 1949004671}
+  - prefabAsset: {fileID: 9176256781164373382, guid: 5bbd075d828004f418d1b2aceacb8e64,
+      type: 3}
+    parent: {fileID: 1949004671}
+  - prefabAsset: {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777,
+      type: 3}
+    parent: {fileID: 796215343}
+  - prefabAsset: {fileID: 5318770071226489326, guid: fc436496b631f3a458103d5a80f52290,
+      type: 3}
+    parent: {fileID: 1808880159}
+  - prefabAsset: {fileID: 1135734128863475178, guid: b56a59ba95c31cf4293dfd6b557a88c9,
+      type: 3}
+    parent: {fileID: 345702324}
   prefabToIDMap:
     m_Keys: []
     m_Values: []
