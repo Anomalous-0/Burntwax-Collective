@@ -26,13 +26,6 @@ public class ObjectManager : MonoBehaviour
     private List<BasicData> basicList = new List<BasicData>();
     private List<DestructableData> destructableList = new List<DestructableData>();
 
-
-
-    
-
-    
-
-
     private void Awake()
     {
         Instance = this;
