@@ -125,15 +125,22 @@ public class ObjectManager : MonoBehaviour
 
     public void LoadData(ObjectConsumableData data)
     {
-        consumableList = data.consumableList;
-        basicList = data.basicList;
-        destructableList = data.destructableList;
+
+        consumableList.Clear();
+        basicList.Clear();
+        destructableList.Clear();
 
         foreach (var obj in objects)
         {
-            if (obj != null) Destroy(obj);
+            if (obj != null) 
+                Destroy(obj);
+            
         }
+        
         objects.Clear();
+        consumableList = data.consumableList;
+        basicList = data.basicList;
+        destructableList = data.destructableList;;
 
         foreach (var obj in consumableList)
         {

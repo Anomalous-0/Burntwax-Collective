@@ -21,6 +21,7 @@ public class MainMenu : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         Time.timeScale = 1f;
+        AudioListener.pause = false;
 
     }
 
@@ -29,6 +30,7 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         loadScene = true;
         Time.timeScale = 1f;
+        AudioListener.pause = false;
 
     }
 

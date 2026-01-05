@@ -32,11 +32,9 @@ public class PauseMenu : MonoBehaviour
             if (Paused)
             {
                 Resume();
-
             }
             else
             {
-
                 Pause();
             }
 
@@ -75,7 +73,6 @@ public class PauseMenu : MonoBehaviour
     {
         SaveSystem.Save();
     }
-
 
     //Quit Game to Main Menu
     public void MainMenu()
