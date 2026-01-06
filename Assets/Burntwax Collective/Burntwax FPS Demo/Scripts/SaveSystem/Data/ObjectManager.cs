@@ -22,12 +22,15 @@ public class ObjectManager : MonoBehaviour
     [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
 
-    private List<ConsumableData> consumableList = new List<ConsumableData>();
-    private List<BasicData> basicList = new List<BasicData>();
-    private List<DestructableData> destructableList = new List<DestructableData>();
+    private List<ConsumableData> consumableList; 
+    private List<BasicData> basicList; 
+    private List<DestructableData> destructableList;
 
     private void Awake()
     {
+        consumableList = new List<ConsumableData>();
+        basicList = new List<BasicData>();
+        destructableList = new List<DestructableData>();
         Instance = this;
         foreach (var prefab in prefabs)
         {
