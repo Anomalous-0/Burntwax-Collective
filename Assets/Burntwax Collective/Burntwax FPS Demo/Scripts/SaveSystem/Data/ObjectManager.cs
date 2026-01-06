@@ -28,15 +28,16 @@ public class ObjectManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        consumableList = new List<ConsumableData>();
-        basicList = new List<BasicData>();
-        destructableList = new List<DestructableData>();
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
             
             Destroy(gameObject);
         }
+        
+        consumableList = new List<ConsumableData>();
+        basicList = new List<BasicData>();
+        destructableList = new List<DestructableData>();
+        
         Instance = this;
         foreach (var prefab in prefabs)
         {

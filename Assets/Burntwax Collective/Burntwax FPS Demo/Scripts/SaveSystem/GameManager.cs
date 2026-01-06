@@ -6,13 +6,14 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-        if (Instance != null)
+       
+        if (Instance != null && Instance != this)
         {
             
             Destroy(gameObject);
         }
         Instance = this;
+        
     }
 
     private void Start()
