@@ -16,9 +16,9 @@ public class ObjectManager : MonoBehaviour
 
     [Header("Runtime Tracking")]
 
-    [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableRuntimeMap = new SerializableDictionary<GameObject, ConsumableData>();
-    [SerializeField] private SerializableDictionary<GameObject, BasicData> basicRuntimeMap = new SerializableDictionary<GameObject, BasicData>();
-    [SerializeField] private SerializableDictionary<GameObject, DestructableData> destructableRuntimeMap = new SerializableDictionary<GameObject, DestructableData>();
+    // [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableRuntimeMap = new SerializableDictionary<GameObject, ConsumableData>();
+    // [SerializeField] private SerializableDictionary<GameObject, BasicData> basicRuntimeMap = new SerializableDictionary<GameObject, BasicData>();
+    // [SerializeField] private SerializableDictionary<GameObject, DestructableData> destructableRuntimeMap = new SerializableDictionary<GameObject, DestructableData>();
     [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
 
@@ -28,9 +28,15 @@ public class ObjectManager : MonoBehaviour
 
     private void Awake()
     {
+        DontDestroyOnLoad(gameObject);
         consumableList = new List<ConsumableData>();
         basicList = new List<BasicData>();
         destructableList = new List<DestructableData>();
+        if (Instance != null)
+        {
+            
+            Destroy(gameObject);
+        }
         Instance = this;
         foreach (var prefab in prefabs)
         {
@@ -42,19 +48,19 @@ public class ObjectManager : MonoBehaviour
     public void Register(GameObject obj)
     {
         objects.Add(obj);
-        if (obj.layer == LayerMask.NameToLayer("Consumable") ||
-           (obj.layer == LayerMask.NameToLayer("Default") && obj.GetComponent<Rigidbody>()))
-        {
-            consumableRuntimeMap[obj] = new ConsumableData();
-        }
-        else if (obj.layer == LayerMask.NameToLayer("Basic"))
-        {
-            basicRuntimeMap[obj] = new BasicData();
-        }
-        else if (obj.layer == LayerMask.NameToLayer("Destructable"))
-        {
-            destructableRuntimeMap[obj] = new DestructableData();
-        }
+        // if (obj.layer == LayerMask.NameToLayer("Consumable") ||
+        //    (obj.layer == LayerMask.NameToLayer("Default") && obj.GetComponent<Rigidbody>()))
+        // {
+        //     consumableRuntimeMap[obj] = new ConsumableData();
+        // }
+        // else if (obj.layer == LayerMask.NameToLayer("Basic"))
+        // {
+        //     basicRuntimeMap[obj] = new BasicData();
+        // }
+        // else if (obj.layer == LayerMask.NameToLayer("Destructable"))
+        // {
+        //     destructableRuntimeMap[obj] = new DestructableData();
+        // }
     }
 
 
