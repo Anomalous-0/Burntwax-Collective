@@ -87,6 +87,13 @@ public class GunStateMachine : MonoBehaviour
         proceduralShootHash = Animator.StringToHash("proceduralShoot");
         incrementalReloadHash = Animator.StringToHash("incrementalReload");
         shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+
+        if (CurrentGunModel)
+            CurrentGunModel.gameObject.SetActive(false);
+        ActiveGunScriptable = null;
+        CurrentGunModel = null;
+        anim.Play("empty_rest");
+        CurrentGuns.Clear();
     }
 
 
@@ -352,6 +359,10 @@ public class GunStateMachine : MonoBehaviour
     {
         if (ActiveGunScriptable == null)
         {
+            data.GunModel = null;
+            data.ActiveGunScriptable = null;
+            data.CurrentGuns.Clear();
+            data.currentState = null;
             return;
         }
         data.GunModel = CurrentGunModel;
@@ -373,7 +384,7 @@ public class GunStateMachine : MonoBehaviour
     {
         if (data.ActiveGunScriptable == null)
         {
-            if(CurrentGunModel) 
+            if (CurrentGunModel)
                 CurrentGunModel.gameObject.SetActive(false);
             ActiveGunScriptable = null;
             CurrentGunModel = null;
