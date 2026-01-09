@@ -9,7 +9,6 @@ public class Crate : MonoBehaviour, Destructable
 {
 
     [Header("Health")]
-    [SerializeField] public float maxHealth = 100;
     [SerializeField] public float currentHealth;
 
 
@@ -17,8 +16,6 @@ public class Crate : MonoBehaviour, Destructable
     [SerializeField] bool destroy;
     [SerializeField] private int itemsToSpawn = 3;
     public List<GameObject> resources_prefabs;
-
-    public float MaxHealth { get => maxHealth; private set => maxHealth = value; }
     public float CurrentHealth { get => currentHealth; set => currentHealth = value; }
 
     public void TakeDamage(float damage)
@@ -44,7 +41,7 @@ public class Crate : MonoBehaviour, Destructable
     private void Start()
     {
         ObjectManager.Instance.Register(gameObject);
-        currentHealth = maxHealth;
+        //currentHealth = maxHealth;
     }
 
     public void Destruct(Vector3 pos)

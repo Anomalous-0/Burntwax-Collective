@@ -114,7 +114,7 @@ public class ObjectManager : MonoBehaviour
             else if (objects[i].layer == LayerMask.NameToLayer("Destructable"))
             {
                 var rb = objects[i].GetComponent<Rigidbody>();
-                var destructable = objects[i].GetComponent<Crate>();
+                var destructable = objects[i].GetComponent<Destructable>();
 
                 destructableList.Add(new DestructableData
                 {
@@ -183,8 +183,10 @@ public class ObjectManager : MonoBehaviour
                 newObj.transform.localScale = obj.scale;
                 newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
 
-                newObj.GetComponent<Crate>().CurrentHealth = obj.currentHealth;
 
+                
+                newObj.GetComponent<Destructable>().CurrentHealth = obj.currentHealth;
+                
 
             }
         }
