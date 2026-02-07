@@ -76,7 +76,7 @@ public class GunStateMachine : MonoBehaviour
         states = new GunStateFactory(this);
         currentState = states.Rest();
         currentState.EnterState();
-        handIK.weight = 0;
+        // handIK.weight = 0;
     }
 
     void Start()
