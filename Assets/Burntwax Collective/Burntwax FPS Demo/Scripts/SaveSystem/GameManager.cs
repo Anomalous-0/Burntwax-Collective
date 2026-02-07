@@ -37,11 +37,15 @@ namespace Burntwax
                     SaveSystem.Load();
                 }
             }
-            if (MainMenu.Instance.loadScene)
+            if (MainMenu.Instance != null)
             {
-                MainMenu.Instance.loadScene = false;
-                SaveSystem.Load();
+                if (MainMenu.Instance.loadScene)
+                {
+                    MainMenu.Instance.loadScene = false;
+                    SaveSystem.Load();
+                }
             }
+
 
 
         }
