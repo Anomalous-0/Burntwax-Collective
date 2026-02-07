@@ -1,4 +1,3 @@
-#if CINEMACHINE
 namespace Burntwax
 {
     public class CameraFpsState : CameraBaseState
@@ -46,5 +45,3 @@ namespace Burntwax
 
     }
 }
-
-#endif

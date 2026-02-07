@@ -17,10 +17,7 @@ namespace Burntwax
 
 
             public PlayerSaveData PlayerData;
-
-#if CINEMACHINE
             public CamSaveData CamData;
-#endif
 
             public GunSaveData GunData;
             public PlayerHealthSaveData PlayerHealthData;
@@ -68,9 +65,7 @@ namespace Burntwax
             if (player != null)
                 player.SaveData(ref _saveData.PlayerData);
 
-#if CINEMACHINE
             player.GetComponent<CamStateMachine>().SaveData(ref _saveData.CamData);
-#endif
             player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
 
             GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
@@ -115,9 +110,7 @@ namespace Burntwax
             if (player)
             {
                 player.LoadData(_saveData.PlayerData);
-#if CINEMACHINE
                 player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
-#endif
                 player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
 
             }

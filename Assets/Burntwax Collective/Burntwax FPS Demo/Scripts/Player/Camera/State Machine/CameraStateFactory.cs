@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-
-#if CINEMACHINE
+using Burntwax;
 
 namespace Burntwax
 {
@@ -47,5 +46,3 @@ namespace Burntwax
     }
 
 }
-
-#endif

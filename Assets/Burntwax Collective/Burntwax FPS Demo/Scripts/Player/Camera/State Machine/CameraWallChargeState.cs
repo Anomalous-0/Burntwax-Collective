@@ -1,4 +1,3 @@
-#if CINEMACHINE
 namespace Burntwax
 {
     public class CameraWallChargeState : CameraBaseState
@@ -51,5 +50,3 @@ namespace Burntwax
 
     }
 }
-
-#endif

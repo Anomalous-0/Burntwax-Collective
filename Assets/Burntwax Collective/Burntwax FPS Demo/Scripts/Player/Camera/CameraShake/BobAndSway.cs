@@ -1,5 +1,5 @@
 using UnityEngine;
-#if CINEMACHINE
+
 namespace Burntwax
 {
     public class BobAndSway : MonoBehaviour
@@ -242,5 +242,3 @@ namespace Burntwax
         }
     }
 }
-
-#endif

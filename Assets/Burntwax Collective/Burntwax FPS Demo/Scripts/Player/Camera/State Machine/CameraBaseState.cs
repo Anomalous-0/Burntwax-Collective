@@ -1,8 +1,5 @@
-#if CINEMACHINE
 namespace Burntwax
 {
-
-    
     public abstract class CameraBaseState
     {
 
@@ -76,5 +73,3 @@ namespace Burntwax
     }
 
 }
-
-#endif
