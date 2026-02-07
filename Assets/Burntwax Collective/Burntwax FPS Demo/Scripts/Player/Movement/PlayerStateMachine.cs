@@ -17,7 +17,10 @@ namespace Burntwax
 
         [Header("State Machines")]
         public GunStateMachine gunMachine;
+
+#if CINEMACHINE
         public CamStateMachine cam;
+#endif
 
 
 
@@ -166,13 +169,26 @@ namespace Burntwax
             rideHeight = normalHeight;
             startYScale = transform.localScale.y;
 
+#if !CINEMACHINE
+            Debug.LogError(
+                "This FPS Controller requires Cinemachine 2.10.5 at the latest" +
+                "Install it via Window → Package Manager → Version History → Cinemachine → 2.10.5");
+#endif
+
+#if !UNITY_ANIMATION_RIGGING
+            Debug.LogError(
+                "This FPS Controller requires Unity's Animation Rigging package. " +
+                "Install it via Window → Package Manager.");
+#endif
         }
 
 
 
         private void LateUpdate()
         {
+#if CINEMACHINE
             SetRotation();
+#endif
         }
 
         private void Update()
@@ -205,10 +221,14 @@ namespace Burntwax
             verticalInput = InputManager.Instance.MoveInput.y;
         }
 
+
+
         private void SetRotation()
         {
             player.transform.forward = new Vector3(Camera.main.transform.forward.x, 0, Camera.main.transform.forward.z).normalized;
         }
+
+
 
         private void ApplyFloatingForce()
         {

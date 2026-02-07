@@ -2,11 +2,8 @@ using UnityEngine;
 
 namespace Burntwax
 {
-
-
     public class GunShootState : GunBaseState
     {
-
         public GunShootState(GunStateMachine currentContext, GunStateFactory gunStateFactory) : base(currentContext, gunStateFactory) { }
 
         public override void EnterState()
@@ -21,6 +18,7 @@ namespace Burntwax
             if (Ctx.anim.GetBool(Ctx.proceduralShootHash))
             {
                 Ctx.recoil.Recoil();
+
             }
         }
 
@@ -44,16 +42,7 @@ namespace Burntwax
                 SwitchState(Factory.NoShoot());
             }
 
-
-
-
         }
-
-
-
-
-
-
         public override void InitializeSubState() { }
 
 
@@ -79,11 +68,12 @@ namespace Burntwax
 
         public void Recoil()
         {
+#if UNITY_ANIMATION_RIGGING
             if (Ctx.camShake)
             {
                 Ctx.camShake.GenerateImpulse(Camera.main.transform.forward);
             }
-
+#endif
 
         }
 

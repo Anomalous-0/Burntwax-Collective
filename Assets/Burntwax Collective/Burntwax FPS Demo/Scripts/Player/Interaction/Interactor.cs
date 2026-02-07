@@ -1,12 +1,14 @@
 using UnityEngine;
 
+#if CINEMACHINE
 namespace Burntwax
 {
     public class Interactor : MonoBehaviour
     {
 
-
+        
         public CamStateMachine cam;
+        
         public PlayerCrosshair crosshair;
 
         [SerializeField] float raycastDistance = 3f;
@@ -51,3 +53,5 @@ namespace Burntwax
     }
 
 }
+
+#endif

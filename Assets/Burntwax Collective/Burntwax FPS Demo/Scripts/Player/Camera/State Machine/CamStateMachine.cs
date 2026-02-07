@@ -1,5 +1,7 @@
 using UnityEngine;
+#if CINEMACHINE
 using Cinemachine;
+
 
 namespace Burntwax
 {
@@ -103,3 +105,5 @@ namespace Burntwax
         public float pitch;
     }
 }
+
+#endif

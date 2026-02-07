@@ -9,7 +9,10 @@ namespace Burntwax
 
         public static PauseMenu Instance;
         [Header("Camera stuff")]
+
+#if CINEMACHINE
         public CamStateMachine camStateMachine;
+#endif
 
         public GameObject pauseMenuUI;
         public bool Paused;
@@ -51,9 +54,12 @@ namespace Burntwax
             Paused = false;
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+#if CINEMACHINE
             camStateMachine.fpsCam.gameObject.SetActive(true);
             camStateMachine.aimCam.gameObject.SetActive(true);
             camStateMachine.chargeCam.gameObject.SetActive(true);
+#endif
         }
 
         private void Pause()
@@ -62,9 +68,12 @@ namespace Burntwax
 
             Time.timeScale = 0f;
             AudioListener.pause = true;
+
+#if CINEMACHINE
             camStateMachine.fpsCam.gameObject.SetActive(false);
             camStateMachine.aimCam.gameObject.SetActive(false);
             camStateMachine.chargeCam.gameObject.SetActive(false);
+#endif
             Paused = true;
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
