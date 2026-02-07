@@ -2,16 +2,19 @@ using System;
 using Burntwax.Guns;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Recoil Config", menuName = "Guns/Recoil Config", order = 2)]
-public class RecoilConfig : ScriptableObject, ICloneable
+namespace Burntwax
 {
-
-    public float VerticalRecoil;
-
-    public object Clone()
+    [CreateAssetMenu(fileName = "Recoil Config", menuName = "Guns/Recoil Config", order = 2)]
+    public class RecoilConfig : ScriptableObject, ICloneable
     {
-        RecoilConfig config = CreateInstance<RecoilConfig>();
-        Utilities.CopyValues(this, config);
-        return config;
+
+        public float VerticalRecoil;
+
+        public object Clone()
+        {
+            RecoilConfig config = CreateInstance<RecoilConfig>();
+            Utilities.CopyValues(this, config);
+            return config;
+        }
     }
 }

@@ -1,82 +1,84 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour
+namespace Burntwax
 {
-    private float health;
-    private float lerpTimer;
-    public float maxHealth = 100;
-    public float chipSpeed = 2.0f;
-
-    public Image frontHealthBar;
-    public Image backHealthBar;
-    void Start()
+    public class PlayerHealth : MonoBehaviour
     {
-        health = maxHealth;
-    }
-    void Update()
-    {
-        health = Mathf.Clamp(health, 0, maxHealth);
-        UpdateHealthUI();
+        private float health;
+        private float lerpTimer;
+        public float maxHealth = 100;
+        public float chipSpeed = 2.0f;
 
-    }
-
-    public void UpdateHealthUI()
-    {
-        float fillF = frontHealthBar.fillAmount;
-        float fillB = backHealthBar.fillAmount;
-        float hFraction = health / maxHealth;
-        if (fillB > hFraction)
+        public Image frontHealthBar;
+        public Image backHealthBar;
+        void Start()
         {
-            frontHealthBar.fillAmount = hFraction;
-            backHealthBar.color = Color.red;
-            lerpTimer += Time.deltaTime;
-            float percentComplete = lerpTimer / chipSpeed;
-            percentComplete = percentComplete * percentComplete;
-            backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete * Time.deltaTime);
+            health = maxHealth;
         }
-        if (fillF < hFraction)
+        void Update()
         {
-            backHealthBar.color = Color.cyan;
-            backHealthBar.fillAmount = hFraction;
-            lerpTimer += Time.deltaTime;
-            float percentComplete = lerpTimer / chipSpeed;
-            percentComplete = percentComplete * percentComplete;
-            frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete * Time.deltaTime);
+            health = Mathf.Clamp(health, 0, maxHealth);
+            UpdateHealthUI();
+
+        }
+
+        public void UpdateHealthUI()
+        {
+            float fillF = frontHealthBar.fillAmount;
+            float fillB = backHealthBar.fillAmount;
+            float hFraction = health / maxHealth;
+            if (fillB > hFraction)
+            {
+                frontHealthBar.fillAmount = hFraction;
+                backHealthBar.color = Color.red;
+                lerpTimer += Time.deltaTime;
+                float percentComplete = lerpTimer / chipSpeed;
+                percentComplete = percentComplete * percentComplete;
+                backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete * Time.deltaTime);
+            }
+            if (fillF < hFraction)
+            {
+                backHealthBar.color = Color.cyan;
+                backHealthBar.fillAmount = hFraction;
+                lerpTimer += Time.deltaTime;
+                float percentComplete = lerpTimer / chipSpeed;
+                percentComplete = percentComplete * percentComplete;
+                frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete * Time.deltaTime);
+            }
+        }
+
+        public void TakeDamage(float damage)
+        {
+            health -= damage;
+            lerpTimer = 0f;
+        }
+
+        public void RestoreHealth(float healAmount)
+        {
+            health += healAmount;
+            lerpTimer = 0f;
+        }
+
+        public float CurrentHealth()
+        {
+            return health;
+        }
+
+        public void LoadData(PlayerHealthSaveData data)
+        {
+            health = data.health;
+        }
+        public void SaveData(ref PlayerHealthSaveData data)
+        {
+            data.health = health;
         }
     }
 
-    public void TakeDamage(float damage)
+    [System.Serializable]
+    public struct PlayerHealthSaveData
     {
-        health -= damage;
-        lerpTimer = 0f;
+        public float health;
     }
 
-    public void RestoreHealth(float healAmount)
-    {
-        health += healAmount;
-        lerpTimer = 0f;
-    }
-
-    public float CurrentHealth()
-    {
-        return health;
-    }
-
-    public void LoadData(PlayerHealthSaveData data)
-    {
-        health = data.health;
-    }
-    public void SaveData(ref PlayerHealthSaveData data)
-    {
-        data.health = health;
-    }
-}
-
-[System.Serializable]
-public struct PlayerHealthSaveData
-{
-    public float health;
 }

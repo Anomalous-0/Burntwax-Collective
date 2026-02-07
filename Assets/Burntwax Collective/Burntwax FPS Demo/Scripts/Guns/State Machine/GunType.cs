@@ -1,11 +1,14 @@
-public enum GunType
+namespace Burntwax
 {
-    Pistol,
-    SMG,
-    Shotgun,
-    Revolver,
+    public enum GunType
+    {
+        Pistol,
+        SMG,
+        Shotgun,
+        Revolver,
 
-    Katana
+        Katana
 
 
+    }
 }

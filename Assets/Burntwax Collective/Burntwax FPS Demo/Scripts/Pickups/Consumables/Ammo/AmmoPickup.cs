@@ -1,49 +1,50 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
-public class AmmoPickup : MonoBehaviour
+namespace Burntwax
 {
-
-    public int ammoCount;
-
-
-    [SerializeField] GunScriptableObject gun;
-
-    private GunStateMachine playerGun;
-
-
-    void Start()
-    {
-        ObjectManager.Instance.Register(gameObject);
-    }
-
-
-    //Collect ammo
-    void OnTriggerEnter(Collider other)
+    [RequireComponent(typeof(Rigidbody))]
+    public class AmmoPickup : MonoBehaviour
     {
 
-        if (other.GetComponentInParent<PlayerHealth>())
+        public int ammoCount;
+
+
+        [SerializeField] GunScriptableObject gun;
+
+        private GunStateMachine playerGun;
+
+
+        void Start()
         {
-            playerGun = FindFirstObjectByType<GunStateMachine>();
+            ObjectManager.Instance.Register(gameObject);
+        }
 
-            if (playerGun.CurrentGuns.Contains(gun))
+
+        //Collect ammo
+        void OnTriggerEnter(Collider other)
+        {
+
+            if (other.GetComponentInParent<PlayerHealth>())
             {
-                if (gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo)
+                playerGun = FindFirstObjectByType<GunStateMachine>();
+
+                if (playerGun.CurrentGuns.Contains(gun))
                 {
-                    if (gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount)
+                    if (gun.AmmoConfig.currentAmmo < gun.AmmoConfig.maxAmmo)
                     {
-                        gun.AmmoConfig.currentAmmo += ammoCount;
+                        if (gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo > ammoCount)
+                        {
+                            gun.AmmoConfig.currentAmmo += ammoCount;
+                        }
+                        else
+                        {
+                            gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
+                        }
+                        gameObject.SetActive(false);
+                        Destroy(gameObject);
                     }
-                    else
-                    {
-                        gun.AmmoConfig.currentAmmo += gun.AmmoConfig.maxAmmo - gun.AmmoConfig.currentAmmo;
-                    }
-                    gameObject.SetActive(false);  
-                    Destroy(gameObject);
                 }
             }
         }
     }
 }
-
-

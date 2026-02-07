@@ -1,10 +1,12 @@
 
 using UnityEngine;
-
-public interface Destructable
+namespace Burntwax
 {
-    public float CurrentHealth{get; set;}
-    public void TakeDamage(float damage);
+    public interface Destructable
+    {
+        public float CurrentHealth { get; set; }
+        public void TakeDamage(float damage);
 
-    public void Destruct(Vector3 pos);
+        public void Destruct(Vector3 pos);
+    }
 }

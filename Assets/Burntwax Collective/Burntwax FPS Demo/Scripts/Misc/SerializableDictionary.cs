@@ -1,37 +1,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class SerializableDictionary<K, V> : Dictionary<K, V>, ISerializationCallbackReceiver
+namespace Burntwax
 {
-    [SerializeField]
-    private List<K> m_Keys = new List<K>();
 
-    [SerializeField]
-    private List<V> m_Values = new List<V>();
-
-    public void OnBeforeSerialize()
+    [System.Serializable]
+    public class SerializableDictionary<K, V> : Dictionary<K, V>, ISerializationCallbackReceiver
     {
-        m_Keys.Clear();
-        m_Values.Clear();
-        using Enumerator enumerator = GetEnumerator();
-        while (enumerator.MoveNext())
-        {
-            KeyValuePair<K, V> current = enumerator.Current;
-            m_Keys.Add(current.Key);
-            m_Values.Add(current.Value);
-        }
-    }
+        [SerializeField]
+        private List<K> m_Keys = new List<K>();
 
-    public void OnAfterDeserialize()
-    {
-        Clear();
-        for (int i = 0; i < m_Keys.Count; i++)
+        [SerializeField]
+        private List<V> m_Values = new List<V>();
+
+        public void OnBeforeSerialize()
         {
-            Add(m_Keys[i], m_Values[i]);
+            m_Keys.Clear();
+            m_Values.Clear();
+            using Enumerator enumerator = GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                KeyValuePair<K, V> current = enumerator.Current;
+                m_Keys.Add(current.Key);
+                m_Values.Add(current.Value);
+            }
         }
 
-        m_Keys.Clear();
-        m_Values.Clear();
+        public void OnAfterDeserialize()
+        {
+            Clear();
+            for (int i = 0; i < m_Keys.Count; i++)
+            {
+                Add(m_Keys[i], m_Values[i]);
+            }
+
+            m_Keys.Clear();
+            m_Values.Clear();
+        }
     }
 }

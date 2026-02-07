@@ -1,46 +1,49 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class MainMenu : MonoBehaviour
+namespace Burntwax
 {
-
-    public static MainMenu Instance;
-    public bool loadScene;
-    //Load Scene
-
-    void Awake()
+    public class MainMenu : MonoBehaviour
     {
-        if (Instance != null)
+
+        public static MainMenu Instance;
+        public bool loadScene;
+        //Load Scene
+
+        void Awake()
         {
-            Debug.LogError("Found more than one Main Menu in the scene");
-            Destroy(gameObject);
+            if (Instance != null)
+            {
+                Debug.LogError("Found more than one Main Menu in the scene");
+                Destroy(gameObject);
+            }
+            Instance = this;
         }
-        Instance = this;
-    }
-    public void NewGame()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
+        public void NewGame()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
 
-    }
+        }
 
-    public void Resume()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        loadScene = true;
-        Time.timeScale = 1f;
-        AudioListener.pause = false;
+        public void Resume()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            loadScene = true;
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
 
-    }
+        }
 
-    public void Quit()
-    {
-        Application.Quit();
-    }
+        public void Quit()
+        {
+            Application.Quit();
+        }
 
-    public void Options()
-    {
+        public void Options()
+        {
 
+        }
     }
 }

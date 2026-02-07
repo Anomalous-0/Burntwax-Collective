@@ -1,58 +1,57 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class GunStowState : GunBaseState
+namespace Burntwax
 {
-
-    public GunStowState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
-    : base(currentContext, gunStateFactory)
+    public class GunStowState : GunBaseState
     {
-        IsRootState = true;
-    }
 
-    public override void EnterState()
-    {
-        Ctx.anim.SetBool(Ctx.stowHash, true);
-        Ctx.fullyEquipped = true;
-        InitializeSubState();
-    }
-
-    public override void UpdateState()
-    {
-        CheckSwitchStates();
-    }
-
-    public override void ExitState()
-    {
-        Ctx.anim.SetBool(Ctx.stowHash, false);
-    }
-
-    public override void CheckSwitchStates()
-    {
-        if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.ShootIsPriority())
+        public GunStowState(GunStateMachine currentContext, GunStateFactory gunStateFactory)
+        : base(currentContext, gunStateFactory)
         {
-
-            SwitchState(Factory.Rest());
-        }
-        else if (Ctx.AutoReload() || Ctx.ManualReload())
-        {
-            SwitchState(Factory.Reload());
+            IsRootState = true;
         }
 
-        else if (!Ctx.isReloading && InputPrioritySorter.Instance.AimIsPriority())
+        public override void EnterState()
         {
-            SwitchState(Factory.Aim());
+            Ctx.anim.SetBool(Ctx.stowHash, true);
+            Ctx.fullyEquipped = true;
+            InitializeSubState();
+        }
+
+        public override void UpdateState()
+        {
+            CheckSwitchStates();
+        }
+
+        public override void ExitState()
+        {
+            Ctx.anim.SetBool(Ctx.stowHash, false);
+        }
+
+        public override void CheckSwitchStates()
+        {
+            if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.ShootIsPriority())
+            {
+
+                SwitchState(Factory.Rest());
+            }
+            else if (Ctx.AutoReload() || Ctx.ManualReload())
+            {
+                SwitchState(Factory.Reload());
+            }
+
+            else if (!Ctx.isReloading && InputPrioritySorter.Instance.AimIsPriority())
+            {
+                SwitchState(Factory.Aim());
+            }
+
+
         }
 
 
+        public override void InitializeSubState()
+        {
+            SetSubState(Factory.NoShoot());
+
+        }
+
     }
-
-
-    public override void InitializeSubState()
-    {
-        SetSubState(Factory.NoShoot());
-
-    }
-
 }

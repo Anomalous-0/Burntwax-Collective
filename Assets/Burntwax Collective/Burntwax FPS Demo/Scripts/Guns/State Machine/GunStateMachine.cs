@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using UnityEngine.UIElements;
 
-
+namespace Burntwax {
 [DisallowMultipleComponent]
 public class GunStateMachine : MonoBehaviour
 {
@@ -429,4 +427,5 @@ public struct GunSaveData
     public GunBaseState currentState;
 
 
+}
 }

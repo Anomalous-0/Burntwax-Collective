@@ -1,12 +1,17 @@
 using UnityEngine;
 
-public class PrefabGuid : MonoBehaviour
+namespace Burntwax
 {
-    public string guid;
 
-    [ContextMenu("Generate guid")]
-    private void GenerateGuid()
+    public class PrefabGuid : MonoBehaviour
     {
-        guid = System.Guid.NewGuid().ToString();
+        public string guid;
+
+        [ContextMenu("Generate guid")]
+        private void GenerateGuid()
+        {
+            guid = System.Guid.NewGuid().ToString();
+        }
     }
+
 }

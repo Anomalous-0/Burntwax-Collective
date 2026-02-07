@@ -2,41 +2,46 @@ using System;
 
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
-public class AmmoConfig : ScriptableObject
+namespace Burntwax
 {
 
-    public int maxAmmo;
-    public int clipSize;
-
-    public int currentAmmo;
-    public int currentClip;
-
-
-    public void OnEnable()
+    [CreateAssetMenu(fileName = "Ammo Config", menuName = "Guns/Ammo Config", order = 3)]
+    public class AmmoConfig : ScriptableObject
     {
-        currentClip = clipSize;
-        currentAmmo = maxAmmo;
+
+        public int maxAmmo;
+        public int clipSize;
+
+        public int currentAmmo;
+        public int currentClip;
+
+
+        public void OnEnable()
+        {
+            currentClip = clipSize;
+            currentAmmo = maxAmmo;
+        }
+
+        public void Reload()
+        {
+            int maxReloadAmount = Mathf.Min(clipSize, currentAmmo);
+            int availableBullets = clipSize - currentClip;
+            int reloadAmount = Mathf.Min(maxReloadAmount, availableBullets);
+            currentClip = currentClip + reloadAmount;
+            currentAmmo -= reloadAmount;
+        }
+
+        public void IncrementalReload()
+        {
+            currentClip++;
+            currentAmmo--;
+        }
+
+
+        public bool CanReload()
+        {
+            return currentClip < clipSize && currentAmmo > 0;
+        }
     }
 
-    public void Reload()
-    {
-        int maxReloadAmount = Mathf.Min(clipSize, currentAmmo);
-        int availableBullets = clipSize - currentClip;
-        int reloadAmount = Mathf.Min(maxReloadAmount, availableBullets);
-        currentClip = currentClip + reloadAmount;
-        currentAmmo -= reloadAmount;
-    }
-
-    public void IncrementalReload()
-    {
-        currentClip++;
-        currentAmmo--;
-    }
-
-
-    public bool CanReload()
-    {
-        return currentClip < clipSize && currentAmmo > 0;
-    }
 }

@@ -1,54 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-[RequireComponent(typeof(Rigidbody))]
-public class Target : MonoBehaviour
+
+namespace Burntwax
 {
-
-    [Header("Settings")]
-    public float teleportDistance = 10f;
-    public float rotationVelocity = 3f;
-    public float minHeightOffset = 0f;  // Minimum extra height above the player
-    public float maxHeightOffset = 5f;
-
-    public PlayerStateMachine player;
-
-    void Start()
-    {
-        player = FindFirstObjectByType<PlayerStateMachine>();
-        ObjectManager.Instance.Register(gameObject);
-    }
-
-
-    void Update()
-    {
-        RotateToPlayer();
-
-    }
-
-
-    private void RotateToPlayer()
-    {
-        Vector3 direction = (player.transform.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, direction.y, direction.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationVelocity);
-    }
-
-    public void Teleport()
+    [RequireComponent(typeof(Rigidbody))]
+    public class Target : MonoBehaviour
     {
 
-        Vector2 randomDirection2D = Random.insideUnitCircle.normalized;
-        Vector3 randomDirection = new Vector3(randomDirection2D.x, 0f, randomDirection2D.y);
+        [Header("Settings")]
+        public float teleportDistance = 10f;
+        public float rotationVelocity = 3f;
+        public float minHeightOffset = 0f;  // Minimum extra height above the player
+        public float maxHeightOffset = 5f;
+
+        public PlayerStateMachine player;
+
+        void Start()
+        {
+            player = FindFirstObjectByType<PlayerStateMachine>();
+            ObjectManager.Instance.Register(gameObject);
+        }
 
 
-        Vector3 teleportPosition = player.transform.position + randomDirection * teleportDistance;
+        void Update()
+        {
+            RotateToPlayer();
+
+        }
 
 
-        float randomHeightOffset = Random.Range(minHeightOffset, maxHeightOffset);
-        teleportPosition.y = player.transform.position.y + randomHeightOffset;
+        private void RotateToPlayer()
+        {
+            Vector3 direction = (player.transform.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, direction.y, direction.z));
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationVelocity);
+        }
 
-        transform.position = teleportPosition;
+        public void Teleport()
+        {
+
+            Vector2 randomDirection2D = Random.insideUnitCircle.normalized;
+            Vector3 randomDirection = new Vector3(randomDirection2D.x, 0f, randomDirection2D.y);
+
+
+            Vector3 teleportPosition = player.transform.position + randomDirection * teleportDistance;
+
+
+            float randomHeightOffset = Random.Range(minHeightOffset, maxHeightOffset);
+            teleportPosition.y = player.transform.position.y + randomHeightOffset;
+
+            transform.position = teleportPosition;
+        }
+
+
     }
-
-
 }

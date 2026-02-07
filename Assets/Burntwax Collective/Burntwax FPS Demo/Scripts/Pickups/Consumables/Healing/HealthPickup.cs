@@ -1,39 +1,41 @@
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
-[RequireComponent(typeof(Rigidbody))]
-public class HealthPickup : MonoBehaviour
+namespace Burntwax
 {
 
-    public int heal;
-
-
-    private PlayerHealth playerHealth;
-
-    void Start()
-    {
-        ObjectManager.Instance.Register(gameObject);
-        gameObject.layer = LayerMask.NameToLayer("Consumable");
-    }
-
-    //Collect health
-    void OnTriggerEnter(Collider other)
+    [RequireComponent(typeof(Rigidbody))]
+    public class HealthPickup : MonoBehaviour
     {
 
-        if (other.GetComponentInParent<PlayerHealth>() != false)
+        public int heal;
+
+
+        private PlayerHealth playerHealth;
+
+        void Start()
         {
-            playerHealth = FindFirstObjectByType<PlayerHealth>();
-            if (playerHealth.CurrentHealth() < playerHealth.maxHealth)
-            {
-                playerHealth.RestoreHealth(heal);
-                gameObject.SetActive(false);
-                Destroy(gameObject);
-            }
-
+            ObjectManager.Instance.Register(gameObject);
+            gameObject.layer = LayerMask.NameToLayer("Consumable");
         }
+
+        //Collect health
+        void OnTriggerEnter(Collider other)
+        {
+
+            if (other.GetComponentInParent<PlayerHealth>() != false)
+            {
+                playerHealth = FindFirstObjectByType<PlayerHealth>();
+                if (playerHealth.CurrentHealth() < playerHealth.maxHealth)
+                {
+                    playerHealth.RestoreHealth(heal);
+                    gameObject.SetActive(false);
+                    Destroy(gameObject);
+                }
+
+            }
+        }
+
     }
 
 }
-
-
 

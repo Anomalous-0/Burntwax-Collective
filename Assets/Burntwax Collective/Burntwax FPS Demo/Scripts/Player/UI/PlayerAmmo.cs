@@ -1,28 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-[DisallowMultipleComponent]
-
-public class PlayerAmmo : MonoBehaviour
+namespace Burntwax
 {
 
+    [DisallowMultipleComponent]
 
-    [SerializeField] private GunStateMachine gunSelector;
-    [SerializeField] private TextMeshProUGUI ammoText;
-
-
-
-    void Update()
+    public class PlayerAmmo : MonoBehaviour
     {
-        if (gunSelector.ActiveGunScriptable != null)
+
+
+        [SerializeField] private GunStateMachine gunSelector;
+        [SerializeField] private TextMeshProUGUI ammoText;
+
+
+
+        void Update()
         {
-            ammoText.SetText($"{gunSelector.ActiveGunScriptable.AmmoConfig.currentClip} / {gunSelector.ActiveGunScriptable.AmmoConfig.currentAmmo}");
-        }
-        else
-        {
-            ammoText.SetText("");
+            if (gunSelector.ActiveGunScriptable != null)
+            {
+                ammoText.SetText($"{gunSelector.ActiveGunScriptable.AmmoConfig.currentClip} / {gunSelector.ActiveGunScriptable.AmmoConfig.currentAmmo}");
+            }
+            else
+            {
+                ammoText.SetText("");
+            }
         }
     }
+
 }

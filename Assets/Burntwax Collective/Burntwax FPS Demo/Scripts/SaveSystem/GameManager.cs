@@ -1,45 +1,50 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+
+namespace Burntwax
 {
-    public static GameManager Instance;
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-       
-        if (Instance != null && Instance != this)
+        public static GameManager Instance;
+
+        private void Awake()
         {
-            
-            Destroy(gameObject);
-        }
-        Instance = this;
-        
-    }
 
-    private void Start()
-    {
-
-    }
-
-    private void Update()
-    {
-        if (InputManager.Instance)
-        {
-            if (InputManager.Instance.saveIsPressed)
+            if (Instance != null && Instance != this)
             {
-                SaveSystem.Save();
+
+                Destroy(gameObject);
             }
-            if (InputManager.Instance.loadIsPressed)
+            Instance = this;
+
+        }
+
+        private void Start()
+        {
+
+        }
+
+        private void Update()
+        {
+            if (InputManager.Instance)
             {
+                if (InputManager.Instance.saveIsPressed)
+                {
+                    SaveSystem.Save();
+                }
+                if (InputManager.Instance.loadIsPressed)
+                {
+                    SaveSystem.Load();
+                }
+            }
+            if (MainMenu.Instance.loadScene)
+            {
+                MainMenu.Instance.loadScene = false;
                 SaveSystem.Load();
             }
-        }
-        if(MainMenu.Instance.loadScene)
-        {
-            MainMenu.Instance.loadScene = false;
-            SaveSystem.Load();
-        }
 
 
+        }
     }
+
 }

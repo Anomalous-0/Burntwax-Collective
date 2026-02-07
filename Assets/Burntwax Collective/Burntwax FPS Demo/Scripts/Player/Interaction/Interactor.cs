@@ -1,54 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Events;
 
-
-public class Interactor : MonoBehaviour
+namespace Burntwax
 {
-
-
-    public CamStateMachine cam;
-    public PlayerCrosshair crosshair;
-
-    [SerializeField] float raycastDistance = 3f;
-    [SerializeField] LayerMask interactableLayer;
-
-
-    Interactable interactable;
-
-    void Update()
+    public class Interactor : MonoBehaviour
     {
 
-        RaycastHit hit;
-        if (cam.currentState != cam.states.Aim() && Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, interactableLayer))
+
+        public CamStateMachine cam;
+        public PlayerCrosshair crosshair;
+
+        [SerializeField] float raycastDistance = 3f;
+        [SerializeField] LayerMask interactableLayer;
+
+
+        Interactable interactable;
+
+        void Update()
         {
-            crosshair.SetInteractCrosshair();
 
-
-            if (hit.collider.GetComponent<Interactable>())
+            RaycastHit hit;
+            if (cam.currentState != cam.states.Aim() && Physics.Raycast(transform.position, transform.forward, out hit, raycastDistance, interactableLayer))
             {
-                if (interactable == null || interactable.ID != hit.collider.GetComponent<Interactable>().ID)
-                {
-                    interactable = hit.collider.GetComponent<Interactable>();
+                crosshair.SetInteractCrosshair();
 
-                }
-                if (InputManager.Instance.interactIsPressed)
-                {
-                    interactable.onInteract.Invoke();
 
-                    if (!interactable.continuous)
+                if (hit.collider.GetComponent<Interactable>())
+                {
+                    if (interactable == null || interactable.ID != hit.collider.GetComponent<Interactable>().ID)
                     {
-                        InputManager.Instance.interactIsPressed = false;
-                    }
+                        interactable = hit.collider.GetComponent<Interactable>();
 
+                    }
+                    if (InputManager.Instance.interactIsPressed)
+                    {
+                        interactable.onInteract.Invoke();
+
+                        if (!interactable.continuous)
+                        {
+                            InputManager.Instance.interactIsPressed = false;
+                        }
+
+                    }
                 }
             }
-        }
-        else
-        {
-            crosshair.ResetInteractCrosshair();
+            else
+            {
+                crosshair.ResetInteractCrosshair();
+            }
         }
     }
+
 }

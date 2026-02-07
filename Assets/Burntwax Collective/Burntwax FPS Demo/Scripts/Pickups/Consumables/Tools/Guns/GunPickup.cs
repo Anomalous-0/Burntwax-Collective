@@ -1,6 +1,7 @@
-
-using Unity.VisualScripting;
 using UnityEngine;
+
+namespace Burntwax
+{
 [RequireComponent(typeof(Rigidbody))]
 public class GunPickup : MonoBehaviour
 {
@@ -46,5 +47,6 @@ public class GunPickup : MonoBehaviour
         }
     }
 
+}
 }
 

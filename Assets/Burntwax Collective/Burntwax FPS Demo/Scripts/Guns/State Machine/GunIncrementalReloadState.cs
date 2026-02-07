@@ -1,5 +1,4 @@
-using UnityEngine;
-
+namespace Burntwax {
 public class GunIncrementalReloadState : GunBaseState {
    
 
@@ -43,4 +42,5 @@ public class GunIncrementalReloadState : GunBaseState {
     public override void InitializeSubState(){
     }
 
+}
 }
