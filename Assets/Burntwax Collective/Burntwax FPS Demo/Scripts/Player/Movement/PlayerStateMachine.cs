@@ -17,7 +17,6 @@ namespace Burntwax
 
         [Header("State Machines")]
         public GunStateMachine gunMachine;
-        public CamStateMachine cam;
 
 
 

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Animations.Rigging;
 
 namespace Burntwax {
 [DisallowMultipleComponent]
-public class GunStateMachine : MonoBehaviour
+public partial class GunStateMachine : MonoBehaviour
 {
 
     [Header("State Machines")]
@@ -17,9 +16,6 @@ public class GunStateMachine : MonoBehaviour
 
     public int currentID;
 
-    [Header("Recoil")]
-    public Cinemachine.CinemachineImpulseSource camShake;
-
 
     [Header("Animation")]
     [SerializeField] public Transform GunParent;
@@ -28,7 +24,7 @@ public class GunStateMachine : MonoBehaviour
 
     public Animator anim;
 
-    public Rig handIK;
+
 
     [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
 
@@ -68,6 +64,8 @@ public class GunStateMachine : MonoBehaviour
 
 
 
+    partial void OnGunSetup_Rigging(GameObject currentGunModel);
+    partial void OnGunSetup_Cinemachine(GameObject currentGunModel);
 
     void Awake()
     {
@@ -258,9 +256,10 @@ public class GunStateMachine : MonoBehaviour
         Spawn(ActiveGunScriptable);
         crosshair.SetGunCrosshair(ActiveGunScriptable);
         currentState = states.Rest();
-        handIK.weight = 1;
+       
         anim.Play("equip_" + ActiveGunScriptable.Type);
-        camShake = CurrentGunModel.GetComponent<Cinemachine.CinemachineImpulseSource>();
+        OnGunSetup_Rigging(CurrentGunModel);
+        OnGunSetup_Cinemachine(CurrentGunModel);
 
         ActiveGunScriptable.AmmoConfig.OnEnable();
 
