@@ -7,8 +7,12 @@ namespace Burntwax
     {
         public static GameManager Instance;
 
+        public bool loadScene;
+
         private void Awake()
         {
+
+            DontDestroyOnLoad(gameObject);
 
             if (Instance != null && Instance != this)
             {
@@ -37,17 +41,13 @@ namespace Burntwax
                     SaveSystem.Load();
                 }
             }
-            if (MainMenu.Instance != null)
+
+            if (loadScene)
             {
-                if (MainMenu.Instance.loadScene)
-                {
-                    MainMenu.Instance.loadScene = false;
-                    SaveSystem.Load();
-                }
+                Debug.Log("Loading Scene...");
+                SaveSystem.Load();
+                loadScene = false;
             }
-
-
-
         }
     }
 

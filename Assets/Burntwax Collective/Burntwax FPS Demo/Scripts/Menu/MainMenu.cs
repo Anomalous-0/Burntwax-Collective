@@ -30,7 +30,7 @@ namespace Burntwax
         public void Resume()
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-            loadScene = true;
+            GameManager.Instance.loadScene = true;
             Time.timeScale = 1f;
             AudioListener.pause = false;
 
