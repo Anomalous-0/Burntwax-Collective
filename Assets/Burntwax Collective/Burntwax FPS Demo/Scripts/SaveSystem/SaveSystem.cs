@@ -107,7 +107,7 @@ namespace Burntwax
                 gun.LoadData(_saveData.GunData);
             }
 
-            // ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
+            ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
 
         }
         public static void Load()

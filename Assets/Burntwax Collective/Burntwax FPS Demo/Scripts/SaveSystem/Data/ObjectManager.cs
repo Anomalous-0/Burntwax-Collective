@@ -35,6 +35,13 @@ namespace Burntwax
             }
             Instance = this;
 
+
+
+
+        }
+
+        void Start()
+        {
             consumableList = new List<ConsumableData>();
             basicList = new List<BasicData>();
             destructableList = new List<DestructableData>();
@@ -44,15 +51,28 @@ namespace Burntwax
             {
                 var id = prefab.prefabAsset.GetComponent<PrefabGuid>().guid;
                 prefabToIDMap[id] = prefab;
+
             }
-
-
+            Debug.Log("New list");
         }
 
 
         public void Register(GameObject obj)
         {
             objects.Add(obj);
+            // if (obj.layer == LayerMask.NameToLayer("Consumable") ||
+            //    (obj.layer == LayerMask.NameToLayer("Default") && obj.GetComponent<Rigidbody>()))
+            // {
+            //     consumableRuntimeMap[obj] = new ConsumableData();
+            // }
+            // else if (obj.layer == LayerMask.NameToLayer("Basic"))
+            // {
+            //     basicRuntimeMap[obj] = new BasicData();
+            // }
+            // else if (obj.layer == LayerMask.NameToLayer("Destructable"))
+            // {
+            //     destructableRuntimeMap[obj] = new DestructableData();
+            // }
         }
 
 
@@ -100,6 +120,7 @@ namespace Burntwax
                         position = objects[i].transform.position,
                         rotation = objects[i].transform.rotation
                     });
+                    // Debug.Log($"Saved Basic Object: {id} at Position: {objects[i].transform.position}");
                 }
 
                 else if (objects[i].layer == LayerMask.NameToLayer("Destructable"))
@@ -127,18 +148,23 @@ namespace Burntwax
         public void LoadData(ObjectConsumableData data)
         {
 
-            consumableList.Clear();
-            basicList.Clear();
-            destructableList.Clear();
-
-            foreach (var obj in objects)
+            if (objects.Count > 0)
             {
-                if (obj != null)
-                    Destroy(obj);
+                consumableList.Clear();
+                basicList.Clear();
+                destructableList.Clear();
+                Debug.Log("Clearing existing objects...");
 
+                foreach (var obj in objects)
+                {
+                    if (obj != null)
+                        Destroy(obj);
+
+                }
+                objects.Clear();
             }
 
-            objects.Clear();
+
             consumableList = data.consumableList;
             basicList = data.basicList;
             destructableList = data.destructableList; ;
@@ -150,6 +176,11 @@ namespace Burntwax
                     GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
                     newObj.transform.localScale = obj.scale;
                     newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
+
+                    if (obj.velocity != Vector3.zero)
+                    {
+                        Debug.Log($"Instantiated Consumable Object with Velocity: {obj.velocity}");
+                    }
 
 
                 }
