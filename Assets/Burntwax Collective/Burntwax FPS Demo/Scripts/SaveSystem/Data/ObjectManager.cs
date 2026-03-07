@@ -33,35 +33,29 @@ namespace Burntwax
 
                 Destroy(gameObject);
             }
+            Instance = this;
 
+
+
+        }
+
+
+        void Start()
+        {
             consumableList = new List<ConsumableData>();
             basicList = new List<BasicData>();
             destructableList = new List<DestructableData>();
 
-            Instance = this;
+
             foreach (var prefab in prefabs)
             {
                 var id = prefab.prefabAsset.GetComponent<PrefabGuid>().guid;
                 prefabToIDMap[id] = prefab;
             }
         }
-
         public void Register(GameObject obj)
         {
             objects.Add(obj);
-            // if (obj.layer == LayerMask.NameToLayer("Consumable") ||
-            //    (obj.layer == LayerMask.NameToLayer("Default") && obj.GetComponent<Rigidbody>()))
-            // {
-            //     consumableRuntimeMap[obj] = new ConsumableData();
-            // }
-            // else if (obj.layer == LayerMask.NameToLayer("Basic"))
-            // {
-            //     basicRuntimeMap[obj] = new BasicData();
-            // }
-            // else if (obj.layer == LayerMask.NameToLayer("Destructable"))
-            // {
-            //     destructableRuntimeMap[obj] = new DestructableData();
-            // }
         }
 
 

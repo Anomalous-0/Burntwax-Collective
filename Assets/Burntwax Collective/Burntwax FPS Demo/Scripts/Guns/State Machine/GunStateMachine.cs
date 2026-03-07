@@ -358,7 +358,8 @@ public partial class GunStateMachine : MonoBehaviour
         {
             data.GunModel = null;
             data.ActiveGunScriptable = null;
-            data.CurrentGuns.Clear();
+            if (CurrentGuns.Count > 0)
+                data.CurrentGuns.Clear();
             data.currentState = null;
             return;
         }

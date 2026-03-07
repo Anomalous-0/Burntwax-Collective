@@ -14,16 +14,12 @@ namespace Burntwax
         [System.Serializable]
         public struct SaveData
         {
-
-
+            public SceneSaveData SceneData;
             public PlayerSaveData PlayerData;
             public CamSaveData CamData;
-
             public GunSaveData GunData;
             public PlayerHealthSaveData PlayerHealthData;
-
             public ObjectConsumableData ObjectConsumableData;
-
 
         }
 
@@ -54,12 +50,12 @@ namespace Burntwax
             string json = JsonUtility.ToJson(_saveData);
             string encryptedData = EncryptionUtility.EncryptString(json);
 
-            File.WriteAllText(SaveFileName(), encryptedData);
+            await File.WriteAllTextAsync(SaveFileName(), encryptedData);
         }
 
         private static void HandleSaveData()
         {
-
+            GameManager.Instance.SceneData.Save(ref _saveData.SceneData);
 
             PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
             if (player != null)
@@ -74,8 +70,6 @@ namespace Burntwax
 
 
             ObjectManager.Instance.SaveData(ref _saveData.ObjectConsumableData);
-
-
         }
 
 
@@ -92,19 +86,11 @@ namespace Burntwax
 
         private static async Task HandleLoadDataAsync()
         {
-            // await GameManager.Instance.
-        }
-        public static void Load()
-        {
-            string saveData = File.ReadAllText(SaveFileName());
-            string decryptedData = EncryptionUtility.DecryptString(saveData);
-            _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
-            HandleLoadData();
-        }
-        private static void HandleLoadData()
-        {
+            await GameManager.Instance.SceneData.LoadAsync(_saveData.SceneData);
 
+            await GameManager.Instance.SceneData.WaitForSceneFullLoad();
 
+            // GameManager.Instance.SceneData.Load(_saveData.SceneData);
 
             PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
             if (player)
@@ -120,8 +106,38 @@ namespace Burntwax
             {
                 gun.LoadData(_saveData.GunData);
             }
-            ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
+
+            // ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
+
         }
+        // public static void Load()
+        // {
+        //     string saveData = File.ReadAllText(SaveFileName());
+        //     string decryptedData = EncryptionUtility.DecryptString(saveData);
+        //     _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
+        //     HandleLoadData();
+        // }
+        // private static void HandleLoadData()
+        // {
+
+        //     GameManager.Instance.SceneData.Load(_saveData.SceneData);
+
+        //     PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
+        //     if (player)
+        //     {
+        //         player.LoadData(_saveData.PlayerData);
+        //         player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
+        //         player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
+
+        //     }
+
+        //     GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
+        //     if (gun)
+        //     {
+        //         gun.LoadData(_saveData.GunData);
+        //     }
+        //     ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
+        // }
 
 
     }

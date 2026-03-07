@@ -1429,6 +1429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 449002267}
   - component: {fileID: 449002266}
+  - component: {fileID: 449002268}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1448,6 +1449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f6c7c39d122f2c43bbdbfd2bfe2b8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  loadScene: 0
 --- !u!4 &449002267
 Transform:
   m_ObjectHideFlags: 0
@@ -1463,6 +1465,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &449002268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449002265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0336fd0589b79b04da26818ea91ada73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::SceneLoader
+  sceneDataSOArray:
+  - {fileID: 11400000, guid: a5c6561382ea1394dbf804153807110b, type: 2}
+  - {fileID: 11400000, guid: 4112f4bf44e34ed41a6867af0032a976, type: 2}
+  - {fileID: 11400000, guid: 16a597d6ed5209a41a16fd0b29757b15, type: 2}
 --- !u!1 &449691732
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,6 +1614,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 449691732}
   m_CullTransparentMesh: 1
+--- !u!1 &488549701
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 488549703}
+  - component: {fileID: 488549702}
+  m_Layer: 0
+  m_Name: InputManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &488549702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488549701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7281f740d99b8634283fad42b6bf257f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InputManager
+  MoveInput: {x: 0, y: 0}
+  LookInput: {x: 0, y: 0}
+  interactIsPressed: 0
+  jumpIsPressed: 0
+  pauseIsPressed: 0
+  useGloves: 0
+  shootIsPressed: 0
+--- !u!4 &488549703
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488549701}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &520887810
 GameObject:
   m_ObjectHideFlags: 0
@@ -4053,6 +4122,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366081638}
   m_CullTransparentMesh: 1
+--- !u!1 &1435500057
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1435500059}
+  - component: {fileID: 1435500058}
+  m_Layer: 0
+  m_Name: SceneData
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1435500058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435500057}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 208f60d639ea8ab47b038a7ed77827b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::SceneData
+  data: {fileID: 11400000, guid: a5c6561382ea1394dbf804153807110b, type: 2}
+--- !u!4 &1435500059
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1435500057}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0, y: 0, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1580128519
 GameObject:
   m_ObjectHideFlags: 0
@@ -5898,9 +6012,11 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 449002267}
+  - {fileID: 488549703}
+  - {fileID: 1435500059}
   - {fileID: 276632136}
   - {fileID: 1076411130}
   - {fileID: 1816551733}
   - {fileID: 1998396167}
   - {fileID: 520887812}
-  - {fileID: 449002267}

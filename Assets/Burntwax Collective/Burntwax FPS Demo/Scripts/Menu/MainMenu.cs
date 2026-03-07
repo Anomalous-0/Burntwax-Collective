@@ -21,7 +21,7 @@ namespace Burntwax
         }
         public void NewGame()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
             Time.timeScale = 1f;
             AudioListener.pause = false;
 
@@ -29,7 +29,7 @@ namespace Burntwax
 
         public void Resume()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
             GameManager.Instance.loadScene = true;
             Time.timeScale = 1f;
             AudioListener.pause = false;

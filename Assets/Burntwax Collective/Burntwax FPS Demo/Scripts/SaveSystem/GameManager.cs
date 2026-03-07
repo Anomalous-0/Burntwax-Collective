@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Threading.Tasks;
 
 namespace Burntwax
 {
@@ -8,6 +8,12 @@ namespace Burntwax
         public static GameManager Instance;
 
         public bool loadScene;
+
+        public SceneData SceneData { get; set; }
+
+        private bool isSaving;
+        private bool isLoading;
+        
 
         private void Awake()
         {
@@ -34,20 +40,34 @@ namespace Burntwax
             {
                 if (InputManager.Instance.saveIsPressed)
                 {
-                    SaveSystem.Save();
+                    SaveAsync();
                 }
                 if (InputManager.Instance.loadIsPressed)
                 {
-                    SaveSystem.Load();
+                    LoadAsync();
                 }
             }
 
             if (loadScene)
             {
                 Debug.Log("Loading Scene...");
-                SaveSystem.Load();
+                LoadAsync();
                 loadScene = false;
             }
+        }
+
+        private async void SaveAsync()
+        {
+            isSaving = true;
+            await SaveSystem.SaveAsynchronously();
+            isSaving = false;
+        }
+
+        private async void LoadAsync()
+        {
+            isLoading = true;
+            await SaveSystem.LoadAsync();
+            isLoading = false;
         }
     }
 

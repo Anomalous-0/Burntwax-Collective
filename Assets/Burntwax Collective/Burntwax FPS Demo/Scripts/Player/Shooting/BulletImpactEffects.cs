@@ -12,7 +12,7 @@ namespace Burntwax
 
         void Awake()
         {
-            DontDestroyOnLoad(gameObject);
+            // Do ntDestroyOnLoad(gameObject);
             if (Instance != null)
             {
 
