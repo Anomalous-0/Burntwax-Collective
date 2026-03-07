@@ -79,7 +79,7 @@ namespace Burntwax
         //Quit Game to Main Menu
         public void MainMenu()
         {
-            SceneManager.LoadSceneAsync(0);
+            SceneManager.LoadSceneAsync(1);
 
         }
 

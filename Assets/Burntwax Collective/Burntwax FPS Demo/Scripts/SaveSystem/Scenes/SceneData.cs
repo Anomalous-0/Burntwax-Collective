@@ -20,6 +20,7 @@ namespace Burntwax
         public void Save(ref SceneSaveData saveData)
         {
             saveData.ID = data.Name;
+            GameManager.Instance.currentSceneID = data.Name;
             Debug.Log($"Saving Scene with ID: {saveData.ID}");
         }
 

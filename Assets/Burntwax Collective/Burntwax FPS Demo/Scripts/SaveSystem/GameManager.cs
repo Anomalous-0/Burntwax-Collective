@@ -11,6 +11,8 @@ namespace Burntwax
 
         public SceneData SceneData { get; set; }
 
+        public string currentSceneID;
+
         private bool isSaving;
         private bool isLoading;
         
@@ -56,14 +58,14 @@ namespace Burntwax
             }
         }
 
-        private async void SaveAsync()
+        public async void SaveAsync()
         {
             isSaving = true;
             await SaveSystem.SaveAsynchronously();
             isSaving = false;
         }
 
-        private async void LoadAsync()
+        public async void LoadAsync()
         {
             isLoading = true;
             await SaveSystem.LoadAsync();

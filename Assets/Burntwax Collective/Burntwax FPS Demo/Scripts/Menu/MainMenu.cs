@@ -1,3 +1,5 @@
+using System.Data.Common;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +10,8 @@ namespace Burntwax
 
         public static MainMenu Instance;
         public bool loadScene;
+
+        
         //Load Scene
 
         void Awake()
@@ -21,19 +25,25 @@ namespace Burntwax
         }
         public void NewGame()
         {
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+            SceneManager.LoadSceneAsync(2);
             Time.timeScale = 1f;
             AudioListener.pause = false;
 
         }
 
-        public void Resume()
+        // public void Resume()
+        // {
+        //     GameManager.Instance.loadScene = true;
+        //     Time.timeScale = 1f;
+        //     AudioListener.pause = false;
+
+        // }
+
+        public async void Resume()
         {
-            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
-            GameManager.Instance.loadScene = true;
+            GameManager.Instance.LoadAsync();
             Time.timeScale = 1f;
             AudioListener.pause = false;
-
         }
 
         public void Quit()
