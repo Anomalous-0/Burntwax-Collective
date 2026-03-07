@@ -35,13 +35,6 @@ namespace Burntwax
             }
             Instance = this;
 
-
-
-        }
-
-
-        void Start()
-        {
             consumableList = new List<ConsumableData>();
             basicList = new List<BasicData>();
             destructableList = new List<DestructableData>();
@@ -52,7 +45,11 @@ namespace Burntwax
                 var id = prefab.prefabAsset.GetComponent<PrefabGuid>().guid;
                 prefabToIDMap[id] = prefab;
             }
+
+
         }
+
+
         public void Register(GameObject obj)
         {
             objects.Add(obj);

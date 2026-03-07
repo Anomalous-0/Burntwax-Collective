@@ -11,7 +11,7 @@ namespace Burntwax
         public static MainMenu Instance;
         public bool loadScene;
 
-        
+
         //Load Scene
 
         void Awake()

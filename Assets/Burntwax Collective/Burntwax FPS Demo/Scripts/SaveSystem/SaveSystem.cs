@@ -110,34 +110,34 @@ namespace Burntwax
             // ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
 
         }
-        // public static void Load()
-        // {
-        //     string saveData = File.ReadAllText(SaveFileName());
-        //     string decryptedData = EncryptionUtility.DecryptString(saveData);
-        //     _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
-        //     HandleLoadData();
-        // }
-        // private static void HandleLoadData()
-        // {
+        public static void Load()
+        {
+            string saveData = File.ReadAllText(SaveFileName());
+            string decryptedData = EncryptionUtility.DecryptString(saveData);
+            _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
+            HandleLoadData();
+        }
+        private static void HandleLoadData()
+        {
 
-        //     GameManager.Instance.SceneData.Load(_saveData.SceneData);
+            // GameManager.Instance.SceneData.Load(_saveData.SceneData);
 
-        //     PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
-        //     if (player)
-        //     {
-        //         player.LoadData(_saveData.PlayerData);
-        //         player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
-        //         player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
+            PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
+            if (player)
+            {
+                player.LoadData(_saveData.PlayerData);
+                player.GetComponent<CamStateMachine>().LoadData(_saveData.CamData);
+                player.GetComponent<PlayerHealth>().LoadData(_saveData.PlayerHealthData);
 
-        //     }
+            }
 
-        //     GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
-        //     if (gun)
-        //     {
-        //         gun.LoadData(_saveData.GunData);
-        //     }
-        //     ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
-        // }
+            GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
+            if (gun)
+            {
+                gun.LoadData(_saveData.GunData);
+            }
+            ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
+        }
 
 
     }

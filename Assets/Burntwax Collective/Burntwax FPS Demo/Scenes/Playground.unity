@@ -33330,6 +33330,11 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 42627137}
+    - target: {fileID: 4829537716825103936, guid: f65697f85dd502c41822119599570e43,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5974331289442504412, guid: f65697f85dd502c41822119599570e43,
         type: 3}
       propertyPath: rb

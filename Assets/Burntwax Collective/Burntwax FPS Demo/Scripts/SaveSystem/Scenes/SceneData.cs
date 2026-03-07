@@ -24,10 +24,10 @@ namespace Burntwax
             Debug.Log($"Saving Scene with ID: {saveData.ID}");
         }
 
-        // public void Load(SceneSaveData saveData)
-        // {
-        //     GameManager.Instance.GetComponent<SceneLoader>().LoadSceneByIndex(saveData.ID);
-        // }
+        public void Load(SceneSaveData saveData)
+        {
+            GameManager.Instance.GetComponent<SceneLoader>().LoadSceneByIndex(saveData.ID);
+        }
 
         public async Task LoadAsync(SceneSaveData saveData)
         {

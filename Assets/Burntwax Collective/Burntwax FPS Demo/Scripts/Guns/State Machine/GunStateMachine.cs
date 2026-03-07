@@ -73,23 +73,24 @@ public partial class GunStateMachine : MonoBehaviour
         currentState = states.Rest();
         currentState.EnterState();
         // handIK.weight = 0;
-    }
 
-    void Start()
-    {
         aimHash = Animator.StringToHash("aim");
         stowHash = Animator.StringToHash("stow");
         reloadHash = Animator.StringToHash("reload");
         proceduralShootHash = Animator.StringToHash("proceduralShoot");
         incrementalReloadHash = Animator.StringToHash("incrementalReload");
         shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+    }
 
-        if (CurrentGunModel)
-            CurrentGunModel.gameObject.SetActive(false);
-        ActiveGunScriptable = null;
-        CurrentGunModel = null;
-        anim.Play("empty_rest");
-        CurrentGuns.Clear();
+    void Start()
+    {
+
+        // if (CurrentGunModel)
+        //     CurrentGunModel.gameObject.SetActive(false);
+        // ActiveGunScriptable = null;
+        // CurrentGunModel = null;
+        // anim.Play("empty_rest");
+        // CurrentGuns.Clear();
     }
 
 
