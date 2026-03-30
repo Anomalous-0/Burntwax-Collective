@@ -16,6 +16,8 @@ namespace Burntwax
 
         void Start()
         {
+            if (GameManager.Instance.IsLoadingFromSave)
+                return;
             ObjectManager.Instance.Register(gameObject);
         }
 

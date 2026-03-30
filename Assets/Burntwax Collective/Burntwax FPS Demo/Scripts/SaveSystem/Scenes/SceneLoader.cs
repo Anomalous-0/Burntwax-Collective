@@ -49,11 +49,6 @@ namespace Burntwax
 
                 while (!asyncLoad.isDone)
                 {
-                    if (asyncLoad.progress >= 0.9f)
-                    {
-                        asyncLoad.allowSceneActivation = true;
-                        break;
-                    }
                     await Task.Yield();
                 }
             }

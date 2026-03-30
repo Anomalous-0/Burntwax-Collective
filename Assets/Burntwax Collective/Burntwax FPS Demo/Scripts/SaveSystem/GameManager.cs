@@ -6,6 +6,8 @@ namespace Burntwax
 {
     public class GameManager : MonoBehaviour
     {
+
+        public bool IsLoadingFromSave { get; set; }
         public static GameManager Instance;
 
         public bool loadScene;
@@ -27,6 +29,7 @@ namespace Burntwax
             {
 
                 Destroy(gameObject);
+                return;
             }
             Instance = this;
 

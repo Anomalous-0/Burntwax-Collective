@@ -31,23 +31,24 @@ namespace Burntwax
 
         public async Task LoadAsync(SceneSaveData saveData)
         {
-            await GameManager.Instance.GetComponent<SceneLoader>().LoadSceneByIndexAsync(saveData.ID);
-        }
+            var tcs = new TaskCompletionSource<bool>();
 
-        public Task WaitForSceneFullLoad()
-        {
-            TaskCompletionSource<bool> taskCompletion = new TaskCompletionSource<bool>();
-            UnityEngine.Events.UnityAction<Scene, LoadSceneMode> sceneLoaderHandler = null;
-            sceneLoaderHandler = (scene, mode) =>
+            UnityEngine.Events.UnityAction<Scene, LoadSceneMode> handler = null;
+            handler = (scene, mode) =>
             {
-                taskCompletion.SetResult(true);
-                SceneManager.sceneLoaded -= sceneLoaderHandler;
+                tcs.SetResult(true);
+                SceneManager.sceneLoaded -= handler;
             };
 
-            SceneManager.sceneLoaded += sceneLoaderHandler;
+            SceneManager.sceneLoaded += handler;
 
-            return taskCompletion.Task;
+            await GameManager.Instance.GetComponent<SceneLoader>()
+                .LoadSceneByIndexAsync(saveData.ID);
+
+            await tcs.Task; 
         }
+
+    
 
 
 

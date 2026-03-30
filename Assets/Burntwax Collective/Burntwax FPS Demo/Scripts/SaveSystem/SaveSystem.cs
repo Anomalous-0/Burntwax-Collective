@@ -86,9 +86,8 @@ namespace Burntwax
 
         private static async Task HandleLoadDataAsync()
         {
+            GameManager.Instance.IsLoadingFromSave = true;
             await GameManager.Instance.SceneData.LoadAsync(_saveData.SceneData);
-
-            await GameManager.Instance.SceneData.WaitForSceneFullLoad();
 
             // GameManager.Instance.SceneData.Load(_saveData.SceneData);
 
@@ -108,7 +107,7 @@ namespace Burntwax
             }
 
             ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
-
+            GameManager.Instance.IsLoadingFromSave = false;
         }
         public static void Load()
         {

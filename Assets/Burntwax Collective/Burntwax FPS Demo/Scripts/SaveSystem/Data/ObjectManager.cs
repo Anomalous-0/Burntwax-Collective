@@ -30,21 +30,30 @@ namespace Burntwax
         {
             if (Instance != null && Instance != this)
             {
-
                 Destroy(gameObject);
+                return;
             }
             Instance = this;
 
 
-
+            consumableList = new List<ConsumableData>();
+            basicList = new List<BasicData>();
+            destructableList = new List<DestructableData>();
 
         }
 
         void Start()
         {
-            consumableList = new List<ConsumableData>();
-            basicList = new List<BasicData>();
-            destructableList = new List<DestructableData>();
+            Debug.Log("IsLoadingFromSave: " + GameManager.Instance.IsLoadingFromSave);
+
+            if (GameManager.Instance.IsLoadingFromSave)
+            {
+                Debug.Log("Skipping ObjectManager init due to load");
+                return;
+            }
+            // consumableList = new List<ConsumableData>();
+            // basicList = new List<BasicData>();
+            // destructableList = new List<DestructableData>();
 
 
             foreach (var prefab in prefabs)
