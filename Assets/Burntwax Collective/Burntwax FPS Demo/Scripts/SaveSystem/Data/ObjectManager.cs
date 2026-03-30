@@ -44,11 +44,8 @@ namespace Burntwax
 
         void Start()
         {
-            Debug.Log("IsLoadingFromSave: " + GameManager.Instance.IsLoadingFromSave);
-
             if (GameManager.Instance.IsLoadingFromSave)
-            {
-                Debug.Log("Skipping ObjectManager init due to load");
+            {          
                 return;
             }
             // consumableList = new List<ConsumableData>();
@@ -62,7 +59,6 @@ namespace Burntwax
                 prefabToIDMap[id] = prefab;
 
             }
-            Debug.Log("New list");
         }
 
 
@@ -162,7 +158,6 @@ namespace Burntwax
                 consumableList.Clear();
                 basicList.Clear();
                 destructableList.Clear();
-                Debug.Log("Clearing existing objects...");
 
                 foreach (var obj in objects)
                 {
@@ -185,13 +180,6 @@ namespace Burntwax
                     GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
                     newObj.transform.localScale = obj.scale;
                     newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
-
-                    if (obj.velocity != Vector3.zero)
-                    {
-                        Debug.Log($"Instantiated Consumable Object with Velocity: {obj.velocity}");
-                    }
-
-
                 }
             }
 

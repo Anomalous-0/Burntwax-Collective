@@ -139,6 +139,22 @@ namespace Burntwax
         }
 
 
+        public static SceneSaveData? GetSavedSceneData()
+        {
+            string path = SaveFileName();
+
+            if (!File.Exists(path))
+                return null;
+
+            string encrypted = File.ReadAllText(path);
+            string decrypted = EncryptionUtility.DecryptString(encrypted);
+
+            SaveData data = JsonUtility.FromJson<SaveData>(decrypted);
+
+            return data.SceneData;
+        }
+
+
     }
 
 }

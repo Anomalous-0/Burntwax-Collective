@@ -1,5 +1,3 @@
-using System.Data.Common;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

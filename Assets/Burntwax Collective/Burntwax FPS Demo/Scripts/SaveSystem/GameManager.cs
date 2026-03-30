@@ -37,7 +37,13 @@ namespace Burntwax
 
         private void Start()
         {
+            var sceneData = SaveSystem.GetSavedSceneData();
 
+            if (sceneData.HasValue)
+            {
+                currentSceneID = sceneData.Value.ID;
+                Debug.Log($"Loaded last saved scene ID: {currentSceneID}");
+            }
         }
 
         private void Update()
@@ -56,16 +62,10 @@ namespace Burntwax
                     }
                     else
                     {
+                        Debug.Log("Loading from save in the same scene...");
                         SaveSystem.Load();
                     }
                 }
-            }
-
-            if (loadScene)
-            {
-                Debug.Log("Loading Scene...");
-                LoadAsync();
-                loadScene = false;
             }
         }
 
