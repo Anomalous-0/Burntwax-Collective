@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
+using Cinemachine;
 
 namespace Burntwax
 {
@@ -14,6 +16,11 @@ namespace Burntwax
         public PlayerCrosshair crosshair;
 
         [Space]
+        [Header("Cinemachine Required")]
+        public CinemachineImpulseSource camShake;
+
+        [Header("Animation Rigging Required")]
+        public Rig handIK;
 
         public int currentID;
 
@@ -59,14 +66,6 @@ namespace Burntwax
 
         public bool ableToShootInMiddleOfAnimation = false;
         public bool fullyEquipped;
-
-
-
-
-
-
-        partial void OnGunSetup_Rigging(GameObject currentGunModel);
-        partial void OnGunSetup_Cinemachine(GameObject currentGunModel);
 
         void Awake()
         {
@@ -258,10 +257,11 @@ namespace Burntwax
             Spawn(ActiveGunScriptable);
             crosshair.SetGunCrosshair(ActiveGunScriptable);
             currentState = states.Rest();
-
+            if (handIK != null)
+                handIK.weight = 1;
             anim.Play("equip_" + ActiveGunScriptable.Type);
-            OnGunSetup_Rigging(CurrentGunModel);
-            OnGunSetup_Cinemachine(CurrentGunModel);
+
+            camShake = CurrentGunModel.GetComponent<CinemachineImpulseSource>();
 
             ActiveGunScriptable.AmmoConfig.OnEnable();
 
