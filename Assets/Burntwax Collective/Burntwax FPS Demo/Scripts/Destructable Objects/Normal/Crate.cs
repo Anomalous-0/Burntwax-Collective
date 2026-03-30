@@ -41,10 +41,13 @@ namespace Burntwax
 
         }
 
-        private void Start()
+        void Awake()
         {
+            if (GameManager.Instance.IsLoadingFromSave)
+                return;
+            if (ObjectManager.Instance == null)
+                return;
             ObjectManager.Instance.Register(gameObject);
-            //currentHealth = maxHealth;
         }
 
         public void Destruct(Vector3 pos)

@@ -44,20 +44,19 @@ namespace Burntwax
 
         void Start()
         {
-            if (GameManager.Instance.IsLoadingFromSave)
-            {          
-                return;
-            }
-            // consumableList = new List<ConsumableData>();
-            // basicList = new List<BasicData>();
-            // destructableList = new List<DestructableData>();
-
-
             foreach (var prefab in prefabs)
             {
                 var id = prefab.prefabAsset.GetComponent<PrefabGuid>().guid;
                 prefabToIDMap[id] = prefab;
+            }
 
+            if (GameManager.Instance.IsLoadingFromSave)
+                return;
+
+            PrefabGuid[] sceneObjects = FindObjectsByType<PrefabGuid>(FindObjectsSortMode.None);
+            foreach (var obj in sceneObjects)
+            {
+                objects.Add(obj.gameObject);
             }
         }
 
@@ -153,19 +152,21 @@ namespace Burntwax
         public void LoadData(ObjectConsumableData data)
         {
 
-            if (objects.Count > 0)
+            foreach (var obj in objects)
             {
-                consumableList.Clear();
-                basicList.Clear();
-                destructableList.Clear();
+                if (obj != null)
+                    Destroy(obj);
+            }
+            objects.Clear();
+            consumableList.Clear();
+            basicList.Clear();
+            destructableList.Clear();
 
-                foreach (var obj in objects)
-                {
-                    if (obj != null)
-                        Destroy(obj);
-
-                }
-                objects.Clear();
+            PrefabGuid[] existingObjects = FindObjectsByType<PrefabGuid>(FindObjectsSortMode.None);
+            foreach (var existing in existingObjects)
+            {
+                if (existing != null && existing.gameObject != null)
+                    Destroy(existing.gameObject);
             }
 
 

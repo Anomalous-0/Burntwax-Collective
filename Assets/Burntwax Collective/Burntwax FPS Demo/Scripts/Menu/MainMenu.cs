@@ -39,9 +39,15 @@ namespace Burntwax
 
         public async void Resume()
         {
-            GameManager.Instance.LoadAsync();
+            if (!SaveSystem.SaveExists())
+            {
+                Debug.LogWarning("No save file found.");
+                return;
+            }
+
             Time.timeScale = 1f;
             AudioListener.pause = false;
+            GameManager.Instance.LoadAsync();
         }
 
         public void Quit()

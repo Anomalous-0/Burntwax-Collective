@@ -23,6 +23,11 @@ namespace Burntwax
 
         }
 
+        public static bool SaveExists()
+        {
+            return File.Exists(SaveFileName());
+        }
+
         public static string SaveFileName()
         {
             string saveFile = Application.persistentDataPath + "/save" + ".GAME";
@@ -41,7 +46,9 @@ namespace Burntwax
 
         public static async Task SaveAsynchronously()
         {
+            GameManager.Instance.isSaving = true;
             await SaveAsync();
+            GameManager.Instance.isSaving = false;
         }
 
         private static async Task SaveAsync()
@@ -76,11 +83,13 @@ namespace Burntwax
 
         public static async Task LoadAsync()
         {
+            GameManager.Instance.isLoading = true;
             string saveData = File.ReadAllText(SaveFileName());
             string decryptedData = EncryptionUtility.DecryptString(saveData);
             _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
 
             await HandleLoadDataAsync();
+            GameManager.Instance.isLoading = false;
 
         }
 

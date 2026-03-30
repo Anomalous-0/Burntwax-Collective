@@ -12,12 +12,13 @@ namespace Burntwax
 
         private PlayerHealth playerHealth;
 
-        void Start()
+        void Awake()
         {
             if (GameManager.Instance.IsLoadingFromSave)
                 return;
+            if (ObjectManager.Instance == null)
+                return;
             ObjectManager.Instance.Register(gameObject);
-            gameObject.layer = LayerMask.NameToLayer("Consumable");
         }
 
         //Collect health

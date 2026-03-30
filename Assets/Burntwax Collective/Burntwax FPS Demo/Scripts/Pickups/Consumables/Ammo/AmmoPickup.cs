@@ -13,13 +13,22 @@ namespace Burntwax
 
         private GunStateMachine playerGun;
 
-
-        void Start()
+        void Awake()
         {
             if (GameManager.Instance.IsLoadingFromSave)
                 return;
+            if (ObjectManager.Instance == null)
+                return;
             ObjectManager.Instance.Register(gameObject);
         }
+
+
+        // void Start()
+        // {
+        //     if (GameManager.Instance.IsLoadingFromSave)
+        //         return;
+        //     ObjectManager.Instance.Register(gameObject);
+        // }
 
 
         //Collect ammo

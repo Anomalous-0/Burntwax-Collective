@@ -49,10 +49,11 @@ namespace Burntwax
         public void Spawn(GameObject player, GameObject currentGun, MonoBehaviour ActiveMonoBehaviour)
         {
             this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-            if (TrailPool == null)
+            if (TrailPool != null)
             {
-                TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
+                TrailPool.Dispose();
             }
+            TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
             ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
             ShootingAudioSource = player.GetComponent<AudioSource>();
             BulletImpactEffects.Instance = FindFirstObjectByType<BulletImpactEffects>();

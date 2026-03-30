@@ -16,8 +16,8 @@ namespace Burntwax
 
         public string currentSceneID;
 
-        private bool isSaving;
-        private bool isLoading;
+        public bool isSaving;
+        public bool isLoading;
 
 
         private void Awake()
@@ -78,9 +78,8 @@ namespace Burntwax
 
         public async void LoadAsync()
         {
-            isLoading = true;
             await SaveSystem.LoadAsync();
-            isLoading = false;
+            
         }
     }
 
