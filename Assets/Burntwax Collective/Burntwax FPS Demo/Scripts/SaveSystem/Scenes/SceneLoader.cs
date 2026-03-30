@@ -17,27 +17,9 @@ namespace Burntwax
         private void Awake()
         {
 
-            PopulateSceneMapping();
-        }
-
-        private void PopulateSceneMapping()
-        {
             foreach (var sceneDataSO in sceneDataSOArray)
             {
                 sceneIDToIndexMap[sceneDataSO.Name] = sceneDataSO.index;
-            }
-        }
-
-
-        public void LoadSceneByIndex(string sceneID)
-        {
-            if (sceneIDToIndexMap.TryGetValue(sceneID, out int sceneIndex))
-            {
-                SceneManager.LoadScene(sceneIndex);
-            }
-            else
-            {
-                Debug.LogError($"Scene ID {sceneID} not found in mapping.");
             }
         }
 

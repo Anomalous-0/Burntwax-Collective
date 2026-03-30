@@ -152,23 +152,13 @@ namespace Burntwax
         public void LoadData(ObjectConsumableData data)
         {
 
-            foreach (var obj in objects)
-            {
-                if (obj != null)
-                    Destroy(obj);
-            }
-            objects.Clear();
-            consumableList.Clear();
-            basicList.Clear();
-            destructableList.Clear();
-
             PrefabGuid[] existingObjects = FindObjectsByType<PrefabGuid>(FindObjectsSortMode.None);
             foreach (var existing in existingObjects)
             {
                 if (existing != null && existing.gameObject != null)
                     Destroy(existing.gameObject);
             }
-
+            objects.Clear();
 
             consumableList = data.consumableList;
             basicList = data.basicList;

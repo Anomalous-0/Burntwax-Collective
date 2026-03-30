@@ -1450,6 +1450,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   loadScene: 0
+  currentSceneID: 
+  isSaving: 0
+  isLoading: 0
 --- !u!4 &449002267
 Transform:
   m_ObjectHideFlags: 0
@@ -6014,8 +6017,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 449002267}
-  - {fileID: 488549703}
   - {fileID: 1435500059}
+  - {fileID: 488549703}
   - {fileID: 276632136}
   - {fileID: 1076411130}
   - {fileID: 1816551733}

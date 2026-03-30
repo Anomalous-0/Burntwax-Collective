@@ -66,10 +66,12 @@ namespace Burntwax
 
             PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
             if (player != null)
+            {
                 player.SaveData(ref _saveData.PlayerData);
 
-            player.GetComponent<CamStateMachine>().SaveData(ref _saveData.CamData);
-            player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
+                player.GetComponent<CamStateMachine>().SaveData(ref _saveData.CamData);
+                player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
+            }
 
             GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
             if (gun)
