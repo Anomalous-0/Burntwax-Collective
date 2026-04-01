@@ -14,11 +14,11 @@ namespace Burntwax
 
         void Awake()
         {
-            if (GameManager.Instance.IsLoadingFromSave)
-                return;
-            if (ObjectManager.Instance == null)
-                return;
-            ObjectManager.Instance.Register(gameObject);
+            // if (GameManager.Instance.IsLoadingFromSave)
+            //     return;
+            // if (ObjectManager.Instance == null)
+            //     return;
+            // ObjectManager.Instance.Register(gameObject);
         }
         void OnTriggerEnter(Collider other)
         {

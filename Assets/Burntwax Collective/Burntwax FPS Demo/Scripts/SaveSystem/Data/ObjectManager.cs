@@ -53,6 +53,8 @@ namespace Burntwax
             if (GameManager.Instance.IsLoadingFromSave)
                 return;
 
+            objects.Clear();
+
             PrefabGuid[] sceneObjects = FindObjectsByType<PrefabGuid>(FindObjectsSortMode.None);
             foreach (var obj in sceneObjects)
             {
@@ -171,6 +173,7 @@ namespace Burntwax
                     GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
                     newObj.transform.localScale = obj.scale;
                     newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
+                    objects.Add(newObj);
                 }
             }
 
@@ -180,8 +183,7 @@ namespace Burntwax
                 {
                     GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
                     newObj.transform.localScale = obj.scale;
-
-
+                    objects.Add(newObj);
                 }
             }
 
@@ -192,12 +194,8 @@ namespace Burntwax
                     GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
                     newObj.transform.localScale = obj.scale;
                     newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
-
-
-
                     newObj.GetComponent<Destructable>().CurrentHealth = obj.currentHealth;
-
-
+                    objects.Add(newObj);
                 }
             }
 
