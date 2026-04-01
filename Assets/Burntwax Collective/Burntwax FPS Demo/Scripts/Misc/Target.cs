@@ -14,6 +14,12 @@ namespace Burntwax
 
         public PlayerStateMachine player;
 
+
+        void Awake()
+        {
+            GetComponent<Rigidbody>().transform.localScale = new Vector3(0.6f, 0.6f, 0.06f);
+        }
+
         void Start()
         {
             player = FindFirstObjectByType<PlayerStateMachine>();

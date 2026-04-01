@@ -43,11 +43,7 @@ namespace Burntwax
 
         void Awake()
         {
-            // if (GameManager.Instance.IsLoadingFromSave)
-            //     return;
-            // if (ObjectManager.Instance == null)
-            //     return;
-            // ObjectManager.Instance.Register(gameObject);
+            GetComponent<Rigidbody>().transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         }
 
         public void Destruct(Vector3 pos)
