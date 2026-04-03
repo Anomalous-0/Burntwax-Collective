@@ -16,11 +16,12 @@ namespace Burntwax
         public int currentClip;
 
 
-        public void OnEnable()
-        {
-            currentClip = clipSize;
-            currentAmmo = maxAmmo;
-        }
+        // public void Awake()
+        // {
+            
+        //     currentClip = clipSize;
+        //     currentAmmo = maxAmmo;
+        // }
 
         public void Reload()
         {

@@ -263,8 +263,6 @@ namespace Burntwax
 
             camShake = CurrentGunModel.GetComponent<CinemachineImpulseSource>();
 
-            ActiveGunScriptable.AmmoConfig.OnEnable();
-
             anim.SetBool(aimHash, false);
             anim.SetBool(stowHash, false);
             anim.SetBool(reloadHash, false);
