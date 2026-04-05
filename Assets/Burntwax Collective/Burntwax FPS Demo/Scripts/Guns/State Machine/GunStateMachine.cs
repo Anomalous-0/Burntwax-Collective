@@ -12,7 +12,7 @@ namespace Burntwax
         [Header("State Machines")]
         public PlayerStateMachine stateMachine;
         public GameObject player;
-        public CamStateMachine camMachine;
+    
         public PlayerCrosshair crosshair;
 
         [Space]

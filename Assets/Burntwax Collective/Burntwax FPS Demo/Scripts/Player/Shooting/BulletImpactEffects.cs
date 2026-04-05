@@ -40,10 +40,28 @@ namespace Burntwax
         public void ImpactAudio(string tag, Vector3 position, Quaternion rotation)
         {
             var effect = surfaceEffects.Find(effect => effect.surfaceTag == tag);
+
             if (effect != null)
             {
                 if (effect.impactSounds != null && effect.impactSounds.Count > 0)
-                    AudioSource.PlayClipAtPoint(effect.impactSounds[Random.Range(0, effect.impactSounds.Count)], position, effect.volume);
+                {
+                    AudioClip clip = effect.impactSounds[Random.Range(0, effect.impactSounds.Count)];
+                    GameObject tempGO = new GameObject("ImpactAudio");
+                    tempGO.transform.position = position;
+
+                    AudioSource audioSource = tempGO.AddComponent<AudioSource>();
+
+                    audioSource.clip = clip;
+                    audioSource.volume = effect.volume;
+
+                    audioSource.pitch = Random.Range(0.9f, 1.1f);
+
+                    audioSource.spatialBlend = 1.0f;
+
+                    audioSource.Play();
+
+                    Destroy(tempGO, clip.length / audioSource.pitch);
+                }
             }
             else
             {
