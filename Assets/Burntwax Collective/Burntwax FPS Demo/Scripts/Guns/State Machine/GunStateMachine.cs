@@ -243,7 +243,7 @@ namespace Burntwax
 
 
                 SetupGun();
-
+                ActiveGunScriptable.AmmoConfig.Enable();
 
             }
 
