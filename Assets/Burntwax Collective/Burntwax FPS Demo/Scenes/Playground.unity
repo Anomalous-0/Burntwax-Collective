@@ -29594,22 +29594,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2102403154}
   m_SourcePrefab: {fileID: 100100000, guid: 6636a48dda6f4014ba12d43b3dca04c1, type: 3}
---- !u!4 &543450652562008270
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 919132148019622516}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.24345599, y: 1.519605, z: 0.13830853}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6303818257005483697}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1001 &681006534694997354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29707,22 +29691,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1587496263}
   m_SourcePrefab: {fileID: 100100000, guid: 569a885bdb695bf4fbaf0914fde33777, type: 3}
---- !u!1 &919132148019622516
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 543450652562008270}
-  m_Layer: 0
-  m_Name: Untitled
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!1001 &1094740192120463180
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29822,10 +29790,25 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8967501273172980240}
     m_Modifications:
+    - target: {fileID: 279699623456233262, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 758545380755496439, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_Name
       value: Arms
+      objectReference: {fileID: 0}
+    - target: {fileID: 2310144700840683861, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: a67dd6e8e81691c4a9cd8944de7896de, type: 2}
+    - target: {fileID: 2416764896338369610, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3421360364221472154, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
@@ -30581,22 +30564,6 @@ Transform:
   - {fileID: 7777712728714018833}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4831018559923761046
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6303818257005483697}
-  m_Layer: 0
-  m_Name: Arms
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &5254480661762349328 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3421360364221472154, guid: 4339d97cde5264747a29eaf7ae86e4b5,
@@ -30931,21 +30898,6 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_ApplyBeforeBody: 0
---- !u!4 &6303818257005483697
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4831018559923761046}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 543450652562008270}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6446468962331008341
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31549,4 +31501,3 @@ SceneRoots:
   - {fileID: 434014395}
   - {fileID: 699535639}
   - {fileID: 1643080437}
-  - {fileID: 543450652562008270}
