@@ -243,7 +243,7 @@ namespace Burntwax
 
 
                 SetupGun();
-
+                ActiveGunScriptable.AmmoConfig.OnEnable();
 
             }
 
@@ -268,6 +268,7 @@ namespace Burntwax
             anim.SetBool(reloadHash, false);
             anim.SetBool(proceduralShootHash, false);
             anim.SetBool(incrementalReloadHash, false);
+
         }
 
 
