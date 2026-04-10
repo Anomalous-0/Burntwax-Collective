@@ -2,7 +2,7 @@
 using UnityEngine;
 namespace Burntwax
 {
-    public interface Destructable
+    public interface Destructible
     {
         public float CurrentHealth { get; set; }
         public void TakeDamage(float damage);

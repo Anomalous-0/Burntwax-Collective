@@ -143,7 +143,7 @@ namespace Burntwax
                 {
                     Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance), ForceMode.Impulse);
                 }
-                if (Hit.collider.TryGetComponent(out Destructable destructable))
+                if (Hit.collider.TryGetComponent(out Destructible destructable))
                 {
                     destructable.TakeDamage(DamageConfig.GetDamage(distance) / 2);
                 }

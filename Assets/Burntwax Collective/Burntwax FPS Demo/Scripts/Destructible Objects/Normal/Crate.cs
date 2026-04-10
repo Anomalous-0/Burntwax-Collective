@@ -8,7 +8,7 @@ namespace Burntwax
 {
 
     [RequireComponent(typeof(Rigidbody))]
-    public class Crate : MonoBehaviour, Destructable
+    public class Crate : MonoBehaviour, Destructible
     {
 
         [Header("Health")]

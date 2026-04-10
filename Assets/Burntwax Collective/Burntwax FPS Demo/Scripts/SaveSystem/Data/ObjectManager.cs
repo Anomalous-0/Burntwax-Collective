@@ -18,13 +18,13 @@ namespace Burntwax
 
         // [SerializeField] private SerializableDictionary<GameObject, ConsumableData> consumableRuntimeMap = new SerializableDictionary<GameObject, ConsumableData>();
         // [SerializeField] private SerializableDictionary<GameObject, BasicData> basicRuntimeMap = new SerializableDictionary<GameObject, BasicData>();
-        // [SerializeField] private SerializableDictionary<GameObject, DestructableData> destructableRuntimeMap = new SerializableDictionary<GameObject, DestructableData>();
+        // [SerializeField] private SerializableDictionary<GameObject, DestructibleData> destructableRuntimeMap = new SerializableDictionary<GameObject, DestructibleData>();
         [SerializeField] private List<GameObject> objects = new List<GameObject>();
 
 
         private List<ConsumableData> consumableList;
         private List<BasicData> basicList;
-        private List<DestructableData> destructableList;
+        private List<DestructibleData> destructibleList;
 
         private void Awake()
         {
@@ -38,7 +38,7 @@ namespace Burntwax
 
             consumableList = new List<ConsumableData>();
             basicList = new List<BasicData>();
-            destructableList = new List<DestructableData>();
+            destructibleList = new List<DestructibleData>();
 
         }
 
@@ -75,9 +75,9 @@ namespace Burntwax
             // {
             //     basicRuntimeMap[obj] = new BasicData();
             // }
-            // else if (obj.layer == LayerMask.NameToLayer("Destructable"))
+            // else if (obj.layer == LayerMask.NameToLayer("Destructible"))
             // {
-            //     destructableRuntimeMap[obj] = new DestructableData();
+            //     destructibleRuntimeMap[obj] = new DestructibleData();
             // }
         }
 
@@ -87,7 +87,7 @@ namespace Burntwax
         {
             consumableList.Clear();
             basicList.Clear();
-            destructableList.Clear();
+            destructibleList.Clear();
 
             for (int i = objects.Count - 1; i >= 0; i--)
             {
@@ -129,26 +129,26 @@ namespace Burntwax
                     // Debug.Log($"Saved Basic Object: {id} at Position: {objects[i].transform.position}");
                 }
 
-                else if (objects[i].layer == LayerMask.NameToLayer("Destructable"))
+                else if (objects[i].layer == LayerMask.NameToLayer("Destructible"))
                 {
                     var rb = objects[i].GetComponent<Rigidbody>();
-                    var destructable = objects[i].GetComponent<Destructable>();
+                    var destructible = objects[i].GetComponent<Destructible>();
 
-                    destructableList.Add(new DestructableData
+                    destructibleList.Add(new DestructibleData
                     {
                         guid = id,
                         scale = objects[i].transform.localScale,
                         position = rb.position,
                         rotation = rb.rotation.normalized,
                         velocity = rb.linearVelocity,
-                        currentHealth = destructable.CurrentHealth
+                        currentHealth = destructible.CurrentHealth
                     });
                 }
             }
 
             data.consumableList = consumableList;
             data.basicList = basicList;
-            data.destructableList = destructableList;
+            data.destructibleList = destructibleList;
         }
 
         public void LoadData(ObjectConsumableData data)
@@ -164,7 +164,7 @@ namespace Burntwax
 
             consumableList = data.consumableList;
             basicList = data.basicList;
-            destructableList = data.destructableList; ;
+            destructibleList = data.destructibleList; ;
 
             foreach (var obj in consumableList)
             {
@@ -187,14 +187,14 @@ namespace Burntwax
                 }
             }
 
-            foreach (var obj in destructableList)
+            foreach (var obj in destructibleList)
             {
                 if (prefabToIDMap.TryGetValue(obj.guid, out PrefabData prefab))
                 {
                     GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
                     newObj.transform.localScale = obj.scale;
                     newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
-                    newObj.GetComponent<Destructable>().CurrentHealth = obj.currentHealth;
+                    newObj.GetComponent<Destructible>().CurrentHealth = obj.currentHealth;
                     objects.Add(newObj);
                 }
             }
@@ -219,7 +219,7 @@ namespace Burntwax
     {
         public List<ConsumableData> consumableList;
         public List<BasicData> basicList;
-        public List<DestructableData> destructableList;
+        public List<DestructibleData> destructibleList;
 
     }
 
@@ -248,7 +248,7 @@ namespace Burntwax
 
     [System.Serializable]
 
-    public struct DestructableData
+    public struct DestructibleData
     {
         public string guid;
         public Vector3 scale;
