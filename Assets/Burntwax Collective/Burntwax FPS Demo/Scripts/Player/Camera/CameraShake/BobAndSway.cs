@@ -71,6 +71,7 @@ namespace Burntwax
             new Keyframe(0.7f, 0.6f),
             new Keyframe(1f, 1f)
         );
+        [Range(0f, 1f)] public float landingBobStartPhase = 0.375f;
 
         [Header("ADS Bobbing")]
         public bool adsBob = true; // Toggle for ADS bobbing
@@ -82,6 +83,7 @@ namespace Burntwax
         private Vector3 landingVelocityImpulse;
         private float landingJoltTimer;
         private float landingJoltDuration = 0.3f;
+        private bool syncBobWithLandingJolt;
 
         private bool wasGroundedLastFrame = true;
         private float airTime = 0f;
@@ -113,8 +115,14 @@ namespace Burntwax
 
             SwayRotation();
 
+            bool landedFromFall = onSolid && !wasGroundedLastFrame && airTime > 0.05f;
+            if (landedFromFall)
+            {
+                syncBobWithLandingJolt = true;
+            }
+
             // Adjusted condition to allow bobbing during ADS if adsBob is enabled
-            bool shouldBob = (cam.currentState != cam.states.Aim() || adsBob) && gun.CurrentState != gun.states.Shoot() && landingJoltTimer <= 0f;
+            bool shouldBob = (cam.currentState != cam.states.Aim() || adsBob) && gun.CurrentState != gun.states.Shoot();
             if (shouldBob)
             {
                 BobOffset();
@@ -141,7 +149,7 @@ namespace Burntwax
             }
             else
             {
-                if (!wasGroundedLastFrame && airTime > 0.05f)
+                if (landedFromFall)
                 {
                     float clampedAirTime = Mathf.Clamp(airTime, 0, maxAirTimeForJoltScale);
                     float normalizedAirTime = clampedAirTime / maxAirTimeForJoltScale;
@@ -158,6 +166,11 @@ namespace Burntwax
             if (landingJoltTimer > 0f)
             {
                 landingJoltTimer -= Time.deltaTime;
+                if (landingJoltTimer <= 0f)
+                {
+                    landingJoltTimer = 0f;
+                    syncBobWithLandingJolt = false;
+                }
             }
 
             wasGroundedLastFrame = onSolid;
@@ -206,6 +219,12 @@ namespace Burntwax
 
             stepTimer += Time.deltaTime * rb.linearVelocity.magnitude * currentBobFreq;
             if (stepTimer > 1f) stepTimer -= 1f;
+
+            if (syncBobWithLandingJolt)
+            {
+                stepTimer = landingBobStartPhase;
+                syncBobWithLandingJolt = false;
+            }
 
             float horizontal = Mathf.Sin(stepTimer * 2 * Mathf.PI);
             float verticalBase = Mathf.Sin(stepTimer * 4 * Mathf.PI);
