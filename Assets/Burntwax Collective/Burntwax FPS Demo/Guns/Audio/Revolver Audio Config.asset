@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 059fd3bb396532c4a8283f871f5b3ea8, type: 3}
   m_Name: Revolver Audio Config
   m_EditorClassIdentifier: 
-  volume: 0.026
+  volume: 1
   fireClips:
-  - {fileID: 8300000, guid: ab6d2bc59a1d2504e9448cfeb689a265, type: 3}
+  - {fileID: 8300000, guid: 2454bfa2d2e204f4ab30d11ddb9569d5, type: 3}
+  - {fileID: 8300000, guid: 1508f2a7efd79264d8860615dc9cd9bc, type: 3}
   emptyClip: {fileID: 8300000, guid: e7632c6401c09437e83de45d33c5858e, type: 3}
   reloadClip: {fileID: 0}
   lastBulletClip: {fileID: 0}
