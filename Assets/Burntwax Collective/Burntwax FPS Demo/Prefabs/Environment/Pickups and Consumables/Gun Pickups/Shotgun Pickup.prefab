@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8544456611354336202}
   - component: {fileID: 4038177688584997818}
   - component: {fileID: -6570683857230414001}
+  - component: {fileID: 558549022706092365}
   m_Layer: 0
   m_Name: Shotgun Pickup
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3812518188793430526}
@@ -105,12 +106,33 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.35, z: 1.8}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &558549022706092365
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7830901257135825875}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 3, z: 3}
-  m_Center: {x: -1, y: 0, z: 0}
+  m_Size: {x: 0.8, y: 1, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &3702645447039575573
 PrefabInstance:
   m_ObjectHideFlags: 0
