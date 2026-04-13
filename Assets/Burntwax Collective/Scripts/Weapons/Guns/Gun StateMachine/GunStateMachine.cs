@@ -6,7 +6,7 @@ using Cinemachine;
 namespace Burntwax
 {
     [DisallowMultipleComponent]
-    public partial class GunStateMachine : MonoBehaviour
+    public class GunStateMachine : MonoBehaviour
     {
 
         [Header("State Machines")]

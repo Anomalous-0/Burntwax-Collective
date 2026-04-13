@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Burntwax;
 using UnityEngine;
 using UnityEngine.Pool;
 using Random = UnityEngine.Random;
@@ -10,7 +9,7 @@ namespace Burntwax
 {
 
     [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
-    public class GunScriptableObject : ScriptableObject
+    public class GunScriptableObject : ScriptableObject, Weapon
     {
 
         public int ID;
