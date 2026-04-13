@@ -3375,7 +3375,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 254040434}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 12
   m_Type: 1
   m_Color: {r: 0.94716984, g: 0.8391166, b: 0.65587044, a: 1}
@@ -35529,6 +35529,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  landingBobStartPhase: 0.375
   adsBob: 1
   adsBobMultiplier: 0.03
   adsBobFrequencyMultiplier: 0.1
