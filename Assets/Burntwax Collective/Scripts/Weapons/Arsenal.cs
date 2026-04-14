@@ -58,7 +58,7 @@ namespace Burntwax
             {
                 SwitchToGuns();
             }
-            else if (gunStateMachine.anim.GetCurrentAnimatorStateInfo(0).IsName("equip_" + gunStateMachine.ActiveGunScriptable.Type))
+            else if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot() && gunStateMachine.anim.GetCurrentAnimatorStateInfo(0).IsName("equip_" + gunStateMachine.ActiveGunScriptable.Type))
             {
                 SwitchToKatana();
             }
