@@ -8,11 +8,9 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class GunStateMachine : MonoBehaviour
     {
-
         [Header("State Machines")]
         public GameObject player;
         [HideInInspector] public PlayerStateMachine stateMachine;
-
         [HideInInspector] public PlayerCrosshair crosshair;
 
         [Space]
@@ -24,7 +22,6 @@ namespace Burntwax
 
         public int currentID;
 
-
         [Header("Animation")]
         public Animator anim;
         [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
@@ -33,25 +30,15 @@ namespace Burntwax
         public List<GameObject> OrderedGuns;
 
         [Space]
-
-
         [Header("Current Gun")]
         public GunScriptableObject ActiveGunScriptable;
         public GameObject CurrentGunModel;
         public ProceduralRecoil recoil;
 
-
-        [Space]
-
-
-
         private GunBaseState currentState;
         public GunStateFactory states;
 
-
-
         public GunBaseState CurrentState { get { return currentState; } set { currentState = value; } }
-
 
         public bool isReloading = false;
         public bool isIncrementalReloading = false;
@@ -59,6 +46,9 @@ namespace Burntwax
 
         public bool ableToShootInMiddleOfAnimation = false;
         public bool fullyEquipped;
+
+        [HideInInspector] public bool selectedByArsenal = true;
+        [HideInInspector] public int lastGunID = -1;
 
         void Awake()
         {
@@ -79,138 +69,161 @@ namespace Burntwax
 
         void Start()
         {
-
         }
-
-
 
         private void Update()
         {
-            if (ActiveGunScriptable)
+            if (!selectedByArsenal || PauseMenu.Instance.Paused)
+                return;
+
+            if (ActiveGunScriptable != null)
+            {
+                EmptyClip();
+            }
+        }
+
+        private void FixedUpdate()
+        {
+            if (!selectedByArsenal)
+                return;
+
+            if (ActiveGunScriptable != null)
             {
                 currentState.UpdateStates();
             }
-            if (ActiveGunScriptable != null && !PauseMenu.Instance.Paused)
-            {
-                WeaponSelect();
-
-
-                if ((InputManager.Instance.weaponSelectID || InputManager.Instance.mouseScroll != 0) && !isShooting)
-                {
-                    WeaponSwitch();
-                }
-                EmptyClip();
-            }
-
         }
-
-
 
         private void Despawn(GunScriptableObject activeGun)
         {
-            CurrentGunModel.SetActive(false);
+            if (CurrentGunModel != null)
+                CurrentGunModel.SetActive(false);
+
             activeGun.Despawn(this);
         }
 
         private void Spawn(GunScriptableObject activeGun)
         {
+            DisableAllGunModels();
+
+            if (OrderedGuns == null || currentID < 0 || currentID >= OrderedGuns.Count)
+            {
+                Debug.LogError($"OrderedGuns does not contain a valid model for gun ID {currentID}");
+                return;
+            }
+
             CurrentGunModel = OrderedGuns[currentID];
             CurrentGunModel.SetActive(true);
             activeGun.Spawn(player, CurrentGunModel, this);
-
         }
 
-        private void WeaponSelect()
+        public bool HasGun()
         {
-            if (InputManager.Instance.weaponSelectID)
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha1))
-                {
-                    currentID = 0;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha2))
-                {
-                    currentID = 1;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha3))
-                {
-                    currentID = 2;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha4))
-                {
-                    currentID = 3;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha5))
-                {
-                    currentID = 4;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha6))
-                {
-                    currentID = 5;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha7))
-                {
-                    currentID = 6;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha8))
-                {
-                    currentID = 7;
-                }
-                else if (Input.GetKeyDown(KeyCode.Alpha9))
-                {
-                    currentID = 8;
-                }
-            }
+            return CurrentGuns != null && CurrentGuns.Count > 0;
         }
 
-        private void WeaponSwitch()
+        public void EquipFromArsenal()
         {
-            if (InputManager.Instance.mouseScroll != 0)
-            {
-                ScrollID();
-            }
-            else if (InputManager.Instance.weaponSelectID)
-            {
+            selectedByArsenal = true;
 
-                WeaponSelect();
-            }
-
-            if (currentID != ActiveGunScriptable.ID)
+            if (CurrentGuns != null && CurrentGuns.Count > 0)
             {
-                GunScriptableObject gun = CurrentGuns.Find(gun => gun.ID == currentID);
-                if (gun == null)
+                GunScriptableObject gunToEquip = null;
+
+                if (lastGunID != -1)
+                    gunToEquip = CurrentGuns.Find(g => g.ID == lastGunID);
+
+                if (gunToEquip == null)
                 {
-                    Debug.LogError($"No GunScriptableObject found for GunType: {gun}");
+                    gunToEquip = ActiveGunScriptable != null ? ActiveGunScriptable : CurrentGuns[0];
+
+                    anim.Play("empty_rest");
                     return;
                 }
-                Despawn(ActiveGunScriptable);
 
-                ActiveGunScriptable = gun;
+                ActiveGunScriptable = gunToEquip;
+                currentID = gunToEquip.ID;
                 SetupGun();
+            }
+            else
+            {
+                if (CurrentGunModel != null)
+                    CurrentGunModel.SetActive(false);
+
+                if (handIK != null)
+                    handIK.weight = 1;
+
+                anim.Play("empty_rest");
             }
         }
 
-        private void ScrollID()
+        public void StowFromArsenal()
         {
-            if (InputManager.Instance.mouseScroll > 0)
+            selectedByArsenal = false;
+
+            isReloading = false;
+            isIncrementalReloading = false;
+            isShooting = false;
+            ableToShootInMiddleOfAnimation = false;
+            fullyEquipped = false;
+
+            if (CurrentGunModel != null)
+                CurrentGunModel.SetActive(false);
+
+            if (handIK != null)
+                handIK.weight = 0;
+
+            anim.SetBool(aimHash, false);
+            anim.SetBool(stowHash, false);
+            anim.SetBool(reloadHash, false);
+            anim.SetBool(proceduralShootHash, false);
+            anim.SetBool(incrementalReloadHash, false);
+
+            anim.Play("empty_rest");
+        }
+
+        public void SelectGunByID(int gunID)
+        {
+            if (CurrentGuns == null || CurrentGuns.Count == 0)
+                return;
+
+            GunScriptableObject gun = CurrentGuns.Find(g => g.ID == gunID);
+            if (gun == null)
+                return;
+
+            if (ActiveGunScriptable != null && ActiveGunScriptable.ID == gunID && selectedByArsenal)
+                return;
+
+            if (ActiveGunScriptable != null && CurrentGunModel != null)
+                Despawn(ActiveGunScriptable);
+
+            ActiveGunScriptable = gun;
+            currentID = gun.ID;
+            SetupGun();
+        }
+
+        public void ScrollGun(float scrollValue)
+        {
+            if (CurrentGuns == null || CurrentGuns.Count == 0)
+                return;
+
+            int currentIndex = CurrentGuns.FindIndex(g => g.ID == currentID);
+            if (currentIndex < 0)
+                currentIndex = 0;
+
+            if (scrollValue > 0)
             {
-                currentID++;
-                if (currentID > CurrentGuns.Count - 1)
-                {
-                    currentID = 0;
-                }
+                currentIndex++;
+                if (currentIndex >= CurrentGuns.Count)
+                    currentIndex = 0;
             }
-            else if (InputManager.Instance.mouseScroll < 0)
+            else if (scrollValue < 0)
             {
-                currentID--;
-                if (currentID < 0)
-                {
-                    currentID = CurrentGuns.Count - 1;
-                }
+                currentIndex--;
+                if (currentIndex < 0)
+                    currentIndex = CurrentGuns.Count - 1;
             }
 
-
-
+            SelectGunByID(CurrentGuns[currentIndex].ID);
         }
 
         public void Pickup(GunScriptableObject gun)
@@ -218,35 +231,52 @@ namespace Burntwax
             if (!CurrentGuns.Contains(gun))
             {
                 CurrentGuns.Add(gun);
-                if (ActiveGunScriptable != null)
-                {
-                    Despawn(ActiveGunScriptable);
-                }
-
-                ActiveGunScriptable = gun;
-                currentID = gun.ID;
-
-
-                SetupGun();
-                ActiveGunScriptable.AmmoConfig.Enable();
-
             }
 
-        }
+            gun.AmmoConfig.Enable();
 
+            ActiveGunScriptable = gun;
+            currentID = gun.ID;
+            lastGunID = gun.ID;
+
+            Arsenal arsenal = GetComponent<Arsenal>();
+            if (arsenal != null)
+            {
+                arsenal.ForceSwitchToGuns();
+            }
+            else
+            {
+                selectedByArsenal = true;
+                SetupGun();
+            }
+        }
 
         private void SetupGun()
         {
+            if (ActiveGunScriptable == null)
+                return;
+
+            lastGunID = currentID;
+
             fullyEquipped = false;
             isReloading = false;
+            isIncrementalReloading = false;
+            isShooting = false;
+            ableToShootInMiddleOfAnimation = false;
+
             Spawn(ActiveGunScriptable);
             crosshair.SetGunCrosshair(ActiveGunScriptable);
+
             currentState = states.Rest();
+            currentState.EnterState();
+
             if (handIK != null)
                 handIK.weight = 1;
+
             anim.Play("equip_" + ActiveGunScriptable.Type);
 
-            camShake = CurrentGunModel.GetComponent<CinemachineImpulseSource>();
+            if (CurrentGunModel != null)
+                camShake = CurrentGunModel.GetComponent<CinemachineImpulseSource>();
 
             anim.SetBool(aimHash, false);
             anim.SetBool(stowHash, false);
@@ -255,12 +285,12 @@ namespace Burntwax
             anim.SetBool(incrementalReloadHash, false);
         }
 
-
-
-
         private void EmptyClip()
         {
-            if (ClipEmpty() && InputManager.Instance.shootIsPressed && CurrentState.CurrentSuperstate() != states.Reload() && CurrentState.CurrentSuperstate() != states.Stow() && ClipEmpty() && InputManager.Instance.shootIsPressed)
+            if (ClipEmpty()
+                && InputManager.Instance.shootIsPressed
+                && CurrentState.CurrentSuperstate() != states.Reload()
+                && CurrentState.CurrentSuperstate() != states.Stow())
             {
                 ActiveGunScriptable.AudioConfig.PlayEmptyClip(stateMachine.GetComponent<AudioSource>());
                 InputManager.Instance.shootIsPressed = false;
@@ -269,42 +299,38 @@ namespace Burntwax
 
         public bool CanShoot()
         {
-            return ActiveGunScriptable.AmmoConfig.currentClip > 0 && !isShooting;
+            return ActiveGunScriptable != null
+                && ActiveGunScriptable.AmmoConfig.currentClip > 0
+                && !isShooting;
         }
 
         private bool ClipEmpty()
         {
-            return ActiveGunScriptable.AmmoConfig.currentClip == 0 && ActiveGunScriptable.AmmoConfig.currentAmmo == 0;
+            return ActiveGunScriptable != null
+                && ActiveGunScriptable.AmmoConfig.currentClip == 0
+                && ActiveGunScriptable.AmmoConfig.currentAmmo == 0;
         }
 
-        //Animation event
         public void EndReload()
         {
             if (!ActiveGunScriptable.incrementalReload)
             {
-
                 ActiveGunScriptable.EndReload();
             }
+
             isReloading = false;
-
-
         }
 
-        //Animation event
         public void EndEquip()
         {
             fullyEquipped = true;
         }
 
-
-        //Animation event
         public void EndIncrementalReload()
         {
             ActiveGunScriptable.EndIncrementalReload();
         }
 
-
-        //Animation event
         public void EndShoot()
         {
             ableToShootInMiddleOfAnimation = false;
@@ -316,25 +342,23 @@ namespace Burntwax
             ableToShootInMiddleOfAnimation = true;
         }
 
-
-
-
-
         public bool ManualReload()
         {
-            return InputManager.Instance.reloadIsPressed && ActiveGunScriptable.CanReload();
-            // return  !isReloading && InputManager.Instance.reloadIsPressed && GunSelector.ActiveGun.CanReload();
+            return ActiveGunScriptable != null
+                && InputManager.Instance.reloadIsPressed
+                && ActiveGunScriptable.CanReload();
         }
-
 
         public bool IncrementalReload()
         {
-            return ActiveGunScriptable.CanReload();
+            return ActiveGunScriptable != null && ActiveGunScriptable.CanReload();
         }
 
         public bool AutoReload()
         {
-            return ActiveGunScriptable.CanReload() && ActiveGunScriptable.AmmoConfig.currentClip == 0;
+            return ActiveGunScriptable != null
+                && ActiveGunScriptable.CanReload()
+                && ActiveGunScriptable.AmmoConfig.currentClip == 0;
         }
 
         public void SaveData(ref GunSaveData data)
@@ -346,16 +370,20 @@ namespace Burntwax
                 if (CurrentGuns.Count > 0)
                     data.CurrentGuns.Clear();
                 data.currentState = null;
+                data.lastGunID = lastGunID;
                 return;
             }
+
             data.GunModel = CurrentGunModel;
             data.ActiveGunScriptable = ActiveGunScriptable;
             data.ActiveGunScriptable.ID = currentID;
             data.CurrentGuns = CurrentGuns;
             data.currentState = currentState;
+            data.lastGunID = lastGunID;
 
             data.clipAmmo = new List<int>();
             data.reserveAmmo = new List<int>();
+
             foreach (GunScriptableObject gun in CurrentGuns)
             {
                 data.clipAmmo.Add(gun.AmmoConfig.currentClip);
@@ -369,19 +397,24 @@ namespace Burntwax
             {
                 if (CurrentGunModel)
                     CurrentGunModel.gameObject.SetActive(false);
+
                 ActiveGunScriptable = null;
                 CurrentGunModel = null;
                 anim.Play("empty_rest");
                 CurrentGuns.Clear();
+                lastGunID = data.lastGunID;
                 return;
             }
-            if (ActiveGunScriptable != null)
+
+            if (ActiveGunScriptable != null && CurrentGunModel != null)
                 Despawn(ActiveGunScriptable);
 
             currentID = data.ActiveGunScriptable.ID;
             CurrentGuns = data.CurrentGuns;
             ActiveGunScriptable = data.ActiveGunScriptable;
             CurrentGunModel = data.GunModel;
+            lastGunID = data.lastGunID;
+
             Spawn(ActiveGunScriptable);
             SetupGun();
 
@@ -390,14 +423,23 @@ namespace Burntwax
             currentState.EnterState();
             fullyEquipped = true;
 
-
             foreach (GunScriptableObject gun in CurrentGuns)
             {
                 int index = CurrentGuns.IndexOf(gun);
                 gun.AmmoConfig.currentClip = data.clipAmmo[index];
                 gun.AmmoConfig.currentAmmo = data.reserveAmmo[index];
             }
+        }
 
+        private void DisableAllGunModels()
+        {
+            if (OrderedGuns == null) return;
+
+            foreach (GameObject gunObj in OrderedGuns)
+            {
+                if (gunObj != null)
+                    gunObj.SetActive(false);
+            }
         }
     }
 
@@ -410,7 +452,6 @@ namespace Burntwax
         public List<int> clipAmmo;
         public List<int> reserveAmmo;
         public GunBaseState currentState;
-
-
+        public int lastGunID;
     }
 }

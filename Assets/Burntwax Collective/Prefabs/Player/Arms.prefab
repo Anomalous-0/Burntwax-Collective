@@ -10163,6 +10163,7 @@ GameObject:
   - component: {fileID: 7409600953642053044}
   - component: {fileID: 8982893999631422072}
   - component: {fileID: 581475758498700004}
+  - component: {fileID: 37865160206100765}
   - component: {fileID: 3421360364221472154}
   - component: {fileID: 2488700794300891772}
   m_Layer: 0
@@ -10233,6 +10234,21 @@ MonoBehaviour:
   - m_Rig: {fileID: 3406981270840785279}
     m_Active: 1
   m_Effectors: []
+--- !u!114 &37865160206100765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758545380755496439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4817ebf02a735444a85ac5324a5127b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.Arsenal
+  gunStateMachine: {fileID: 0}
+  katanaStateMachine: {fileID: 0}
+  currentMode: 0
 --- !u!114 &3421360364221472154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10245,8 +10261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dfead5a010aee34e862cd1c493dd008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 0}
   player: {fileID: 0}
+  stateMachine: {fileID: 0}
   crosshair: {fileID: 0}
   camShake: {fileID: 0}
   handIK: {fileID: 3406981270840785279}
@@ -10272,6 +10288,8 @@ MonoBehaviour:
   isShooting: 0
   ableToShootInMiddleOfAnimation: 0
   fullyEquipped: 0
+  selectedByArsenal: 1
+  lastGunID: -1
 --- !u!114 &2488700794300891772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10284,8 +10302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b1c7be398c3a5f46970409f78bb1721, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaStateMachine
-  stateMachine: {fileID: 0}
   player: {fileID: 0}
+  stateMachine: {fileID: 0}
   crosshair: {fileID: 0}
   camShake: {fileID: 3983912548163265846}
   handIK: {fileID: 3406981270840785279}
@@ -10294,11 +10312,11 @@ MonoBehaviour:
   slashHash: 0
   parryHash: 0
   stowHash: 0
-  ActiveKatanaScriptable: {fileID: 11400000, guid: 6ca5b7445e1dfe944b42fa3c2c82e715,
-    type: 2}
+  ActiveKatanaScriptable: {fileID: 0}
   isSlashing: 0
   ableToSlashInMiddleOfAnimation: 0
   fullyEquipped: 0
+  selectedByArsenal: 0
 --- !u!1 &791730279315066389
 GameObject:
   m_ObjectHideFlags: 0

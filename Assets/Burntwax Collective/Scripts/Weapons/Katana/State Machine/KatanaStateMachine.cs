@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
@@ -8,11 +7,11 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class KatanaStateMachine : MonoBehaviour
     {
-
         [Header("State Machines")]
         public GameObject player;
         [HideInInspector] public PlayerStateMachine stateMachine;
         [HideInInspector] public PlayerCrosshair crosshair;
+
 
         [Space]
         [Header("Cinemachine Required")]
@@ -21,32 +20,23 @@ namespace Burntwax
         [Header("Animation Rigging Required")]
         public Rig handIK;
 
-
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
         [HideInInspector] public int slashHash, parryHash, stowHash;
         public KatanaScriptableObject ActiveKatanaScriptable;
 
-
-        [Space]
-
-
-
-
-
         private KatanaBaseState currentState;
         public KatanaStateFactory states;
 
-
-
         public KatanaBaseState CurrentState { get { return currentState; } set { currentState = value; } }
+
         [Space]
-
         public bool isSlashing = false;
-
         public bool ableToSlashInMiddleOfAnimation = false;
         public bool fullyEquipped;
+
+        [HideInInspector] public bool selectedByArsenal = false;
 
         void Awake()
         {
@@ -60,101 +50,124 @@ namespace Burntwax
 
             stateMachine = player.GetComponent<PlayerStateMachine>();
             crosshair = player.GetComponentInChildren<PlayerCrosshair>();
-
         }
 
         void Start()
         {
-
-            // if (CurrentGunModel)
-            //     CurrentGunModel.gameObject.SetActive(false);
-            // ActiveGunScriptable = null;
-            // CurrentGunModel = null;
-            // anim.Play("empty_rest");
-            // CurrentGuns.Clear();
         }
-
-
 
         private void Update()
         {
+        }
+
+        private void FixedUpdate()
+        {
+            if (!selectedByArsenal)
+                return;
+
             if (ActiveKatanaScriptable != null)
             {
                 currentState.UpdateStates();
             }
         }
 
-
-
         private void Despawn(KatanaScriptableObject activeKatana)
         {
-            Katana.SetActive(false);
+            if (Katana != null)
+                Katana.SetActive(false);
+
             activeKatana.Despawn(this);
         }
 
         private void Spawn(KatanaScriptableObject activeKatana)
         {
-            Katana.SetActive(true);
+            if (Katana != null)
+                Katana.SetActive(true);
+
             activeKatana.Spawn(player, Katana, this);
         }
 
-        private void WeaponSelect()
+        public bool HasKatana()
         {
-            if (InputManager.Instance.katanaSelect)
-            {
-
-            }
+            return ActiveKatanaScriptable != null;
         }
 
-        private void WeaponSwitch()
+        public void EquipFromArsenal()
         {
+            if (ActiveKatanaScriptable == null)
+                return;
 
-        }
-
-
-        public void Pickup(KatanaScriptableObject katana)
-        {
-
-            ActiveKatanaScriptable = katana;
-
-
+            selectedByArsenal = true;
             SetupKatana();
-
-
-
-
         }
 
-
-        private void SetupKatana()
+        public void StowFromArsenal()
         {
-            fullyEquipped = false;
+            selectedByArsenal = false;
+
             isSlashing = false;
-            Spawn(ActiveKatanaScriptable);
-            crosshair.SetKatanaCrosshair(ActiveKatanaScriptable);
-            currentState = states.Idle();
+            ableToSlashInMiddleOfAnimation = false;
+            fullyEquipped = false;
+
+            if (Katana != null)
+                Katana.SetActive(false);
+
             if (handIK != null)
                 handIK.weight = 1;
-            anim.Play("equip_katana");
-
-            camShake = Katana.GetComponent<CinemachineImpulseSource>();
 
             anim.SetBool(slashHash, false);
             anim.SetBool(parryHash, false);
             anim.SetBool(stowHash, false);
 
+            anim.Play("empty_rest");
         }
 
+        public void Pickup(KatanaScriptableObject katana)
+        {
+            ActiveKatanaScriptable = katana;
 
+            Arsenal arsenal = GetComponent<Arsenal>();
+            if (arsenal != null)
+            {
+                arsenal.ForceSwitchToKatana();
+            }
+            else
+            {
+                selectedByArsenal = true;
+                SetupKatana();
+            }
+        }
 
-        //Animation event
+        private void SetupKatana()
+        {
+            fullyEquipped = false;
+            isSlashing = false;
+            ableToSlashInMiddleOfAnimation = false;
+
+            Spawn(ActiveKatanaScriptable);
+            crosshair.SetKatanaCrosshair(ActiveKatanaScriptable);
+
+            currentState = states.Idle();
+            currentState.EnterState();
+
+            if (handIK != null)
+                handIK.weight = 1;
+
+            anim.Play("equip_Katana");
+
+            if (Katana != null)
+                camShake = Katana.GetComponent<CinemachineImpulseSource>();
+
+            anim.SetBool(slashHash, false);
+            anim.SetBool(parryHash, false);
+            anim.SetBool(stowHash, false);
+        }
+
         public void EndEquip()
         {
             fullyEquipped = true;
         }
 
-
-        //Animation event
         public void EndSlash()
         {
             ableToSlashInMiddleOfAnimation = false;
@@ -168,20 +181,15 @@ namespace Burntwax
 
         public void SaveData(ref KatanaSaveData data)
         {
-
         }
 
         public void LoadData(KatanaSaveData data)
         {
-
-
         }
     }
 
     [System.Serializable]
     public struct KatanaSaveData
     {
-
-
     }
 }
