@@ -22,22 +22,13 @@ namespace Burntwax
         [Header("Animation Rigging Required")]
         public Rig handIK;
 
-        public int currentID;
-
 
         [Header("Animation")]
-        [SerializeField] public Transform KatanaParent;
-
-
-
-        public Animator anim;
-
-
-
-        [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
-
-        public KatanaScriptableObject ActiveKatanaScriptable;
         public GameObject Katana;
+        public Animator anim;
+        [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
+        public KatanaScriptableObject ActiveKatanaScriptable;
+        
 
         [Space]
 
@@ -49,13 +40,11 @@ namespace Burntwax
         public KatanaStateFactory states;
 
 
-
+        
         public KatanaBaseState CurrentState { get { return currentState; } set { currentState = value; } }
+        [Space]
 
-
-        public bool isReloading = false;
-        public bool isIncrementalReloading = false;
-        public bool isShooting = false;
+        public bool isSlashing = false;
 
         public bool ableToSlashInMiddleOfAnimation = false;
         public bool fullyEquipped;
@@ -146,7 +135,7 @@ namespace Burntwax
         private void SetupKatana()
         {
             fullyEquipped = false;
-            isReloading = false;
+            isSlashing = false;
             Spawn(ActiveKatanaScriptable);
             crosshair.SetKatanaCrosshair(ActiveKatanaScriptable);
             currentState = states.Idle();
@@ -176,7 +165,7 @@ namespace Burntwax
         public void EndSlash()
         {
             ableToSlashInMiddleOfAnimation = false;
-            isShooting = false;
+            isSlashing = false;
         }
 
         public void AbleToSlashInMiddleOfAnimation()

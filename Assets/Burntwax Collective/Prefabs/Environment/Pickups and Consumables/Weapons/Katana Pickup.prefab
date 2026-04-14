@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7538684600870313851}
   - component: {fileID: 1296446820326422074}
   - component: {fileID: 4463103168759893677}
+  - component: {fileID: 327280279557472106}
   m_Layer: 0
   m_Name: Katana Pickup
   m_TagString: Untagged
@@ -50,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cc194644eca294478a2bfb91cc48780, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaPickup
-  katana: {fileID: 0}
+  katana: {fileID: 11400000, guid: 6ca5b7445e1dfe944b42fa3c2c82e715, type: 2}
 --- !u!54 &7538684600870313851
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -121,6 +122,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.4, y: 0.8, z: 2}
   m_Center: {x: 0, y: 0.1, z: -0.05}
+--- !u!114 &327280279557472106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419120966271812492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.PrefabGuid
+  guid: 2bd5ec21-90d2-4d20-85f3-7d79889ab761
 --- !u!1 &569071943058703690
 GameObject:
   m_ObjectHideFlags: 0

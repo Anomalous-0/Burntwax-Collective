@@ -26,14 +26,7 @@ namespace Burntwax
 
 
         [Header("Animation")]
-        [SerializeField] public Transform GunParent;
-
-
-
         public Animator anim;
-
-
-
         [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
 
         public List<GunScriptableObject> CurrentGuns;

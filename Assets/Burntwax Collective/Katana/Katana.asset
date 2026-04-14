@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a395b3c1f0ca4c14195dd07e45587966, type: 3}
+  m_Name: Katana
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaScriptableObject
+  Model: {fileID: 0}
+  DamageConfig: {fileID: 0}
+  AudioConfig: {fileID: 0}
+  CrosshairConfig: {fileID: 0}

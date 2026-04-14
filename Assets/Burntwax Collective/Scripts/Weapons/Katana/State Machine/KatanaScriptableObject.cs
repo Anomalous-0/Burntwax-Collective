@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 namespace Burntwax
 {
 
-    [CreateAssetMenu(fileName = "Katana", menuName = "Katana", order = 0)]
+    [CreateAssetMenu(fileName = "Katana", menuName = "Katana/Katana", order = 0)]
     public class KatanaScriptableObject : ScriptableObject
     {
 
@@ -20,7 +20,9 @@ namespace Burntwax
 
 
         [Header("Configs")]
-
+        public KatanaDamageConfig DamageConfig;
+        public KatanaAudioConfig AudioConfig;
+        public KatanaCrosshairConfig CrosshairConfig;
 
         private MonoBehaviour ActiveMonoBehaviour;
 
