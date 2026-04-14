@@ -34,10 +34,10 @@ namespace Burntwax
         public void Spawn(GameObject player, GameObject currentGun, MonoBehaviour ActiveMonoBehaviour)
         {
             this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-            if (TrailPool != null)
-            {
-                TrailPool.Dispose();
-            }
+            // if (TrailPool != null)
+            // {
+            //     TrailPool.Dispose();
+            // }
             // TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
             
         }

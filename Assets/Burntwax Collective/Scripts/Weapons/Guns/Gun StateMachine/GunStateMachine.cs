@@ -10,10 +10,10 @@ namespace Burntwax
     {
 
         [Header("State Machines")]
-        public PlayerStateMachine stateMachine;
         public GameObject player;
-    
-        public PlayerCrosshair crosshair;
+        [HideInInspector] public PlayerStateMachine stateMachine;
+
+        [HideInInspector] public PlayerCrosshair crosshair;
 
         [Space]
         [Header("Cinemachine Required")]
@@ -65,7 +65,6 @@ namespace Burntwax
             states = new GunStateFactory(this);
             currentState = states.Rest();
             currentState.EnterState();
-            // handIK.weight = 0;
 
             aimHash = Animator.StringToHash("aim");
             stowHash = Animator.StringToHash("stow");
@@ -73,23 +72,24 @@ namespace Burntwax
             proceduralShootHash = Animator.StringToHash("proceduralShoot");
             incrementalReloadHash = Animator.StringToHash("incrementalReload");
             shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+
+            stateMachine = player.GetComponent<PlayerStateMachine>();
+            crosshair = player.GetComponentInChildren<PlayerCrosshair>();
         }
 
         void Start()
         {
 
-            // if (CurrentGunModel)
-            //     CurrentGunModel.gameObject.SetActive(false);
-            // ActiveGunScriptable = null;
-            // CurrentGunModel = null;
-            // anim.Play("empty_rest");
-            // CurrentGuns.Clear();
         }
 
 
 
         private void Update()
         {
+            if (ActiveGunScriptable)
+            {
+                currentState.UpdateStates();
+            }
             if (ActiveGunScriptable != null && !PauseMenu.Instance.Paused)
             {
                 WeaponSelect();
@@ -102,14 +102,6 @@ namespace Burntwax
                 EmptyClip();
             }
 
-        }
-
-        private void FixedUpdate()
-        {
-            if (ActiveGunScriptable)
-            {
-                currentState.UpdateStates();
-            }
         }
 
 

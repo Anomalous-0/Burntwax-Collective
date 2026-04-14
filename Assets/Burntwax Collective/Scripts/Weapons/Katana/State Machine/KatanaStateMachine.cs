@@ -10,10 +10,9 @@ namespace Burntwax
     {
 
         [Header("State Machines")]
-        public PlayerStateMachine stateMachine;
         public GameObject player;
-
-        public PlayerCrosshair crosshair;
+        [HideInInspector] public PlayerStateMachine stateMachine;
+        [HideInInspector] public PlayerCrosshair crosshair;
 
         [Space]
         [Header("Cinemachine Required")]
@@ -26,9 +25,9 @@ namespace Burntwax
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
-        [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
+        [HideInInspector] public int slashHash, parryHash, stowHash;
         public KatanaScriptableObject ActiveKatanaScriptable;
-        
+
 
         [Space]
 
@@ -40,7 +39,7 @@ namespace Burntwax
         public KatanaStateFactory states;
 
 
-        
+
         public KatanaBaseState CurrentState { get { return currentState; } set { currentState = value; } }
         [Space]
 
@@ -54,14 +53,14 @@ namespace Burntwax
             states = new KatanaStateFactory(this);
             currentState = states.Idle();
             currentState.EnterState();
-            // handIK.weight = 0;
 
-            aimHash = Animator.StringToHash("aim");
+            slashHash = Animator.StringToHash("slash");
+            parryHash = Animator.StringToHash("parry");
             stowHash = Animator.StringToHash("stow");
-            reloadHash = Animator.StringToHash("reload");
-            proceduralShootHash = Animator.StringToHash("proceduralShoot");
-            incrementalReloadHash = Animator.StringToHash("incrementalReload");
-            shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+
+            stateMachine = player.GetComponent<PlayerStateMachine>();
+            crosshair = player.GetComponentInChildren<PlayerCrosshair>();
+
         }
 
         void Start()
@@ -78,11 +77,6 @@ namespace Burntwax
 
 
         private void Update()
-        {
-
-        }
-
-        private void FixedUpdate()
         {
             if (ActiveKatanaScriptable != null)
             {
@@ -114,7 +108,7 @@ namespace Burntwax
 
         private void WeaponSwitch()
         {
-          
+
         }
 
 
@@ -145,11 +139,10 @@ namespace Burntwax
 
             camShake = Katana.GetComponent<CinemachineImpulseSource>();
 
-            anim.SetBool(aimHash, false);
+            anim.SetBool(slashHash, false);
+            anim.SetBool(parryHash, false);
             anim.SetBool(stowHash, false);
-            anim.SetBool(reloadHash, false);
-            anim.SetBool(proceduralShootHash, false);
-            anim.SetBool(incrementalReloadHash, false);
+
         }
 
 
@@ -173,12 +166,12 @@ namespace Burntwax
             ableToSlashInMiddleOfAnimation = true;
         }
 
-        public void SaveData(ref GunSaveData data)
+        public void SaveData(ref KatanaSaveData data)
         {
 
         }
 
-        public void LoadData(GunSaveData data)
+        public void LoadData(KatanaSaveData data)
         {
 
 

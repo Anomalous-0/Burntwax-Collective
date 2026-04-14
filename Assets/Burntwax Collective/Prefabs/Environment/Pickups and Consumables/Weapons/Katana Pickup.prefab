@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3609237824880716943}
   - component: {fileID: 5806723329943116071}
   - component: {fileID: 7538684600870313851}
-  - component: {fileID: 1296446820326422074}
   - component: {fileID: 4463103168759893677}
   - component: {fileID: 327280279557472106}
+  - component: {fileID: 5401304969906306710}
   m_Layer: 0
   m_Name: Katana Pickup
   m_TagString: Untagged
@@ -79,28 +79,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!64 &1296446820326422074
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 419120966271812492}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4253027216179222250, guid: 05a7dfdf62a56a8498484946f9127154, type: 3}
 --- !u!65 &4463103168759893677
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -135,6 +113,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.PrefabGuid
   guid: 2bd5ec21-90d2-4d20-85f3-7d79889ab761
+--- !u!65 &5401304969906306710
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419120966271812492}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.1, y: 0.2, z: 1.5}
+  m_Center: {x: 0, y: 0.15, z: -0.05}
 --- !u!1 &569071943058703690
 GameObject:
   m_ObjectHideFlags: 0
