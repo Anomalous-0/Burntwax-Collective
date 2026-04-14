@@ -6,14 +6,14 @@ using Cinemachine;
 namespace Burntwax
 {
     [DisallowMultipleComponent]
-    public partial class GunStateMachine : MonoBehaviour
+    public class GunStateMachine : MonoBehaviour
     {
 
         [Header("State Machines")]
-        public PlayerStateMachine stateMachine;
         public GameObject player;
+        [HideInInspector] public PlayerStateMachine stateMachine;
     
-        public PlayerCrosshair crosshair;
+        [HideInInspector] public PlayerCrosshair crosshair;
 
         [Space]
         [Header("Cinemachine Required")]
@@ -26,14 +26,7 @@ namespace Burntwax
 
 
         [Header("Animation")]
-        [SerializeField] public Transform GunParent;
-
-
-
         public Animator anim;
-
-
-
         [HideInInspector] public int stowHash, aimHash, reloadHash, proceduralShootHash, incrementalReloadHash, shotWhileIncReloadHash;
 
         public List<GunScriptableObject> CurrentGuns;
@@ -72,7 +65,6 @@ namespace Burntwax
             states = new GunStateFactory(this);
             currentState = states.Rest();
             currentState.EnterState();
-            // handIK.weight = 0;
 
             aimHash = Animator.StringToHash("aim");
             stowHash = Animator.StringToHash("stow");
@@ -80,17 +72,14 @@ namespace Burntwax
             proceduralShootHash = Animator.StringToHash("proceduralShoot");
             incrementalReloadHash = Animator.StringToHash("incrementalReload");
             shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
+
+            stateMachine = player.GetComponent<PlayerStateMachine>();
+            crosshair = player.GetComponentInChildren<PlayerCrosshair>();
         }
 
         void Start()
         {
 
-            // if (CurrentGunModel)
-            //     CurrentGunModel.gameObject.SetActive(false);
-            // ActiveGunScriptable = null;
-            // CurrentGunModel = null;
-            // anim.Play("empty_rest");
-            // CurrentGuns.Clear();
         }
 
 
@@ -268,7 +257,6 @@ namespace Burntwax
             anim.SetBool(reloadHash, false);
             anim.SetBool(proceduralShootHash, false);
             anim.SetBool(incrementalReloadHash, false);
-
         }
 
 
