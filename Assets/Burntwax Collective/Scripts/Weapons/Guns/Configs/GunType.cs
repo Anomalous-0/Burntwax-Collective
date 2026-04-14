@@ -6,9 +6,5 @@ namespace Burntwax
         SMG,
         Shotgun,
         Revolver,
-
-        Katana
-
-
     }
 }

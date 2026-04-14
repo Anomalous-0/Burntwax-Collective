@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Burntwax
 {
-    public interface Weapon 
+    public class Weapon 
     {
     }
 

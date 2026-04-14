@@ -23,6 +23,8 @@ namespace Burntwax
         public float mouseScroll { get; private set; } = 0;
         public bool weaponSelectID { get; private set; }
 
+        public bool katanaSelect { get; private set; }
+
         public bool useGloves = false;
         public bool gloveShootIsPressed { get; private set; } = false;
 
@@ -83,6 +85,9 @@ namespace Burntwax
             input.OnFoot.WeaponSelect.started += SetSelect;
             input.OnFoot.WeaponSelect.canceled += SetSelect;
 
+            input.OnFoot.KatanaSelect.started += SetKatanaSelect;
+            input.OnFoot.KatanaSelect.canceled += SetSelect;
+
             input.OnFoot.Interact.started += SetInteract;
             input.OnFoot.Interact.canceled += SetInteract;
 
@@ -136,6 +141,10 @@ namespace Burntwax
 
             input.OnFoot.WeaponSelect.started -= SetScroll;
             input.OnFoot.WeaponSelect.canceled -= SetScroll;
+
+            input.OnFoot.KatanaSelect.started -= SetKatanaSelect;
+            input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
+
 
             input.OnFoot.Interact.started -= SetInteract;
             input.OnFoot.Interact.canceled -= SetInteract;
@@ -216,6 +225,11 @@ namespace Burntwax
         private void SetSelect(InputAction.CallbackContext ctx)
         {
             weaponSelectID = ctx.started;
+        }
+
+        private void SetKatanaSelect(InputAction.CallbackContext ctx)
+        {
+            katanaSelect = ctx.started;
         }
 
         private void SetInteract(InputAction.CallbackContext ctx)

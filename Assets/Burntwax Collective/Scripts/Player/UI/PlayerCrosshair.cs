@@ -33,6 +33,15 @@ namespace Burntwax
                 outerIcon.rectTransform.sizeDelta = gun.CrosshairConfig.dimensions;
             }
         }
+
+        public void SetKatanaCrosshair(KatanaScriptableObject katana)
+        {
+            if (katana != null)
+            {
+                outerIcon.sprite = katana.CrosshairConfig.icon;
+                outerIcon.rectTransform.sizeDelta = katana.CrosshairConfig.dimensions;
+            }
+        }
         public void SetAimCrosshair()
         {
             outerIcon.gameObject.SetActive(false);

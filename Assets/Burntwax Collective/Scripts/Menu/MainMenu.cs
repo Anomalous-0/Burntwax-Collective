@@ -28,15 +28,6 @@ namespace Burntwax
             AudioListener.pause = false;
 
         }
-
-        // public void Resume()
-        // {
-        //     GameManager.Instance.loadScene = true;
-        //     Time.timeScale = 1f;
-        //     AudioListener.pause = false;
-
-        // }
-
         public async void Resume()
         {
             if (!SaveSystem.SaveExists())

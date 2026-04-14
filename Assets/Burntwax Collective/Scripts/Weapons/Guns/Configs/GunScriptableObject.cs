@@ -9,7 +9,7 @@ namespace Burntwax
 {
 
     [CreateAssetMenu(fileName = "Gun", menuName = "Guns/Gun", order = 0)]
-    public class GunScriptableObject : ScriptableObject, Weapon
+    public class GunScriptableObject : ScriptableObject
     {
 
         public int ID;

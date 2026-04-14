@@ -37,7 +37,7 @@
                     "name": "Interact",
                     "type": "Button",
                     "id": "8e3b1175-0f55-4002-86cd-c3e1d0c75857",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -91,7 +91,16 @@
                     "name": "Gloves",
                     "type": "Button",
                     "id": "bf7ebad4-55a5-4316-9ea5-ff43c22f980b",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "KatanaSelect",
+                    "type": "Button",
+                    "id": "2f7bce50-4c6e-42ac-8e2c-0cb3a25210cb",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -100,7 +109,7 @@
                     "name": "GloveShoot",
                     "type": "Button",
                     "id": "56063d37-8243-4733-874a-1be5d4df444f",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -118,7 +127,7 @@
                     "name": "WeaponSelect",
                     "type": "Button",
                     "id": "9b7f10d9-175e-4f8b-b8a9-0d19d6154aae",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -402,6 +411,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Gloves",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "37cbedb9-c46c-4a01-8776-e012b9246c4b",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "KatanaSelect",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
