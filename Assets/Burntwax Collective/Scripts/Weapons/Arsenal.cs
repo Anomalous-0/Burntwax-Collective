@@ -5,6 +5,7 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class Arsenal : MonoBehaviour
     {
+        [HideInInspector]
         public enum WeaponMode
         {
             Guns,
@@ -17,6 +18,9 @@ namespace Burntwax
 
         [Header("Current Mode")]
         public WeaponMode currentMode = WeaponMode.Guns;
+
+        public int currentID = -1;
+        public int lastID;
 
         private void Start()
         {
@@ -35,77 +39,83 @@ namespace Burntwax
                 return;
 
             HandleKatanaToggle();
-            HandleGunSelectionInputs();
+            gunStateMachine.HandleGunSwitching();
+           
+            // HandleGunSelectionInputs();
         }
 
         private void HandleKatanaToggle()
         {
-            if (!Input.GetKeyDown(KeyCode.Q))
-                return;
+            if (InputManager.Instance.katanaSelect)
+            {
+                if (currentMode == WeaponMode.Katana)
+                {
+                    // Switch to Gun system
+                }
 
-            if (currentMode == WeaponMode.Katana)
-            {
-                SwitchToGuns();
-            }
-            else if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
-            {
-                SwitchToKatana();
+                else if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
+                {
+                    // Switch to Katana system, currentID is -1
+                    lastID = currentID;
+                    currentID = -1;
+
+                }
             }
         }
 
         private void HandleGunSelectionInputs()
         {
 
-            int directGunID = GetDirectGunIDInput();
-            if (directGunID != -1 && directGunID != gunStateMachine.currentID && gunStateMachine.CurrentGuns.Exists(g => g.ID == directGunID))
-            {
+            // int directGunID = GetDirectGunIDInput();
+            // if (directGunID != -1 && directGunID != gunStateMachine.currentID && gunStateMachine.CurrentGuns.Exists(g => g.ID == directGunID))
+            // {
 
-                if (currentMode == WeaponMode.Katana)
-                {
-                    SwitchToGuns();
-                    return;
-                }
-                gunStateMachine.SelectGunByID(directGunID);
-                return;
-            }
+            //     if (currentMode == WeaponMode.Katana)
+            //     {
+            //         SwitchToGuns();
+            //         return;
+            //     }
+            //     gunStateMachine.SelectGunByID(directGunID);
+            //     return;
+            // }
 
-            float scroll = InputManager.Instance.mouseScroll;
-            if (scroll != 0)
-            {
-                if (currentMode == WeaponMode.Katana)
-                {
-                    SwitchToGuns();
-                    return;
-                }
+            // float scroll = InputManager.Instance.mouseScroll;
+            // if (scroll != 0)
+            // {
+            //     if (currentMode == WeaponMode.Katana)
+            //     {
+            //         SwitchToGuns();
+            //         return;
+            //     }
 
-                gunStateMachine.ScrollGun(scroll);
-            }
+            //     gunStateMachine.ScrollGun(scroll);
+            // }
         }
 
-        private int GetDirectGunIDInput()
+        private void WeaponHotkeySelect()
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) return 0;
-            if (Input.GetKeyDown(KeyCode.Alpha2)) return 1;
-            if (Input.GetKeyDown(KeyCode.Alpha3)) return 2;
-            if (Input.GetKeyDown(KeyCode.Alpha4)) return 3;
-            if (Input.GetKeyDown(KeyCode.Alpha5)) return 4;
-            if (Input.GetKeyDown(KeyCode.Alpha6)) return 5;
-            if (Input.GetKeyDown(KeyCode.Alpha7)) return 6;
-            if (Input.GetKeyDown(KeyCode.Alpha8)) return 7;
-            if (Input.GetKeyDown(KeyCode.Alpha9)) return 8;
+            if (Input.GetKeyDown(KeyCode.Alpha1)) currentID = 0;
+            if (Input.GetKeyDown(KeyCode.Alpha2)) currentID = 1;
+            if (Input.GetKeyDown(KeyCode.Alpha3)) currentID = 2;
+            if (Input.GetKeyDown(KeyCode.Alpha4)) currentID = 3;
+            if (Input.GetKeyDown(KeyCode.Alpha5)) currentID = 4;
+            if (Input.GetKeyDown(KeyCode.Alpha6)) currentID = 5;
+            if (Input.GetKeyDown(KeyCode.Alpha7)) currentID = 6;
+            if (Input.GetKeyDown(KeyCode.Alpha8)) currentID = 7;
+            if (Input.GetKeyDown(KeyCode.Alpha9)) currentID = 8;
 
-            return -1;
+
         }
 
         public void SwitchToGuns()
         {
             if (katanaStateMachine != null)
-                katanaStateMachine.StowFromArsenal();
+                // katanaStateMachine.StowFromArsenal();
 
-            if (gunStateMachine != null)
-                gunStateMachine.EquipFromArsenal();
+                if (gunStateMachine != null)
+                    // gunStateMachine.EquipFromArsenal();
 
-            currentMode = WeaponMode.Guns;
+                    currentMode = WeaponMode.Guns;
         }
 
         public void SwitchToKatana()
@@ -114,10 +124,10 @@ namespace Burntwax
                 return;
 
             if (gunStateMachine != null)
-                gunStateMachine.StowFromArsenal();
+                // gunStateMachine.StowFromArsenal();
 
-            katanaStateMachine.EquipFromArsenal();
-            currentMode = WeaponMode.Katana;
+                // katanaStateMachine.EquipFromArsenal();
+                currentMode = WeaponMode.Katana;
         }
     }
 }
