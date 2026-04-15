@@ -129,7 +129,7 @@ namespace Burntwax
             Arsenal arsenal = GetComponent<Arsenal>();
             if (arsenal != null)
             {
-                arsenal.ForceSwitchToKatana();
+                arsenal.SwitchToKatana();
             }
             else
             {

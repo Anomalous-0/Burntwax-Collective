@@ -141,7 +141,7 @@ namespace Burntwax
                 }
 
                 ActiveGunScriptable = gunToEquip;
-                currentID = gunToEquip.ID;
+                currentID = ActiveGunScriptable.ID;
                 SetupGun();
             }
             else
@@ -191,7 +191,12 @@ namespace Burntwax
                 return;
 
             if (ActiveGunScriptable != null && ActiveGunScriptable.ID == gunID && selectedByArsenal)
+            {
+
+                Debug.Log($"Gun with ID {gunID} is already equipped. No need to switch.");
+
                 return;
+            }
 
             if (ActiveGunScriptable != null && CurrentGunModel != null)
                 Despawn(ActiveGunScriptable);
@@ -242,7 +247,7 @@ namespace Burntwax
             Arsenal arsenal = GetComponent<Arsenal>();
             if (arsenal != null)
             {
-                arsenal.ForceSwitchToGuns();
+                arsenal.SwitchToGuns();
             }
             else
             {

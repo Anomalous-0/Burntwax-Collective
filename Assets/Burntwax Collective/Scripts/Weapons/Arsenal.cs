@@ -12,16 +12,11 @@ namespace Burntwax
         }
 
         [Header("References")]
-        public GunStateMachine gunStateMachine;
-        public KatanaStateMachine katanaStateMachine;
+        [HideInInspector] public GunStateMachine gunStateMachine;
+        [HideInInspector] public KatanaStateMachine katanaStateMachine;
 
         [Header("Current Mode")]
         public WeaponMode currentMode = WeaponMode.Guns;
-
-        [Header("Switch Settings")]
-        [SerializeField] private float switchCooldown = 0.15f;
-
-        private float switchTimer;
 
         private void Start()
         {
@@ -31,16 +26,13 @@ namespace Burntwax
             if (katanaStateMachine == null)
                 katanaStateMachine = GetComponent<KatanaStateMachine>();
 
-            ForceSwitchToGuns();
+            SwitchToGuns();
         }
 
         private void Update()
         {
             if (PauseMenu.Instance != null && PauseMenu.Instance.Paused)
                 return;
-
-            if (switchTimer > 0f)
-                switchTimer -= Time.deltaTime;
 
             HandleKatanaToggle();
             HandleGunSelectionInputs();
@@ -51,14 +43,11 @@ namespace Burntwax
             if (!Input.GetKeyDown(KeyCode.Q))
                 return;
 
-            if (switchTimer > 0f)
-                return;
-
             if (currentMode == WeaponMode.Katana)
             {
                 SwitchToGuns();
             }
-            else if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot() && gunStateMachine.anim.GetCurrentAnimatorStateInfo(0).IsName("equip_" + gunStateMachine.ActiveGunScriptable.Type))
+            else if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
                 SwitchToKatana();
             }
@@ -66,13 +55,16 @@ namespace Burntwax
 
         private void HandleGunSelectionInputs()
         {
-            if (switchTimer > 0f)
-                return;
 
             int directGunID = GetDirectGunIDInput();
-            if (directGunID != -1)
+            if (directGunID != -1 && directGunID != gunStateMachine.currentID && gunStateMachine.CurrentGuns.Exists(g => g.ID == directGunID))
             {
-                SwitchToGuns();
+
+                if (currentMode == WeaponMode.Katana)
+                {
+                    SwitchToGuns();
+                    return;
+                }
                 gunStateMachine.SelectGunByID(directGunID);
                 return;
             }
@@ -105,27 +97,8 @@ namespace Burntwax
             return -1;
         }
 
-        public void SwitchToKatana()
-        {
-            if (currentMode == WeaponMode.Katana)
-                return;
-
-            if (katanaStateMachine == null || !katanaStateMachine.HasKatana())
-                return;
-
-            if (gunStateMachine != null)
-                gunStateMachine.StowFromArsenal();
-
-            katanaStateMachine.EquipFromArsenal();
-            currentMode = WeaponMode.Katana;
-            switchTimer = switchCooldown;
-        }
-
         public void SwitchToGuns()
         {
-            if (currentMode == WeaponMode.Guns)
-                return;
-
             if (katanaStateMachine != null)
                 katanaStateMachine.StowFromArsenal();
 
@@ -133,22 +106,9 @@ namespace Burntwax
                 gunStateMachine.EquipFromArsenal();
 
             currentMode = WeaponMode.Guns;
-            switchTimer = switchCooldown;
         }
 
-        public void ForceSwitchToGuns()
-        {
-            if (katanaStateMachine != null)
-                katanaStateMachine.StowFromArsenal();
-
-            if (gunStateMachine != null)
-                gunStateMachine.EquipFromArsenal();
-
-            currentMode = WeaponMode.Guns;
-            switchTimer = 0f;
-        }
-
-        public void ForceSwitchToKatana()
+        public void SwitchToKatana()
         {
             if (katanaStateMachine == null || !katanaStateMachine.HasKatana())
                 return;
@@ -158,7 +118,6 @@ namespace Burntwax
 
             katanaStateMachine.EquipFromArsenal();
             currentMode = WeaponMode.Katana;
-            switchTimer = 0f;
         }
     }
 }
