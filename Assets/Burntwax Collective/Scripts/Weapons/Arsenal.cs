@@ -68,10 +68,8 @@ namespace Burntwax
                         return;
                     }
                     else
-                    {
-
+                    { 
                         SwitchToGuns(selectedID);
-
                         return;
                     }
                 }

@@ -113,6 +113,8 @@ namespace Burntwax
 
         public bool SwitchToGun(int newID)
         {
+            if(newID == arsenal.currentID)
+                return false;
             if (!gunLookup.TryGetValue(newID, out GunScriptableObject newGun) || newGun == null)
             {
                 Debug.LogError($"No GunScriptableObject found for gun ID: {newID}");

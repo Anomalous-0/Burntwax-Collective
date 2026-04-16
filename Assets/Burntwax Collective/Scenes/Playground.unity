@@ -10677,12 +10677,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 557682775}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &633448767 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
-    type: 3}
-  m_PrefabInstance: {fileID: 7818493175321906782}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &638113745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33624,7 +33618,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableManager
   prefabs:
-  - prefabAsset: {fileID: 633448767}
+  - prefabAsset: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+      type: 3}
     parent: {fileID: 99655214}
   - prefabAsset: {fileID: 189091626145577203, guid: 7ee7a870c60546241ba7e375fd9d96a0,
       type: 3}
