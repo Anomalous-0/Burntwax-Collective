@@ -17,7 +17,7 @@ namespace Burntwax
             public SceneSaveData SceneData;
             public PlayerSaveData PlayerData;
             public CamSaveData CamData;
-            public GunSaveData GunData;
+            public ArsenalSaveData ArsenalData;
             public PlayerHealthSaveData PlayerHealthData;
             public ObjectConsumableData ObjectConsumableData;
 
@@ -73,9 +73,9 @@ namespace Burntwax
                 player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
             }
 
-            GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
-            if (gun)
-                gun.SaveData(ref _saveData.GunData);
+            Arsenal arsenal = GameManager.FindFirstObjectByType<Arsenal>();
+            if (arsenal)
+                arsenal.SaveData(ref _saveData.ArsenalData);
 
 
             ObjectManager.Instance.SaveData(ref _saveData.ObjectConsumableData);
@@ -111,10 +111,11 @@ namespace Burntwax
 
             }
 
-            GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
-            if (gun)
+
+            Arsenal arsenal = GameManager.FindFirstObjectByType<Arsenal>();
+            if (arsenal)
             {
-                gun.LoadData(_saveData.GunData);
+                arsenal.LoadData(_saveData.ArsenalData);
             }
 
             ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
@@ -141,10 +142,10 @@ namespace Burntwax
 
             }
 
-            GunStateMachine gun = GameManager.FindFirstObjectByType<GunStateMachine>();
-            if (gun)
+            Arsenal arsenal = GameManager.FindFirstObjectByType<Arsenal>();
+            if (arsenal)
             {
-                gun.LoadData(_saveData.GunData);
+                arsenal.LoadData(_saveData.ArsenalData);
             }
             ObjectManager.Instance.LoadData(_saveData.ObjectConsumableData);
         }

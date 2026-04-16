@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -31,8 +30,6 @@ namespace Burntwax
 
             if (katanaStateMachine == null)
                 katanaStateMachine = GetComponent<KatanaStateMachine>();
-
-
         }
 
         private void Update()
@@ -43,17 +40,13 @@ namespace Burntwax
             WeaponSwitch();
         }
 
-
         private void WeaponSwitch()
         {
-
             bool hasWeaponNumberInput = ReadWeaponHotkey(out int selectedID);
             bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
 
-
             if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
-
                 if (hasWeaponNumberInput)
                 {
                     if (selectedID == -1)
@@ -67,29 +60,16 @@ namespace Burntwax
                         SwitchToKatana();
                         return;
                     }
-                    else
-                    { 
-                        SwitchToGuns(selectedID);
-                        return;
-                    }
+
+                    SwitchToGuns(selectedID);
+                    return;
                 }
 
                 if (hasScrollInput)
                 {
-
                     ScrollToGun();
-                    return;
                 }
-
             }
-
-
-
-
-
-
-
-
         }
 
         private int GetScrollID()
@@ -100,18 +80,16 @@ namespace Burntwax
             int nextID = currentID;
 
             if (InputManager.Instance.mouseScroll > 0f)
-            {
                 nextID++;
-            }
             else if (InputManager.Instance.mouseScroll < 0f)
-            {
                 nextID--;
-            }
 
+            int count = gunStateMachine.CurrentGuns.Count;
             if (nextID < 0)
-                nextID = gunStateMachine.CurrentGuns.Count - 1;
-            else if (nextID >= gunStateMachine.CurrentGuns.Count)
+                nextID = count - 1;
+            else if (nextID >= count)
                 nextID = 0;
+
             return nextID;
         }
 
@@ -128,19 +106,12 @@ namespace Burntwax
             if (Input.GetKeyDown(KeyCode.Alpha2)) { selectedID = 1; return true; }
             if (Input.GetKeyDown(KeyCode.Alpha3)) { selectedID = 2; return true; }
             if (Input.GetKeyDown(KeyCode.Alpha4)) { selectedID = 3; return true; }
-            // if (Input.GetKeyDown(KeyCode.Alpha5)) { selectedID = 4; return true; }
-            // if (Input.GetKeyDown(KeyCode.Alpha6)) { selectedID = 5; return true; }
-            // if (Input.GetKeyDown(KeyCode.Alpha7)) { selectedID = 6; return true; }
-            // if (Input.GetKeyDown(KeyCode.Alpha8)) { selectedID = 7; return true; }
-            // if (Input.GetKeyDown(KeyCode.Alpha9)) { selectedID = 8; return true; }
-
 
             return false;
         }
 
         public void ScrollToGun()
         {
-
             if (currentMode == WeaponMode.Katana)
             {
                 int id = lastID;
@@ -149,50 +120,106 @@ namespace Burntwax
                 katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
                 gunStateMachine.SwitchToGun(id);
                 currentID = id;
-
-
             }
             else
             {
+                int scrollID = GetScrollID();
                 lastID = currentID;
-                gunStateMachine.SwitchToGun(GetScrollID());
-                currentID = GetScrollID();
+                gunStateMachine.SwitchToGun(scrollID);
+                currentID = scrollID;
             }
-
-
-
-
-
         }
 
         public void SwitchToGuns(int selectedID)
         {
             if (gunStateMachine.CurrentGuns.Count == 0)
                 return;
+
             lastID = currentID;
+
             if (currentMode == WeaponMode.Katana)
             {
                 currentMode = WeaponMode.Guns;
                 katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
-
             }
+
             gunStateMachine.SwitchToGun(selectedID);
             currentID = selectedID;
         }
 
         public void SwitchToKatana()
         {
-            lastID = currentID;
             if (katanaStateMachine.KatanaScriptable == null)
                 return;
+
+            lastID = currentID;
 
             if (currentMode == WeaponMode.Guns)
             {
                 currentMode = WeaponMode.Katana;
                 gunStateMachine.Despawn(gunStateMachine.ActiveGunScriptable);
             }
+
             katanaStateMachine.SetupKatana();
             currentID = -1;
         }
+
+        // ── Unified Save / Load ──────────────────────────────────
+
+        public void SaveData(ref ArsenalSaveData data)
+        {
+            data.currentMode = currentMode;
+            data.currentID = currentID;
+            data.lastID = lastID;
+
+            gunStateMachine.SaveData(ref data.gunData);
+            katanaStateMachine.SaveData(ref data.katanaData);
+        }
+
+        public void LoadData(ArsenalSaveData data)
+        {
+            // Despawn whatever is currently active to start clean
+            if (gunStateMachine.ActiveGunScriptable != null)
+                gunStateMachine.Despawn(gunStateMachine.ActiveGunScriptable);
+
+            if (katanaStateMachine.ActiveKatanaScriptable != null)
+                katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
+
+                
+
+            // Restore arsenal state
+            currentMode = data.currentMode;
+            currentID = data.currentID;
+            lastID = data.lastID;
+
+            // Load sub-system data
+            gunStateMachine.LoadData(data.gunData);
+            katanaStateMachine.LoadData(data.katanaData);
+
+            // Activate the correct weapon based on saved mode
+            switch (currentMode)
+            {
+                case WeaponMode.Guns:
+                    
+                        gunStateMachine.SetupAfterLoad(data.gunData);
+                    break;
+                    
+
+                case WeaponMode.Katana:
+                    
+                        katanaStateMachine.SetupAfterLoad();
+                    break;
+            }
+        }
+    }
+
+    [System.Serializable]
+    public struct ArsenalSaveData
+    {
+        public Arsenal.WeaponMode currentMode;
+        public int currentID;
+        public int lastID;
+        public GunSaveData gunData;
+        public KatanaSaveData katanaData;
     }
 }
