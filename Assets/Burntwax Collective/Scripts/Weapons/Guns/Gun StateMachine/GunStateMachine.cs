@@ -110,51 +110,9 @@ namespace Burntwax
             }
         }
 
-        public void HandleGunSwitching(int selectedID)
+
+        public bool SwitchToGun(int newID)
         {
-            // if (PauseMenu.Instance.Paused)
-            //     return;
-
-            bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
-            
-
-            if (currentState.CurrentSubstate() != states.Shoot() )
-            {
-                int targetID = hasScrollInput ? GetScrollID() : selectedID;
-                SwitchToGun(targetID);
-            }
-            
-        }
-
-        private int GetScrollID()
-        {
-            if (CurrentGuns.Count == 0)
-                return currentID;
-
-            int nextID = currentID;
-
-            if (InputManager.Instance.mouseScroll > 0f)
-            {
-                nextID++;
-            }
-            else if (InputManager.Instance.mouseScroll < 0f)
-            {
-                nextID--;
-            }
-
-            if (nextID < 0)
-                nextID = CurrentGuns.Count - 1;
-            else if (nextID >= CurrentGuns.Count)
-                nextID = 0;
-
-            return nextID;
-        }
-
-        private bool SwitchToGun(int newID)
-        {
-            if (ActiveGunScriptable != null && newID == ActiveGunScriptable.ID)
-                return false;
-
             if (!gunLookup.TryGetValue(newID, out GunScriptableObject newGun) || newGun == null)
             {
                 Debug.LogError($"No GunScriptableObject found for gun ID: {newID}");
@@ -182,6 +140,7 @@ namespace Burntwax
             }
 
             activeGun?.Despawn(this);
+            ActiveGunScriptable = null;
         }
 
         private void Spawn(GunScriptableObject activeGun)
@@ -212,6 +171,11 @@ namespace Burntwax
             CurrentGuns.Add(gun);
             gunLookup[gun.ID] = gun;
 
+            KatanaStateMachine katana = GetComponent<KatanaStateMachine>();
+
+            if (arsenal.currentMode == Arsenal.WeaponMode.Katana)
+                katana.Despawn(katana.ActiveKatanaScriptable);
+
             if (ActiveGunScriptable != null)
             {
                 Despawn(ActiveGunScriptable);
@@ -222,9 +186,10 @@ namespace Burntwax
 
             arsenal.lastID = arsenal.currentID;
             arsenal.currentID = currentID;
-            
+
             SetupGun();
             ActiveGunScriptable.AmmoConfig.Enable();
+            arsenal.currentMode = Arsenal.WeaponMode.Guns;  
         }
 
         private void SetupGun()

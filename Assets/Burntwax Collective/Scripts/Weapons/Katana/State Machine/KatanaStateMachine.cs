@@ -23,6 +23,12 @@ namespace Burntwax
         [Header("Animation Rigging Required")]
         public Rig handIK;
 
+        [Space]
+        [Space]
+
+        public KatanaScriptableObject KatanaScriptable;
+
+
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
@@ -74,7 +80,8 @@ namespace Burntwax
             if (Katana != null)
                 Katana.SetActive(false);
 
-            activeKatana.Despawn(this);
+            activeKatana?.Despawn(this);
+            ActiveKatanaScriptable = null;
         }
 
         private void Spawn(KatanaScriptableObject activeKatana)
@@ -83,32 +90,34 @@ namespace Burntwax
                 Katana.SetActive(true);
 
             activeKatana.Spawn(player, Katana, this);
-        }
-
-        public bool HasKatana()
-        {
-            return ActiveKatanaScriptable != null;
+            ActiveKatanaScriptable = activeKatana;
         }
 
 
         public void Pickup(KatanaScriptableObject katana)
         {
+
+            GunStateMachine gun = GetComponent<GunStateMachine>();
+            if (arsenal.currentMode == Arsenal.WeaponMode.Guns)
+                gun.Despawn(gun.ActiveGunScriptable);
+
             arsenal.lastID = arsenal.currentID;
             arsenal.currentID = -1;
 
-            
-            ActiveKatanaScriptable = katana;
+
+            KatanaScriptable = katana;
             SetupKatana();
+            arsenal.currentMode = Arsenal.WeaponMode.Katana;
         }
 
-        private void SetupKatana()
+        public void SetupKatana()
         {
             fullyEquipped = false;
             isSlashing = false;
             ableToSlashInMiddleOfAnimation = false;
 
-            Spawn(ActiveKatanaScriptable);
-            crosshair.SetKatanaCrosshair(ActiveKatanaScriptable);
+            Spawn(KatanaScriptable);
+            crosshair?.SetKatanaCrosshair(ActiveKatanaScriptable);
 
             currentState = states.Idle();
             currentState.EnterState();

@@ -45,7 +45,7 @@ namespace Burntwax
         public void Despawn(MonoBehaviour ActiveMonoBehaviour)
         {
             this.ActiveMonoBehaviour = ActiveMonoBehaviour;
-            TrailPool.Dispose();
+            // TrailPool.Dispose();
         }
 
         public void Slash()
