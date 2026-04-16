@@ -7,6 +7,9 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class KatanaStateMachine : MonoBehaviour
     {
+
+        private Arsenal arsenal;
+
         [Header("State Machines")]
         public GameObject player;
         [HideInInspector] public PlayerStateMachine stateMachine;
@@ -50,6 +53,8 @@ namespace Burntwax
 
             stateMachine = player.GetComponent<PlayerStateMachine>();
             crosshair = player.GetComponentInChildren<PlayerCrosshair>();
+
+            arsenal = GetComponent<Arsenal>();
         }
 
         void Start()
@@ -58,20 +63,13 @@ namespace Burntwax
 
         private void Update()
         {
-        }
-
-        private void FixedUpdate()
-        {
-            if (!selectedByArsenal)
-                return;
-
             if (ActiveKatanaScriptable != null)
             {
                 currentState.UpdateStates();
             }
         }
 
-        private void Despawn(KatanaScriptableObject activeKatana)
+        public void Despawn(KatanaScriptableObject activeKatana)
         {
             if (Katana != null)
                 Katana.SetActive(false);
@@ -92,50 +90,15 @@ namespace Burntwax
             return ActiveKatanaScriptable != null;
         }
 
-        public void EquipFromArsenal()
-        {
-            if (ActiveKatanaScriptable == null)
-                return;
-
-            selectedByArsenal = true;
-            SetupKatana();
-        }
-
-        public void StowFromArsenal()
-        {
-            selectedByArsenal = false;
-
-            isSlashing = false;
-            ableToSlashInMiddleOfAnimation = false;
-            fullyEquipped = false;
-
-            if (Katana != null)
-                Katana.SetActive(false);
-
-            if (handIK != null)
-                handIK.weight = 1;
-
-            anim.SetBool(slashHash, false);
-            anim.SetBool(parryHash, false);
-            anim.SetBool(stowHash, false);
-
-            anim.Play("empty_rest");
-        }
 
         public void Pickup(KatanaScriptableObject katana)
         {
-            ActiveKatanaScriptable = katana;
+            arsenal.lastID = arsenal.currentID;
+            arsenal.currentID = -1;
 
-            Arsenal arsenal = GetComponent<Arsenal>();
-            if (arsenal != null)
-            {
-                arsenal.SwitchToKatana();
-            }
-            else
-            {
-                selectedByArsenal = true;
-                SetupKatana();
-            }
+            
+            ActiveKatanaScriptable = katana;
+            SetupKatana();
         }
 
         private void SetupKatana()

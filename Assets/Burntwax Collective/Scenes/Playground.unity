@@ -6908,6 +6908,7 @@ MonoBehaviour:
   interactIsPressed: 0
   jumpIsPressed: 0
   pauseIsPressed: 0
+  katanaSelect: 0
   useGloves: 0
   shootIsPressed: 0
 --- !u!4 &371505449
@@ -10675,6 +10676,12 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2534855556683237600, guid: 8940725a50546e144ac6b50b27d99a53,
     type: 3}
   m_PrefabInstance: {fileID: 557682775}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &633448767 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+    type: 3}
+  m_PrefabInstance: {fileID: 7818493175321906782}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &638113745
 PrefabInstance:
@@ -33617,6 +33624,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConsumableManager
   prefabs:
+  - prefabAsset: {fileID: 633448767}
+    parent: {fileID: 99655214}
   - prefabAsset: {fileID: 189091626145577203, guid: 7ee7a870c60546241ba7e375fd9d96a0,
       type: 3}
     parent: {fileID: 99655214}
@@ -35154,6 +35163,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8967501273172980240}
     m_Modifications:
+    - target: {fileID: 37865160206100765, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: currentID
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 758545380755496439, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_Name
@@ -35189,6 +35203,11 @@ PrefabInstance:
       propertyPath: stateMachine
       value: 
       objectReference: {fileID: 401126580}
+    - target: {fileID: 5465173363379185540, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: recoilKickBack.z
+      value: -0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 7022634232439819720, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -36525,6 +36544,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Katana Pickup
       objectReference: {fileID: 0}
+    - target: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Metal
+      objectReference: {fileID: 0}
+    - target: {fileID: 569071943058703690, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3364044804509757085, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 3609237824880716943, guid: 9030a940f3e9efc4f98fc070a59bff8c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -36574,6 +36613,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4270799961055627544, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 5023082648612512931, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 8240699357308309235, guid: 9030a940f3e9efc4f98fc070a59bff8c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

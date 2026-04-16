@@ -8,6 +8,8 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class GunStateMachine : MonoBehaviour
     {
+
+        private Arsenal arsenal;
         [Header("State Machines")]
         [SerializeField] private GameObject player;
         [HideInInspector] public PlayerStateMachine stateMachine;
@@ -73,24 +75,23 @@ namespace Burntwax
             incrementalReloadHash = Animator.StringToHash("incrementalReload");
             shotWhileIncReloadHash = Animator.StringToHash("shotWhileIncReload");
 
-            if (player != null)
-            {
-                stateMachine = player.GetComponent<PlayerStateMachine>();
-                crosshair = player.GetComponentInChildren<PlayerCrosshair>();
-                playerAudioSource = player.GetComponent<AudioSource>();
-            }
+
+            crosshair = player.GetComponentInChildren<PlayerCrosshair>();
+            playerAudioSource = player.GetComponent<AudioSource>();
 
             RebuildGunLookup();
+
+            arsenal = GetComponent<Arsenal>();
         }
 
         private void Update()
         {
-            if (ActiveGunScriptable == null)
-                return;
+            if (ActiveGunScriptable != null)
+            {
+                currentState.UpdateStates();
+            }
 
-            currentState.UpdateStates();
 
-            
 
             HandleEmptyClip();
         }
@@ -109,39 +110,20 @@ namespace Burntwax
             }
         }
 
-        public void HandleGunSwitching()
+        public void HandleGunSwitching(int selectedID)
         {
-            if (PauseMenu.Instance.Paused)
-                return;
+            // if (PauseMenu.Instance.Paused)
+            //     return;
 
-            bool hasWeaponNumberInput = ReadWeaponHotkey(out int selectedID);
             bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
+            
 
-            if ((hasWeaponNumberInput || hasScrollInput) && !isShooting)
+            if (currentState.CurrentSubstate() != states.Shoot() )
             {
                 int targetID = hasScrollInput ? GetScrollID() : selectedID;
                 SwitchToGun(targetID);
             }
-        }
-
-        private bool ReadWeaponHotkey(out int selectedID)
-        {
-            selectedID = currentID;
-
-            if (!InputManager.Instance.weaponSelectID)
-                return false;
-
-            if (Input.GetKeyDown(KeyCode.Alpha1)) { selectedID = 0; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha2)) { selectedID = 1; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) { selectedID = 2; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha4)) { selectedID = 3; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha5)) { selectedID = 4; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha6)) { selectedID = 5; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha7)) { selectedID = 6; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha8)) { selectedID = 7; return true; }
-            if (Input.GetKeyDown(KeyCode.Alpha9)) { selectedID = 8; return true; }
-
-            return false;
+            
         }
 
         private int GetScrollID()
@@ -192,7 +174,7 @@ namespace Burntwax
             return true;
         }
 
-        private void Despawn(GunScriptableObject activeGun)
+        public void Despawn(GunScriptableObject activeGun)
         {
             if (CurrentGunModel != null)
             {
@@ -238,6 +220,9 @@ namespace Burntwax
             ActiveGunScriptable = gun;
             currentID = gun.ID;
 
+            arsenal.lastID = arsenal.currentID;
+            arsenal.currentID = currentID;
+            
             SetupGun();
             ActiveGunScriptable.AmmoConfig.Enable();
         }
