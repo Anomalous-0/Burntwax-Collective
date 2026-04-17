@@ -38,7 +38,7 @@ namespace Burntwax
             {
                 SwitchState(Factory.Idle());
             }
-            else if (InputManager.Instance.aimHeld)
+            else if (InputManager.Instance.parry)
             {
                 SwitchState(Factory.Parry());
             }
