@@ -12,7 +12,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            
+
 
             InitializeSubState();
         }
@@ -29,7 +29,18 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-           
+            if (InputManager.Instance.slash)
+            {
+                SwitchState(Factory.Slash());
+            }
+            else if (InputManager.Instance.parry)
+            {
+                SwitchState(Factory.Parry());
+            }
+            else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
+            {
+                SwitchState(Factory.Stow());
+            }
 
         }
 

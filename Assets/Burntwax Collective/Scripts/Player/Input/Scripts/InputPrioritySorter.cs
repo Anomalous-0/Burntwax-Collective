@@ -8,7 +8,7 @@ namespace Burntwax
     {
         string sprint = "sprint";
         string aim = "aim";
-        string shoot = "shoot";
+        string attack = "attack";
 
         public static InputPrioritySorter Instance;
 
@@ -42,15 +42,15 @@ namespace Burntwax
                 // Debug.Log("Deleted sprint from list");
                 inputPriority.Remove(sprint);
             }
-            if (InputManager.Instance.shootIsPressed && !inputPriority.Contains(shoot))
+            if (InputManager.Instance.attackIsPressed && !inputPriority.Contains(attack))
             {
-                // Debug.Log("Should add shoot to list");
-                inputPriority.Add(shoot);
+                // Debug.Log("Should add attack to list");
+                inputPriority.Add(attack);
             }
-            else if (!InputManager.Instance.shootIsPressed && inputPriority.Contains(shoot))
+            else if (!InputManager.Instance.attackIsPressed && inputPriority.Contains(attack))
             {
-                // Debug.Log("Deleted shoot from list");
-                inputPriority.Remove(shoot);
+                // Debug.Log("Deleted attack from list");
+                inputPriority.Remove(attack);
             }
 
 
@@ -67,9 +67,9 @@ namespace Burntwax
             return inputPriority.IndexOf(aim) == inputPriority.Count - 1 && inputPriority.Count >= 1;
         }
 
-        public bool ShootIsPriority()
+        public bool AttackIsPriority()
         {
-            return inputPriority.IndexOf(shoot) == inputPriority.Count - 1 && inputPriority.Count >= 1;
+            return inputPriority.IndexOf(attack) == inputPriority.Count - 1 && inputPriority.Count >= 1;
         }
 
     }
