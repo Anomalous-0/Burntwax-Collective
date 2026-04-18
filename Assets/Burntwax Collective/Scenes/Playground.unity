@@ -6910,7 +6910,10 @@ MonoBehaviour:
   pauseIsPressed: 0
   katanaSelect: 0
   useGloves: 0
-  shootIsPressed: 0
+  aimIsPressed: 0
+  attackIsPressed: 0
+  slash: 0
+  parry: 0
 --- !u!4 &371505449
 Transform:
   m_ObjectHideFlags: 0
@@ -35178,6 +35181,16 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 1513530040}
+    - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: parryTimeout
+      value: 500
+      objectReference: {fileID: 0}
+    - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: slashTimeout
+      value: 500
+      objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: stateMachine

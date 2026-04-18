@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,31 +7,36 @@ namespace Burntwax
     public class InputManager : MonoBehaviour
     {
 
+        private Arsenal arsenal;
+
         public static InputManager Instance;
         public Vector2 MoveInput = Vector2.zero;
         public Vector2 LookInput = Vector2.zero;
         public bool InvertMouseY { get; private set; } = true;
 
-        public bool interactIsPressed = false;
+        [HideInInspector] public bool interactIsPressed = false;
 
         public bool moveIsPressed { get; private set; } = false;
 
         public bool crouchIsPressed { get; private set; } = false;
-        public bool jumpIsPressed /*{ get; private set; }*/ = false;
-        public bool pauseIsPressed = false;
+        [HideInInspector] public bool jumpIsPressed /*{ get; private set; }*/ = false;
+        [HideInInspector] public bool pauseIsPressed = false;
 
 
         public float mouseScroll { get; private set; } = 0;
         public bool weaponSelectID { get; private set; }
 
-        public bool katanaSelect;
+        [HideInInspector] public bool katanaSelect;
 
-        public bool useGloves = false;
+        [HideInInspector] public bool useGloves = false;
         public bool gloveShootIsPressed { get; private set; } = false;
 
 
-        public bool aimIsPressed { get; private set; } = false;
+        public bool aimIsPressed = false;
         public bool attackIsPressed = false;
+
+        public bool slash;
+        public bool parry;
         public bool reloadIsPressed { get; private set; } = false;
         public bool sprintIsPressed { get; private set; } = false;
 
@@ -42,9 +48,8 @@ namespace Burntwax
 
         void Awake()
         {
-
-
             Instance = this;
+            arsenal = FindFirstObjectByType<Arsenal>();
         }
 
         private void OnEnable()
@@ -165,9 +170,20 @@ namespace Burntwax
 
         private void Update()
         {
-
-
+            if (attackIsPressed && Math.Abs(LookInput.magnitude) > 0.0001f)
+            {
+                slash = true;
+            }
+            if (aimIsPressed && Math.Abs(LookInput.magnitude) > 0.0001f)
+            {
+                parry = true;
+            }
         }
+
+
+
+
+
 
         // These two functions handle the reading of the look and moving 2d values given from the player
         private void SetMove(InputAction.CallbackContext ctx)
@@ -190,6 +206,8 @@ namespace Burntwax
         private void SetAim(InputAction.CallbackContext ctx)
         {
             aimIsPressed = ctx.started;
+
+
         }
 
         private void SetCrouch(InputAction.CallbackContext ctx)
@@ -210,6 +228,8 @@ namespace Burntwax
         private void SetAttack(InputAction.CallbackContext ctx)
         {
             attackIsPressed = ctx.started;
+
+
         }
 
         private void SetReload(InputAction.CallbackContext ctx)

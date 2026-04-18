@@ -15,6 +15,12 @@ namespace Burntwax
         [HideInInspector] public PlayerCrosshair crosshair;
 
         [Space]
+        [Header("Mechanics")]
+        public int slashTimeout;
+        public int parryTimeout;
+        
+
+        [Space]
         [Header("Cinemachine Required")]
         public CinemachineImpulseSource camShake;
 

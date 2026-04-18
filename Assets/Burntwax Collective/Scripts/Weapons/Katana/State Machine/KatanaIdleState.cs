@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Burntwax
 {
     public class KatanaIdleState : KatanaBaseState
@@ -12,7 +14,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            
+            UnityEngine.Debug.Log("Entered idle state");
 
             InitializeSubState();
         }
@@ -29,7 +31,18 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-           
+            if (InputManager.Instance.slash)
+            {
+                SwitchState(Factory.Slash());
+            }
+            else if (InputManager.Instance.parry)
+            {
+                SwitchState(Factory.Parry());
+            }
+            else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
+            {
+                SwitchState(Factory.Stow());
+            }
 
         }
 
