@@ -30,7 +30,10 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputPrioritySorter.Instance.AimIsPriority() && Ctx.gun.CurrentState != Ctx.gun.states.Reload() && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot())
+            if (InputPrioritySorter.Instance.AimIsPriority() 
+            && Ctx.gun.CurrentState != Ctx.gun.states.Reload() 
+            && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot()
+            && Ctx.arsenal.currentMode != Arsenal.WeaponMode.Katana   )
             {
                 SwitchState(Factory.Aim());
             }

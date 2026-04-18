@@ -136,8 +136,8 @@ namespace Burntwax
             input.OnFoot.Reload.started -= SetReload;
             input.OnFoot.Reload.canceled -= SetReload;
 
-            input.OnFoot.WeaponScroll.performed -= SetScroll;
-            input.OnFoot.WeaponScroll.canceled -= SetScroll;
+            input.OnFoot.WeaponScroll.performed -= SetSelect;
+            input.OnFoot.WeaponScroll.canceled -= SetSelect;
 
             input.OnFoot.WeaponSelect.started -= SetScroll;
             input.OnFoot.WeaponSelect.canceled -= SetScroll;

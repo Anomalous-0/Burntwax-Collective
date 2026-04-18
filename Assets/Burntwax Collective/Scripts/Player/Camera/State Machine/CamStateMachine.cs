@@ -10,6 +10,7 @@ namespace Burntwax
 
         [Header("State Machines")]
         [HideInInspector] public PlayerStateMachine player;
+        public Arsenal arsenal;
 
         public PauseMenu pauseMenu;
 

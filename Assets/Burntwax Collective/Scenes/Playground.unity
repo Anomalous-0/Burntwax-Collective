@@ -36070,6 +36070,11 @@ PrefabInstance:
       objectReference: {fileID: 4608233550417660578}
     - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: arsenal
+      value: 
+      objectReference: {fileID: 8915226981332152387}
+    - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: chargeCam
       value: 
       objectReference: {fileID: 8898618160970215624}
@@ -36840,6 +36845,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1142371221871575081}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8915226981332152387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 37865160206100765, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1142371221871575081}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4817ebf02a735444a85ac5324a5127b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.Arsenal
 --- !u!4 &8967501273172980240
 Transform:
   m_ObjectHideFlags: 0
