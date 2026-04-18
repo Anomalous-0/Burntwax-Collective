@@ -32,7 +32,7 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if ((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && InputManager.Instance.attackIsPressed)
+            if ((Ctx.CanShoot() || Ctx.ableToShootInMiddleOfAnimation) && InputManager.Instance.shootIsPressed)
             {
 
                 Shoot();

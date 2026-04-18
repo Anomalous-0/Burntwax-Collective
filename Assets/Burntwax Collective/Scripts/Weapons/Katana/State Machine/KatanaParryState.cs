@@ -1,7 +1,3 @@
-using UnityEngine;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
-
 namespace Burntwax
 {
     public class KatanaParryState : KatanaBaseState
@@ -16,7 +12,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Debug.Log("Entered Parry State");
+            
 
             InitializeSubState();
         }

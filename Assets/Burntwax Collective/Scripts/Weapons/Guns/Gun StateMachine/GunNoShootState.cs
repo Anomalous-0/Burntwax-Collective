@@ -21,7 +21,7 @@ namespace Burntwax
             if (Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Reload() && Ctx.fullyEquipped
             && Ctx.CurrentState.CurrentSuperstate() != Ctx.states.Stow()
             && Ctx.CanShoot()
-            && InputPrioritySorter.Instance.AttackIsPriority() && !Ctx.isShooting)
+            && InputPrioritySorter.Instance.ShootIsPriority() && !Ctx.isShooting)
             {
                 SwitchState(Factory.Shoot());
             }

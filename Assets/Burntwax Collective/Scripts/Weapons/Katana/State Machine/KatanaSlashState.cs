@@ -1,5 +1,3 @@
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
 namespace Burntwax
 {
     public class KatanaSlashState : KatanaBaseState
@@ -14,8 +12,6 @@ namespace Burntwax
 
         public override void EnterState()
         {
-
-            Debug.Log("Entered Slash State");
             
 
             InitializeSubState();
@@ -33,19 +29,6 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-
-            if(!InputManager.Instance.slash)
-            {
-                SwitchState(Factory.Idle());
-            }
-            else if (InputManager.Instance.aimHeld)
-            {
-                SwitchState(Factory.Parry());
-            }
-            else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
-            {
-                SwitchState(Factory.Stow());
-            }
            
 
         }

@@ -6,7 +6,6 @@ namespace Burntwax
     public class InputManager : MonoBehaviour
     {
 
-
         public static InputManager Instance;
         public Vector2 MoveInput = Vector2.zero;
         public Vector2 LookInput = Vector2.zero;
@@ -16,43 +15,22 @@ namespace Burntwax
 
         public bool moveIsPressed { get; private set; } = false;
 
-        [HideInInspector] public bool crouchIsPressed { get; private set; } = false;
-        [HideInInspector] public bool jumpIsPressed /*{ get; private set; }*/ = false;
-        [HideInInspector] public bool pauseIsPressed = false;
+        public bool crouchIsPressed { get; private set; } = false;
+        public bool jumpIsPressed /*{ get; private set; }*/ = false;
+        public bool pauseIsPressed = false;
 
 
         public float mouseScroll { get; private set; } = 0;
         public bool weaponSelectID { get; private set; }
 
-        [HideInInspector] public bool katanaSelect;
+        public bool katanaSelect;
 
-        [HideInInspector] public bool useGloves = false;
-        [HideInInspector] public bool gloveShootIsPressed { get; private set; } = false;
-
-
-        public bool slash;
-        public bool parry;
+        public bool useGloves = false;
+        public bool gloveShootIsPressed { get; private set; } = false;
 
 
-        public bool aimHeld { get; private set; } = false;
-        public bool aimPressedThisFrame { get; private set; } = false;
-        public bool aimReleasedThisFrame { get; private set; } = false;
-        public bool aimIsPressed => aimHeld;
-
-        public bool attackHeld { get; private set; } = false;
-        public bool attackPressedThisFrame { get; private set; } = false;
-        public bool attackReleasedThisFrame { get; private set; } = false;
-        public bool attackIsPressed
-        {
-            get => attackHeld;
-            set => attackHeld = value;
-        }
-
-        public Vector2 dragStartScreenPos { get; private set; } = Vector2.zero;
-        public Vector2 currentScreenPos { get; private set; } = Vector2.zero;
-        public Vector2 dragDelta { get; private set; } = Vector2.zero;
-        public Vector2 dragDeltaNormalized { get; private set; } = Vector2.zero;
-
+        public bool aimIsPressed { get; private set; } = false;
+        public bool shootIsPressed = false;
         public bool reloadIsPressed { get; private set; } = false;
         public bool sprintIsPressed { get; private set; } = false;
 
@@ -60,27 +38,13 @@ namespace Burntwax
         public bool saveIsPressed { get; private set; } = false;
         public bool loadIsPressed { get; private set; } = false;
 
-        [SerializeField] Arsenal arsenal;
-
         PlayerInput input;
-        private bool slashDragActive = false;
-        private bool hasReleaseDragVector = false;
-        private Vector2 releaseDragVector = Vector2.zero;
 
         void Awake()
         {
-            Instance = this;
 
-            if (arsenal == null)
-            {
-                arsenal = GetComponentInParent<Arsenal>();
-            }
 
             Instance = this;
-            if (arsenal == null)
-            {
-                arsenal = FindFirstObjectByType<Arsenal>();
-            }
         }
 
         private void OnEnable()
@@ -98,7 +62,6 @@ namespace Burntwax
             input.OnFoot.Sprint.canceled += SetSprint;
 
             input.OnFoot.Aim.started += SetAim;
-            input.OnFoot.Aim.performed += SetAim;
             input.OnFoot.Aim.canceled += SetAim;
 
             input.OnFoot.Crouch.started += SetCrouch;
@@ -110,9 +73,8 @@ namespace Burntwax
             input.OnFoot.Pause.started += SetPause;
             input.OnFoot.Pause.canceled += SetPause;
 
-            input.OnFoot.Attack.started += SetAttack;
-            input.OnFoot.Attack.performed += SetAttack;
-            input.OnFoot.Attack.canceled += SetAttack;
+            input.OnFoot.Shoot.started += SetShoot;
+            input.OnFoot.Shoot.canceled += SetShoot;
 
             input.OnFoot.Reload.started += SetReload;
             input.OnFoot.Reload.canceled += SetReload;
@@ -157,7 +119,6 @@ namespace Burntwax
             input.OnFoot.Sprint.canceled -= SetSprint;
 
             input.OnFoot.Aim.started -= SetAim;
-            input.OnFoot.Aim.performed -= SetAim;
             input.OnFoot.Aim.canceled -= SetAim;
 
             input.OnFoot.Crouch.started -= SetCrouch;
@@ -169,9 +130,8 @@ namespace Burntwax
             input.OnFoot.Pause.started -= SetPause;
             input.OnFoot.Pause.canceled -= SetPause;
 
-            input.OnFoot.Attack.started -= SetAttack;
-            input.OnFoot.Attack.performed -= SetAttack;
-            input.OnFoot.Attack.canceled -= SetAttack;
+            input.OnFoot.Shoot.started -= SetShoot;
+            input.OnFoot.Shoot.canceled -= SetShoot;
 
             input.OnFoot.Reload.started -= SetReload;
             input.OnFoot.Reload.canceled -= SetReload;
@@ -179,8 +139,8 @@ namespace Burntwax
             input.OnFoot.WeaponScroll.performed -= SetScroll;
             input.OnFoot.WeaponScroll.canceled -= SetScroll;
 
-            input.OnFoot.WeaponSelect.started -= SetSelect;
-            input.OnFoot.WeaponSelect.canceled -= SetSelect;
+            input.OnFoot.WeaponSelect.started -= SetScroll;
+            input.OnFoot.WeaponSelect.canceled -= SetScroll;
 
             input.OnFoot.KatanaSelect.started -= SetKatanaSelect;
             input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
@@ -209,14 +169,6 @@ namespace Burntwax
 
         }
 
-        private void LateUpdate()
-        {
-            attackPressedThisFrame = false;
-            attackReleasedThisFrame = false;
-            aimPressedThisFrame = false;
-            aimReleasedThisFrame = false;
-        }
-
         // These two functions handle the reading of the look and moving 2d values given from the player
         private void SetMove(InputAction.CallbackContext ctx)
         {
@@ -237,24 +189,7 @@ namespace Burntwax
 
         private void SetAim(InputAction.CallbackContext ctx)
         {
-            bool isPressed = !ctx.canceled && ctx.ReadValueAsButton();
-
-            if (ctx.started)
-            {
-                aimPressedThisFrame = true;
-                if (CanCaptureKatanaDrag())
-                {
-                    BeginSlashDrag();
-                }
-            }
-
-            if (ctx.canceled && aimHeld)
-            {
-                aimReleasedThisFrame = true;
-            }
-
-            aimHeld = isPressed;
-            FinalizeSlashDrag();
+            aimIsPressed = ctx.started;
         }
 
         private void SetCrouch(InputAction.CallbackContext ctx)
@@ -272,27 +207,9 @@ namespace Burntwax
             pauseIsPressed = ctx.started;
         }
 
-        private void SetAttack(InputAction.CallbackContext ctx)
+        private void SetShoot(InputAction.CallbackContext ctx)
         {
-            attackIsPressed = ctx.started;
-            bool isPressed = !ctx.canceled && ctx.ReadValueAsButton();
-
-            if (ctx.started)
-            {
-                attackPressedThisFrame = true;
-                if (CanCaptureKatanaDrag())
-                {
-                    BeginSlashDrag();
-                }
-            }
-
-            if (ctx.canceled && attackHeld)
-            {
-                attackReleasedThisFrame = true;
-            }
-
-            attackHeld = isPressed;
-            FinalizeSlashDrag();
+            shootIsPressed = ctx.started;
         }
 
         private void SetReload(InputAction.CallbackContext ctx)
@@ -340,31 +257,6 @@ namespace Burntwax
         {
             loadIsPressed = ctx.started;
         }
-
-
-
-        public void BeginSlashDrag()
-        {
-        }
-
-
-        private void FinalizeSlashDrag()
-        {
-        }
-
-        private bool CanCaptureKatanaDrag()
-        {
-            return arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
-        }
-
-        private Vector2 ReadMouseScreenPosition()
-        {
-            if (Mouse.current == null)
-            {
-                return Vector2.zero;
-            }
-
-            return Mouse.current.position.ReadValue();
-        }
     }
+
 }
