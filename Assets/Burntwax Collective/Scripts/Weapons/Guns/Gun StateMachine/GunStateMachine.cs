@@ -219,7 +219,7 @@ namespace Burntwax
 
         private void HandleEmptyClip()
         {
-            if (!IsOutOfAmmo() || !InputManager.Instance.shootIsPressed)
+            if (!IsOutOfAmmo() || !InputManager.Instance.attackIsPressed)
                 return;
 
             GunBaseState superState = CurrentState.CurrentSuperstate();
@@ -229,7 +229,7 @@ namespace Burntwax
             if (playerAudioSource != null)
                 ActiveGunScriptable.AudioConfig.PlayEmptyClip(playerAudioSource);
 
-            InputManager.Instance.shootIsPressed = false;
+            InputManager.Instance.attackIsPressed = false;
         }
 
         public bool CanShoot()

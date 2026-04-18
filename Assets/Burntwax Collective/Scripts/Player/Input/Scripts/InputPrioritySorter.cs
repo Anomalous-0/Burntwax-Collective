@@ -42,12 +42,12 @@ namespace Burntwax
                 // Debug.Log("Deleted sprint from list");
                 inputPriority.Remove(sprint);
             }
-            if (InputManager.Instance.shootIsPressed && !inputPriority.Contains(shoot))
+            if (InputManager.Instance.attackIsPressed && !inputPriority.Contains(shoot))
             {
                 // Debug.Log("Should add shoot to list");
                 inputPriority.Add(shoot);
             }
-            else if (!InputManager.Instance.shootIsPressed && inputPriority.Contains(shoot))
+            else if (!InputManager.Instance.attackIsPressed && inputPriority.Contains(shoot))
             {
                 // Debug.Log("Deleted shoot from list");
                 inputPriority.Remove(shoot);

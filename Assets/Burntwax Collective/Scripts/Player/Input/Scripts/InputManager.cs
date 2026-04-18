@@ -30,7 +30,7 @@ namespace Burntwax
 
 
         public bool aimIsPressed { get; private set; } = false;
-        public bool shootIsPressed = false;
+        public bool attackIsPressed = false;
         public bool reloadIsPressed { get; private set; } = false;
         public bool sprintIsPressed { get; private set; } = false;
 
@@ -73,8 +73,8 @@ namespace Burntwax
             input.OnFoot.Pause.started += SetPause;
             input.OnFoot.Pause.canceled += SetPause;
 
-            input.OnFoot.Shoot.started += SetShoot;
-            input.OnFoot.Shoot.canceled += SetShoot;
+            input.OnFoot.Attack.started += SetAttack;
+            input.OnFoot.Attack.canceled += SetAttack;
 
             input.OnFoot.Reload.started += SetReload;
             input.OnFoot.Reload.canceled += SetReload;
@@ -130,17 +130,17 @@ namespace Burntwax
             input.OnFoot.Pause.started -= SetPause;
             input.OnFoot.Pause.canceled -= SetPause;
 
-            input.OnFoot.Shoot.started -= SetShoot;
-            input.OnFoot.Shoot.canceled -= SetShoot;
+            input.OnFoot.Attack.started -= SetAttack;
+            input.OnFoot.Attack.canceled -= SetAttack;
 
             input.OnFoot.Reload.started -= SetReload;
             input.OnFoot.Reload.canceled -= SetReload;
 
-            input.OnFoot.WeaponScroll.performed -= SetSelect;
-            input.OnFoot.WeaponScroll.canceled -= SetSelect;
+            input.OnFoot.WeaponScroll.performed -= SetScroll;
+            input.OnFoot.WeaponScroll.canceled -= SetScroll;
 
-            input.OnFoot.WeaponSelect.started -= SetScroll;
-            input.OnFoot.WeaponSelect.canceled -= SetScroll;
+            input.OnFoot.WeaponSelect.started -= SetSelect;
+            input.OnFoot.WeaponSelect.canceled -= SetSelect;
 
             input.OnFoot.KatanaSelect.started -= SetKatanaSelect;
             input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
@@ -207,9 +207,9 @@ namespace Burntwax
             pauseIsPressed = ctx.started;
         }
 
-        private void SetShoot(InputAction.CallbackContext ctx)
+        private void SetAttack(InputAction.CallbackContext ctx)
         {
-            shootIsPressed = ctx.started;
+            attackIsPressed = ctx.started;
         }
 
         private void SetReload(InputAction.CallbackContext ctx)

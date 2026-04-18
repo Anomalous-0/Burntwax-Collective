@@ -45,7 +45,7 @@ namespace Burntwax
             bool hasWeaponNumberInput = ReadWeaponHotkey(out int selectedID);
             bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
 
-            if (gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
+            if (katanaStateMachine.fullyEquipped && katanaStateMachine.CurrentState != katanaStateMachine.states.Parry() && katanaStateMachine.CurrentState != katanaStateMachine.states.Slash() && gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
                 if (hasWeaponNumberInput)
                 {
@@ -114,6 +114,9 @@ namespace Burntwax
         {
             if (currentMode == WeaponMode.Katana)
             {
+
+                if (!katanaStateMachine.fullyEquipped)
+                    return;
                 int id = lastID;
                 lastID = currentID;
                 currentMode = WeaponMode.Guns;
@@ -135,29 +138,27 @@ namespace Burntwax
             if (gunStateMachine.CurrentGuns.Count == 0)
                 return;
 
-            lastID = currentID;
+
 
             if (currentMode == WeaponMode.Katana)
             {
                 currentMode = WeaponMode.Guns;
                 katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
             }
-
+            lastID = currentID;
             gunStateMachine.SwitchToGun(selectedID);
             currentID = selectedID;
         }
 
         public void SwitchToKatana()
         {
-            if (katanaStateMachine.KatanaScriptable == null)
-                return;
-
             lastID = currentID;
 
             if (currentMode == WeaponMode.Guns)
             {
                 currentMode = WeaponMode.Katana;
                 gunStateMachine.Despawn(gunStateMachine.ActiveGunScriptable);
+                gunStateMachine.fullyEquipped = false;
             }
 
             katanaStateMachine.SetupKatana();
@@ -185,7 +186,7 @@ namespace Burntwax
             if (katanaStateMachine.ActiveKatanaScriptable != null)
                 katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
 
-                
+
 
             // Restore arsenal state
             currentMode = data.currentMode;
@@ -200,14 +201,14 @@ namespace Burntwax
             switch (currentMode)
             {
                 case WeaponMode.Guns:
-                    
-                        gunStateMachine.SetupAfterLoad(data.gunData);
+
+                    gunStateMachine.SetupAfterLoad(data.gunData);
                     break;
-                    
+
 
                 case WeaponMode.Katana:
-                    
-                        katanaStateMachine.SetupAfterLoad();
+
+                    katanaStateMachine.SetupAfterLoad();
                     break;
             }
         }
