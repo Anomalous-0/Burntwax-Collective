@@ -170,13 +170,12 @@ namespace Burntwax
 
         private void Update()
         {
-            if (attackIsPressed && Math.Abs(LookInput.magnitude) > 0.0001f)
+            if (arsenal.currentMode == Arsenal.WeaponMode.Katana && Math.Abs(LookInput.magnitude) > 0.65f)
             {
-                slash = true;
-            }
-            if (aimIsPressed && Math.Abs(LookInput.magnitude) > 0.0001f)
-            {
-                parry = true;
+                if (attackIsPressed)
+                    slash = true;
+                else if (aimIsPressed)
+                    parry = true;
             }
         }
 
