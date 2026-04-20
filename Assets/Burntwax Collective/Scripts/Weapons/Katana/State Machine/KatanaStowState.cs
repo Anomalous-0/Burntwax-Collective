@@ -18,6 +18,7 @@ namespace Burntwax
 
             Ctx.anim.SetBool(Ctx.stowHash, true);
             Ctx.fullyEquipped = true;
+            Ctx.camStateMachine.SetCameraInputActive(true);
             InitializeSubState();
         }
 

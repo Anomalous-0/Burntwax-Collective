@@ -14,6 +14,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
+            // Ctx.camStateMachine.SetCameraInputActive(true);
             InitializeSubState();
         }
 

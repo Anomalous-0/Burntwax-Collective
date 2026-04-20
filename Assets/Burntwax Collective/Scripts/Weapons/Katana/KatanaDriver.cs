@@ -32,7 +32,7 @@ namespace Burntwax
             smoothedInput = Vector2.Lerp(smoothedInput, mouseDelta, 1f - smoothing);
 
             Vector2 dir = smoothedInput.normalized;
-            Debug.Log($"[KatanaDriver] {currentAction} direction: {GetDirectionName(dir)} | raw: ({dir.x:F2}, {dir.y:F2})");
+            // Debug.Log($"[KatanaDriver] {currentAction} direction: {GetDirectionName(dir)} | raw: ({dir.x:F2}, {dir.y:F2})");
         }
 
         public void EndSwing()

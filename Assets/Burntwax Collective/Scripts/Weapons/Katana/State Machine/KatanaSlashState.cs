@@ -10,10 +10,10 @@ namespace Burntwax
             IsRootState = true;
         }
 
-        public bool released = false;
+
         public override void EnterState()
         {
-            released = false;
+    
             InputManager.Instance.slash = false;
             Ctx.katanaDriver.BeginSwing(InputManager.Instance.slashStartDirection, "Slash");
 
@@ -31,12 +31,7 @@ namespace Burntwax
             {
                 Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
             }
-            else if (!released)
-            {
-                released = true;
-                
-                Ctx.camStateMachine.SetCameraInputActive(true);
-            }
+           
 
             CheckSwitchStates();
         }
@@ -44,7 +39,7 @@ namespace Burntwax
         public override void ExitState()
         {
             Ctx.katanaDriver.EndSwing();
-            
+            Ctx.camStateMachine.SetCameraInputActive(true);
             Ctx.anim.SetBool(Ctx.slashHash, false);
 
 
@@ -62,13 +57,12 @@ namespace Burntwax
                     && Ctx.stateMachine.currentState.CurrentSubstate()
                         != Ctx.stateMachine.states.Idle())
                 {
-                    Ctx.camStateMachine.SetCameraInputActive(true);
                     SwitchState(Factory.Stow());
                 }
                 else
                 {
                    
-                    SwitchState(Factory.Ready());
+                    SwitchState(Factory.Idle());
                 }
             }
         }
