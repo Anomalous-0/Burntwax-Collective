@@ -18,8 +18,7 @@ namespace Burntwax
 
         [Space]
         [Header("Mechanics")]
-        public int slashTimeout;
-        public int parryTimeout;
+        public float camSlowdown = 0.02f;
 
 
         [Space]

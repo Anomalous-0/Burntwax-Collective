@@ -105,12 +105,11 @@ namespace Burntwax
             {
                 cachedHorizontalSpeed = pov.m_HorizontalAxis.m_MaxSpeed;
                 cachedVerticalSpeed = pov.m_VerticalAxis.m_MaxSpeed;
-                pov.m_HorizontalAxis.m_MaxSpeed = 0f;
-                pov.m_VerticalAxis.m_MaxSpeed = 0f;
+                pov.m_HorizontalAxis.m_MaxSpeed = katana.camSlowdown;
+                pov.m_VerticalAxis.m_MaxSpeed = katana.camSlowdown;
             }
-            else if (pov.m_HorizontalAxis.m_MaxSpeed == 0f && pov.m_VerticalAxis.m_MaxSpeed == 0f)
+            else if (pov.m_HorizontalAxis.m_MaxSpeed == katana.camSlowdown && pov.m_VerticalAxis.m_MaxSpeed == katana.camSlowdown)
             {
-                Debug.Log("Leaving cam lock state");
                 pov.m_HorizontalAxis.m_MaxSpeed = cachedHorizontalSpeed;
                 pov.m_VerticalAxis.m_MaxSpeed = cachedVerticalSpeed;
             }
