@@ -29,7 +29,7 @@ public class GunIncrementalReloadState : GunBaseState {
     
     public override void CheckSwitchStates(){
         
-        if(InputPrioritySorter.Instance.AttackIsPriority() && Ctx.ActiveGunScriptable.AmmoConfig.currentClip > 0) {
+        if(InputPrioritySorter.Instance.ShootIsPriority() && Ctx.ActiveGunScriptable.AmmoConfig.currentClip > 0) {
             Ctx.anim.SetTrigger(Ctx.shotWhileIncReloadHash);
             SwitchState(Factory.Rest());
         }

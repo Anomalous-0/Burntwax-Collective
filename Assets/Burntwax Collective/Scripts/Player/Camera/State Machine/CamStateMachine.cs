@@ -11,12 +11,10 @@ namespace Burntwax
         [Header("State Machines")]
         [HideInInspector] public PlayerStateMachine player;
         public Arsenal arsenal;
-        public GunStateMachine gun;
-        public KatanaStateMachine katana;
 
         public PauseMenu pauseMenu;
 
-        
+        public GunStateMachine gun;
         [HideInInspector] public PlayerCrosshair crosshair;
 
         CinemachineVirtualCamera activeCam;
@@ -32,11 +30,6 @@ namespace Burntwax
         int activeCameraPriorityModifier = 2000;
 
         public Vector3 mouseWorldPosition;
-
-        private float cachedHorizontalSpeed;
-        private float cachedVerticalSpeed;
-
-
 
 
         private void Awake()
@@ -89,24 +82,6 @@ namespace Burntwax
             activeCam = NewCameraMode;
             pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
 
-        }
-
-        public void SetCameraInputActive(bool active)
-        {
-            if (pov == null) return;
-
-            if (!active)
-            {
-                cachedHorizontalSpeed = pov.m_HorizontalAxis.m_MaxSpeed;
-                cachedVerticalSpeed = pov.m_VerticalAxis.m_MaxSpeed;
-                pov.m_HorizontalAxis.m_MaxSpeed = 0f;
-                pov.m_VerticalAxis.m_MaxSpeed = 0f;
-            }
-            else
-            {
-                pov.m_HorizontalAxis.m_MaxSpeed = cachedHorizontalSpeed;
-                pov.m_VerticalAxis.m_MaxSpeed = cachedVerticalSpeed;
-            }
         }
 
         public void LoadData(CamSaveData data)

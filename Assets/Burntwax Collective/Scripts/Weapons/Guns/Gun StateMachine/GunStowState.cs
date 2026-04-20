@@ -28,7 +28,7 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.AttackIsPriority())
+            if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.ShootIsPriority())
             {
 
                 SwitchState(Factory.Rest());

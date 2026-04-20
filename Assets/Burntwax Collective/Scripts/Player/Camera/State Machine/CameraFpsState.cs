@@ -38,7 +38,7 @@ namespace Burntwax
                 SwitchState(Factory.Aim());
             }
 
-            else if (Ctx.player.currentState == Ctx.player.states.Wallcharge() || Ctx.katana.CurrentState == Ctx.katana.states.Slash() || Ctx.katana.CurrentState == Ctx.katana.states.Parry())
+            else if (Ctx.player.currentState == Ctx.player.states.Wallcharge())
             {
                 SwitchState(Factory.Wallcharge());
             }

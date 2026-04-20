@@ -14,6 +14,8 @@ namespace Burntwax
 
         public override void EnterState()
         {
+            UnityEngine.Debug.Log("Entered idle state");
+
             InitializeSubState();
         }
 
@@ -29,9 +31,13 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputManager.Instance.aimIsPressed || InputManager.Instance.attackIsPressed)
+            if (InputManager.Instance.slash)
             {
-                SwitchState(Factory.Ready());
+                SwitchState(Factory.Slash());
+            }
+            else if (InputManager.Instance.parry)
+            {
+                SwitchState(Factory.Parry());
             }
             else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
             {
