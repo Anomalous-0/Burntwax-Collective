@@ -33,12 +33,12 @@ namespace Burntwax
             if (InputPrioritySorter.Instance.AimIsPriority() 
             && Ctx.gun.CurrentState != Ctx.gun.states.Reload() 
             && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot()
-            && Ctx.arsenal.currentMode == Arsenal.WeaponMode.Guns)
+            && Ctx.arsenal.currentMode != Arsenal.WeaponMode.Katana   )
             {
                 SwitchState(Factory.Aim());
             }
 
-            else if (Ctx.player.currentState == Ctx.player.states.Wallcharge() )
+            else if (Ctx.player.currentState == Ctx.player.states.Wallcharge() || Ctx.katana.CurrentState == Ctx.katana.states.Slash() || Ctx.katana.CurrentState == Ctx.katana.states.Parry())
             {
                 SwitchState(Factory.Wallcharge());
             }
