@@ -5,6 +5,7 @@ namespace Burntwax
     enum KatanaStates
     {
         idle,
+        ready,
         slash,
         parry,
         stow
@@ -25,11 +26,17 @@ namespace Burntwax
             states[KatanaStates.slash] = new KatanaSlashState(context, this);
             states[KatanaStates.parry] = new KatanaParryState(context, this);
             states[KatanaStates.stow] = new KatanaStowState(context, this);
+            states[KatanaStates.ready] = new KatanaReadyState(context, this); 
         }
 
         public KatanaBaseState Idle()
         {
             return states[KatanaStates.idle];
+        }
+
+        public KatanaBaseState Ready()
+        {
+            return states[KatanaStates.ready];
         }
 
         public KatanaBaseState Slash()

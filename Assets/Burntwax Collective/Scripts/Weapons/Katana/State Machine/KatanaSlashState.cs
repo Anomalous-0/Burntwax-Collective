@@ -4,61 +4,75 @@ namespace Burntwax
 {
     public class KatanaSlashState : KatanaBaseState
     {
-
-
         public KatanaSlashState(KatanaStateMachine currentContext, KatanaStateFactory katanaStateFactory)
         : base(currentContext, katanaStateFactory)
         {
             IsRootState = true;
-
         }
 
-        int timeout;
-
+        public bool released = false;
         public override void EnterState()
         {
-            timeout = Ctx.slashTimeout;
+            released = false;
             InputManager.Instance.slash = false;
-            Debug.Log("Entered slash state");
+            Ctx.katanaDriver.BeginSwing(InputManager.Instance.slashStartDirection, "Slash");
+
+            Ctx.camStateMachine.SetCameraInputActive(false);
+
+            Ctx.anim.SetBool(Ctx.slashHash, true);
+            Ctx.isSlashing = true;
+
             InitializeSubState();
         }
 
         public override void UpdateState()
         {
-            timeout--;
-            CheckSwitchStates();
+            if (InputManager.Instance.isTrackingSlash)
+            {
+                Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
+            }
+            else if (!released)
+            {
+                released = true;
+                
+                Ctx.camStateMachine.SetCameraInputActive(true);
+            }
 
+            CheckSwitchStates();
         }
 
         public override void ExitState()
         {
+            Ctx.katanaDriver.EndSwing();
+            
+            Ctx.anim.SetBool(Ctx.slashHash, false);
+
+
         }
 
         public override void CheckSwitchStates()
         {
-            if (timeout <= 0)
+            if (!Ctx.isSlashing && !InputManager.Instance.attackIsPressed)
             {
                 if (InputManager.Instance.parry)
                 {
                     SwitchState(Factory.Parry());
                 }
-                else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
+                else if (InputPrioritySorter.Instance.SprintIsPriority()
+                    && Ctx.stateMachine.currentState.CurrentSubstate()
+                        != Ctx.stateMachine.states.Idle())
                 {
+                    Ctx.camStateMachine.SetCameraInputActive(true);
                     SwitchState(Factory.Stow());
                 }
                 else
                 {
-                    SwitchState(Factory.Idle());
+                   
+                    SwitchState(Factory.Ready());
                 }
             }
         }
 
-
-        public override void InitializeSubState()
-        {
-
-
-        }
-
+        public override void InitializeSubState() { }
     }
 }
