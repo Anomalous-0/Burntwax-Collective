@@ -7,7 +7,7 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class KatanaStateMachine : MonoBehaviour
     {
-        [HideInInspector] public Arsenal arsenal;
+        private Arsenal arsenal;
         [HideInInspector] public KatanaDriver katanaDriver;
 
         [Header("State Machines")]
@@ -102,7 +102,7 @@ namespace Burntwax
         public void Pickup(KatanaScriptableObject katana)
         {
             GunStateMachine gun = GetComponent<GunStateMachine>();
-            Arsenal arsenal = GetComponent<Arsenal>();
+
             if (arsenal.currentMode == Arsenal.WeaponMode.Guns)
                 gun.Despawn(gun.ActiveGunScriptable);
 

@@ -55,10 +55,12 @@ namespace Burntwax
             }
             else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
             {
+                Ctx.camStateMachine.SetCameraInputActive(true);
                 SwitchState(Factory.Stow());
             }
             else if (!InputManager.Instance.aimIsPressed && !InputManager.Instance.attackIsPressed)
             {
+                Ctx.camStateMachine.SetCameraInputActive(true);
                 SwitchState(Factory.Idle());
             }
 
