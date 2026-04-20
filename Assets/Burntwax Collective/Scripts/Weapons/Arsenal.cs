@@ -45,7 +45,7 @@ namespace Burntwax
             bool hasWeaponNumberInput = ReadWeaponHotkey(out int selectedID);
             bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
 
-            if (katanaStateMachine.fullyEquipped && katanaStateMachine.CurrentState != katanaStateMachine.states.Parry() && katanaStateMachine.CurrentState != katanaStateMachine.states.Slash() && gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
+            if (gunStateMachine.CurrentGuns.Count > 0 && katanaStateMachine.fullyEquipped && katanaStateMachine.CurrentState != katanaStateMachine.states.Parry() && katanaStateMachine.CurrentState != katanaStateMachine.states.Slash() && gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
                 if (hasWeaponNumberInput)
                 {

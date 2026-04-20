@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 namespace Burntwax
 {
@@ -15,7 +16,8 @@ namespace Burntwax
         public override void EnterState()
         {
 
-            Debug.Log("Entered stow state");
+            Ctx.anim.SetBool(Ctx.stowHash, true);
+            Ctx.fullyEquipped = true;
             InitializeSubState();
         }
 
@@ -27,22 +29,21 @@ namespace Burntwax
 
         public override void ExitState()
         {
+            Ctx.anim.SetBool(Ctx.stowHash, false);
         }
 
         public override void CheckSwitchStates()
         {
-            if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.ShootIsPriority())
+            if ((InputManager.Instance.attackIsPressed || InputManager.Instance.aimIsPressed) && (InputPrioritySorter.Instance.AttackIsPriority() || InputPrioritySorter.Instance.AimIsPriority()))
+            {
+                SwitchState(Factory.Ready());
+            }
+
+            else if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.SprintIsPriority())
             {
                 SwitchState(Factory.Idle());
             }
-            else if (InputManager.Instance.slash)
-            {
-                SwitchState(Factory.Slash());
-            }
-            else if (InputManager.Instance.parry)
-            {
-                SwitchState(Factory.Parry());
-            }
+
         }
 
 
