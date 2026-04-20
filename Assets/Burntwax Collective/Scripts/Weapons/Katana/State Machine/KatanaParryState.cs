@@ -9,11 +9,10 @@ namespace Burntwax
         }
 
 
-        public bool released = false;
 
         public override void EnterState()
         {
-            released = false;
+
             InputManager.Instance.parry = false;
             Ctx.katanaDriver.BeginSwing(InputManager.Instance.slashStartDirection, "Parry");
 
@@ -32,11 +31,7 @@ namespace Burntwax
             {
                 Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
             }
-            else if (!released)
-            {
-                released = true;
-                Ctx.camStateMachine.SetCameraInputActive(true);
-            }
+            
             CheckSwitchStates();
         }
 

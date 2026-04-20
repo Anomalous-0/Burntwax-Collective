@@ -10,13 +10,16 @@ namespace Burntwax
 
         [Header("State Machines")]
         [HideInInspector] public PlayerStateMachine player;
-        public Arsenal arsenal;
-        public GunStateMachine gun;
-        public KatanaStateMachine katana;
+
+        public GameObject Arms;
+
+        [HideInInspector] public Arsenal arsenal;
+        [HideInInspector] public GunStateMachine gun;
+        [HideInInspector] public KatanaStateMachine katana;
 
         public PauseMenu pauseMenu;
 
-        
+
         [HideInInspector] public PlayerCrosshair crosshair;
 
         CinemachineVirtualCamera activeCam;
@@ -44,6 +47,11 @@ namespace Burntwax
             activeCam = fpsCam;
             player = GetComponent<PlayerStateMachine>();
             crosshair = GetComponent<PlayerCrosshair>();
+
+            arsenal = Arms.GetComponent<Arsenal>();
+            gun = Arms.GetComponent<GunStateMachine>();
+            katana = Arms.GetComponent<KatanaStateMachine>();
+
             pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -55,7 +63,6 @@ namespace Burntwax
         }
         void Update()
         {
-
             currentState.UpdateState();
             Vector2 screenCenterPoint = new Vector2(Screen.width / 2.0f, Screen.height / 2.0f);
             Ray ray = Camera.main.ScreenPointToRay(screenCenterPoint);
@@ -63,7 +70,6 @@ namespace Burntwax
             {
                 mouseWorldPosition = raycastHit.point;
             }
-
         }
 
 
@@ -102,8 +108,9 @@ namespace Burntwax
                 pov.m_HorizontalAxis.m_MaxSpeed = 0f;
                 pov.m_VerticalAxis.m_MaxSpeed = 0f;
             }
-            else
+            else if (pov.m_HorizontalAxis.m_MaxSpeed == 0f && pov.m_VerticalAxis.m_MaxSpeed == 0f)
             {
+                Debug.Log("Leaving cam lock state");
                 pov.m_HorizontalAxis.m_MaxSpeed = cachedHorizontalSpeed;
                 pov.m_VerticalAxis.m_MaxSpeed = cachedVerticalSpeed;
             }
