@@ -8,19 +8,17 @@ namespace Burntwax
     public class KatanaStateMachine : MonoBehaviour
     {
         private Arsenal arsenal;
-        [HideInInspector] public KatanaDriver katanaDriver;
 
         [Header("State Machines")]
         public GameObject player;
         [HideInInspector] public PlayerStateMachine stateMachine;
-        [HideInInspector] public CamStateMachine camStateMachine;
         [HideInInspector] public PlayerCrosshair crosshair;
 
         [Space]
         [Header("Mechanics")]
         public int slashTimeout;
         public int parryTimeout;
-
+        
 
         [Space]
         [Header("Cinemachine Required")]
@@ -36,7 +34,7 @@ namespace Burntwax
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
-        [HideInInspector] public int readyHash, slashHash, parryHash, stowHash;
+        [HideInInspector] public int slashHash, parryHash, stowHash;
         public KatanaScriptableObject ActiveKatanaScriptable;
 
         private KatanaBaseState currentState;
@@ -50,7 +48,6 @@ namespace Burntwax
 
         [Space]
         public bool isSlashing;
-        public bool isParrying;
         public bool ableToSlashInMiddleOfAnimation;
         public bool fullyEquipped;
 
@@ -62,17 +59,14 @@ namespace Burntwax
             currentState = states.Idle();
             currentState.EnterState();
 
-            readyHash = Animator.StringToHash("ready");
             slashHash = Animator.StringToHash("slash");
             parryHash = Animator.StringToHash("parry");
             stowHash = Animator.StringToHash("stow");
 
             stateMachine = player.GetComponent<PlayerStateMachine>();
-            camStateMachine = player.GetComponent<CamStateMachine>();
             crosshair = player.GetComponentInChildren<PlayerCrosshair>();
 
             arsenal = GetComponent<Arsenal>();
-            katanaDriver = GetComponent<KatanaDriver>();
         }
 
         private void Update()
@@ -118,7 +112,6 @@ namespace Burntwax
         {
             fullyEquipped = false;
             isSlashing = false;
-            isParrying = false;
             ableToSlashInMiddleOfAnimation = false;
 
             Spawn(KatanaScriptable);
@@ -140,7 +133,6 @@ namespace Burntwax
 
         private void ResetAnimationFlags()
         {
-            anim.SetBool(readyHash, false);
             anim.SetBool(slashHash, false);
             anim.SetBool(parryHash, false);
             anim.SetBool(stowHash, false);
@@ -159,11 +151,6 @@ namespace Burntwax
             isSlashing = false;
         }
 
-        public void EndParry()
-        {
-            ableToSlashInMiddleOfAnimation = false;
-            isParrying = false;
-        }
         public void AbleToSlashInMiddleOfAnimation()
         {
             ableToSlashInMiddleOfAnimation = true;
@@ -189,13 +176,12 @@ namespace Burntwax
         /// </summary>
         public void SetupAfterLoad()
         {
-            if (KatanaScriptable == null)
-            {
+            if (KatanaScriptable == null) {
                 anim.Play("empty_rest");
                 return;
             }
-
-            ResetAnimationFlags();
+    
+            isSlashing = false;
             ableToSlashInMiddleOfAnimation = false;
 
             Spawn(KatanaScriptable);
