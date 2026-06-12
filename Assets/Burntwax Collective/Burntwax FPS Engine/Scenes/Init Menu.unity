@@ -469,6 +469,72 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 375215624}
   m_CullTransparentMesh: 1
+--- !u!1 &449002265
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 449002267}
+  - component: {fileID: 449002266}
+  - component: {fileID: 449002268}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &449002266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449002265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f6c7c39d122f2c43bbdbfd2bfe2b8ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  loadScene: 0
+  currentSceneID: 
+  isSaving: 0
+  isLoading: 0
+--- !u!4 &449002267
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449002265}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.030249715, y: 1.1897602, z: -0.27713966}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &449002268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 449002265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0336fd0589b79b04da26818ea91ada73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::SceneLoader
+  sceneDataSOArray:
+  - {fileID: 11400000, guid: a5c6561382ea1394dbf804153807110b, type: 2}
+  - {fileID: 11400000, guid: 562401de165acfc45bb79b2552387ef0, type: 2}
+  - {fileID: 11400000, guid: 4112f4bf44e34ed41a6867af0032a976, type: 2}
+  - {fileID: 11400000, guid: 16a597d6ed5209a41a16fd0b29757b15, type: 2}
 --- !u!1 &449691732
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,7 +776,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: BURNTWAX FPS DEMO
+  m_text: BURNTWAX FPS ENGINE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: e73a58f6e2794ae7b1b7e50b7fb811b0, type: 2}
@@ -1422,7 +1488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 208f60d639ea8ab47b038a7ed77827b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::SceneData
-  data: {fileID: 11400000, guid: 562401de165acfc45bb79b2552387ef0, type: 2}
+  data: {fileID: 11400000, guid: a5c6561382ea1394dbf804153807110b, type: 2}
 --- !u!4 &1435500059
 Transform:
   m_ObjectHideFlags: 0
@@ -1891,6 +1957,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 449002267}
   - {fileID: 1435500059}
   - {fileID: 488549703}
   - {fileID: 276632136}
