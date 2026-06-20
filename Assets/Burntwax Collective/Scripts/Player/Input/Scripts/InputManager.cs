@@ -48,7 +48,7 @@ namespace Burntwax
         void Awake()
         {
             Instance = this;
-            arsenal = FindFirstObjectByType<Arsenal>();
+            arsenal = FindAnyObjectByType<Arsenal>();
         }
 
         // ── OnEnable / OnDisable remain IDENTICAL to your current code ──
@@ -137,7 +137,8 @@ namespace Burntwax
         // ── MODIFIED Update ────────────────────────────────────
         private void Update()
         {
-            if (arsenal.currentMode != Arsenal.WeaponMode.Katana)
+
+            if (arsenal && arsenal.currentMode != Arsenal.WeaponMode.Katana)
                 return;
 
             bool enoughForce = Math.Abs(LookInput.magnitude) > 0.95f;
