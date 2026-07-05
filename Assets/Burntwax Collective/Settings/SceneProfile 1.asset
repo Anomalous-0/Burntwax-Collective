@@ -332,7 +332,6 @@ MonoBehaviour:
   - {fileID: 4428814131316263788}
   - {fileID: 3860501006345370745}
   - {fileID: -2696242370821431862}
-  - {fileID: 932823359318210944}
 --- !u!114 &849379129802519247
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -373,47 +372,6 @@ MonoBehaviour:
   maxNits:
     m_OverrideState: 1
     m_Value: 1000
---- !u!114 &932823359318210944
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: deba25f7dc428d448ae0d61b87ca19d6, type: 3}
-  m_Name: BenDayBloomEffect
-  m_EditorClassIdentifier: Assembly-CSharp::BenDayBloomEffect
-  active: 1
-  threshold:
-    m_OverrideState: 1
-    m_Value: 0.9
-  intensity:
-    m_OverrideState: 1
-    m_Value: 1
-  scatter:
-    m_OverrideState: 1
-    m_Value: 0.7
-  clamp:
-    m_OverrideState: 1
-    m_Value: 65472
-  maxIterations:
-    m_OverrideState: 1
-    m_Value: 6
-  tint:
-    m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
-    hdr: 0
-  dotsDensity:
-    m_OverrideState: 1
-    m_Value: 10
-  dotsCutoff:
-    m_OverrideState: 1
-    m_Value: 0.4
-  scrollDirection:
-    m_OverrideState: 1
-    m_Value: {x: 0, y: 0}
 --- !u!114 &971467702805909546
 MonoBehaviour:
   m_ObjectHideFlags: 3
