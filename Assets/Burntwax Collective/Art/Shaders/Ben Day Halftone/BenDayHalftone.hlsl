@@ -48,6 +48,25 @@ float BenDayDirectLight_float(float2 uv)
 #endif
 }
 
+float BenDayEyeDepth_float(float2 uv)
+{
+#if defined(SHADERGRAPH_PREVIEW)
+    return 0.0;
+#else
+    float rawDepth = SampleSceneDepth(uv);
+
+    #if UNITY_REVERSED_Z
+        if (rawDepth <= 0.0001)
+            return 1e6;
+    #else
+        if (rawDepth >= 0.9999)
+            return 1e6;
+    #endif
+
+    return LinearEyeDepth(rawDepth, _ZBufferParams);
+#endif
+}
+
 void BenDayShadowBloom_float(
     float2 UV,
     float3 SceneColor,
@@ -64,6 +83,8 @@ void BenDayShadowBloom_float(
     float LightThreshold,
     float LightFeather,
     float LightDotStrength,
+    float DistanceFadeStart,
+    float DistanceFadeEnd,
 
     out float3 Out)
 {
@@ -76,6 +97,7 @@ void BenDayShadowBloom_float(
     // Pixel brightness from the rendered scene.
     float luminance = dot(SceneColor, float3(0.2126, 0.7152, 0.0722));
     float directLight = BenDayDirectLight_float(UV);
+    float eyeDepth = BenDayEyeDepth_float(UV);
     float shadowAmount = 1.0 - directLight;
 
     // Screen-space Ben Day dot pattern.
@@ -110,15 +132,19 @@ void BenDayShadowBloom_float(
         shadowAmount
     );
 
-    // Bright/emissive area mask.
+    // Bright area mask based on actual direct lighting, not scene color brightness.
     float lightMask = smoothstep(
         LightThreshold,
         LightThreshold + LightFeather,
-        luminance
+        directLight
     );
 
     float shadowDots = baseDot * shadowMask * saturate(ShadowStrength);
     float lightDots  = baseDot * lightMask  * saturate(LightDotStrength);
+    float fadeRange = max(DistanceFadeEnd - DistanceFadeStart, 1e-5);
+    float distanceFade = 1.0 - saturate((eyeDepth - DistanceFadeStart) / fadeRange);
+    shadowDots *= distanceFade;
+    lightDots *= distanceFade;
 
     float3 color = SceneColor;
 
@@ -129,8 +155,11 @@ void BenDayShadowBloom_float(
     float3 shadowDotColor = max(SceneColor - shadowDarkening.xxx, 0.0);
     color = lerp(color, shadowDotColor, shadowDots);
 
-    // Use the real bright/emissive scene color for glow dots.
-    color += SceneColor * lightDots;
+    // Normalize light-dot visibility across local colors.
+    // A pure additive scene-color term makes white surfaces blow out while darker hues barely show.
+    float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
+    float3 lightDotColor = saturate(SceneColor * lightVisibilityCompensation);
+    color += lightDotColor * lightDots;
 
     Out = saturate(color);
 }

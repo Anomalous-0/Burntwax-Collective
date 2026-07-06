@@ -96,26 +96,28 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _Dot_Scale: 126
+    - _Dot_Scale: 128.2
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
+    - _Fade_End_Distance: 150
+    - _Fade_Start_Distance: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Light_Dot_Strength: 1
-    - _Light_Feather: 0.8
+    - _Light_Dot_Strength: 0.1
+    - _Light_Feather: 0.43
     - _Light_Strength: 0
-    - _Light_Threshold: 0.34
+    - _Light_Threshold: 0.2
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Shadow_Dot_Brightness: 0.45
-    - _Shadow_Feather: 0.05
-    - _Shadow_Strength: 1
-    - _Shadow_Threshold: 0.03
+    - _Shadow_Dot_Brightness: 0.85
+    - _Shadow_Feather: 0
+    - _Shadow_Strength: 0.7
+    - _Shadow_Threshold: 0.74
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _Softness: 0.05
