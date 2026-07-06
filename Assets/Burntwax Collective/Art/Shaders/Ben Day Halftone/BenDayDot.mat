@@ -8,8 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BenDayDot
-  m_Shader: {fileID: -6465566751694194690, guid: a50d13d7fc33d5649855606dfdbfc0c9,
-    type: 3}
+  m_Shader: {fileID: 4800000, guid: b8a67dac62424eb28201a9b5f52fac25, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -96,16 +95,16 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _Dot_Scale: 128.2
+    - _Dot_Scale: 188.59
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
-    - _Fade_End_Distance: 150
+    - _Fade_End_Distance: 80
     - _Fade_Start_Distance: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Light_Dot_Strength: 0.2
+    - _Light_Dot_Strength: 0.3
     - _Light_Feather: 0.43
     - _Light_Strength: 0
     - _Light_Threshold: 0.2
