@@ -119,7 +119,8 @@ MonoBehaviour:
   - {fileID: 1646130543283278660}
   - {fileID: -2660764782525424549}
   - {fileID: -7713624001074407658}
-  m_RendererFeatureMap: adc0de57c6d2eee5441352ee013bd8165bdcb312871013db165708edd6b3f394
+  - {fileID: 4776369030020659888}
+  m_RendererFeatureMap: adc0de57c6d2eee5441352ee013bd8165bdcb312871013db165708edd6b3f394b0fa8e9653124942
   m_UseNativeRenderPass: 0
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -190,3 +191,23 @@ MonoBehaviour:
       restoreCamera: 1
       offset: {x: 0, y: 0, z: 0, w: 0}
       cameraFieldOfView: 60
+--- !u!114 &4776369030020659888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: Outline Shader
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.FullScreenPassRendererFeature
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 1
+  requirements: 3
+  passMaterial: {fileID: 2100000, guid: a61fc43481187c942a907253b7c974c1, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
