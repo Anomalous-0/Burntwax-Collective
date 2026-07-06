@@ -5,9 +5,11 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
         _Color("Outline Color", Color) = (0, 0, 0, 1)
         _Thickness("Thickness (Pixels)", Range(0.5, 4.0)) = 1.25
         _DepthThreshold("Depth Threshold", Range(0.0001, 0.02)) = 0.002
-        _DepthScale("Depth Scale", Range(0.25, 4.0)) = 1.0
+        _DepthScale("Depth Scale", Range(0.25, 6.0)) = 1.0
         _NormalThreshold("Normal Threshold", Range(0.01, 1.0)) = 0.2
         _NormalStrength("Normal Strength", Range(0.5, 4.0)) = 1.0
+        _FadeStart("Fade Start Distance", Float) = 5.0
+        _FadeEnd("Fade End Distance", Float) = 18.0
     }
 
     SubShader
@@ -37,6 +39,8 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
                 float _DepthScale;
                 float _NormalThreshold;
                 float _NormalStrength;
+                float _FadeStart;
+                float _FadeEnd;
             CBUFFER_END
 
             float SampleEyeDepth(float2 uv)
@@ -83,10 +87,15 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
 
                 float2 uv = input.texcoord.xy;
                 float2 texelSize = (_BlitTexture_TexelSize.xy * _Thickness);
+                float centerDepth = SampleEyeDepth(uv);
 
                 float depthEdge = DepthEdge(uv, texelSize);
                 float normalEdge = NormalEdge(uv, texelSize);
                 float edge = saturate(max(depthEdge, normalEdge));
+                // Fade the post outline by scene depth so distant geometry outlines soften out.
+                float fadeRange = max(_FadeEnd - _FadeStart, 1e-5);
+                float fade = 1.0 - saturate((centerDepth - _FadeStart) / fadeRange);
+                edge *= fade;
 
                 half4 sceneColor = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, uv);
                 return lerp(sceneColor, _Color, edge);
