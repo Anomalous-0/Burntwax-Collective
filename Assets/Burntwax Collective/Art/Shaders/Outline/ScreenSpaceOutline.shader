@@ -4,6 +4,7 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
     {
         _Color("Outline Color", Color) = (0, 0, 0, 1)
         _Thickness("Thickness (Pixels)", Range(0.5, 4.0)) = 1.25
+        _ReferenceResolution("Reference Resolution", Vector) = (1920, 1080, 0, 0)
         _DepthThreshold("Depth Threshold", Range(0.0001, 0.02)) = 0.002
         _DepthScale("Depth Scale", Range(0.25, 6.0)) = 1.0
         _NormalThreshold("Normal Threshold", Range(0.01, 1.0)) = 0.2
@@ -35,6 +36,7 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
             CBUFFER_START(UnityPerMaterial)
                 half4 _Color;
                 float _Thickness;
+                float4 _ReferenceResolution;
                 float _DepthThreshold;
                 float _DepthScale;
                 float _NormalThreshold;
@@ -46,6 +48,14 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
             float SampleEyeDepth(float2 uv)
             {
                 return LinearEyeDepth(SampleSceneDepth(uv), _ZBufferParams);
+            }
+
+            float OutlineScreenScale()
+            {
+                float2 referenceResolution = max(_ReferenceResolution.xy, float2(1.0, 1.0));
+                float referenceMinDimension = min(referenceResolution.x, referenceResolution.y);
+                float currentMinDimension = min(_ScreenParams.x, _ScreenParams.y);
+                return currentMinDimension / referenceMinDimension;
             }
 
             float DepthEdge(float2 uv, float2 texelSize)
@@ -86,7 +96,8 @@ Shader "Burntwax/Fullscreen/Screen Space Outline"
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
                 float2 uv = input.texcoord.xy;
-                float2 texelSize = (_BlitTexture_TexelSize.xy * _Thickness);
+                float effectiveThickness = _Thickness * OutlineScreenScale();
+                float2 texelSize = (_BlitTexture_TexelSize.xy * effectiveThickness);
                 float centerDepth = SampleEyeDepth(uv);
 
                 float depthEdge = DepthEdge(uv, texelSize);

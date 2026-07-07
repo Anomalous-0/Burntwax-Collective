@@ -5,6 +5,7 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
         _Dot_Scale("Dot Scale", Float) = 128.2
         _Angle_Degrees("Angle Degrees", Float) = 16.5
         _Softness("Softness", Range(0.0, 1.0)) = 0.05
+        _ReferenceResolution("Reference Resolution", Vector) = (1920, 1080, 0, 0)
 
         _Shadow_Threshold("Shadow Threshold", Range(0.0, 1.0)) = 0.74
         _Shadow_Feather("Shadow Feather", Range(0.0, 1.0)) = 0.0
@@ -47,6 +48,7 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float _Dot_Scale;
                 float _Angle_Degrees;
                 float _Softness;
+                float4 _ReferenceResolution;
                 float _Shadow_Threshold;
                 float _Shadow_Feather;
                 float _Shadow_Strength;
@@ -122,6 +124,14 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 return LinearEyeDepth(rawDepth, _ZBufferParams);
             }
 
+            float BenDayScreenScale()
+            {
+                float2 referenceResolution = max(_ReferenceResolution.xy, float2(1.0, 1.0));
+                float referenceMinDimension = min(referenceResolution.x, referenceResolution.y);
+                float currentMinDimension = min(_ScreenParams.x, _ScreenParams.y);
+                return currentMinDimension / referenceMinDimension;
+            }
+
             half4 Frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -131,6 +141,7 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
 
                 float dotScale = max(_Dot_Scale, 1.0);
                 float softness = max(_Softness, 0.0001);
+                float screenScale = max(BenDayScreenScale(), 1e-5);
                 float shadowFeather = max(_Shadow_Feather, 0.0001);
                 float lightFeather = max(_Light_Feather, 0.0001);
                 float shadowDotBrightness = saturate(_Shadow_Dot_Brightness);
@@ -147,18 +158,23 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float s = sin(angle);
                 float c = cos(angle);
 
-                float aspect = _ScreenParams.x / _ScreenParams.y;
-                float2 p = uv - 0.5;
-                p.x *= aspect;
+                float referenceMinDimension = max(min(_ReferenceResolution.x, _ReferenceResolution.y), 1.0);
+                float pitchAtReference = referenceMinDimension / dotScale;
+                float pitchPixels = max(pitchAtReference * screenScale, 1.0);
+                float softnessPixels = max(softness * pitchPixels, 0.0001);
+
+                float2 centeredPixels = (uv - 0.5) * _ScreenParams.xy;
 
                 float2 rotated;
-                rotated.x = p.x * c - p.y * s;
-                rotated.y = p.x * s + p.y * c;
+                rotated.x = centeredPixels.x * c - centeredPixels.y * s;
+                rotated.y = centeredPixels.x * s + centeredPixels.y * c;
 
-                float2 grid = rotated * dotScale;
+                float2 grid = rotated / pitchPixels;
                 float2 cell = frac(grid) - 0.5;
                 float dist = length(cell);
-                float baseDot = 1.0 - smoothstep(0.25, 0.25 + softness, dist);
+                float distPixels = dist * pitchPixels;
+                float radiusPixels = pitchPixels * 0.25;
+                float baseDot = 1.0 - smoothstep(radiusPixels, radiusPixels + softnessPixels, distPixels);
 
                 float shadowMask = smoothstep(
                     _Shadow_Threshold,

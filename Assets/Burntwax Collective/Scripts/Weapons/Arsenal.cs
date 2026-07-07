@@ -10,12 +10,16 @@ namespace Burntwax
         public enum WeaponMode
         {
             Guns,
-            Katana
+            Katana,
+
+            Glove
         }
 
         [Header("References")]
         [HideInInspector] public GunStateMachine gunStateMachine;
         [HideInInspector] public KatanaStateMachine katanaStateMachine;
+
+        [HideInInspector] public GloveStateMachine gloveStateMachine;
 
         [Header("Current Mode")]
         public WeaponMode currentMode = WeaponMode.Guns;
@@ -30,6 +34,9 @@ namespace Burntwax
 
             if (katanaStateMachine == null)
                 katanaStateMachine = GetComponent<KatanaStateMachine>();
+
+            if (gloveStateMachine == null)
+                gloveStateMachine = GetComponent<GloveStateMachine>();
         }
 
         private void Update()
