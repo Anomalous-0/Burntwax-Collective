@@ -3137,12 +3137,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 222070242}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &234052514 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8385974728170835288, guid: 4339d97cde5264747a29eaf7ae86e4b5,
-    type: 3}
-  m_PrefabInstance: {fileID: 1142371221871575081}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &240252942 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2534855556683237600, guid: 8940725a50546e144ac6b50b27d99a53,
@@ -35179,7 +35173,7 @@ PrefabInstance:
         type: 3}
       propertyPath: 'OrderedGuns.Array.data[3]'
       value: 
-      objectReference: {fileID: 234052514}
+      objectReference: {fileID: 0}
     - target: {fileID: 7120825543759020784, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_IsActive
@@ -35236,7 +35230,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8385974728170835288, guid: 4339d97cde5264747a29eaf7ae86e4b5, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4339d97cde5264747a29eaf7ae86e4b5, type: 3}

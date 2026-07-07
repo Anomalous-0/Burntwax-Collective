@@ -4,68 +4,63 @@ namespace Burntwax
 {
     public enum GloveState
     {
-        Hidden,
-        Equip,
-        Idle,
-        Aim,
-        Fire,
-        Reload,
-        Stow
+        Unequipped,
+        ChargeAttract,
+        Attract,
+        Hold,
+        ChargeBlast,
+        Blast,
     }
 
-    public class GunStateFactory
+    public class GloveStateFactory
     {
 
-        GunStateMachine context;
-        Dictionary<GunStates, GunBaseState> states = new Dictionary<GunStates, GunBaseState>();
+        GloveStateMachine context;
+        Dictionary<GloveState, GloveBaseState> states = new Dictionary<GloveState, GloveBaseState>();
 
-        public GunStateFactory(GunStateMachine currentContext)
+        public GloveStateFactory(GloveStateMachine currentContext)
         {
             context = currentContext;
-            states[GunStates.rest] = new GunRestState(context, this);
-            states[GunStates.shoot] = new GunShootState(context, this);
-            states[GunStates.noShoot] = new GunNoShootState(context, this);
-            states[GunStates.reload] = new GunReloadState(context, this);
-            states[GunStates.incrementalReload] = new GunIncrementalReloadState(context, this);
-            states[GunStates.aim] = new GunAimState(context, this);
-            states[GunStates.stow] = new GunStowState(context, this);
+            states[GloveState.Unequipped] = new GloveUnequippedState(context, this);
+            states[GloveState.ChargeAttract] = new GloveChargeAttractState(context, this);
+            states[GloveState.Attract] = new GloveAttractState(context, this);
+            states[GloveState.Hold] = new GloveHoldState(context, this);
+            states[GloveState.ChargeBlast] = new GloveChargeBlastState(context, this);
+            states[GloveState.Blast] = new GloveBlastState(context, this);
+
 
         }
 
-        public GunBaseState Rest()
+        public GloveBaseState Unequipped()
         {
-            return states[GunStates.rest];
+            return states[GloveState.Unequipped];
         }
 
-        public GunBaseState Shoot()
+        public GloveBaseState ChargeAttract()
         {
-            return states[GunStates.shoot];
+            return states[GloveState.ChargeAttract];
         }
 
-        public GunBaseState NoShoot()
+        public GloveBaseState Attract()
         {
-            return states[GunStates.noShoot];
+            return states[GloveState.Attract];
         }
 
-        public GunBaseState Reload()
+        public GloveBaseState Hold()
         {
-            return states[GunStates.reload];
+            return states[GloveState.Hold];
         }
 
-        public GunBaseState IncrementalReload()
+        public GloveBaseState ChargeBlast()
         {
-            return states[GunStates.incrementalReload];
+            return states[GloveState.ChargeBlast];
         }
 
-        public GunBaseState Aim()
+        public GloveBaseState Blast()
         {
-            return states[GunStates.aim];
+            return states[GloveState.Blast];
         }
 
-        public GunBaseState Stow()
-        {
-            return states[GunStates.stow];
-        }
     }
 
 }
