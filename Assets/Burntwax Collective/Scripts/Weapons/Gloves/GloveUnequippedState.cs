@@ -1,9 +1,11 @@
+using UnityEngine;
+
 namespace Burntwax
 {
-    public class GloveEquippedState : GloveBaseState
+    public class GloveUnequippedState : GloveBaseState
     {
 
-        public GloveEquippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
+        public GloveUnequippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         {
             IsRootState = true;
@@ -27,7 +29,12 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            
+            Debug.Log("Switching to equipped State");
+            if(InputManager.Instance.useGloves)
+            {
+                
+                SwitchState(Factory.Equipped());
+            }
 
 
         }

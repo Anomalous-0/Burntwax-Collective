@@ -1,9 +1,9 @@
 namespace Burntwax
 {
-    public class GloveUnequippedState : GloveBaseState
+    public class GloveEquippedState : GloveBaseState
     {
 
-        public GloveUnequippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
+        public GloveEquippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         {
             IsRootState = true;
@@ -35,7 +35,18 @@ namespace Burntwax
 
         public override void InitializeSubState()
         {
-            
+            if(InputManager.Instance.useGloves && Ctx.AttractObject)
+            {
+                SetSubState(Factory.ChargeAttract());
+            }
+            else if(InputManager.Instance.useGloves && !Ctx.AttractObject)
+            {
+                SetSubState(Factory.ChargeBlast());
+            }
+            else
+            {
+                SetSubState(Factory.Hold());
+            }
 
         }
 

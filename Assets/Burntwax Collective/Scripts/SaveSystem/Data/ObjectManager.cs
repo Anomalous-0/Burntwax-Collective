@@ -55,7 +55,7 @@ namespace Burntwax
 
             objects.Clear();
 
-            PrefabGuid[] sceneObjects = FindObjectsByType<PrefabGuid>(FindObjectsSortMode.None);
+            PrefabGuid[] sceneObjects = FindObjectsByType<PrefabGuid>();
             foreach (var obj in sceneObjects)
             {
                 objects.Add(obj.gameObject);

@@ -20,15 +20,16 @@ namespace Burntwax
         private GunStateMachine gunStateMachine;
         private KatanaStateMachine katanaStateMachine;
 
+        [Header("State Variables")]
 
+        private bool attractObject;
         public bool FullyEquipped { get; private set; }
         public bool IsFiring { get; private set; }
         public bool IsReloading { get; private set; }
 
-        private int aimHash;
-        private int fireHash;
-        private int reloadHash;
-        private int stowHash;
+        public bool AttractObject { get { return attractObject; } }
+
+        private int idleHash, chargeHash, holdHash, blashHash;
 
         public GloveBaseState CurrentState;
 
@@ -50,8 +51,10 @@ namespace Burntwax
 
         private void Update()
         {
+            CurrentState.UpdateStates();
             currentStateText = CurrentState.GetType().Name;
             currentSubstateText = CurrentState.CurrentSubstate()?.GetType().Name ?? "None";
+            
         }
 
 

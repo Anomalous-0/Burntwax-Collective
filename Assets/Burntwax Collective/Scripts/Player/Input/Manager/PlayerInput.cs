@@ -192,15 +192,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": true
                 },
                 {
-                    ""name"": ""GloveShoot"",
-                    ""type"": ""Button"",
-                    ""id"": ""56063d37-8243-4733-874a-1be5d4df444f"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""WeaponScroll"",
                     ""type"": ""PassThrough"",
                     ""id"": ""fd4bf2e3-5663-42a2-a536-c4ca517fe39b"",
@@ -492,7 +483,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""242341ae-c6e7-4375-8fea-bb05dc5f500f"",
-                    ""path"": ""<Keyboard>/g"",
+                    ""path"": ""<Keyboard>/f"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -519,28 +510,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Aim"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""6d23c6ff-66f8-44a0-a2ba-6329bcc78ac9"",
-                    ""path"": ""<Keyboard>/f"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""GloveShoot"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""817c6399-15f4-42fe-ac55-713de805b983"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""GloveShoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1232,7 +1201,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_Reload = m_OnFoot.FindAction("Reload", throwIfNotFound: true);
         m_OnFoot_Gloves = m_OnFoot.FindAction("Gloves", throwIfNotFound: true);
         m_OnFoot_KatanaSelect = m_OnFoot.FindAction("KatanaSelect", throwIfNotFound: true);
-        m_OnFoot_GloveShoot = m_OnFoot.FindAction("GloveShoot", throwIfNotFound: true);
         m_OnFoot_WeaponScroll = m_OnFoot.FindAction("WeaponScroll", throwIfNotFound: true);
         m_OnFoot_WeaponSelect = m_OnFoot.FindAction("WeaponSelect", throwIfNotFound: true);
         m_OnFoot_Pause = m_OnFoot.FindAction("Pause", throwIfNotFound: true);
@@ -1342,7 +1310,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Reload;
     private readonly InputAction m_OnFoot_Gloves;
     private readonly InputAction m_OnFoot_KatanaSelect;
-    private readonly InputAction m_OnFoot_GloveShoot;
     private readonly InputAction m_OnFoot_WeaponScroll;
     private readonly InputAction m_OnFoot_WeaponSelect;
     private readonly InputAction m_OnFoot_Pause;
@@ -1403,10 +1370,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "OnFoot/KatanaSelect".
         /// </summary>
         public InputAction @KatanaSelect => m_Wrapper.m_OnFoot_KatanaSelect;
-        /// <summary>
-        /// Provides access to the underlying input action "OnFoot/GloveShoot".
-        /// </summary>
-        public InputAction @GloveShoot => m_Wrapper.m_OnFoot_GloveShoot;
         /// <summary>
         /// Provides access to the underlying input action "OnFoot/WeaponScroll".
         /// </summary>
@@ -1486,9 +1449,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @KatanaSelect.started += instance.OnKatanaSelect;
             @KatanaSelect.performed += instance.OnKatanaSelect;
             @KatanaSelect.canceled += instance.OnKatanaSelect;
-            @GloveShoot.started += instance.OnGloveShoot;
-            @GloveShoot.performed += instance.OnGloveShoot;
-            @GloveShoot.canceled += instance.OnGloveShoot;
             @WeaponScroll.started += instance.OnWeaponScroll;
             @WeaponScroll.performed += instance.OnWeaponScroll;
             @WeaponScroll.canceled += instance.OnWeaponScroll;
@@ -1548,9 +1508,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @KatanaSelect.started -= instance.OnKatanaSelect;
             @KatanaSelect.performed -= instance.OnKatanaSelect;
             @KatanaSelect.canceled -= instance.OnKatanaSelect;
-            @GloveShoot.started -= instance.OnGloveShoot;
-            @GloveShoot.performed -= instance.OnGloveShoot;
-            @GloveShoot.canceled -= instance.OnGloveShoot;
             @WeaponScroll.started -= instance.OnWeaponScroll;
             @WeaponScroll.performed -= instance.OnWeaponScroll;
             @WeaponScroll.canceled -= instance.OnWeaponScroll;
@@ -1878,13 +1835,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnKatanaSelect(InputAction.CallbackContext context);
-        /// <summary>
-        /// Method invoked when associated input action "GloveShoot" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
-        /// </summary>
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
-        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnGloveShoot(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "WeaponScroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

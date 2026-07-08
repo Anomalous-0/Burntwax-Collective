@@ -23,7 +23,6 @@ namespace Burntwax
         public bool weaponSelectID { get; private set; }
         [HideInInspector] public bool katanaSelect;
         [HideInInspector] public bool useGloves = false;
-        public bool gloveShootIsPressed { get; private set; } = false;
 
         public bool aimIsPressed = false;
         public bool attackIsPressed = false;
@@ -88,8 +87,6 @@ namespace Burntwax
             input.OnFoot.Interact.canceled += SetInteract;
             input.OnFoot.Gloves.started += SetGloves;
             input.OnFoot.Gloves.canceled += SetGloves;
-            input.OnFoot.GloveShoot.started += SetGloveShoot;
-            input.OnFoot.GloveShoot.canceled += SetGloveShoot;
             input.OnFoot.Save.started += SetSave;
             input.OnFoot.Save.canceled += SetSave;
             input.OnFoot.Load.started += SetLoad;
@@ -124,8 +121,6 @@ namespace Burntwax
             input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
             input.OnFoot.Interact.started -= SetInteract;
             input.OnFoot.Interact.canceled -= SetInteract;
-            input.OnFoot.GloveShoot.started -= SetGloveShoot;
-            input.OnFoot.GloveShoot.canceled -= SetGloveShoot;
             input.OnFoot.Save.started -= SetSave;
             input.OnFoot.Save.canceled -= SetSave;
             input.OnFoot.Load.started -= SetLoad;
@@ -193,7 +188,6 @@ namespace Burntwax
         private void SetKatanaSelect(InputAction.CallbackContext ctx) => katanaSelect = ctx.started;
         private void SetInteract(InputAction.CallbackContext ctx) => interactIsPressed = ctx.started;
         private void SetGloves(InputAction.CallbackContext ctx) => useGloves = ctx.started;
-        private void SetGloveShoot(InputAction.CallbackContext ctx) => gloveShootIsPressed = ctx.started;
         private void SetSave(InputAction.CallbackContext ctx) => saveIsPressed = ctx.started;
         private void SetLoad(InputAction.CallbackContext ctx) => loadIsPressed = ctx.started;
     }

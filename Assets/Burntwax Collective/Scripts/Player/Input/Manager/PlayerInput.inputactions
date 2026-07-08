@@ -106,15 +106,6 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "GloveShoot",
-                    "type": "Button",
-                    "id": "56063d37-8243-4733-874a-1be5d4df444f",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "WeaponScroll",
                     "type": "PassThrough",
                     "id": "fd4bf2e3-5663-42a2-a536-c4ca517fe39b",
@@ -406,7 +397,7 @@
                 {
                     "name": "",
                     "id": "242341ae-c6e7-4375-8fea-bb05dc5f500f",
-                    "path": "<Keyboard>/g",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -433,28 +424,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "6d23c6ff-66f8-44a0-a2ba-6329bcc78ac9",
-                    "path": "<Keyboard>/f",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "GloveShoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "817c6399-15f4-42fe-ac55-713de805b983",
-                    "path": "<Gamepad>/leftStickPress",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "GloveShoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
