@@ -1,18 +1,15 @@
 namespace Burntwax
 {
-    public class GloveUnequippedState : GloveBaseState
+    public class GloveBlastState : GloveBaseState
     {
 
-        public GloveUnequippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
+        public GloveBlastState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
-        {
-            IsRootState = true;
-        }
+        { }
 
         public override void EnterState()
         {
-            Ctx.anim.SetBool(Ctx.stowHash, true);
-            Ctx.fullyEquipped = true;
+
             InitializeSubState();
         }
 
@@ -23,25 +20,12 @@ namespace Burntwax
 
         public override void ExitState()
         {
-            Ctx.anim.SetBool(Ctx.stowHash, false);
+
         }
 
         public override void CheckSwitchStates()
         {
-            if (Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Sprint() && !InputPrioritySorter.Instance.AimIsPriority() || InputPrioritySorter.Instance.AttackIsPriority())
-            {
 
-                SwitchState(Factory.Rest());
-            }
-            else if (Ctx.AutoReload() || Ctx.ManualReload())
-            {
-                SwitchState(Factory.Reload());
-            }
-
-            else if (!Ctx.isReloading && InputPrioritySorter.Instance.AimIsPriority())
-            {
-                SwitchState(Factory.Aim());
-            }
 
 
         }
@@ -49,7 +33,6 @@ namespace Burntwax
 
         public override void InitializeSubState()
         {
-            SetSubState(Factory.NoShoot());
 
         }
 

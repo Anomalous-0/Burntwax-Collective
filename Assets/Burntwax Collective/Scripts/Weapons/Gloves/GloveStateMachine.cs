@@ -9,25 +9,18 @@ namespace Burntwax
     {
 
         [Header("References")]
+        public string currentStateText;
+        public string currentSubstateText;
         [SerializeField] private GameObject player;
         [SerializeField] private GameObject gloveModel;
-        [SerializeField] private Animator anim;
+        private Animator anim;
         [SerializeField] private Rig handIK;
-        [SerializeField] private CinemachineImpulseSource camShake;
 
-        [Header("Weapon Links")]
-        [SerializeField] private Arsenal arsenal;
-        [SerializeField] private GunStateMachine gunStateMachine;
-        [SerializeField] private KatanaStateMachine katanaStateMachine;
+        private Arsenal arsenal;
+        private GunStateMachine gunStateMachine;
+        private KatanaStateMachine katanaStateMachine;
 
-        [Header("Planning Flags")]
-        [SerializeField] private bool useDedicatedGloveMode = true;
-        [SerializeField] private bool syncToCurrentWeaponSystem = true;
 
-        [Header("Runtime")]
-        [SerializeField] private GloveState currentState = GloveState.Hidden;
-
-        public GloveState CurrentState => currentState;
         public bool FullyEquipped { get; private set; }
         public bool IsFiring { get; private set; }
         public bool IsReloading { get; private set; }
@@ -37,37 +30,31 @@ namespace Burntwax
         private int reloadHash;
         private int stowHash;
 
+        public GloveBaseState CurrentState;
+
+        public GloveStateFactory states;
+
         private void Awake()
         {
-            CacheReferences();
-            CacheAnimatorHashes();
+            states = new GloveStateFactory(this);
+            CurrentState = states.Unequipped();
+            CurrentState.EnterState();
+
+
+            anim = gloveModel.GetComponent<Animator>();
+            arsenal = GetComponent<Arsenal>();
+            gunStateMachine = GetComponent<GunStateMachine>();
+            katanaStateMachine = GetComponent<KatanaStateMachine>();
+
         }
 
         private void Update()
         {
-            if (!syncToCurrentWeaponSystem)
-                return;
+            currentStateText = CurrentState.GetType().Name;
+            currentSubstateText = CurrentState.CurrentSubstate()?.GetType().Name ?? "None";
         }
 
-        private void CacheReferences()
-        {
-            if (arsenal == null)
-                arsenal = GetComponent<Arsenal>();
 
-            if (gunStateMachine == null)
-                gunStateMachine = GetComponent<GunStateMachine>();
-
-            if (katanaStateMachine == null)
-                katanaStateMachine = GetComponent<KatanaStateMachine>();
-        }
-
-        private void CacheAnimatorHashes()
-        {
-            aimHash = Animator.StringToHash("aim");
-            fireHash = Animator.StringToHash("gloveFire");
-            reloadHash = Animator.StringToHash("gloveReload");
-            stowHash = Animator.StringToHash("stow");
-        }
 
     }
 }

@@ -5,6 +5,7 @@ namespace Burntwax
     public enum GloveState
     {
         Unequipped,
+        Equipped,
         ChargeAttract,
         Attract,
         Hold,
@@ -22,6 +23,7 @@ namespace Burntwax
         {
             context = currentContext;
             states[GloveState.Unequipped] = new GloveUnequippedState(context, this);
+            states[GloveState.Equipped] = new GloveEquippedState(context, this);
             states[GloveState.ChargeAttract] = new GloveChargeAttractState(context, this);
             states[GloveState.Attract] = new GloveAttractState(context, this);
             states[GloveState.Hold] = new GloveHoldState(context, this);
@@ -36,6 +38,10 @@ namespace Burntwax
             return states[GloveState.Unequipped];
         }
 
+        public GloveBaseState Equipped()
+        {
+            return states[GloveState.Equipped];
+        }
         public GloveBaseState ChargeAttract()
         {
             return states[GloveState.ChargeAttract];
