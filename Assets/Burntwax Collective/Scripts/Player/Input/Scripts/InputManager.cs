@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 
 namespace Burntwax
 {
@@ -20,7 +21,8 @@ namespace Burntwax
         [HideInInspector] public bool pauseIsPressed = false;
 
         public float mouseScroll { get; private set; } = 0;
-        public bool weaponSelectID { get; private set; }
+        public int weaponSelectID { get; private set; } = -1;
+        public bool HasWeaponSelectInput { get { return weaponSelectID >= 0; } }
         [HideInInspector] public bool katanaSelect;
         [HideInInspector] public bool useGloves = false;
 
@@ -121,6 +123,8 @@ namespace Burntwax
             input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
             input.OnFoot.Interact.started -= SetInteract;
             input.OnFoot.Interact.canceled -= SetInteract;
+            input.OnFoot.Gloves.started += SetGloves;
+            input.OnFoot.Gloves.canceled += SetGloves;
             input.OnFoot.Save.started -= SetSave;
             input.OnFoot.Save.canceled -= SetSave;
             input.OnFoot.Load.started -= SetLoad;
@@ -184,7 +188,56 @@ namespace Burntwax
         private void SetAttack(InputAction.CallbackContext ctx) => attackIsPressed = ctx.started;
         private void SetReload(InputAction.CallbackContext ctx) => reloadIsPressed = ctx.started;
         private void SetScroll(InputAction.CallbackContext ctx) => mouseScroll = ctx.ReadValue<float>();
-        private void SetSelect(InputAction.CallbackContext ctx) => weaponSelectID = ctx.started;
+        private void SetSelect(InputAction.CallbackContext ctx)
+        {
+            weaponSelectID = GetWeaponIDFromControl(ctx.control);
+        }
+
+        private int GetWeaponIDFromControl(InputControl control)
+        {
+            KeyControl key = control as KeyControl;
+            if (key == null)
+                return -1;
+
+            switch (key.keyCode)
+            {
+                case Key.Digit1:
+                case Key.Numpad1:
+                    return 0;
+                case Key.Digit2:
+                case Key.Numpad2:
+                    return 1;
+                case Key.Digit3:
+                case Key.Numpad3:
+                    return 2;
+                case Key.Digit4:
+                case Key.Numpad4:
+                    return 3;
+                case Key.Digit5:
+                case Key.Numpad5:
+                    return 4;
+                case Key.Digit6:
+                case Key.Numpad6:
+                    return 5;
+                case Key.Digit7:
+                case Key.Numpad7:
+                    return 6;
+                case Key.Digit8:
+                case Key.Numpad8:
+                    return 7;
+                case Key.Digit9:
+                case Key.Numpad9:
+                    return 8;
+                default:
+                    return -1;
+            }
+        }
+
+        public void ConsumeWeaponSwitchInput()
+        {
+            weaponSelectID = -1;
+            mouseScroll = 0f;
+        }
         private void SetKatanaSelect(InputAction.CallbackContext ctx) => katanaSelect = ctx.started;
         private void SetInteract(InputAction.CallbackContext ctx) => interactIsPressed = ctx.started;
         private void SetGloves(InputAction.CallbackContext ctx) => useGloves = ctx.started;

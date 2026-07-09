@@ -106,7 +106,7 @@ namespace Burntwax
 
             if (InputManager.Instance.katanaSelect) { selectedID = -1; return true; }
 
-            if (!InputManager.Instance.weaponSelectID)
+            if (!InputManager.Instance.HasWeaponSelectInput)
                 return false;
 
             if (Input.GetKeyDown(KeyCode.Alpha1)) { selectedID = 0; return true; }

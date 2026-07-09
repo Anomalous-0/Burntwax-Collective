@@ -85,6 +85,8 @@ namespace Burntwax
 
         private void Update()
         {
+            HandleWeaponSwitchInput();
+
             if (ActiveGunScriptable != null)
                 currentState.UpdateStates();
 
@@ -103,23 +105,119 @@ namespace Burntwax
             }
         }
 
-        public bool SwitchToGun(int newID)
+        private void HandleWeaponSwitchInput()
         {
-            if (newID == arsenal.currentID)
-                return false;
+            if (InputManager.Instance == null)
+                return;
 
-            if (!gunLookup.TryGetValue(newID, out GunScriptableObject newGun) || newGun == null)
+            bool hasHotkeyInput = InputManager.Instance.HasWeaponSelectInput;
+            bool hasScrollInput = Mathf.Abs(InputManager.Instance.mouseScroll) > 0.01f;
+
+            if (!hasHotkeyInput && !hasScrollInput)
+                return;
+
+            int requestedID = hasHotkeyInput
+                ? InputManager.Instance.weaponSelectID
+                : GetScrolledGunID(InputManager.Instance.mouseScroll);
+
+            InputManager.Instance.ConsumeWeaponSwitchInput();
+
+            if (requestedID < 0)
+                return;
+
+            SwitchToGun(requestedID);
+        }
+
+        private int GetScrolledGunID(float scrollValue)
+        {
+            if (CurrentGuns == null || CurrentGuns.Count == 0)
+                return -1;
+
+            int direction = scrollValue > 0f ? 1 : -1;
+            int currentIndex = CurrentGuns.FindIndex(gun => gun != null && gun.ID == currentID);
+
+            if (currentIndex < 0 && ActiveGunScriptable != null)
+                currentIndex = CurrentGuns.FindIndex(gun => gun != null && gun.ID == ActiveGunScriptable.ID);
+
+            if (currentIndex < 0)
+                currentIndex = 0;
+
+            for (int i = 0; i < CurrentGuns.Count; i++)
             {
-                Debug.LogError($"No GunScriptableObject found for gun ID: {newID}");
+                currentIndex = (currentIndex + direction + CurrentGuns.Count) % CurrentGuns.Count;
+                GunScriptableObject gun = CurrentGuns[currentIndex];
+
+                if (gun != null)
+                    return gun.ID;
+            }
+
+            return -1;
+        }
+
+        private bool HasWeaponModelForID(int weaponID)
+        {
+            if (OrderedGuns == null)
+            {
+                Debug.LogError("OrderedGuns is null.");
                 return false;
             }
 
-            currentID = newID;
+            if (weaponID < 0 || weaponID >= OrderedGuns.Count)
+            {
+                Debug.LogError($"OrderedGuns is missing an entry for weapon ID {weaponID}.");
+                return false;
+            }
+
+            if (OrderedGuns[weaponID] == null)
+            {
+                Debug.LogError($"OrderedGuns[{weaponID}] is null.");
+                return false;
+            }
+
+            return true;
+        }
+
+        public bool SwitchToGun(int newID)
+        {
+            if (ActiveGunScriptable != null &&
+                ActiveGunScriptable.ID == newID &&
+                arsenal != null &&
+                arsenal.currentMode == Arsenal.WeaponMode.Guns)
+            {
+                return false;
+            }
+
+            if (!gunLookup.TryGetValue(newID, out GunScriptableObject newGun) || newGun == null)
+            {
+                // This can happen when the player presses a hotkey for a weapon they have not picked up yet.
+                Debug.LogWarning($"Cannot switch to gun ID {newID} because it is not in CurrentGuns.");
+                return false;
+            }
+
+            if (!HasWeaponModelForID(newID))
+                return false;
+
+            if (arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana)
+            {
+                KatanaStateMachine katana = GetComponent<KatanaStateMachine>();
+
+                if (katana != null && katana.ActiveKatanaScriptable != null)
+                    katana.Despawn(katana.ActiveKatanaScriptable);
+            }
 
             if (ActiveGunScriptable != null)
                 Despawn(ActiveGunScriptable);
 
+            currentID = newID;
             ActiveGunScriptable = newGun;
+
+            if (arsenal != null)
+            {
+                arsenal.lastID = arsenal.currentID;
+                arsenal.currentID = currentID;
+                arsenal.currentMode = Arsenal.WeaponMode.Guns;
+            }
+
             SetupGun();
 
             return true;
