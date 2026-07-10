@@ -6,6 +6,7 @@ namespace Burntwax
     {
         Unequipped,
         Equipped,
+        Idle,
         ChargeAttract,
         Attract,
         Hold,
@@ -26,6 +27,7 @@ namespace Burntwax
             states[GloveState.Equipped] = new GloveEquippedState(context, this);
             states[GloveState.ChargeAttract] = new GloveChargeAttractState(context, this);
             states[GloveState.Attract] = new GloveAttractState(context, this);
+            states[GloveState.Idle] = new GloveIdleState(context, this);
             states[GloveState.Hold] = new GloveHoldState(context, this);
             states[GloveState.ChargeBlast] = new GloveChargeBlastState(context, this);
             states[GloveState.Blast] = new GloveBlastState(context, this);
@@ -41,6 +43,11 @@ namespace Burntwax
         public GloveBaseState Equipped()
         {
             return states[GloveState.Equipped];
+        }
+
+        public GloveBaseState Idle()
+        {
+            return states[GloveState.Idle];
         }
         public GloveBaseState ChargeAttract()
         {

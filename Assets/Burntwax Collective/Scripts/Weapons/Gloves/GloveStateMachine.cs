@@ -21,15 +21,19 @@ namespace Burntwax
         private KatanaStateMachine katanaStateMachine;
 
         [Header("State Variables")]
-
-        private bool attractObject;
+        
+        [SerializeField] private float equipWaitTime;
+        [SerializeField] private float substateWaitTime;
+        private bool canAttractObject;
         public bool FullyEquipped { get; private set; }
         public bool IsFiring { get; private set; }
         public bool IsReloading { get; private set; }
 
-        public bool AttractObject { get { return attractObject; } }
+        public bool CanAttractObject { get { return canAttractObject; } }
+        public float EquipWaitTime { get { return equipWaitTime; } }
+        public float SubstateWaitTime { get { return substateWaitTime; } }
 
-        private int idleHash, chargeHash, holdHash, blashHash;
+        private int idleHash, chargeHash, holdHash, blastHash;
 
         public GloveBaseState CurrentState;
 

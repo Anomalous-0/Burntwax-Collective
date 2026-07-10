@@ -107,7 +107,7 @@ namespace Burntwax
 
         private void HandleWeaponSwitchInput()
         {
-            if (InputManager.Instance == null)
+            if (InputManager.Instance == null || currentState.CurrentSubstate() == states.Shoot())
                 return;
 
             bool hasHotkeyInput = InputManager.Instance.HasWeaponSelectInput;

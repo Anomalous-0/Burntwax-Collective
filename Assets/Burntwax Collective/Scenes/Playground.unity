@@ -1864,7 +1864,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 2
@@ -37118,6 +37118,8 @@ MonoBehaviour:
   player: {fileID: 669723134}
   gloveModel: {fileID: 510963324}
   handIK: {fileID: 1142371221871575082}
+  equipWaitTime: 1
+  substateWaitTime: 0.4
 --- !u!4 &8967501273172980240
 Transform:
   m_ObjectHideFlags: 0
