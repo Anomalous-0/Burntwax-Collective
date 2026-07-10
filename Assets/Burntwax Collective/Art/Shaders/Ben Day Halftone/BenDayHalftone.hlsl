@@ -13,6 +13,16 @@
 
 static const float BenDayTwoPi = 6.283185307;
 
+// Cheap per-pixel pseudo-random value, stable across frames (pure function of
+// pixel position - no time input), used to jitter the contrast sample kernel so
+// it doesn't read as a perfectly uniform ring.
+float BenDayHash(float2 p)
+{
+    float3 p3 = frac(float3(p.xyx) * float3(0.1031, 0.1030, 0.0973));
+    p3 += dot(p3, p3.yzx + 33.33);
+    return frac((p3.x + p3.y) * p3.z);
+}
+
 float BenDayDirectLight_float(float2 uv)
 {
 #if defined(SHADERGRAPH_PREVIEW)
@@ -109,14 +119,13 @@ void BenDayShadowBloom_float(
     float WaveFrequency,
     float WaveThickness,
 
-    float ShadowThreshold,
-    float ShadowFeather,
-    float ShadowStrength,
+    float ContrastBorderWidth,
+    float ContrastSensitivity,
+    float ContrastCurve,
+    float ContrastStrength,
+    float BaseVisibility,
     float ShadowBrightness,
 
-    float LightThreshold,
-    float LightFeather,
-    float LightStrength,
     float DistanceFadeStart,
     float DistanceFadeEnd,
 
@@ -124,8 +133,6 @@ void BenDayShadowBloom_float(
 {
     WaveScale = max(WaveScale, 1.0);
     Softness = max(Softness, 0.0001);
-    ShadowFeather = max(ShadowFeather, 0.0001);
-    LightFeather = max(LightFeather, 0.0001);
     ShadowBrightness = saturate(ShadowBrightness);
 
     // Pixel brightness from the rendered scene.
@@ -134,31 +141,54 @@ void BenDayShadowBloom_float(
     float eyeDepth = BenDayEyeDepth_float(UV);
     float shadowAmount = 1.0 - directLight;
 
-    // Dark area mask based on actual sun lighting, not albedo brightness.
-    float shadowMask = smoothstep(
-        ShadowThreshold,
-        ShadowThreshold + ShadowFeather,
-        shadowAmount
-    );
-
-    // Bright area mask based on actual direct lighting, not scene color brightness.
-    float lightMask = smoothstep(
-        LightThreshold,
-        LightThreshold + LightFeather,
-        directLight
-    );
-
     float pitchPixels = max(WaveScale, 1.0);
     float softnessPixels = max(Softness * pitchPixels, 0.0001);
     float baseWave = BenDayWaveShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, WaveAmplitude, WaveFrequency, WaveThickness);
 
-    float shadowWaves = baseWave * shadowMask * saturate(ShadowStrength);
-    float lightWaves = baseWave * lightMask * saturate(LightStrength);
-
     float fadeRange = max(DistanceFadeEnd - DistanceFadeStart, 1e-5);
     float distanceFade = 1.0 - saturate((eyeDepth - DistanceFadeStart) / fadeRange);
-    shadowWaves *= distanceFade;
-    lightWaves *= distanceFade;
+
+    // The whole effect is driven by local contrast, not absolute brightness: flat
+    // bright and flat dark surfaces both read as zero. Unlike fwidth() (a single
+    // adjacent-pixel derivative), this samples the lighting at four taps out to a
+    // real screen-space radius (ContrastBorderWidth) and uses the local max-min
+    // range, so the reactive band is actually as wide as that radius. The kernel
+    // is rotated/resized per pixel via a cheap hash so it reads as a fuzzy,
+    // irregular edge rather than a clean geometric border.
+    float2 texel = 1.0 / _ScreenParams.xy;
+    float borderPixels = max(ContrastBorderWidth, 0.0);
+
+    float2 pixelCoord = UV * _ScreenParams.xy;
+    float hashAngle = BenDayHash(pixelCoord) * BenDayTwoPi;
+    float hashRadius = BenDayHash(pixelCoord + 17.0);
+    float jitteredBorder = borderPixels * lerp(0.3, 1.9, hashRadius);
+
+    float sinA = sin(hashAngle);
+    float cosA = cos(hashAngle);
+    float2 dirA = float2(cosA, sinA);
+    float2 dirB = float2(-sinA, cosA);
+
+    float2 offsetA = dirA * texel * jitteredBorder;
+    float2 offsetB = dirB * texel * jitteredBorder;
+
+    float lightA1 = BenDayDirectLight_float(UV + offsetA);
+    float lightA2 = BenDayDirectLight_float(UV - offsetA);
+    float lightB1 = BenDayDirectLight_float(UV + offsetB);
+    float lightB2 = BenDayDirectLight_float(UV - offsetB);
+
+    float localMax = max(directLight, max(max(lightA1, lightA2), max(lightB1, lightB2)));
+    float localMin = min(directLight, min(min(lightA1, lightA2), min(lightB1, lightB2)));
+    float contrastRaw = localMax - localMin;
+    float contrastNorm = saturate(contrastRaw * ContrastSensitivity);
+
+    float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
+
+    float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
+    float baseVisibility = saturate(BaseVisibility) * baseNoise;
+    float contrastIntensity = lerp(baseVisibility, saturate(ContrastStrength), pow(contrastNorm, max(ContrastCurve, 0.0001))) * distanceFade * grain;
+
+    float shadowWaves = baseWave * contrastIntensity * shadowAmount;
+    float lightWaves = baseWave * contrastIntensity * directLight;
 
     float3 color = SceneColor;
 

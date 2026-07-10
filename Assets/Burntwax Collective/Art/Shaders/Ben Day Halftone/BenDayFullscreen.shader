@@ -10,17 +10,12 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
         _Wave_Thickness("Wave Thickness", Range(0.05, 1.0)) = 0.35
         _ReferenceResolution("Reference Resolution", Vector) = (1920, 1080, 0, 0)
 
-        _Shadow_Threshold("Shadow Threshold", Range(0.0, 1.0)) = 0.74
-        _Shadow_Feather("Shadow Feather", Range(0.0, 1.0)) = 0.0
-        _Shadow_Strength("Shadow Strength", Range(0.0, 1.0)) = 0.7
-        _Shadow_Brightness("Shadow Wave Brightness", Range(0.0, 1.0)) = 0.85
-
-        _Light_Threshold("Light Threshold", Range(0.0, 1.0)) = 0.2
-        _Light_Feather("Light Feather", Range(0.0, 1.0)) = 0.43
-        _Light_Strength("Light Wave Strength", Range(0.0, 1.0)) = 0.2
-
-        _Edge_Sensitivity("Shadow Edge Sensitivity", Range(0.0, 20.0)) = 6.0
-        _Edge_Strength("Shadow Edge Strength", Range(0.0, 1.0)) = 0.5
+        _Contrast_Border_Width("Contrast Border Width (px)", Range(1.0, 32.0)) = 6.0
+        _Contrast_Sensitivity("Contrast Sensitivity", Range(0.5, 40.0)) = 12.0
+        _Contrast_Curve("Contrast Curve", Range(0.25, 4.0)) = 1.0
+        _Contrast_Strength("Contrast Strength", Range(0.0, 1.0)) = 0.85
+        _Base_Visibility("Base Visibility", Range(0.0, 0.3)) = 0.06
+        _Shadow_Brightness("Shadow Wave Brightness", Range(0.0, 1.0)) = 0.6
 
         _Fade_Start_Distance("Fade Start Distance", Float) = 0.0
         _Fade_End_Distance("Fade End Distance", Float) = 150.0
@@ -61,20 +56,27 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float _Wave_Frequency;
                 float _Wave_Thickness;
                 float4 _ReferenceResolution;
-                float _Shadow_Threshold;
-                float _Shadow_Feather;
-                float _Shadow_Strength;
+                float _Contrast_Border_Width;
+                float _Contrast_Sensitivity;
+                float _Contrast_Curve;
+                float _Contrast_Strength;
+                float _Base_Visibility;
                 float _Shadow_Brightness;
-                float _Light_Threshold;
-                float _Light_Feather;
-                float _Light_Strength;
-                float _Edge_Sensitivity;
-                float _Edge_Strength;
                 float _Fade_Start_Distance;
                 float _Fade_End_Distance;
             CBUFFER_END
 
             static const float BenDayTwoPi = 6.283185307;
+
+            // Cheap per-pixel pseudo-random value, stable across frames (pure function
+            // of pixel position - no time input), used to jitter the contrast sample
+            // kernel so it doesn't read as a perfectly uniform ring.
+            float BenDayHash(float2 p)
+            {
+                float3 p3 = frac(float3(p.xyx) * float3(0.1031, 0.1030, 0.0973));
+                p3 += dot(p3, p3.yzx + 33.33);
+                return frac((p3.x + p3.y) * p3.z);
+            }
 
             // Minimal stand-in for URP's InputData, only used to satisfy the
             // LIGHT_LOOP_BEGIN macro's Forward+ cluster lookup (needs positionWS +
@@ -142,6 +144,41 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 return strongest;
             }
 
+            // Same "is this pixel lit" value used for the color compositing below
+            // (sun w/ shadow, unshadowed sun fallback, emissive, every additional
+            // light), but callable at any uv - used both at the pixel center and at
+            // offset taps so contrast can be measured across a real screen-space
+            // radius instead of a single-pixel derivative.
+            float BenDayComputeDirectLight(float2 uv)
+            {
+                float3 positionWS, normalWS;
+                bool hasSurface = BenDaySampleSurface(uv, positionWS, normalWS);
+
+                float directLightExact = 1.0;
+                float directLightApprox = 1.0;
+                float additionalLights = 0.0;
+
+                if (hasSurface)
+                {
+                    float4 shadowCoord = TransformWorldToShadowCoord(positionWS);
+                    Light mainLight = GetMainLight(shadowCoord, positionWS, half4(1.0, 1.0, 1.0, 1.0));
+                    float3 mainLightDirWS = normalize(mainLight.direction);
+                    float ndotl = saturate(dot(normalWS, mainLightDirWS));
+                    directLightExact = saturate(ndotl * mainLight.shadowAttenuation * mainLight.distanceAttenuation);
+
+                    Light mainLightNoShadow = GetMainLight();
+                    directLightApprox = saturate(dot(normalWS, normalize(mainLightNoShadow.direction)));
+
+                    additionalLights = BenDayAdditionalLights(uv, positionWS, normalWS);
+                }
+
+                float3 tapColor = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, uv).rgb;
+                float tapLuminance = dot(tapColor, float3(0.2126, 0.7152, 0.0722));
+                float emissiveBoost = smoothstep(0.65, 0.95, tapLuminance);
+
+                return max(max(directLightExact, directLightApprox), max(emissiveBoost, additionalLights));
+            }
+
             float BenDayEyeDepth(float2 uv)
             {
                 float rawDepth = SampleSceneDepth(uv);
@@ -204,37 +241,13 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float waveScale = max(_Wave_Scale, 1.0);
                 float softness = max(_Softness, 0.0001);
                 float screenScale = max(BenDayScreenScale(), 1e-5);
-                float shadowFeather = max(_Shadow_Feather, 0.0001);
-                float lightFeather = max(_Light_Feather, 0.0001);
                 float shadowBrightness = saturate(_Shadow_Brightness);
 
-                float3 positionWS, normalWS;
-                bool hasSurface = BenDaySampleSurface(uv, positionWS, normalWS);
-
-                float directLightExact = 1.0;
-                float directLightApprox = 1.0;
-                float additionalLights = 0.0;
-
-                if (hasSurface)
-                {
-                    float4 shadowCoord = TransformWorldToShadowCoord(positionWS);
-                    Light mainLight = GetMainLight(shadowCoord, positionWS, half4(1.0, 1.0, 1.0, 1.0));
-                    float3 mainLightDirWS = normalize(mainLight.direction);
-                    float ndotl = saturate(dot(normalWS, mainLightDirWS));
-                    directLightExact = saturate(ndotl * mainLight.shadowAttenuation * mainLight.distanceAttenuation);
-
-                    Light mainLightNoShadow = GetMainLight();
-                    directLightApprox = saturate(dot(normalWS, normalize(mainLightNoShadow.direction)));
-
-                    additionalLights = BenDayAdditionalLights(uv, positionWS, normalWS);
-                }
-
                 float luminance = dot(sceneColor, float3(0.2126, 0.7152, 0.0722));
-                float emissiveBoost = smoothstep(0.65, 0.95, luminance);
 
                 // A pixel counts as "lit" for this effect if the sun, any point/spot
                 // light, or its own emissive value reaches it - not the sun alone.
-                float directLight = max(max(directLightExact, directLightApprox), max(emissiveBoost, additionalLights));
+                float directLight = BenDayComputeDirectLight(uv);
                 float eyeDepth = BenDayEyeDepth(uv);
                 float shadowAmount = 1.0 - directLight;
 
@@ -245,30 +258,71 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
 
                 float baseWave = BenDayWaveShape(uv, pitchPixels, softnessPixels);
 
-                float shadowMask = smoothstep(
-                    _Shadow_Threshold,
-                    _Shadow_Threshold + shadowFeather,
-                    shadowAmount
-                );
-
-                float lightMask = smoothstep(
-                    _Light_Threshold,
-                    _Light_Threshold + lightFeather,
-                    directLight
-                );
-
-                // Screen-space derivative of the lighting term spikes wherever light and
-                // shadow are actively fighting - a flashlight sweeping a wall, a moving
-                // shadow edge - so the waves flare there on top of the normal masking.
-                float edgeFactor = saturate(fwidth(directLight) * _Edge_Sensitivity);
-
-                float shadowWaves = baseWave * max(shadowMask * saturate(_Shadow_Strength), edgeFactor * _Edge_Strength);
-                float lightWaves = baseWave * max(lightMask * saturate(_Light_Strength), edgeFactor * _Edge_Strength);
-
                 float fadeRange = max(_Fade_End_Distance - _Fade_Start_Distance, 1e-5);
                 float distanceFade = 1.0 - saturate((eyeDepth - _Fade_Start_Distance) / fadeRange);
-                shadowWaves *= distanceFade;
-                lightWaves *= distanceFade;
+
+                // The whole effect is driven by local contrast, not absolute
+                // brightness: flat bright surfaces and flat dark surfaces both read as
+                // zero here. Unlike fwidth() (a single adjacent-pixel derivative, so
+                // only ever 1-2 pixels wide no matter how it's scaled), this samples
+                // the lighting at four taps out to a real screen-space radius
+                // (_Contrast_Border_Width) and uses the local max-min range, so the
+                // reactive band around a shadow boundary is actually as wide as that
+                // radius. The curve/sensitivity control how sharply the response
+                // scales with how hard the transition is - a grazing shadow edge stays
+                // faint, a hard-edged spotlight cutoff or flashlight sweep goes strong.
+                float2 texel = 1.0 / _ScreenParams.xy;
+                float borderPixels = max(_Contrast_Border_Width, 0.0);
+
+                // Rotate and resize the sample kernel per pixel using a cheap hash, so
+                // neighboring pixels probe slightly different directions/radii instead
+                // of a perfectly uniform ring - reads as a fuzzy, irregular edge rather
+                // than a clean geometric border.
+                float2 pixelCoord = uv * _ScreenParams.xy;
+                float hashAngle = BenDayHash(pixelCoord) * BenDayTwoPi;
+                float hashRadius = BenDayHash(pixelCoord + 17.0);
+                float jitteredBorder = borderPixels * lerp(0.3, 1.9, hashRadius);
+
+                float sinA = sin(hashAngle);
+                float cosA = cos(hashAngle);
+                float2 dirA = float2(cosA, sinA);
+                float2 dirB = float2(-sinA, cosA);
+
+                float2 offsetA = dirA * texel * jitteredBorder;
+                float2 offsetB = dirB * texel * jitteredBorder;
+
+                float lightA1 = BenDayComputeDirectLight(uv + offsetA);
+                float lightA2 = BenDayComputeDirectLight(uv - offsetA);
+                float lightB1 = BenDayComputeDirectLight(uv + offsetB);
+                float lightB2 = BenDayComputeDirectLight(uv - offsetB);
+
+                float localMax = max(directLight, max(max(lightA1, lightA2), max(lightB1, lightB2)));
+                float localMin = min(directLight, min(min(lightA1, lightA2), min(lightB1, lightB2)));
+                float contrastRaw = localMax - localMin;
+                float contrastNorm = saturate(contrastRaw * _Contrast_Sensitivity);
+
+                // A small extra grain on the final intensity itself so the band's
+                // strength breathes unevenly pixel-to-pixel, instead of a smooth
+                // analytic falloff.
+                float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
+
+                // Flat lit/shadowed regions are no longer exactly zero - a very slight
+                // base hum of visibility (_Base_Visibility) comes through everywhere,
+                // itself grained per-pixel rather than a perfectly flat wash. From
+                // there the response ramps continuously (no plateau, no snap) up to
+                // full _Contrast_Strength as local contrast increases, so edges still
+                // dominate but the whole thing reads as one smooth gradient rather
+                // than "quiet base + a hard line".
+                float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
+                float baseVisibility = saturate(_Base_Visibility) * baseNoise;
+                float contrastIntensity = lerp(baseVisibility, saturate(_Contrast_Strength), pow(contrastNorm, max(_Contrast_Curve, 0.0001))) * distanceFade * grain;
+
+                // Within that contrast band, split the response by which side of the
+                // transition each pixel sits on: the darker side darkens further, the
+                // lighter side brightens further, tracing a reactive rim around every
+                // moving shadow boundary.
+                float shadowWaves = baseWave * contrastIntensity * shadowAmount;
+                float lightWaves = baseWave * contrastIntensity * directLight;
 
                 float3 color = sceneColor;
 
