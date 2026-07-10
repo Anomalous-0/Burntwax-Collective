@@ -79,81 +79,37 @@ float BenDayEyeDepth_float(float2 uv)
 #endif
 }
 
-// Rotated-grid wave shape: rows of a sine-wave line replace the original circular
-// dot. Same distance-field-and-softness approach as the dots, so each row's stroke
-// only covers a slice of its pitch band (never a solid fill).
-float BenDayWaveShape_float(float2 uv, float pitchPixels, float softnessPixels, float angleDegrees, float amplitudeRatio, float frequency, float thicknessRatio)
-{
-    float angle = radians(angleDegrees);
-    float s = sin(angle);
-    float c = cos(angle);
-
-    float aspect = _ScreenParams.x / _ScreenParams.y;
-    float2 p = (uv - 0.5) * float2(aspect, 1.0);
-
-    float2 rotated;
-    rotated.x = p.x * c - p.y * s;
-    rotated.y = p.x * s + p.y * c;
-
-    float rowIndex = floor(rotated.y / pitchPixels + 0.5);
-    float rowCenterY = rowIndex * pitchPixels;
-
-    float amplitude = pitchPixels * saturate(amplitudeRatio) * 0.5;
-    float freq = max(frequency, 0.01);
-    float waveY = amplitude * sin(rotated.x / pitchPixels * BenDayTwoPi * freq);
-
-    float distFromWave = abs(rotated.y - rowCenterY - waveY);
-    float lineHalfWidth = pitchPixels * saturate(thicknessRatio) * 0.5;
-
-    return 1.0 - smoothstep(lineHalfWidth, lineHalfWidth + softnessPixels, distFromWave);
-}
-
-void BenDayShadowBloom_float(
+void BenDayChromaticFringe_float(
     float2 UV,
     float3 SceneColor,
-
-    float WaveScale,
-    float AngleDegrees,
-    float Softness,
-    float WaveAmplitude,
-    float WaveFrequency,
-    float WaveThickness,
 
     float ContrastBorderWidth,
     float ContrastSensitivity,
     float ContrastCurve,
     float ContrastStrength,
     float BaseVisibility,
-    float ShadowBrightness,
+
+    float3 ShadowEdgeColor,
+    float3 LightEdgeColor,
 
     float DistanceFadeStart,
     float DistanceFadeEnd,
 
     out float3 Out)
 {
-    WaveScale = max(WaveScale, 1.0);
-    Softness = max(Softness, 0.0001);
-    ShadowBrightness = saturate(ShadowBrightness);
-
-    // Pixel brightness from the rendered scene.
-    float luminance = dot(SceneColor, float3(0.2126, 0.7152, 0.0722));
     float directLight = BenDayDirectLight_float(UV);
     float eyeDepth = BenDayEyeDepth_float(UV);
     float shadowAmount = 1.0 - directLight;
-
-    float pitchPixels = max(WaveScale, 1.0);
-    float softnessPixels = max(Softness * pitchPixels, 0.0001);
-    float baseWave = BenDayWaveShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, WaveAmplitude, WaveFrequency, WaveThickness);
 
     float fadeRange = max(DistanceFadeEnd - DistanceFadeStart, 1e-5);
     float distanceFade = 1.0 - saturate((eyeDepth - DistanceFadeStart) / fadeRange);
 
     // The whole effect is driven by local contrast, not absolute brightness: flat
-    // bright and flat dark surfaces both read as zero. Unlike fwidth() (a single
-    // adjacent-pixel derivative), this samples the lighting at four taps out to a
-    // real screen-space radius (ContrastBorderWidth) and uses the local max-min
-    // range, so the reactive band is actually as wide as that radius. The kernel
-    // is rotated/resized per pixel via a cheap hash so it reads as a fuzzy,
+    // bright and flat dark surfaces both stay (almost) untinted. Unlike fwidth()
+    // (a single adjacent-pixel derivative), this samples the lighting at four taps
+    // out to a real screen-space radius (ContrastBorderWidth) and uses the local
+    // max-min range, so the reactive band is actually as wide as that radius. The
+    // kernel is rotated/resized per pixel via a cheap hash so it reads as a fuzzy,
     // irregular edge rather than a clean geometric border.
     float2 texel = 1.0 / _ScreenParams.xy;
     float borderPixels = max(ContrastBorderWidth, 0.0);
@@ -181,29 +137,31 @@ void BenDayShadowBloom_float(
     float contrastRaw = localMax - localMin;
     float contrastNorm = saturate(contrastRaw * ContrastSensitivity);
 
+    // A small extra grain on the final intensity itself so the fringe's strength
+    // breathes unevenly pixel-to-pixel, instead of a smooth analytic falloff.
     float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
 
+    // Flat lit/shadowed regions aren't exactly zero - a very slight base hum of
+    // tint (BaseVisibility) comes through everywhere, itself grained per-pixel
+    // rather than a perfectly flat wash. From there the response ramps
+    // continuously (no plateau, no snap) up to full ContrastStrength as local
+    // contrast increases, so edges still dominate but the whole thing reads as
+    // one smooth gradient.
     float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
     float baseVisibility = saturate(BaseVisibility) * baseNoise;
-    float contrastIntensity = lerp(baseVisibility, saturate(ContrastStrength), pow(contrastNorm, max(ContrastCurve, 0.0001))) * distanceFade * grain;
+    float fringeIntensity = lerp(baseVisibility, saturate(ContrastStrength), pow(contrastNorm, max(ContrastCurve, 0.0001))) * distanceFade * grain;
 
-    float shadowWaves = baseWave * contrastIntensity * shadowAmount;
-    float lightWaves = baseWave * contrastIntensity * directLight;
+    // Within that contrast band, split the response by which side of the
+    // transition each pixel sits on, and tint each side with a different color
+    // instead of darkening/brightening - a cool fringe bleeding into the shadow
+    // side of a boundary, a warm fringe bleeding into the lit side, additive so
+    // the underlying image detail stays intact.
+    float shadowFringe = fringeIntensity * shadowAmount;
+    float lightFringe = fringeIntensity * directLight;
 
     float3 color = SceneColor;
-
-    // Normalize wave visibility across bright and dark local colors.
-    // A pure multiply makes waves overpower white surfaces and disappear on darker hues.
-    float visibilityCompensation = lerp(0.35, 0.85, 1.0 - luminance);
-    float shadowDarkening = (1.0 - ShadowBrightness) * visibilityCompensation;
-    float3 shadowWaveColor = max(SceneColor - shadowDarkening.xxx, 0.0);
-    color = lerp(color, shadowWaveColor, shadowWaves);
-
-    // Normalize light-wave visibility across local colors.
-    // A pure additive scene-color term makes white surfaces blow out while darker hues barely show.
-    float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
-    float3 lightWaveColor = saturate(SceneColor * lightVisibilityCompensation);
-    color += lightWaveColor * lightWaves;
+    color += ShadowEdgeColor * shadowFringe;
+    color += LightEdgeColor * lightFringe;
 
     Out = saturate(color);
 }
