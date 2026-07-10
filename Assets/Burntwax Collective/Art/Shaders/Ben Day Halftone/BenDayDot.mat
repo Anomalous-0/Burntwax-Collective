@@ -85,7 +85,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
-    - _Base_Visibility: 0.15
+    - _Base_Visibility: 0.08
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -94,7 +94,7 @@ Material:
     - _Contrast_Border_Width: 6
     - _Contrast_Curve: 1
     - _Contrast_Sensitivity: 12
-    - _Contrast_Strength: 0.85
+    - _Contrast_Strength: 0.55
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
@@ -125,8 +125,8 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _Light_Edge_Color: {r: 0.75, g: 0.35, b: 0.05, a: 1}
-    - _Shadow_Edge_Color: {r: 0.05, g: 0.25, b: 0.55, a: 1}
+    - _Light_Edge_Color: {r: 0.45, g: 0.21, b: 0.03, a: 1}
+    - _Shadow_Edge_Color: {r: 0.03, g: 0.15, b: 0.33, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
