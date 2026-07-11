@@ -2,12 +2,10 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
 {
     Properties
     {
-        _Wave_Scale("Wave Scale", Float) = 128.2
+        _Dot_Scale("Dot Scale", Float) = 90.0
         _Angle_Degrees("Angle Degrees", Float) = 16.5
-        _Softness("Softness", Range(0.0, 1.0)) = 0.05
-        _Wave_Amplitude("Wave Amplitude", Range(0.0, 1.0)) = 0.6
-        _Wave_Frequency("Wave Frequency", Range(0.1, 4.0)) = 1.0
-        _Wave_Thickness("Wave Thickness", Range(0.05, 1.0)) = 0.35
+        _Softness("Softness", Range(0.0, 1.0)) = 0.2
+        _Dot_Radius("Dot Radius", Range(0.1, 0.45)) = 0.3
         _ReferenceResolution("Reference Resolution", Vector) = (1920, 1080, 0, 0)
 
         _Contrast_Border_Width("Contrast Border Width (px)", Range(1.0, 32.0)) = 6.0
@@ -49,12 +47,10 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Shadows.hlsl"
 
             CBUFFER_START(UnityPerMaterial)
-                float _Wave_Scale;
+                float _Dot_Scale;
                 float _Angle_Degrees;
                 float _Softness;
-                float _Wave_Amplitude;
-                float _Wave_Frequency;
-                float _Wave_Thickness;
+                float _Dot_Radius;
                 float4 _ReferenceResolution;
                 float _Contrast_Border_Width;
                 float _Contrast_Sensitivity;
@@ -202,11 +198,11 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 return currentMinDimension / referenceMinDimension;
             }
 
-            // Rotated-grid wave shape: rows of a sine-wave line replace the original
-            // circular dot. Same distance-field-and-softness approach as the dots, so
-            // each row's stroke only covers a slice of its pitch band (never a solid
-            // fill) and softens the same way at its edge.
-            float BenDayWaveShape(float2 uv, float pitchPixels, float softnessPixels)
+            // Classic rotated-grid Ben Day dot: same distance-field-and-softness
+            // approach as before, just a circle per cell instead of a wave line - to
+            // match the hand-authored dot-halftone look already used on prop
+            // textures, rather than reading as a distinct "wave" motif.
+            float BenDayDotShape(float2 uv, float pitchPixels, float softnessPixels)
             {
                 float angle = radians(_Angle_Degrees);
                 float s = sin(angle);
@@ -218,17 +214,13 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 rotated.x = centeredPixels.x * c - centeredPixels.y * s;
                 rotated.y = centeredPixels.x * s + centeredPixels.y * c;
 
-                float rowIndex = floor(rotated.y / pitchPixels + 0.5);
-                float rowCenterY = rowIndex * pitchPixels;
+                float2 grid = rotated / pitchPixels;
+                float2 cell = frac(grid) - 0.5;
+                float distPixels = length(cell) * pitchPixels;
 
-                float amplitude = pitchPixels * saturate(_Wave_Amplitude) * 0.5;
-                float frequency = max(_Wave_Frequency, 0.01);
-                float waveY = amplitude * sin(rotated.x / pitchPixels * BenDayTwoPi * frequency);
+                float radiusPixels = pitchPixels * saturate(_Dot_Radius);
 
-                float distFromWave = abs(rotated.y - rowCenterY - waveY);
-                float lineHalfWidth = pitchPixels * saturate(_Wave_Thickness) * 0.5;
-
-                return 1.0 - smoothstep(lineHalfWidth, lineHalfWidth + softnessPixels, distFromWave);
+                return 1.0 - smoothstep(radiusPixels, radiusPixels + softnessPixels, distPixels);
             }
 
             half4 Frag(Varyings input) : SV_Target
@@ -238,7 +230,7 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float2 uv = input.texcoord.xy;
                 float3 sceneColor = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, uv).rgb;
 
-                float waveScale = max(_Wave_Scale, 1.0);
+                float dotScale = max(_Dot_Scale, 1.0);
                 float softness = max(_Softness, 0.0001);
                 float screenScale = max(BenDayScreenScale(), 1e-5);
                 float shadowBrightness = saturate(_Shadow_Brightness);
@@ -252,11 +244,11 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float shadowAmount = 1.0 - directLight;
 
                 float referenceMinDimension = max(min(_ReferenceResolution.x, _ReferenceResolution.y), 1.0);
-                float pitchAtReference = referenceMinDimension / waveScale;
+                float pitchAtReference = referenceMinDimension / dotScale;
                 float pitchPixels = max(pitchAtReference * screenScale, 1.0);
                 float softnessPixels = max(softness * pitchPixels, 0.0001);
 
-                float baseWave = BenDayWaveShape(uv, pitchPixels, softnessPixels);
+                float baseDot = BenDayDotShape(uv, pitchPixels, softnessPixels);
 
                 float fadeRange = max(_Fade_End_Distance - _Fade_Start_Distance, 1e-5);
                 float distanceFade = 1.0 - saturate((eyeDepth - _Fade_Start_Distance) / fadeRange);
@@ -315,25 +307,32 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 // than "quiet base + a hard line".
                 float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
                 float baseVisibility = saturate(_Base_Visibility) * baseNoise;
-                float contrastIntensity = lerp(baseVisibility, saturate(_Contrast_Strength), pow(contrastNorm, max(_Contrast_Curve, 0.0001))) * distanceFade * grain;
+
+                // Ease the raw contrast value through a smoothstep before curving it -
+                // smoothstep has zero slope at both ends, so the response fades in and
+                // out gradually rather than snapping the instant contrast crosses into
+                // detectable range. Reads as a gradient, not a hard on/off line.
+                float easedContrast = smoothstep(0.0, 1.0, contrastNorm);
+                easedContrast = pow(easedContrast, max(_Contrast_Curve, 0.0001));
+                float contrastIntensity = lerp(baseVisibility, saturate(_Contrast_Strength), easedContrast) * distanceFade * grain;
 
                 // Within that contrast band, split the response by which side of the
                 // transition each pixel sits on: the darker side darkens further, the
                 // lighter side brightens further, tracing a reactive rim around every
                 // moving shadow boundary.
-                float shadowWaves = baseWave * contrastIntensity * shadowAmount;
-                float lightWaves = baseWave * contrastIntensity * directLight;
+                float shadowDots = baseDot * contrastIntensity * shadowAmount;
+                float lightDots = baseDot * contrastIntensity * directLight;
 
                 float3 color = sceneColor;
 
                 float visibilityCompensation = lerp(0.35, 0.85, 1.0 - luminance);
                 float shadowDarkening = (1.0 - shadowBrightness) * visibilityCompensation;
-                float3 shadowWaveColor = max(sceneColor - shadowDarkening.xxx, 0.0);
-                color = lerp(color, shadowWaveColor, shadowWaves);
+                float3 shadowDotColor = max(sceneColor - shadowDarkening.xxx, 0.0);
+                color = lerp(color, shadowDotColor, shadowDots);
 
                 float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
-                float3 lightWaveColor = saturate(sceneColor * lightVisibilityCompensation);
-                color += lightWaveColor * lightWaves;
+                float3 lightDotColor = saturate(sceneColor * lightVisibilityCompensation);
+                color += lightDotColor * lightDots;
 
                 return half4(saturate(color), 1.0);
             }
