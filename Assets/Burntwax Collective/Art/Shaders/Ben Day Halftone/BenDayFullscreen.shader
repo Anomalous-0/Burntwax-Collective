@@ -2,18 +2,24 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
 {
     Properties
     {
-        _Dot_Scale("Dot Scale", Float) = 90.0
+        _Dot_Scale("Dot Scale", Float) = 220.0
         _Angle_Degrees("Angle Degrees", Float) = 16.5
-        _Softness("Softness", Range(0.0, 1.0)) = 0.2
         _Dot_Radius("Dot Radius", Range(0.1, 0.45)) = 0.3
         _ReferenceResolution("Reference Resolution", Vector) = (1920, 1080, 0, 0)
 
         _Contrast_Border_Width("Contrast Border Width (px)", Range(1.0, 32.0)) = 6.0
-        _Contrast_Sensitivity("Contrast Sensitivity", Range(0.5, 40.0)) = 12.0
-        _Contrast_Curve("Contrast Curve", Range(0.25, 4.0)) = 1.0
-        _Contrast_Strength("Contrast Strength", Range(0.0, 1.0)) = 0.85
-        _Base_Visibility("Base Visibility", Range(0.0, 0.3)) = 0.06
-        _Shadow_Brightness("Shadow Wave Brightness", Range(0.0, 1.0)) = 0.6
+        _Contrast_Sensitivity("Contrast Sensitivity", Range(0.5, 40.0)) = 6.0
+        _Contrast_Curve("Contrast Curve", Range(0.25, 4.0)) = 1.4
+
+        _Shadow_Feather("Shadow Feather", Range(0.0, 1.0)) = 0.15
+        _Shadow_Max_Strength("Shadow Max Strength", Range(0.0, 1.0)) = 1.0
+        _Shadow_Base_Visibility("Shadow Base Visibility", Range(0.0, 0.3)) = 0.03
+        _Shadow_Dot_Color("Shadow Dot Color", Color) = (0.03, 0.15, 0.35, 1)
+
+        _Light_Feather("Light Feather", Range(0.0, 1.0)) = 0.15
+        _Light_Max_Strength("Light Max Strength", Range(0.0, 1.0)) = 1.0
+        _Light_Base_Visibility("Light Base Visibility", Range(0.0, 0.3)) = 0.03
+        _Light_Dot_Color("Light Dot Color", Color) = (0.75, 0.35, 0.05, 1)
 
         _Fade_Start_Distance("Fade Start Distance", Float) = 0.0
         _Fade_End_Distance("Fade End Distance", Float) = 150.0
@@ -49,15 +55,19 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
             CBUFFER_START(UnityPerMaterial)
                 float _Dot_Scale;
                 float _Angle_Degrees;
-                float _Softness;
                 float _Dot_Radius;
                 float4 _ReferenceResolution;
                 float _Contrast_Border_Width;
                 float _Contrast_Sensitivity;
                 float _Contrast_Curve;
-                float _Contrast_Strength;
-                float _Base_Visibility;
-                float _Shadow_Brightness;
+                float _Shadow_Feather;
+                float _Shadow_Max_Strength;
+                float _Shadow_Base_Visibility;
+                float4 _Shadow_Dot_Color;
+                float _Light_Feather;
+                float _Light_Max_Strength;
+                float _Light_Base_Visibility;
+                float4 _Light_Dot_Color;
                 float _Fade_Start_Distance;
                 float _Fade_End_Distance;
             CBUFFER_END
@@ -198,10 +208,10 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 return currentMinDimension / referenceMinDimension;
             }
 
-            // Classic rotated-grid Ben Day dot: same distance-field-and-softness
-            // approach as before, just a circle per cell instead of a wave line - to
-            // match the hand-authored dot-halftone look already used on prop
-            // textures, rather than reading as a distinct "wave" motif.
+            // Screen-space Ben Day dot: a fixed grid painted on the lens/screen, like
+            // a film filter, not attached to any object's world position. Called
+            // separately for the shadow and light side so each can have its own
+            // feather (edge softness) while sharing the same grid pitch/rotation/size.
             float BenDayDotShape(float2 uv, float pitchPixels, float softnessPixels)
             {
                 float angle = radians(_Angle_Degrees);
@@ -231,11 +241,7 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float3 sceneColor = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, uv).rgb;
 
                 float dotScale = max(_Dot_Scale, 1.0);
-                float softness = max(_Softness, 0.0001);
                 float screenScale = max(BenDayScreenScale(), 1e-5);
-                float shadowBrightness = saturate(_Shadow_Brightness);
-
-                float luminance = dot(sceneColor, float3(0.2126, 0.7152, 0.0722));
 
                 // A pixel counts as "lit" for this effect if the sun, any point/spot
                 // light, or its own emissive value reaches it - not the sun alone.
@@ -246,9 +252,12 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float referenceMinDimension = max(min(_ReferenceResolution.x, _ReferenceResolution.y), 1.0);
                 float pitchAtReference = referenceMinDimension / dotScale;
                 float pitchPixels = max(pitchAtReference * screenScale, 1.0);
-                float softnessPixels = max(softness * pitchPixels, 0.0001);
 
-                float baseDot = BenDayDotShape(uv, pitchPixels, softnessPixels);
+                // Each side gets its own feather (edge softness), same grid otherwise.
+                float shadowSoftnessPixels = max(_Shadow_Feather, 0.0001) * pitchPixels;
+                float lightSoftnessPixels = max(_Light_Feather, 0.0001) * pitchPixels;
+                float baseDotShadow = BenDayDotShape(uv, pitchPixels, shadowSoftnessPixels);
+                float baseDotLight = BenDayDotShape(uv, pitchPixels, lightSoftnessPixels);
 
                 float fadeRange = max(_Fade_End_Distance - _Fade_Start_Distance, 1e-5);
                 float distanceFade = 1.0 - saturate((eyeDepth - _Fade_Start_Distance) / fadeRange);
@@ -295,44 +304,37 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
 
                 // A small extra grain on the final intensity itself so the band's
                 // strength breathes unevenly pixel-to-pixel, instead of a smooth
-                // analytic falloff.
-                float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
-
-                // Flat lit/shadowed regions are no longer exactly zero - a very slight
-                // base hum of visibility (_Base_Visibility) comes through everywhere,
-                // itself grained per-pixel rather than a perfectly flat wash. From
-                // there the response ramps continuously (no plateau, no snap) up to
-                // full _Contrast_Strength as local contrast increases, so edges still
-                // dominate but the whole thing reads as one smooth gradient rather
-                // than "quiet base + a hard line".
-                float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
-                float baseVisibility = saturate(_Base_Visibility) * baseNoise;
+                // analytic falloff. Kept tight so it reads as texture, not noisy jumps.
+                float grain = lerp(0.9, 1.1, BenDayHash(pixelCoord + 91.0));
+                float baseNoise = lerp(0.85, 1.15, BenDayHash(pixelCoord + 133.0));
 
                 // Ease the raw contrast value through a smoothstep before curving it -
                 // smoothstep has zero slope at both ends, so the response fades in and
                 // out gradually rather than snapping the instant contrast crosses into
-                // detectable range. Reads as a gradient, not a hard on/off line.
+                // detectable range. Reads as a gradient, not a hard on/off line. Shared
+                // between both sides since it's about where the edge is, not how each
+                // side should react to it.
                 float easedContrast = smoothstep(0.0, 1.0, contrastNorm);
                 easedContrast = pow(easedContrast, max(_Contrast_Curve, 0.0001));
-                float contrastIntensity = lerp(baseVisibility, saturate(_Contrast_Strength), easedContrast) * distanceFade * grain;
+
+                // Flat lit/shadowed regions aren't exactly zero - a very slight base
+                // hum of visibility comes through everywhere, itself grained per-pixel.
+                // From there each side ramps continuously (no plateau, no snap) up to
+                // its own max strength as local contrast increases.
+                float shadowIntensity = lerp(saturate(_Shadow_Base_Visibility) * baseNoise, saturate(_Shadow_Max_Strength), easedContrast) * distanceFade * grain;
+                float lightIntensity = lerp(saturate(_Light_Base_Visibility) * baseNoise, saturate(_Light_Max_Strength), easedContrast) * distanceFade * grain;
 
                 // Within that contrast band, split the response by which side of the
-                // transition each pixel sits on: the darker side darkens further, the
-                // lighter side brightens further, tracing a reactive rim around every
-                // moving shadow boundary.
-                float shadowDots = baseDot * contrastIntensity * shadowAmount;
-                float lightDots = baseDot * contrastIntensity * directLight;
+                // transition each pixel sits on: the darker side gets shadow dots, the
+                // lighter side gets light dots, tracing a reactive rim around every
+                // moving shadow boundary. Composited with a straight lerp to the dot's
+                // own color - fully opaque at full strength, not an additive haze.
+                float shadowDots = saturate(baseDotShadow * shadowIntensity * shadowAmount);
+                float lightDots = saturate(baseDotLight * lightIntensity * directLight);
 
                 float3 color = sceneColor;
-
-                float visibilityCompensation = lerp(0.35, 0.85, 1.0 - luminance);
-                float shadowDarkening = (1.0 - shadowBrightness) * visibilityCompensation;
-                float3 shadowDotColor = max(sceneColor - shadowDarkening.xxx, 0.0);
-                color = lerp(color, shadowDotColor, shadowDots);
-
-                float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
-                float3 lightDotColor = saturate(sceneColor * lightVisibilityCompensation);
-                color += lightDotColor * lightDots;
+                color = lerp(color, _Shadow_Dot_Color.rgb, shadowDots);
+                color = lerp(color, _Light_Dot_Color.rgb, lightDots);
 
                 return half4(saturate(color), 1.0);
             }
