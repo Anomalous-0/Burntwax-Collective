@@ -10,12 +10,21 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
         _Wave_Thickness("Wave Thickness", Range(0.05, 1.0)) = 0.35
         _ReferenceResolution("Reference Resolution", Vector) = (1920, 1080, 0, 0)
 
-        _Contrast_Border_Width("Contrast Border Width (px)", Range(1.0, 32.0)) = 6.0
-        _Contrast_Sensitivity("Contrast Sensitivity", Range(0.5, 40.0)) = 12.0
-        _Contrast_Curve("Contrast Curve", Range(0.25, 4.0)) = 1.0
-        _Contrast_Strength("Contrast Strength", Range(0.0, 1.0)) = 0.85
-        _Base_Visibility("Base Visibility", Range(0.0, 0.3)) = 0.06
-        _Shadow_Brightness("Shadow Wave Brightness", Range(0.0, 1.0)) = 0.6
+        _Dark_Dot_Intensity("Dark Dot Intensity", Range(0.0, 2.0)) = 1.0
+        _Dark_Contrast_Border_Width("Dark Contrast Border Width (px)", Range(1.0, 32.0)) = 6.0
+        _Dark_Contrast_Sensitivity("Dark Contrast Sensitivity", Range(0.5, 40.0)) = 12.0
+        _Dark_Contrast_Curve("Dark Contrast Curve", Range(0.25, 4.0)) = 1.0
+        _Dark_Contrast_Strength("Dark Contrast Strength", Range(0.0, 1.0)) = 0.85
+        _Dark_Base_Visibility("Dark Base Visibility", Range(0.0, 0.3)) = 0.06
+        _Dark_Wave_Darkness("Dark Wave Darkness", Range(0.0, 1.0)) = 0.4
+
+        _Light_Dot_Intensity("Light Dot Intensity", Range(0.0, 2.0)) = 1.0
+        _Light_Contrast_Border_Width("Light Contrast Border Width (px)", Range(1.0, 32.0)) = 6.0
+        _Light_Contrast_Sensitivity("Light Contrast Sensitivity", Range(0.5, 40.0)) = 12.0
+        _Light_Contrast_Curve("Light Contrast Curve", Range(0.25, 4.0)) = 1.0
+        _Light_Contrast_Strength("Light Contrast Strength", Range(0.0, 1.0)) = 0.85
+        _Light_Base_Visibility("Light Base Visibility", Range(0.0, 0.3)) = 0.06
+        _Light_Wave_Brightness("Light Wave Brightness", Range(0.0, 1.0)) = 1.0
 
         _Fade_Start_Distance("Fade Start Distance", Float) = 0.0
         _Fade_End_Distance("Fade End Distance", Float) = 150.0
@@ -56,12 +65,20 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float _Wave_Frequency;
                 float _Wave_Thickness;
                 float4 _ReferenceResolution;
-                float _Contrast_Border_Width;
-                float _Contrast_Sensitivity;
-                float _Contrast_Curve;
-                float _Contrast_Strength;
-                float _Base_Visibility;
-                float _Shadow_Brightness;
+                float _Dark_Dot_Intensity;
+                float _Dark_Contrast_Border_Width;
+                float _Dark_Contrast_Sensitivity;
+                float _Dark_Contrast_Curve;
+                float _Dark_Contrast_Strength;
+                float _Dark_Base_Visibility;
+                float _Dark_Wave_Darkness;
+                float _Light_Dot_Intensity;
+                float _Light_Contrast_Border_Width;
+                float _Light_Contrast_Sensitivity;
+                float _Light_Contrast_Curve;
+                float _Light_Contrast_Strength;
+                float _Light_Base_Visibility;
+                float _Light_Wave_Brightness;
                 float _Fade_Start_Distance;
                 float _Fade_End_Distance;
             CBUFFER_END
@@ -231,6 +248,33 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 return 1.0 - smoothstep(lineHalfWidth, lineHalfWidth + softnessPixels, distFromWave);
             }
 
+            float BenDayContrastNorm(float2 uv, float centerLight, float2 texel, float2 pixelCoord, float borderPixels, float sensitivity)
+            {
+                borderPixels = max(borderPixels, 0.0);
+
+                float hashAngle = BenDayHash(pixelCoord) * BenDayTwoPi;
+                float hashRadius = BenDayHash(pixelCoord + 17.0);
+                float jitteredBorder = borderPixels * lerp(0.3, 1.9, hashRadius);
+
+                float sinA = sin(hashAngle);
+                float cosA = cos(hashAngle);
+                float2 dirA = float2(cosA, sinA);
+                float2 dirB = float2(-sinA, cosA);
+
+                float2 offsetA = dirA * texel * jitteredBorder;
+                float2 offsetB = dirB * texel * jitteredBorder;
+
+                float lightA1 = BenDayComputeDirectLight(uv + offsetA);
+                float lightA2 = BenDayComputeDirectLight(uv - offsetA);
+                float lightB1 = BenDayComputeDirectLight(uv + offsetB);
+                float lightB2 = BenDayComputeDirectLight(uv - offsetB);
+
+                float localMax = max(centerLight, max(max(lightA1, lightA2), max(lightB1, lightB2)));
+                float localMin = min(centerLight, min(min(lightA1, lightA2), min(lightB1, lightB2)));
+                float contrastRaw = localMax - localMin;
+                return saturate(contrastRaw * sensitivity);
+            }
+
             half4 Frag(Varyings input) : SV_Target
             {
                 UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
@@ -241,7 +285,10 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float waveScale = max(_Wave_Scale, 1.0);
                 float softness = max(_Softness, 0.0001);
                 float screenScale = max(BenDayScreenScale(), 1e-5);
-                float shadowBrightness = saturate(_Shadow_Brightness);
+                float darkDotIntensity = clamp(_Dark_Dot_Intensity, 0.0, 2.0);
+                float lightDotIntensity = clamp(_Light_Dot_Intensity, 0.0, 2.0);
+                float darkWaveDarkness = saturate(_Dark_Wave_Darkness);
+                float lightWaveBrightness = saturate(_Light_Wave_Brightness);
 
                 float luminance = dot(sceneColor, float3(0.2126, 0.7152, 0.0722));
 
@@ -265,41 +312,14 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 // brightness: flat bright surfaces and flat dark surfaces both read as
                 // zero here. Unlike fwidth() (a single adjacent-pixel derivative, so
                 // only ever 1-2 pixels wide no matter how it's scaled), this samples
-                // the lighting at four taps out to a real screen-space radius
-                // (_Contrast_Border_Width) and uses the local max-min range, so the
-                // reactive band around a shadow boundary is actually as wide as that
-                // radius. The curve/sensitivity control how sharply the response
-                // scales with how hard the transition is - a grazing shadow edge stays
-                // faint, a hard-edged spotlight cutoff or flashlight sweep goes strong.
+                // the lighting at four taps out to a real screen-space radius and
+                // uses the local max-min range, so the reactive band around a shadow
+                // boundary is actually as wide as that radius. Dark and light dots
+                // each get their own copy of those controls below.
                 float2 texel = 1.0 / _ScreenParams.xy;
-                float borderPixels = max(_Contrast_Border_Width, 0.0);
-
-                // Rotate and resize the sample kernel per pixel using a cheap hash, so
-                // neighboring pixels probe slightly different directions/radii instead
-                // of a perfectly uniform ring - reads as a fuzzy, irregular edge rather
-                // than a clean geometric border.
                 float2 pixelCoord = uv * _ScreenParams.xy;
-                float hashAngle = BenDayHash(pixelCoord) * BenDayTwoPi;
-                float hashRadius = BenDayHash(pixelCoord + 17.0);
-                float jitteredBorder = borderPixels * lerp(0.3, 1.9, hashRadius);
-
-                float sinA = sin(hashAngle);
-                float cosA = cos(hashAngle);
-                float2 dirA = float2(cosA, sinA);
-                float2 dirB = float2(-sinA, cosA);
-
-                float2 offsetA = dirA * texel * jitteredBorder;
-                float2 offsetB = dirB * texel * jitteredBorder;
-
-                float lightA1 = BenDayComputeDirectLight(uv + offsetA);
-                float lightA2 = BenDayComputeDirectLight(uv - offsetA);
-                float lightB1 = BenDayComputeDirectLight(uv + offsetB);
-                float lightB2 = BenDayComputeDirectLight(uv - offsetB);
-
-                float localMax = max(directLight, max(max(lightA1, lightA2), max(lightB1, lightB2)));
-                float localMin = min(directLight, min(min(lightA1, lightA2), min(lightB1, lightB2)));
-                float contrastRaw = localMax - localMin;
-                float contrastNorm = saturate(contrastRaw * _Contrast_Sensitivity);
+                float darkContrastNorm = BenDayContrastNorm(uv, directLight, texel, pixelCoord, _Dark_Contrast_Border_Width, _Dark_Contrast_Sensitivity);
+                float lightContrastNorm = BenDayContrastNorm(uv, directLight, texel, pixelCoord, _Light_Contrast_Border_Width, _Light_Contrast_Sensitivity);
 
                 // A small extra grain on the final intensity itself so the band's
                 // strength breathes unevenly pixel-to-pixel, instead of a smooth
@@ -307,32 +327,32 @@ Shader "Burntwax/Fullscreen/Ben Day Halftone"
                 float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
 
                 // Flat lit/shadowed regions are no longer exactly zero - a very slight
-                // base hum of visibility (_Base_Visibility) comes through everywhere,
-                // itself grained per-pixel rather than a perfectly flat wash. From
-                // there the response ramps continuously (no plateau, no snap) up to
-                // full _Contrast_Strength as local contrast increases, so edges still
-                // dominate but the whole thing reads as one smooth gradient rather
-                // than "quiet base + a hard line".
+                // base hum of visibility comes through everywhere, itself grained
+                // per-pixel rather than a perfectly flat wash. Each branch then ramps
+                // up toward its own contrast strength as local contrast increases.
                 float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
-                float baseVisibility = saturate(_Base_Visibility) * baseNoise;
-                float contrastIntensity = lerp(baseVisibility, saturate(_Contrast_Strength), pow(contrastNorm, max(_Contrast_Curve, 0.0001))) * distanceFade * grain;
+                float darkBaseVisibility = saturate(_Dark_Base_Visibility) * baseNoise;
+                float darkContrastIntensity = lerp(darkBaseVisibility, saturate(_Dark_Contrast_Strength), pow(darkContrastNorm, max(_Dark_Contrast_Curve, 0.0001))) * distanceFade * grain * darkDotIntensity;
+
+                float lightBaseVisibility = saturate(_Light_Base_Visibility) * baseNoise;
+                float lightContrastIntensity = lerp(lightBaseVisibility, saturate(_Light_Contrast_Strength), pow(lightContrastNorm, max(_Light_Contrast_Curve, 0.0001))) * distanceFade * grain * lightDotIntensity;
 
                 // Within that contrast band, split the response by which side of the
                 // transition each pixel sits on: the darker side darkens further, the
                 // lighter side brightens further, tracing a reactive rim around every
                 // moving shadow boundary.
-                float shadowWaves = baseWave * contrastIntensity * shadowAmount;
-                float lightWaves = baseWave * contrastIntensity * directLight;
+                float shadowWaves = baseWave * darkContrastIntensity * shadowAmount;
+                float lightWaves = baseWave * lightContrastIntensity * directLight;
 
                 float3 color = sceneColor;
 
                 float visibilityCompensation = lerp(0.35, 0.85, 1.0 - luminance);
-                float shadowDarkening = (1.0 - shadowBrightness) * visibilityCompensation;
+                float shadowDarkening = darkWaveDarkness * visibilityCompensation;
                 float3 shadowWaveColor = max(sceneColor - shadowDarkening.xxx, 0.0);
                 color = lerp(color, shadowWaveColor, shadowWaves);
 
                 float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
-                float3 lightWaveColor = saturate(sceneColor * lightVisibilityCompensation);
+                float3 lightWaveColor = sceneColor * (lightVisibilityCompensation * lightWaveBrightness);
                 color += lightWaveColor * lightWaves;
 
                 return half4(saturate(color), 1.0);

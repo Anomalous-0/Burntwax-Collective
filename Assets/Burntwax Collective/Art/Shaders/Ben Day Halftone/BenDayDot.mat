@@ -86,18 +86,20 @@ Material:
     - _AlphaClip: 0
     - _AlphaToMask: 0
     - _Angle_Degrees: 16.5
-    - _Base_Visibility: 0.15
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Contrast_Border_Width: 8.1
-    - _Contrast_Curve: 1
-    - _Contrast_Sensitivity: 12
-    - _Contrast_Strength: 0.85
     - _Cull: 2
     - _Cutoff: 0.5
+    - _Dark_Base_Visibility: 0.15
+    - _Dark_Contrast_Border_Width: 5.4
+    - _Dark_Contrast_Curve: 1
+    - _Dark_Contrast_Sensitivity: 12
+    - _Dark_Contrast_Strength: 1
+    - _Dark_Dot_Intensity: 1
+    - _Dark_Wave_Darkness: 0.371
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -108,12 +110,18 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _Light_Base_Visibility: 0.132
+    - _Light_Contrast_Border_Width: 3.4
+    - _Light_Contrast_Curve: 1
+    - _Light_Contrast_Sensitivity: 12
+    - _Light_Contrast_Strength: 1
+    - _Light_Dot_Intensity: 1
+    - _Light_Wave_Brightness: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Shadow_Brightness: 0.629
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _Softness: 0.05
