@@ -79,10 +79,12 @@ float BenDayEyeDepth_float(float2 uv)
 #endif
 }
 
-// Rotated-grid wave shape: rows of a sine-wave line replace the circular dot.
-// Same distance-field-and-softness approach, so each row's stroke only covers a
-// slice of its pitch band (never a solid fill).
-float BenDayWaveShape_float(float2 uv, float pitchPixels, float softnessPixels, float angleDegrees, float amplitudeRatio, float frequency, float thicknessRatio)
+// Screen-space Ben Day dot: a fixed grid painted on the lens/screen, like a
+// film filter, not attached to any object's world position. It never resizes
+// or reveals a different part of some hidden pattern as the camera moves or
+// objects move through it - the same screen pixel always sits in the same
+// spot in the grid, full stop.
+float BenDayDotShape_float(float2 uv, float pitchPixels, float softnessPixels, float angleDegrees, float radiusRatio)
 {
     float angle = radians(angleDegrees);
     float s = sin(angle);
@@ -95,55 +97,49 @@ float BenDayWaveShape_float(float2 uv, float pitchPixels, float softnessPixels, 
     rotated.x = p.x * c - p.y * s;
     rotated.y = p.x * s + p.y * c;
 
-    float rowIndex = floor(rotated.y / pitchPixels + 0.5);
-    float rowCenterY = rowIndex * pitchPixels;
+    float2 grid = rotated / pitchPixels;
+    float2 cell = frac(grid) - 0.5;
+    float distPixels = length(cell) * pitchPixels;
 
-    float amplitude = pitchPixels * saturate(amplitudeRatio) * 0.5;
-    float freq = max(frequency, 0.01);
-    float waveY = amplitude * sin(rotated.x / pitchPixels * BenDayTwoPi * freq);
+    float radiusPixels = pitchPixels * saturate(radiusRatio);
 
-    float distFromWave = abs(rotated.y - rowCenterY - waveY);
-    float lineHalfWidth = pitchPixels * saturate(thicknessRatio) * 0.5;
-
-    return 1.0 - smoothstep(lineHalfWidth, lineHalfWidth + softnessPixels, distFromWave);
+    return 1.0 - smoothstep(radiusPixels, radiusPixels + softnessPixels, distPixels);
 }
 
 void BenDayShadowBloom_float(
     float2 UV,
     float3 SceneColor,
 
-    float WaveScale,
+    float DotScale,
     float AngleDegrees,
     float Softness,
-    float WaveAmplitude,
-    float WaveFrequency,
-    float WaveThickness,
+    float DotRadius,
 
     float ContrastBorderWidth,
     float ContrastSensitivity,
     float ContrastCurve,
     float ContrastStrength,
     float BaseVisibility,
-    float ShadowBrightness,
+
+    float3 ShadowDotColor,
+    float ShadowDotStrength,
+    float3 LightDotColor,
+    float LightDotStrength,
 
     float DistanceFadeStart,
     float DistanceFadeEnd,
 
     out float3 Out)
 {
-    WaveScale = max(WaveScale, 1.0);
+    float pitchPixels = max(DotScale, 1.0);
     Softness = max(Softness, 0.0001);
-    ShadowBrightness = saturate(ShadowBrightness);
+    float softnessPixels = max(Softness * pitchPixels, 0.0001);
 
-    // Pixel brightness from the rendered scene.
-    float luminance = dot(SceneColor, float3(0.2126, 0.7152, 0.0722));
     float directLight = BenDayDirectLight_float(UV);
     float eyeDepth = BenDayEyeDepth_float(UV);
     float shadowAmount = 1.0 - directLight;
 
-    float pitchPixels = max(WaveScale, 1.0);
-    float softnessPixels = max(Softness * pitchPixels, 0.0001);
-    float baseWave = BenDayWaveShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, WaveAmplitude, WaveFrequency, WaveThickness);
+    float baseDot = BenDayDotShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, DotRadius);
 
     float fadeRange = max(DistanceFadeEnd - DistanceFadeStart, 1e-5);
     float distanceFade = 1.0 - saturate((eyeDepth - DistanceFadeStart) / fadeRange);
@@ -181,9 +177,9 @@ void BenDayShadowBloom_float(
     float contrastRaw = localMax - localMin;
     float contrastNorm = saturate(contrastRaw * ContrastSensitivity);
 
-    float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
+    float grain = lerp(0.9, 1.1, BenDayHash(pixelCoord + 91.0));
 
-    float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
+    float baseNoise = lerp(0.85, 1.15, BenDayHash(pixelCoord + 133.0));
     float baseVisibility = saturate(BaseVisibility) * baseNoise;
 
     // Ease the raw contrast value through a smoothstep before curving it -
@@ -194,23 +190,16 @@ void BenDayShadowBloom_float(
     easedContrast = pow(easedContrast, max(ContrastCurve, 0.0001));
     float contrastIntensity = lerp(baseVisibility, saturate(ContrastStrength), easedContrast) * distanceFade * grain;
 
-    float shadowWaves = baseWave * contrastIntensity * shadowAmount;
-    float lightWaves = baseWave * contrastIntensity * directLight;
+    // Tint each side's dots with a different color instead of
+    // darkening/brightening - a cool tint on the shadow-side dots, a warm tint
+    // on the light-side dots, additive so the underlying image detail stays
+    // intact through the pattern.
+    float shadowDots = baseDot * contrastIntensity * shadowAmount * saturate(ShadowDotStrength);
+    float lightDots = baseDot * contrastIntensity * directLight * saturate(LightDotStrength);
 
     float3 color = SceneColor;
-
-    // Normalize wave visibility across bright and dark local colors.
-    // A pure multiply makes waves overpower white surfaces and disappear on darker hues.
-    float visibilityCompensation = lerp(0.35, 0.85, 1.0 - luminance);
-    float shadowDarkening = (1.0 - ShadowBrightness) * visibilityCompensation;
-    float3 shadowWaveColor = max(SceneColor - shadowDarkening.xxx, 0.0);
-    color = lerp(color, shadowWaveColor, shadowWaves);
-
-    // Normalize light-wave visibility across local colors.
-    // A pure additive scene-color term makes white surfaces blow out while darker hues barely show.
-    float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
-    float3 lightWaveColor = saturate(SceneColor * lightVisibilityCompensation);
-    color += lightWaveColor * lightWaves;
+    color += ShadowDotColor * shadowDots;
+    color += LightDotColor * lightDots;
 
     Out = saturate(color);
 }
