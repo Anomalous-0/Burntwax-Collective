@@ -14,8 +14,8 @@
 static const float BenDayTwoPi = 6.283185307;
 
 // Cheap per-pixel pseudo-random value, stable across frames (pure function of
-// pixel position - no time input), used to jitter the contrast sample kernel so
-// it doesn't read as a perfectly uniform ring.
+// pixel position - no time input), used to dither the shadow/light tone so dot
+// growth doesn't read as a perfectly uniform ring.
 float BenDayHash(float2 p)
 {
     float3 p3 = frac(float3(p.xyx) * float3(0.1031, 0.1030, 0.0973));
@@ -111,14 +111,15 @@ void BenDayShadowBloom_float(
     float DotScale,
     float AngleDegrees,
     float Softness,
-    float DotRadius,
 
-    float ContrastBorderWidth,
-    float ContrastSensitivity,
-    float ContrastCurve,
-    float ContrastStrength,
-    float BaseVisibility,
-    float ShadowBrightness,
+    float ShadowThreshold,
+    float ShadowFeather,
+    float ShadowStrength,
+    float ShadowDotBrightness,
+
+    float LightThreshold,
+    float LightFeather,
+    float LightDotStrength,
 
     float DistanceFadeStart,
     float DistanceFadeEnd,
@@ -127,84 +128,50 @@ void BenDayShadowBloom_float(
 {
     DotScale = max(DotScale, 1.0);
     Softness = max(Softness, 0.0001);
-    ShadowBrightness = saturate(ShadowBrightness);
+    ShadowFeather = max(ShadowFeather, 0.0001);
+    LightFeather = max(LightFeather, 0.0001);
 
-    // Pixel brightness from the rendered scene.
-    float luminance = dot(SceneColor, float3(0.2126, 0.7152, 0.0722));
     float directLight = BenDayDirectLight_float(UV);
     float eyeDepth = BenDayEyeDepth_float(UV);
     float shadowAmount = 1.0 - directLight;
 
     float pitchPixels = max(DotScale, 1.0);
     float softnessPixels = max(Softness * pitchPixels, 0.0001);
-    float baseDot = BenDayDotShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, DotRadius);
 
     float fadeRange = max(DistanceFadeEnd - DistanceFadeStart, 1e-5);
     float distanceFade = 1.0 - saturate((eyeDepth - DistanceFadeStart) / fadeRange);
 
-    // The whole effect is driven by local contrast, not absolute brightness: flat
-    // bright and flat dark surfaces both read as zero. Unlike fwidth() (a single
-    // adjacent-pixel derivative), this samples the lighting at four taps out to a
-    // real screen-space radius (ContrastBorderWidth) and uses the local max-min
-    // range, so the reactive band is actually as wide as that radius. The kernel
-    // is rotated/resized per pixel via a cheap hash so it reads as a fuzzy,
-    // irregular edge rather than a clean geometric border.
-    float2 texel = 1.0 / _ScreenParams.xy;
-    float borderPixels = max(ContrastBorderWidth, 0.0);
-
+    // Tiny per-pixel dither on the tone that drives each dot's radius, so the
+    // boundary where dots start/stop growing reads as an organic, hand-printed
+    // edge instead of a laser-straight ring.
     float2 pixelCoord = UV * _ScreenParams.xy;
-    float hashAngle = BenDayHash(pixelCoord) * BenDayTwoPi;
-    float hashRadius = BenDayHash(pixelCoord + 17.0);
-    float jitteredBorder = borderPixels * lerp(0.3, 1.9, hashRadius);
+    float shadowGrain = (BenDayHash(pixelCoord) - 0.5) * 0.06;
+    float lightGrain = (BenDayHash(pixelCoord + 91.0) - 0.5) * 0.06;
 
-    float sinA = sin(hashAngle);
-    float cosA = cos(hashAngle);
-    float2 dirA = float2(cosA, sinA);
-    float2 dirB = float2(-sinA, cosA);
+    // True halftone: tone is encoded as dot RADIUS, not as fractional opacity.
+    // Threshold gates where a tone band starts producing dots at all; Feather is
+    // the width of that gate - Feather near 0 snaps dots straight to full size
+    // (a hard silhouette edge), a wider Feather eases them in/out gradually
+    // ("feathering" the hard outline into softer, partial dots). Strength caps
+    // how large the dots grow at maximum tone.
+    float shadowTone = smoothstep(ShadowThreshold, ShadowThreshold + ShadowFeather, shadowAmount + shadowGrain);
+    float lightTone = smoothstep(LightThreshold, LightThreshold + LightFeather, directLight + lightGrain);
 
-    float2 offsetA = dirA * texel * jitteredBorder;
-    float2 offsetB = dirB * texel * jitteredBorder;
+    float shadowRadiusRatio = saturate(shadowTone * ShadowStrength) * distanceFade;
+    float lightRadiusRatio = saturate(lightTone * LightDotStrength) * distanceFade;
 
-    float lightA1 = BenDayDirectLight_float(UV + offsetA);
-    float lightA2 = BenDayDirectLight_float(UV - offsetA);
-    float lightB1 = BenDayDirectLight_float(UV + offsetB);
-    float lightB2 = BenDayDirectLight_float(UV - offsetB);
+    // BenDayDotShape_float is 1 inside the dot and 0 outside it, with only a thin
+    // Softness-wide antialiased ring in between - so every dot is drawn as solid,
+    // opaque ink rather than a translucent haze.
+    float shadowDot = BenDayDotShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, shadowRadiusRatio);
+    float lightDot = BenDayDotShape_float(UV, pitchPixels, softnessPixels, AngleDegrees, lightRadiusRatio);
 
-    float localMax = max(directLight, max(max(lightA1, lightA2), max(lightB1, lightB2)));
-    float localMin = min(directLight, min(min(lightA1, lightA2), min(lightB1, lightB2)));
-    float contrastRaw = localMax - localMin;
-    float contrastNorm = saturate(contrastRaw * ContrastSensitivity);
-
-    float grain = lerp(0.6, 1.4, BenDayHash(pixelCoord + 91.0));
-
-    float baseNoise = lerp(0.4, 1.6, BenDayHash(pixelCoord + 133.0));
-    float baseVisibility = saturate(BaseVisibility) * baseNoise;
-
-    // Ease the raw contrast value through a smoothstep before curving it -
-    // smoothstep has zero slope at both ends, so the response fades in and out
-    // gradually rather than snapping the instant contrast crosses into
-    // detectable range. Reads as a gradient, not a hard on/off line.
-    float easedContrast = smoothstep(0.0, 1.0, contrastNorm);
-    easedContrast = pow(easedContrast, max(ContrastCurve, 0.0001));
-    float contrastIntensity = lerp(baseVisibility, saturate(ContrastStrength), easedContrast) * distanceFade * grain;
-
-    float shadowDots = baseDot * contrastIntensity * shadowAmount;
-    float lightDots = baseDot * contrastIntensity * directLight;
+    float3 shadowInk = SceneColor * saturate(ShadowDotBrightness);
+    float3 lightInk = saturate(lerp(SceneColor, float3(1.0, 1.0, 1.0), 0.8));
 
     float3 color = SceneColor;
-
-    // Normalize dot visibility across bright and dark local colors.
-    // A pure multiply makes dots overpower white surfaces and disappear on darker hues.
-    float visibilityCompensation = lerp(0.35, 0.85, 1.0 - luminance);
-    float shadowDarkening = (1.0 - ShadowBrightness) * visibilityCompensation;
-    float3 shadowDotColor = max(SceneColor - shadowDarkening.xxx, 0.0);
-    color = lerp(color, shadowDotColor, shadowDots);
-
-    // Normalize light-dot visibility across local colors.
-    // A pure additive scene-color term makes white surfaces blow out while darker hues barely show.
-    float lightVisibilityCompensation = lerp(1.35, 0.8, luminance);
-    float3 lightDotColor = saturate(SceneColor * lightVisibilityCompensation);
-    color += lightDotColor * lightDots;
+    color = lerp(color, shadowInk, shadowDot);
+    color = lerp(color, lightInk, lightDot);
 
     Out = saturate(color);
 }
