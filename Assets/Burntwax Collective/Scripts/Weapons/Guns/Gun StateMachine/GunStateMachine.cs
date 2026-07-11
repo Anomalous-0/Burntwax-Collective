@@ -428,6 +428,7 @@ namespace Burntwax
         public void LoadData(GunSaveData data)
         {
             // Restore inventory without activating anything — Arsenal handles activation
+            
             CurrentGuns = data.CurrentGuns ?? new List<GunScriptableObject>();
             RebuildGunLookup();
 

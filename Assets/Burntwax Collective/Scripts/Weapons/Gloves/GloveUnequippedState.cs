@@ -29,7 +29,7 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            Debug.Log("Switching to equipped State");
+            
             if(InputManager.Instance.useGloves)
             {
                 
