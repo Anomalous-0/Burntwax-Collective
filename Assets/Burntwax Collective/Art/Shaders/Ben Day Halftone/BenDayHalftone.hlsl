@@ -79,9 +79,9 @@ float BenDayEyeDepth_float(float2 uv)
 #endif
 }
 
-// Rotated-grid wave shape: rows of a sine-wave line replace the original circular
-// dot. Same distance-field-and-softness approach as the dots, so each row's stroke
-// only covers a slice of its pitch band (never a solid fill).
+// Rotated Ben Day dot shape. The same pitch / angle / amplitude / frequency
+// controls are preserved by placing solid circular dots on a rotated grid whose
+// rows still undulate with the existing sine parameters.
 float BenDayWaveShape_float(float2 uv, float pitchPixels, float softnessPixels, float angleDegrees, float amplitudeRatio, float frequency, float thicknessRatio)
 {
     float angle = radians(angleDegrees);
@@ -95,17 +95,32 @@ float BenDayWaveShape_float(float2 uv, float pitchPixels, float softnessPixels, 
     rotated.x = p.x * c - p.y * s;
     rotated.y = p.x * s + p.y * c;
 
-    float rowIndex = floor(rotated.y / pitchPixels + 0.5);
-    float rowCenterY = rowIndex * pitchPixels;
-
     float amplitude = pitchPixels * saturate(amplitudeRatio) * 0.5;
     float freq = max(frequency, 0.01);
-    float waveY = amplitude * sin(rotated.x / pitchPixels * BenDayTwoPi * freq);
+    float dotRadius = pitchPixels * saturate(thicknessRatio) * 0.5;
 
-    float distFromWave = abs(rotated.y - rowCenterY - waveY);
-    float lineHalfWidth = pitchPixels * saturate(thicknessRatio) * 0.5;
+    float rowIndex = floor(rotated.y / pitchPixels + 0.5);
+    float columnIndex = floor(rotated.x / pitchPixels + 0.5);
 
-    return 1.0 - smoothstep(lineHalfWidth, lineHalfWidth + softnessPixels, distFromWave);
+    float minDistance = 1e9;
+
+    [unroll]
+    for (int rowOffset = -1; rowOffset <= 1; rowOffset++)
+    {
+        float candidateRow = rowIndex + rowOffset;
+
+        [unroll]
+        for (int columnOffset = -1; columnOffset <= 1; columnOffset++)
+        {
+            float candidateColumn = columnIndex + columnOffset;
+            float dotCenterX = candidateColumn * pitchPixels;
+            float dotCenterY = candidateRow * pitchPixels + amplitude * sin(dotCenterX / pitchPixels * BenDayTwoPi * freq);
+            float distanceToDot = length(rotated - float2(dotCenterX, dotCenterY));
+            minDistance = min(minDistance, distanceToDot);
+        }
+    }
+
+    return 1.0 - smoothstep(dotRadius, dotRadius + softnessPixels, minDistance);
 }
 
 void BenDayShadowBloom_float(
