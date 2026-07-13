@@ -1,16 +1,15 @@
 namespace Burntwax
 {
-    public class GloveChargeAttractState : GloveBaseState
+    public class GloveEMState : GloveBaseState
     {
 
-        public GloveChargeAttractState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
+        public GloveEMState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
-        {
-        }
+        { }
 
         public override void EnterState()
         {
-            
+
             InitializeSubState();
         }
 
@@ -21,12 +20,12 @@ namespace Burntwax
 
         public override void ExitState()
         {
-           
+
         }
 
         public override void CheckSwitchStates()
         {
-            
+
 
 
         }
@@ -34,7 +33,6 @@ namespace Burntwax
 
         public override void InitializeSubState()
         {
-           
 
         }
 

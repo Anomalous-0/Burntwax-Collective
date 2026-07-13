@@ -60,9 +60,9 @@ namespace Burntwax
         {
             if (canChooseSubstate)
             {
-                if (Ctx.CanAttractObject && InputManager.Instance.gloveHold)
+                if (Ctx.CanAttractObject)
                 {
-                    SetSubState(Factory.ChargeAttract());
+                    SetSubState(Factory.ReadyAttract());
                 }
                 else if (InputManager.Instance.gloveHold)
                 {
