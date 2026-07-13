@@ -10249,6 +10249,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.Arsenal
   gunStateMachine: {fileID: 0}
   katanaStateMachine: {fileID: 0}
+  gloveStateMachine: {fileID: 0}
   currentMode: 0
   currentID: 0
   lastID: 0
@@ -10309,8 +10310,7 @@ MonoBehaviour:
   stateMachine: {fileID: 0}
   camStateMachine: {fileID: 0}
   crosshair: {fileID: 0}
-  slashTimeout: 500
-  parryTimeout: 500
+  camSlowdown: 0.02
   camShake: {fileID: 3983912548163265846}
   handIK: {fileID: 3406981270840785279}
   KatanaScriptable: {fileID: 0}
@@ -62892,6 +62892,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4793009497212595864}
+  - component: {fileID: 4359762394158857715}
   m_Layer: 0
   m_Name: root
   m_TagString: Untagged
@@ -62916,6 +62917,23 @@ Transform:
   - {fileID: 521938082681903561}
   m_Father: {fileID: 7409600953642053044}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4359762394158857715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5065402398298998708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5815aeb7cd61ce41a76bdb99943fa9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.GloveController
+  anim: {fileID: 8982893999631422072}
+  leftHandIK: {fileID: 8847553288992168570}
+  gloveLayerName: Glove
+  raiseSpeed: 6
+  raiseAmount: 0
 --- !u!1 &5100355224530925805
 GameObject:
   m_ObjectHideFlags: 0

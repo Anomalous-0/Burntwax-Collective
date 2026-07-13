@@ -34,8 +34,9 @@ namespace Burntwax
             {
                 SwitchState(Factory.Stow());
             }
-            else if (!InputManager.Instance.aimIsPressed && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
+            else if ((!InputManager.Instance.aimIsPressed || InputManager.Instance.glovesRaised) && Ctx.CurrentState.CurrentSubstate() != Ctx.states.Shoot())
             {
+                // Drop out of ADS if aim is released OR the glove is raised mid-aim.
                 SwitchState(Factory.Rest());
             }
             else if (Ctx.AutoReload() || Ctx.ManualReload())

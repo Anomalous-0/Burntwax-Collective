@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Interactions;
 
 namespace Burntwax
 {
@@ -24,7 +25,8 @@ namespace Burntwax
         public int weaponSelectID { get; private set; } = -1;
         public bool HasWeaponSelectInput { get { return weaponSelectID >= 0; } }
         [HideInInspector] public bool katanaSelect;
-        [HideInInspector] public bool useGloves = false;
+        [HideInInspector] public bool useGloves = false;      // HOLD F  → gravity glove (GloveStateMachine)
+        [HideInInspector] public bool glovesRaised = false;   // TAP  F  → stop-sign overlay (GloveController) + ADS block
 
         public bool aimIsPressed = false;
         public bool attackIsPressed = false;
@@ -87,8 +89,8 @@ namespace Burntwax
             input.OnFoot.KatanaSelect.canceled += SetKatanaSelect;
             input.OnFoot.Interact.started += SetInteract;
             input.OnFoot.Interact.canceled += SetInteract;
-            input.OnFoot.Gloves.started += SetGloves;
-            input.OnFoot.Gloves.canceled += SetGloves;
+            input.OnFoot.Gloves.performed += OnGloves;
+            input.OnFoot.Gloves.canceled += OnGloves;
             input.OnFoot.Save.started += SetSave;
             input.OnFoot.Save.canceled += SetSave;
             input.OnFoot.Load.started += SetLoad;
@@ -123,8 +125,8 @@ namespace Burntwax
             input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
             input.OnFoot.Interact.started -= SetInteract;
             input.OnFoot.Interact.canceled -= SetInteract;
-            input.OnFoot.Gloves.started += SetGloves;
-            input.OnFoot.Gloves.canceled += SetGloves;
+            input.OnFoot.Gloves.performed -= OnGloves;
+            input.OnFoot.Gloves.canceled -= OnGloves;
             input.OnFoot.Save.started -= SetSave;
             input.OnFoot.Save.canceled -= SetSave;
             input.OnFoot.Load.started -= SetLoad;
@@ -240,7 +242,23 @@ namespace Burntwax
         }
         private void SetKatanaSelect(InputAction.CallbackContext ctx) => katanaSelect = ctx.started;
         private void SetInteract(InputAction.CallbackContext ctx) => interactIsPressed = ctx.started;
-        private void SetGloves(InputAction.CallbackContext ctx) => useGloves = ctx.started;
+        // F is shared. The Gloves action has BOTH a Tap and a Hold interaction; ctx.interaction
+        // tells us which one fired:
+        //   • quick TAP  → toggle the stop-sign overlay (glovesRaised), consumed by GloveController
+        //                  and the ADS gate.
+        //   • press-HOLD → drive the gravity glove (useGloves), consumed by GloveStateMachine.
+        private void OnGloves(InputAction.CallbackContext ctx)
+        {
+            if (ctx.interaction is TapInteraction)
+            {
+                if (ctx.performed) glovesRaised = !glovesRaised;   // released within tap time → toggle overlay
+            }
+            else if (ctx.interaction is HoldInteraction)
+            {
+                if (ctx.performed) useGloves = true;               // held past hold time → gravity glove on
+                else if (ctx.canceled) useGloves = false;          // released → gravity glove off
+            }
+        }
         private void SetSave(InputAction.CallbackContext ctx) => saveIsPressed = ctx.started;
         private void SetLoad(InputAction.CallbackContext ctx) => loadIsPressed = ctx.started;
     }
