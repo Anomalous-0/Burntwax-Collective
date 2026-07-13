@@ -60,11 +60,11 @@ namespace Burntwax
         {
             if (canChooseSubstate)
             {
-                if (Ctx.CanAttractObject && InputManager.Instance.useGloves)
+                if (Ctx.CanAttractObject && InputManager.Instance.gloveHold)
                 {
                     SetSubState(Factory.ChargeAttract());
                 }
-                else if (InputManager.Instance.useGloves)
+                else if (InputManager.Instance.gloveHold)
                 {
                     SetSubState(Factory.ChargeBlast());
                 }
