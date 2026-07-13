@@ -67,7 +67,7 @@ namespace Burntwax
 
         void Update()
         {
-            bool wantUp = InputManager.Instance != null && InputManager.Instance.glovesRaised;
+            bool wantUp = InputManager.Instance != null && InputManager.Instance.useGloves;
 
             float target = wantUp ? 1f : 0f;
             raiseAmount = Mathf.MoveTowards(raiseAmount, target, raiseSpeed * Time.deltaTime);

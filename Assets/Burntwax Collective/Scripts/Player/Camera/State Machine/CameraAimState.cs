@@ -31,7 +31,7 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputPrioritySorter.Instance.SprintIsPriority() || !InputManager.Instance.aimIsPressed || InputManager.Instance.glovesRaised || Ctx.gun.CurrentState == Ctx.gun.states.Reload())
+            if (InputPrioritySorter.Instance.SprintIsPriority() || !InputManager.Instance.aimIsPressed || InputManager.Instance.useGloves || Ctx.gun.CurrentState == Ctx.gun.states.Reload())
             {
                 // Un-zoom the camera if aim is released OR the glove is raised mid-aim.
                 SwitchState(Factory.Fps());

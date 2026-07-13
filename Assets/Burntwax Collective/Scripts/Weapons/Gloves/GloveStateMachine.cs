@@ -43,7 +43,7 @@ namespace Burntwax
         public float EquipWaitTime { get { return equipWaitTime; } }
         public float SubstateWaitTime { get { return substateWaitTime; } }
 
-        private int idleHash, chargeHash, holdHash, blastHash;
+        private int attractHash, chargeHash, holdHash, blastHash;
 
         public GloveBaseState CurrentState;
 

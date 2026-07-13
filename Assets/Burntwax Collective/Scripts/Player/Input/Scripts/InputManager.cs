@@ -25,14 +25,16 @@ namespace Burntwax
         public int weaponSelectID { get; private set; } = -1;
         public bool HasWeaponSelectInput { get { return weaponSelectID >= 0; } }
         [HideInInspector] public bool katanaSelect;
-        [HideInInspector] public bool useGloves = false;      // HOLD F  → gravity glove (GloveStateMachine)
-        [HideInInspector] public bool glovesRaised = false;   // TAP  F  → stop-sign overlay (GloveController) + ADS block
+        public bool gloveHold = false;    
+        public bool glovePressed = false;
+        public bool useGloves {get { return gloveHold || glovePressed; }}  // true if either the hold or tap input is active
 
-        public bool aimIsPressed = false;
-        public bool attackIsPressed = false;
 
-        public bool slash;
-        public bool parry;
+        [HideInInspector] public bool aimIsPressed = false;
+        [HideInInspector] public bool attackIsPressed = false;
+
+        [HideInInspector] public bool slash;
+        [HideInInspector] public bool parry;
         public bool reloadIsPressed { get; private set; } = false;
         public bool sprintIsPressed { get; private set; } = false;
 
@@ -251,12 +253,12 @@ namespace Burntwax
         {
             if (ctx.interaction is TapInteraction)
             {
-                if (ctx.performed) glovesRaised = !glovesRaised;   // released within tap time → toggle overlay
+                if (ctx.performed) glovePressed = !glovePressed;   // released within tap time → toggle overlay
             }
             else if (ctx.interaction is HoldInteraction)
             {
-                if (ctx.performed) useGloves = true;               // held past hold time → gravity glove on
-                else if (ctx.canceled) useGloves = false;          // released → gravity glove off
+                if (ctx.performed) gloveHold = true;               // held past hold time → gravity glove on
+                else if (ctx.canceled) gloveHold = false;          // released → gravity glove off
             }
         }
         private void SetSave(InputAction.CallbackContext ctx) => saveIsPressed = ctx.started;
