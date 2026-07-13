@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: glove_stop_sign
+  m_Name: idle_Glove
   serializedVersion: 7
   m_Legacy: 0
   m_Compressed: 0
@@ -19,7 +19,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 0.279, y: 76.071, z: -90.05}
+        value: {x: -15.599, y: 90.797, z: -137.564}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -35,7 +35,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: -4.581, y: -0.119, z: 26.335}
+        value: {x: -14.398, y: 11.27, z: 84.831}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -51,7 +51,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: {x: 2.148, y: -0.083, z: 63.746}
+        value: {x: 8.34, y: 139.581, z: 16.772}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -908,7 +908,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.279
+        value: -15.599
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -929,7 +929,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 76.071
+        value: 90.797
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -950,7 +950,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -90.05
+        value: -137.564
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1034,7 +1034,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -4.581
+        value: -14.398
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1055,7 +1055,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.119
+        value: 11.27
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1076,7 +1076,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 26.335
+        value: 84.831
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1160,7 +1160,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 2.148
+        value: 8.34
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1181,7 +1181,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: -0.083
+        value: 139.581
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1202,7 +1202,7 @@ AnimationClip:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 63.746
+        value: 16.772
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -3083,7 +3083,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: root/upperarm_L
+    path: root/upperarm_L/lowerarm_L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3095,7 +3095,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: root/upperarm_L
+    path: root/upperarm_L/lowerarm_L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3107,7 +3107,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: root/upperarm_L
+    path: root/upperarm_L/lowerarm_L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3119,7 +3119,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: root/upperarm_L/lowerarm_L
+    path: root/upperarm_L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3131,7 +3131,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: root/upperarm_L/lowerarm_L
+    path: root/upperarm_L
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -3143,7 +3143,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: root/upperarm_L/lowerarm_L
+    path: root/upperarm_L
     classID: 4
     script: {fileID: 0}
     flags: 0

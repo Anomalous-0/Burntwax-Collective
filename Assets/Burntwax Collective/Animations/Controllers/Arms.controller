@@ -363,7 +363,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: glove_stop_sign
+  m_Name: idle_Glove
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -1328,7 +1328,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -7296145659142432665}
-    m_Position: {x: 130.00275, y: 260.61578, z: 0}
+    m_Position: {x: 240, y: 120, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
