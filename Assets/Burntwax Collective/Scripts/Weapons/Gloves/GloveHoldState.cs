@@ -1,8 +1,9 @@
 namespace Burntwax
 {
+    // Branch A, step 2: the primary object orbits in the hand until a tap (or katana slash) throws
+    // it out. Ignores charge input — the two ability branches never overlap.
     public class GloveHoldState : GloveBaseState
     {
-
         public GloveHoldState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         {
@@ -10,33 +11,30 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            
+            Ctx.SetStopSign(true);
             InitializeSubState();
         }
 
         public override void UpdateState()
         {
+            Ctx.TickHold();
             CheckSwitchStates();
         }
 
-        public override void ExitState()
-        {
-           
-        }
+        public override void ExitState() { }
 
         public override void CheckSwitchStates()
         {
-            
-
-
+            if (InputManager.Instance.gloveTap)
+            {
+                SwitchState(Factory.ReleaseObject());
+            }
+            else if (Ctx.KatanaEquipped && InputManager.Instance.attackIsPressed && Ctx.KatanaLaunchInRange())
+            {
+                SwitchState(Factory.ReleaseObject());
+            }
         }
 
-
-        public override void InitializeSubState()
-        {
-            
-
-        }
-
+        public override void InitializeSubState() { }
     }
 }
