@@ -51,23 +51,17 @@ namespace Burntwax
 
         protected void SwitchState(GloveBaseState newState)
         {
-            // current state exists state
             ExitState();
-
-            // new state enters state
-            newState.EnterState();
 
             if (isRootState)
             {
-                // switch current state of context
                 ctx.CurrentState = newState;
+                newState.EnterState();
             }
             else if (currentSuperState != null)
             {
-                // set the current super state's substate to the new state
-                currentSuperState.SetSubState(newState);
+                currentSuperState.EnterSubState(newState);
             }
-
         }
 
         protected void SetSuperState(GloveBaseState newSuperState)
@@ -75,10 +69,11 @@ namespace Burntwax
             currentSuperState = newSuperState;
         }
 
-        protected void SetSubState(GloveBaseState newSubState)
+        protected void EnterSubState(GloveBaseState newSubState)
         {
             currentSubState = newSubState;
             newSubState.SetSuperState(this);
+            newSubState.EnterState();
         }
 
        

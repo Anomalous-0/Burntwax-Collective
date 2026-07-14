@@ -11,8 +11,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.SetStopSign(true);
-            Ctx.ClearDetection(); // drop any idle tint while charging
+           
             InitializeSubState();
         }
 

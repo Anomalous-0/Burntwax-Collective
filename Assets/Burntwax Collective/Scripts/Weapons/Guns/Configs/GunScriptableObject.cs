@@ -55,7 +55,7 @@ namespace Burntwax
             TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
             ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
             ShootingAudioSource = player.GetComponent<AudioSource>();
-            BulletImpactEffects.Instance = FindFirstObjectByType<BulletImpactEffects>();
+            BulletImpactEffects.Instance = FindAnyObjectByType<BulletImpactEffects>();
         }
 
         public void Despawn(MonoBehaviour ActiveMonoBehaviour)

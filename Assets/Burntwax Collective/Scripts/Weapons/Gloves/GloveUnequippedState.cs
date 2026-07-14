@@ -24,10 +24,25 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
+            if (InputManager.Instance == null)
+                return;
+
             if (InputManager.Instance.gloveTap)
             {
                 SwitchState(Factory.Equipped());
             }
+            else if(InputManager.Instance.gloveDoubleTap && Ctx.CanAttractObject)
+            {
+                Ctx.EnterAttract = true;
+                SwitchState(Factory.Equipped());
+
+            }
+            else if(InputManager.Instance.gloveCharging)
+            {
+                Ctx.EnterCharge = true;
+                SwitchState(Factory.Equipped());
+            }
+
         }
 
         public override void InitializeSubState() { }

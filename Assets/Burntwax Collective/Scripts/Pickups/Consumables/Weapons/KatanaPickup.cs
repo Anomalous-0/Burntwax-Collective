@@ -17,7 +17,7 @@ namespace Burntwax
         {
             if (other.GetComponentInParent<PlayerStateMachine>() != false)
             {
-                weaponSelector = FindFirstObjectByType<KatanaStateMachine>();
+                weaponSelector = FindAnyObjectByType<KatanaStateMachine>();
                 if (weaponSelector.ActiveKatanaScriptable == null)
                 {
                     weaponSelector.Pickup(katana);

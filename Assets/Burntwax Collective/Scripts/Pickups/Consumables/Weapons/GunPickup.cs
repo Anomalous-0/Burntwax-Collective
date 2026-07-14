@@ -24,7 +24,7 @@ namespace Burntwax
         {
             if (other.GetComponentInParent<PlayerHealth>() != false)
             {
-                gunSelector = FindFirstObjectByType<GunStateMachine>();
+                gunSelector = FindAnyObjectByType<GunStateMachine>();
                 if (!gunSelector.CurrentGuns.Contains(gun))
                 {
                     gunSelector.Pickup(gun);

@@ -9238,6 +9238,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 510963325}
+  - component: {fileID: 510963326}
   m_Layer: 0
   m_Name: Glove
   m_TagString: Untagged
@@ -9263,6 +9264,95 @@ Transform:
   - {fileID: 1018434370}
   m_Father: {fileID: 1142371221871575083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &510963326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 510963324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ImpulseDefinition:
+    m_ImpulseChannel: 1
+    m_ImpulseShape: 1
+    m_CustomImpulseShape:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_ImpulseDuration: 0.2
+    m_ImpulseType: 3
+    m_DissipationRate: 0.25
+    m_RawSignal: {fileID: 11400000, guid: 6be2a39945a49c44b8faa044ee40ab36, type: 2}
+    m_AmplitudeGain: 3
+    m_FrequencyGain: 1
+    m_RepeatMode: 0
+    m_Randomize: 1
+    m_TimeEnvelope:
+      m_AttackShape:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 1
+          inSlope: 2
+          outSlope: 2
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_DecayShape:
+        serializedVersion: 2
+        m_Curve:
+        - serializedVersion: 3
+          time: 0
+          value: 1
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        - serializedVersion: 3
+          time: 1
+          value: 0
+          inSlope: 0
+          outSlope: 0
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0
+          outWeight: 0
+        m_PreInfinity: 2
+        m_PostInfinity: 2
+        m_RotationOrder: 4
+      m_AttackTime: 0.01
+      m_SustainTime: 0
+      m_DecayTime: 0.2
+      m_ScaleWithImpact: 1
+      m_HoldForever: 0
+    m_ImpactRadius: 100
+    m_DirectionMode: 0
+    m_DissipationMode: 2
+    m_DissipationDistance: 100
+    m_PropagationSpeed: 343
+  m_DefaultVelocity: {x: 0, y: -1, z: 0}
 --- !u!4 &517291632 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2534855556683237600, guid: ee1e7853955903241bc411ff871f5dbc,
@@ -35476,11 +35566,6 @@ PrefabInstance:
       propertyPath: 'OrderedGuns.Array.data[3]'
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 4359762394158857715, guid: 4339d97cde5264747a29eaf7ae86e4b5,
-        type: 3}
-      propertyPath: raiseAmount
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7120825543759020784, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_IsActive
@@ -37166,13 +37251,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.GloveStateMachine
   currentStateText: 
   currentSubstateText: 
-  player: {fileID: 669723134}
+  player: {fileID: 401126580}
   gloveModel: {fileID: 510963324}
   handIK: {fileID: 1142371221871575082}
   gloveHandAnchor: {fileID: 1018434370}
   armsAnimator: {fileID: 8915226981332152389}
-  stopSignParam: stopSign
-  camShake: {fileID: 0}
+  leftHandIK: {fileID: 0}
+  camShake: {fileID: 510963326}
+  gloveLayerName: Glove
+  raiseSpeed: 6
+  raiseAmount: 0
+  equipWaitTime: 4
+  enterAttract: 0
+  enterCharge: 0
   detectDistance: 9
   castRadius: 0.6
   attractableLayer:
@@ -37180,13 +37271,7 @@ MonoBehaviour:
     m_Bits: 2048
   attractTint: {r: 0, g: 1, b: 1, a: 1}
   tintStrength: 0.5
-  maxApproachSpeed: 14
-  approachSlowRadius: 2.5
-  latchDistance: 0.5
-  spinMaxSpeed: 140
-  spinVariation: 0.4
-  launchImpulse: 25
-  katanaLaunchDistance: 2.5
+  canAttract: 0
   minChargeSpeed: 0.45
   blastPrefab: {fileID: 0}
   blastSpeed: 45
@@ -37194,8 +37279,12 @@ MonoBehaviour:
   blastMaxDamage: 40
   blastMinForce: 6
   blastMaxForce: 30
-  equipWaitTime: 1
-  substateWaitTime: 0.4
+  idleHash: 0
+  emptyHash: 0
+  attractHash: 0
+  blastHash: 0
+  blastProjectileHash: 0
+  holdHash: 0
 --- !u!95 &8915226981332152389 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8982893999631422072, guid: 4339d97cde5264747a29eaf7ae86e4b5,

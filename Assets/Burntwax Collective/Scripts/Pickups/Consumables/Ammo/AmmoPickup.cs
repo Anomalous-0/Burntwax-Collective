@@ -33,7 +33,7 @@ namespace Burntwax
 
             if (other.GetComponentInParent<PlayerHealth>())
             {
-                playerGun = FindFirstObjectByType<GunStateMachine>();
+                playerGun = FindAnyObjectByType<GunStateMachine>();
 
                 if (playerGun.CurrentGuns.Contains(gun))
                 {

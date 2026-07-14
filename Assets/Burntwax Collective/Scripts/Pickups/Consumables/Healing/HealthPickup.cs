@@ -23,7 +23,7 @@ namespace Burntwax
 
             if (other.GetComponentInParent<PlayerHealth>() != false)
             {
-                playerHealth = FindFirstObjectByType<PlayerHealth>();
+                playerHealth = FindAnyObjectByType<PlayerHealth>();
                 if (playerHealth.CurrentHealth() < playerHealth.maxHealth)
                 {
                     playerHealth.RestoreHealth(heal);

@@ -1,9 +1,13 @@
+using System.Collections;
+using UnityEngine;
+
 namespace Burntwax
 {
-    // Root state while the glove is out. Idle is the hub substate; the two ability branches
-    // (attract / charge) live under it. This root only owns equip publishing and the unequip tap.
     public class GloveEquippedState : GloveBaseState
     {
+        private bool canCheckForUnequip;
+        private Coroutine unequipDelayCoroutine;
+
         public GloveEquippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         {
@@ -13,6 +17,9 @@ namespace Burntwax
         public override void EnterState()
         {
             Ctx.SetEquipped(true);
+            canCheckForUnequip = false;
+
+            unequipDelayCoroutine = Ctx.StartCoroutine(BeginUnequipCheckAfterDelay());
             InitializeSubState();
         }
 
@@ -21,13 +28,18 @@ namespace Burntwax
             CheckSwitchStates();
         }
 
-        public override void ExitState() { }
+        public override void ExitState()
+        {
+            if (unequipDelayCoroutine != null)
+            {
+                Ctx.StopCoroutine(unequipDelayCoroutine);
+                unequipDelayCoroutine = null;
+            }
+        }
 
         public override void CheckSwitchStates()
         {
-            // Unequip only from the resting palm-up Idle (so a tap that means "launch the held
-            // object" isn't misread as "put the glove away"). Other substates handle their own taps.
-            if (CurrentSubstate() == Ctx.states.Idle() && InputManager.Instance.gloveTap)
+            if (CurrentSubstate() == Ctx.states.Idle() && canCheckForUnequip)
             {
                 SwitchState(Factory.Unequipped());
             }
@@ -35,9 +47,31 @@ namespace Burntwax
 
         public override void InitializeSubState()
         {
-            GloveBaseState idle = Factory.Idle();
-            SetSubState(idle);
-            idle.EnterState();
+            GloveBaseState initialState;
+
+            if (Ctx.EnterAttract)
+            {
+                Ctx.EnterAttract = false;
+                initialState = Factory.Attract();
+            }
+            else if (Ctx.EnterCharge)
+            {
+                Ctx.EnterCharge = false;
+                initialState = Factory.ChargeBlast();
+            }
+            else
+            {
+                initialState = Factory.Idle();
+            }
+
+            EnterSubState(initialState);
+        }
+        private IEnumerator BeginUnequipCheckAfterDelay()
+        {
+            yield return new WaitForSeconds(Ctx.EquipWaitTime);
+            canCheckForUnequip = true;
+            unequipDelayCoroutine = null;
+
         }
     }
 }

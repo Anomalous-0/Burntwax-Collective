@@ -11,13 +11,13 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.SetStopSign(true);
+            
             InitializeSubState();
         }
 
         public override void UpdateState()
         {
-            Ctx.TickHold();
+           
             CheckSwitchStates();
         }
 
@@ -29,10 +29,7 @@ namespace Burntwax
             {
                 SwitchState(Factory.ReleaseObject());
             }
-            else if (Ctx.KatanaEquipped && InputManager.Instance.attackIsPressed && Ctx.KatanaLaunchInRange())
-            {
-                SwitchState(Factory.ReleaseObject());
-            }
+            
         }
 
         public override void InitializeSubState() { }

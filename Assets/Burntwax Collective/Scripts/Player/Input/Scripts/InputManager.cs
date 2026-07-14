@@ -31,7 +31,7 @@ namespace Burntwax
         //   • gloveEquipped        – written BY GloveStateMachine every frame (single source of
         //                            truth). The recognizer reads it to decide whether to defer a
         //                            single tap (only deferred while equipped), and the ADS gate /
-        //                            GloveController read it too.
+        //                            GloveStateMachine uses it for the arm override too.
         //   • gloveTap             – committed single tap (one-frame pulse). Instant while
         //                            unequipped (equip is snappy); deferred by the double-tap
         //                            window while equipped so it can't be the first half of a

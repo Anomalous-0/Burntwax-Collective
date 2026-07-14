@@ -4,19 +4,18 @@ namespace Burntwax
 {
     // Branch B, step 2: release pulse. Spawns the plasma projectile (charge-scaled) and returns to
     // Idle after a brief pose window.
-    public class GloveBlastState : GloveBaseState
+    public class GloveBlastEMState : GloveBaseState
     {
         private const float FireDuration = 0.15f;
         private float enterTime;
 
-        public GloveBlastState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
+        public GloveBlastEMState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         { }
 
         public override void EnterState()
         {
-            Ctx.SetStopSign(true);
-            Ctx.SpawnBlast(InputManager.Instance.gloveBlastCharge);
+           
             enterTime = Time.time;
             InitializeSubState();
         }
@@ -28,7 +27,7 @@ namespace Burntwax
 
         public override void ExitState()
         {
-            Ctx.EndFire();
+          
         }
 
         public override void CheckSwitchStates()

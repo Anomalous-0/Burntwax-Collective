@@ -16,8 +16,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.SetStopSign(true);
-            Ctx.LaunchAttractedObject();
+      
             enterTime = Time.time;
             InitializeSubState();
         }

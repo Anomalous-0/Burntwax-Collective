@@ -64,7 +64,7 @@ namespace Burntwax
         {
             GameManager.Instance.SceneData.Save(ref _saveData.SceneData);
 
-            PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
+            PlayerStateMachine player = GameManager.FindAnyObjectByType<PlayerStateMachine>();
             if (player != null)
             {
                 player.SaveData(ref _saveData.PlayerData);
@@ -73,7 +73,7 @@ namespace Burntwax
                 player.GetComponent<PlayerHealth>().SaveData(ref _saveData.PlayerHealthData);
             }
 
-            Arsenal arsenal = GameManager.FindFirstObjectByType<Arsenal>();
+            Arsenal arsenal = GameManager.FindAnyObjectByType<Arsenal>();
             if (arsenal)
                 arsenal.SaveData(ref _saveData.ArsenalData);
 
@@ -102,7 +102,7 @@ namespace Burntwax
 
             // GameManager.Instance.SceneData.Load(_saveData.SceneData);
 
-            PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
+            PlayerStateMachine player = GameManager.FindAnyObjectByType<PlayerStateMachine>();
             if (player)
             {
                 player.LoadData(_saveData.PlayerData);
@@ -112,7 +112,7 @@ namespace Burntwax
             }
 
 
-            Arsenal arsenal = GameManager.FindFirstObjectByType<Arsenal>();
+            Arsenal arsenal = GameManager.FindAnyObjectByType<Arsenal>();
             if (arsenal)
             {
                 arsenal.LoadData(_saveData.ArsenalData);
@@ -133,7 +133,7 @@ namespace Burntwax
 
             // GameManager.Instance.SceneData.Load(_saveData.SceneData);
 
-            PlayerStateMachine player = GameManager.FindFirstObjectByType<PlayerStateMachine>();
+            PlayerStateMachine player = GameManager.FindAnyObjectByType<PlayerStateMachine>();
             if (player)
             {
                 player.LoadData(_saveData.PlayerData);
@@ -142,7 +142,7 @@ namespace Burntwax
 
             }
 
-            Arsenal arsenal = GameManager.FindFirstObjectByType<Arsenal>();
+            Arsenal arsenal = GameManager.FindAnyObjectByType<Arsenal>();
             if (arsenal)
             {
                 arsenal.LoadData(_saveData.ArsenalData);

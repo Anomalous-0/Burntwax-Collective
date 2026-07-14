@@ -24,16 +24,29 @@ namespace Burntwax
         public string currentSubstateText;
 
         [Header("References")]
-        [SerializeField] private GameObject player;
+        [SerializeField] private PlayerStateMachine player;
         [SerializeField] private GameObject gloveModel;
         [SerializeField] private Rig handIK;
         [Tooltip("Where an attracted object flies to and orbits. Auto-created under the glove model if left empty.")]
         [SerializeField] private Transform gloveHandAnchor;
-        [Tooltip("The Arms animator that owns the masked Glove layer (same one GloveController drives). " +
-                 "Used to switch the raised glove between palm-up idle and the stop-sign action pose.")]
+        [Tooltip("The Arms animator that owns the masked left-arm Glove layer.")]
         [SerializeField] private Animator armsAnimator;
-        [SerializeField] private string stopSignParam = "stopSign";
+        [Tooltip("The left-hand IK constraint. Its weight is released while the glove layer is raised.")]
+        [SerializeField] private TwoBoneIKConstraint leftHandIK;
         [SerializeField] private CinemachineImpulseSource camShake;
+
+        [Header("Arm Override")]
+        [SerializeField] private string gloveLayerName = "Glove";
+        [Tooltip("Raise/lower speed in normalized layer weight per second.")]
+        [SerializeField] private float raiseSpeed = 6f;
+        [Range(0f, 1f)]
+        [SerializeField] private float raiseAmount;
+
+        [Header("States")]
+        [SerializeField] private float equipWaitTime = 1f;
+
+        [SerializeField] private bool enterAttract = false;
+        [SerializeField] private bool enterCharge = false;
 
         [Header("Detection")]
         [SerializeField] private float detectDistance = 9f;        // max reach of the glove
@@ -45,29 +58,7 @@ namespace Burntwax
         [Range(0f, 1f)][SerializeField] private float tintStrength = 0.5f;
 
         [Header("Attract Physics")]
-        [Tooltip("Tractor-beam top speed when the object is far from the hand.")]
-        [SerializeField] private float maxApproachSpeed = 14f;
-        [Tooltip("Within this distance of the hand the object eases its speed down, so it doesn't whip " +
-                 "past and there's a slow window a katana swing can catch.")]
-        [SerializeField] private float approachSlowRadius = 2.5f;
-        [Tooltip("Approach speed never eases below this — keeps the object catching the hand even when " +
-                 "you walk/sprint backward (should stay above the player's move speed).")]
-        [SerializeField] private float minApproachSpeed = 8f;
-        [SerializeField] private float latchDistance = 0.4f;       // object within this of the anchor = latched
-        [Tooltip("Extra gap kept between the held object's surface and the palm so it never clips through.")]
-        [SerializeField] private float palmClearance = 0.05f;
-        [Tooltip("Peak tumble speed (deg/sec) on each axis while the object hovers in the palm. 0 = still.")]
-        [SerializeField] private float spinMaxSpeed = 140f;
-        [Tooltip("How fast the per-axis tumble speeds drift/change over time (higher = more restless).")]
-        [SerializeField] private float spinVariation = 0.4f;
-        [Tooltip("Leave (0,0,0) to hold the object exactly at the anchor (place the anchor in front of " +
-                 "the palm). Set a local-space direction to push it out along that axis; it's auto-" +
-                 "extended to clear the object's size + Palm Clearance.")]
-        [SerializeField] private Vector3 heldLocalOffset = Vector3.zero;
-        [SerializeField] private float launchImpulse = 25f;        // outward throw impulse
-        [Tooltip("A katana swing can only launch the attracted object once it's within this distance of " +
-                 "the hand — stops players spamming attract-from-afar + katana fling.")]
-        [SerializeField] private float katanaLaunchDistance = 2.5f;
+        [SerializeField] private bool canAttract = false;
 
         [Header("Charge Blast")]
         [Range(0f, 1f)][SerializeField] private float minChargeSpeed = 0.45f; // player speed scale at full charge
@@ -78,23 +69,13 @@ namespace Burntwax
         [SerializeField] private float blastMaxDamage = 40f;
         [SerializeField] private float blastMinForce = 6f;
         [SerializeField] private float blastMaxForce = 30f;
-
-        [Header("State Timing")]
-        [SerializeField] private float equipWaitTime = 0.05f;
-        [SerializeField] private float substateWaitTime = 0.05f;
-
-        // ── Legacy runtime flags kept for save/anim hooks ──
-        public bool FullyEquipped { get; private set; }
-        public bool IsFiring { get; private set; }
-        public bool IsReloading { get; private set; }
-
+        public bool CanAttractObject { get { return canAttract; } set { canAttract = value; } }
+        public bool EnterAttract { get { return enterAttract; } set { enterAttract = value; } }
+        public bool EnterCharge { get { return enterCharge; } set { enterCharge = value; } }
         // ── Exposed to states ──
         public float DetectDistance => detectDistance;
         public LayerMask AttractableLayer => attractableLayer;
-        public bool CanAttractObject => detectedPrimary != null;
-        public bool HasAttractedObject => primaryTarget != null;
         public float EquipWaitTime => equipWaitTime;
-        public float SubstateWaitTime => substateWaitTime;
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
 
         public GloveBaseState CurrentState;
@@ -102,62 +83,43 @@ namespace Burntwax
 
         // ── Wired refs ──
         private Arsenal arsenal;
-        private PlayerStateMachine playerMovement;
         private GunStateMachine gunStateMachine;
         private KatanaStateMachine katanaStateMachine;
-        private int stopSignHash;
+        private int gloveLayerIndex = -1;
+        private float baseLeftHandWeight = 1f;
+        private bool gloveEquipped;
+        private bool unequippedAnimationPending;
 
-        // ── Detection / highlight state ──
-        private Rigidbody detectedPrimary;               // best candidate while idle
-        private Renderer tintedRenderer;
+        public int idleHash, emptyHash, attractHash, blastHash, blastProjectileHash, holdHash;
+
+
         private MaterialPropertyBlock mpb;
         private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
         private static readonly int ColorId = Shader.PropertyToID("_Color");
 
-        // ── Active attract (exactly one object at a time) ──
-        private class Attracted
-        {
-            public Rigidbody rb;
-            public bool wasKinematic;
-            public bool wasUsingGravity;
-            public bool wasDetectingCollisions;
-            public Transform originalParent;
-            public MonoBehaviour[] suppressedPickups;
-        }
-        private Rigidbody primaryTarget;                 // the one and only object being attracted
-        private Attracted primaryRecord;                 // its cached original physics state
-        private bool latched;
-        private float spinSeed;                          // per-object offset so each tumbles uniquely
-        private Vector3 heldLocalPos;                    // computed hold position (clears the palm by the object's size)
-
-        private Camera Cam => Camera.main;
-
         private void Awake()
         {
-            states = new GloveStateFactory(this);
-            CurrentState = states.Unequipped();
-            CurrentState.EnterState();
-
             arsenal = GetComponent<Arsenal>();
             gunStateMachine = GetComponent<GunStateMachine>();
             katanaStateMachine = GetComponent<KatanaStateMachine>();
-            if (player != null) playerMovement = player.GetComponent<PlayerStateMachine>();
 
             mpb = new MaterialPropertyBlock();
-            stopSignHash = Animator.StringToHash(stopSignParam);
+            idleHash = Animator.StringToHash("idle_Glove");
+            emptyHash = Animator.StringToHash("empty_Glove");
+            blastHash = Animator.StringToHash("blast_Glove");
+            blastProjectileHash = Animator.StringToHash("blastProjectile_Glove");
 
-            if (gloveHandAnchor == null)
-            {
-                var anchorGo = new GameObject("GloveHandAnchor");
-                anchorGo.transform.SetParent(gloveModel != null ? gloveModel.transform : transform, false);
-                anchorGo.transform.localPosition = new Vector3(-0.2f, -0.1f, 0.5f); // placeholder in front of hand
-                gloveHandAnchor = anchorGo.transform;
-            }
+            InitializeArmOverride();
+
+            states = new GloveStateFactory(this);
+            CurrentState = states.Unequipped();
+            CurrentState.EnterState();
         }
 
         private void Update()
         {
             CurrentState.UpdateStates();
+            UpdateArmOverride();
             currentStateText = CurrentState.GetType().Name;
             currentSubstateText = CurrentState.CurrentSubstate()?.GetType().Name ?? "None";
 
@@ -167,295 +129,95 @@ namespace Burntwax
                 InputManager.Instance.ConsumeGloveGestures();
         }
 
-        // ── Equip publishing ─────────────────────────────────────
-        public void SetEquipped(bool equipped)
+        private void InitializeArmOverride()
         {
-            if (InputManager.Instance != null)
-                InputManager.Instance.gloveEquipped = equipped;
-
-            if (!equipped)
+            if (armsAnimator == null)
             {
-                ClearDetection();
-                DropAttract();
-                SetStopSign(false);
-                ClearChargeSlow();
+                Debug.LogWarning("[GloveStateMachine] No Arms Animator assigned.");
+                return;
             }
-        }
 
-        public void SetStopSign(bool on)
-        {
-            if (armsAnimator != null)
-                armsAnimator.SetBool(stopSignHash, on);
-        }
-
-        // ── Detection + highlight (used by Idle) ─────────────────
-        public void RunDetection()
-        {
-            Rigidbody best = null;
-            float bestDist = float.MaxValue;
-
-            if (Cam != null)
+            gloveLayerIndex = armsAnimator.GetLayerIndex(gloveLayerName);
+            if (gloveLayerIndex < 0)
             {
-                var hits = Physics.SphereCastAll(Cam.transform.position, castRadius,
-                    Cam.transform.forward, detectDistance, attractableLayer, QueryTriggerInteraction.Collide);
+                Debug.LogWarning($"[GloveStateMachine] Animator layer '{gloveLayerName}' was not found.");
+            }
 
-                foreach (var h in hits)
+            if (leftHandIK == null)
+            {
+                TwoBoneIKConstraint[] constraints =
+                    armsAnimator.GetComponentsInChildren<TwoBoneIKConstraint>(true);
+
+                foreach (TwoBoneIKConstraint constraint in constraints)
                 {
-                    Rigidbody rb = h.rigidbody != null ? h.rigidbody : h.collider.attachedRigidbody;
-                    if (rb == null) continue;
-                    // Nearest along the sweep is the primary. (distance 0 = started inside; treat as nearest)
-                    float d = h.distance <= 0f ? 0f : h.distance;
-                    if (d < bestDist)
+                    if (constraint.gameObject.name == "LeftHandIK")
                     {
-                        bestDist = d;
-                        best = rb;
+                        leftHandIK = constraint;
+                        break;
                     }
                 }
             }
 
-            detectedPrimary = best;
-            ApplyTint(best != null ? best.GetComponentInChildren<Renderer>() : null);
+            if (leftHandIK != null)
+                baseLeftHandWeight = leftHandIK.weight;
+            else
+                Debug.LogWarning("[GloveStateMachine] LeftHandIK constraint was not found.");
         }
 
-        public void ClearDetection()
+        private void UpdateArmOverride()
         {
-            detectedPrimary = null;
-            ApplyTint(null);
-        }
+            float target = gloveEquipped ? 1f : 0f;
+            raiseAmount = Mathf.MoveTowards(raiseAmount, target, raiseSpeed * Time.deltaTime);
 
-        private void ApplyTint(Renderer target)
-        {
-            if (target == tintedRenderer) return;
+            if (armsAnimator != null && gloveLayerIndex >= 0)
+                armsAnimator.SetLayerWeight(gloveLayerIndex, raiseAmount);
 
-            // Restore the previously tinted renderer.
-            if (tintedRenderer != null)
+            if (leftHandIK != null)
+                leftHandIK.weight = Mathf.Lerp(baseLeftHandWeight, 0f, raiseAmount);
+
+            // Keep the last glove pose active while its layer fades out. Resetting to the empty
+            // state any earlier would remove the override immediately and make the hand snap back.
+            if (unequippedAnimationPending && raiseAmount <= 0f)
             {
-                tintedRenderer.GetPropertyBlock(mpb);
-                mpb.Clear();
-                tintedRenderer.SetPropertyBlock(mpb);
-            }
-
-            tintedRenderer = target;
-
-            if (tintedRenderer != null)
-            {
-                Color baseCol = Color.white;
-                var sm = tintedRenderer.sharedMaterial;
-                if (sm != null)
-                {
-                    if (sm.HasProperty(BaseColorId)) baseCol = sm.GetColor(BaseColorId);
-                    else if (sm.HasProperty(ColorId)) baseCol = sm.GetColor(ColorId);
-                }
-                Color tinted = Color.Lerp(baseCol, attractTint, tintStrength);
-
-                tintedRenderer.GetPropertyBlock(mpb);
-                mpb.SetColor(BaseColorId, tinted);
-                mpb.SetColor(ColorId, tinted);
-                tintedRenderer.SetPropertyBlock(mpb);
+                PlayGloveAnimation(emptyHash);
+                unequippedAnimationPending = false;
             }
         }
 
-        // ── Attract lifecycle (used by Attract / Hold / ReleaseObject) ──
-        // Exactly ONE object is attracted: the tinted target captured at the moment of the double-tap.
-        public void BeginAttract()
+        public void SetEquipped(bool equipped)
         {
-            DropAttract();
-            latched = false;
-            spinSeed = Random.Range(0f, 100f);
-            primaryTarget = detectedPrimary;
-            if (primaryTarget != null)
-                primaryRecord = CapturePrimary(primaryTarget);
+            gloveEquipped = equipped;
+            unequippedAnimationPending = !equipped;
 
-            // We've committed the target; stop tinting the idle candidate.
-            ClearDetection();
+            if (InputManager.Instance != null)
+                InputManager.Instance.gloveEquipped = equipped;
         }
 
-        private Attracted CapturePrimary(Rigidbody rb)
+        
+
+        public void PlayGloveAnimation(int stateHash)
         {
-            var a = new Attracted
-            {
-                rb = rb,
-                wasKinematic = rb.isKinematic,
-                wasUsingGravity = rb.useGravity,
-                wasDetectingCollisions = rb.detectCollisions,
-                originalParent = rb.transform.parent,
-                suppressedPickups = SuppressPickups(rb.gameObject, true)
-            };
-            rb.useGravity = false;
-            // While it's flying to / orbiting the hand it must not bonk the world or shove the player.
-            rb.detectCollisions = false;
-            return a;
+            if (armsAnimator != null && gloveLayerIndex >= 0)
+                armsAnimator.Play(stateHash, gloveLayerIndex, 0f);
         }
 
-        /// <summary>Eases the object toward the hand. Returns true once it has latched.</summary>
-        public bool TickAttract()
-        {
-            if (primaryTarget == null || gloveHandAnchor == null) return false;
-
-            Vector3 anchor = gloveHandAnchor.position;
-            Vector3 toAnchor = anchor - primaryTarget.position;
-            float dist = toAnchor.magnitude;
-
-            if (!primaryTarget.isKinematic && dist > 0.0001f)
-            {
-                // Tractor-beam ease-in: full speed far away, easing down as it nears the hand so it
-                // doesn't whip past — but never below minApproachSpeed, so it always out-paces the
-                // player (e.g. back-pedalling) and actually reaches the hand to latch.
-                float speed = Mathf.Max(minApproachSpeed, maxApproachSpeed * Mathf.Clamp01(dist / approachSlowRadius));
-                primaryTarget.linearVelocity = (toAnchor / dist) * speed;
-            }
-
-            if (dist <= latchDistance)
-            {
-                latched = true;
-                // Fully suspend physics and ride the palm: parent to the anchor so it tracks the hand
-                // exactly (no inertia, no per-frame lag). Physics resumes only on release (repulsion).
-                primaryTarget.linearVelocity = Vector3.zero;
-                primaryTarget.angularVelocity = Vector3.zero;
-                primaryTarget.isKinematic = true;
-                primaryTarget.transform.SetParent(gloveHandAnchor, true);
-                // Sit exactly where the anchor is placed (that's the "in front of the palm" spot you
-                // set). Only if you give a Held Local Offset do we push along THAT direction, and then
-                // auto-extend it to at least the object's radius + clearance so a big object can't clip
-                // the palm. We never invent an outward direction ourselves (the rig's local axes vary).
-                if (heldLocalOffset.sqrMagnitude < 1e-6f)
-                {
-                    heldLocalPos = Vector3.zero;
-                }
-                else
-                {
-                    float minDist = BoundingRadius(primaryTarget) + palmClearance;
-                    heldLocalPos = heldLocalOffset.normalized * Mathf.Max(heldLocalOffset.magnitude, minDist);
-                }
-                primaryTarget.transform.localPosition = heldLocalPos;
-                return true;
-            }
-            return false;
-        }
-
-        /// <summary>Holds the latched object pinned in front of the palm with a lazy 3-axis tumble.</summary>
-        public void TickHold()
-        {
-            if (primaryTarget == null || gloveHandAnchor == null) return;
-
-            // Parented to the anchor, so it already tracks the palm; keep it pinned clear of the palm.
-            primaryTarget.transform.localPosition = heldLocalPos;
-
-            if (spinMaxSpeed != 0f)
-            {
-                // Each axis gets its own Perlin-noise speed that smoothly drifts within
-                // [-spinMaxSpeed, +spinMaxSpeed] over time, so the tumble looks organic and each
-                // object (different spinSeed) spins differently.
-                float t = Time.time * spinVariation;
-                float sx = (Mathf.PerlinNoise(t, spinSeed + 0.0f) - 0.5f) * 2f;
-                float sy = (Mathf.PerlinNoise(t, spinSeed + 5.3f) - 0.5f) * 2f;
-                float sz = (Mathf.PerlinNoise(t, spinSeed + 11.7f) - 0.5f) * 2f;
-                Vector3 spin = new Vector3(sx, sy, sz) * spinMaxSpeed;
-                primaryTarget.transform.Rotate(spin * Time.deltaTime, Space.Self);
-            }
-        }
-
-        /// <summary>True only while the attracted object is close enough to the hand for a katana launch.</summary>
-        public bool KatanaLaunchInRange()
-        {
-            if (primaryTarget == null || gloveHandAnchor == null) return false;
-            return Vector3.Distance(primaryTarget.position, gloveHandAnchor.position) <= katanaLaunchDistance;
-        }
-
-        /// <summary>Throws the attracted object out along the camera forward.</summary>
-        public void LaunchAttractedObject()
-        {
-            if (primaryTarget != null && primaryRecord != null)
-            {
-                Vector3 dir = Cam != null ? Cam.transform.forward : transform.forward;
-                RestoreAttracted(primaryRecord);
-                primaryTarget.linearVelocity = Vector3.zero;   // drop the inward tractor velocity first
-                primaryTarget.angularVelocity = Vector3.zero;
-                primaryTarget.AddForce(dir * launchImpulse, ForceMode.Impulse);
-            }
-            primaryRecord = null;
-            primaryTarget = null;
-            latched = false;
-        }
-
-        // Releases the attracted object back to normal physics WITHOUT throwing it (used on unequip).
-        private void DropAttract()
-        {
-            if (primaryRecord != null)
-                RestoreAttracted(primaryRecord);
-            primaryRecord = null;
-            primaryTarget = null;
-            latched = false;
-        }
-
-        private void RestoreAttracted(Attracted a)
-        {
-            if (a.rb == null) return;
-            // Unparent first (back to its original parent) so physics resumes in world space.
-            a.rb.transform.SetParent(a.originalParent, true);
-            a.rb.isKinematic = a.wasKinematic;
-            a.rb.useGravity = a.wasUsingGravity;
-            a.rb.detectCollisions = a.wasDetectingCollisions;
-            SuppressPickups(a.rb.gameObject, false, a.suppressedPickups);
-        }
-
-        // Half the object's bounding-box diagonal — a radius that covers it in ANY orientation, so a
-        // tumbling held object never dips into the palm.
-        private float BoundingRadius(Rigidbody rb)
-        {
-            Collider[] cols = rb.GetComponentsInChildren<Collider>();
-            if (cols.Length > 0)
-            {
-                Bounds b = cols[0].bounds;
-                for (int i = 1; i < cols.Length; i++) b.Encapsulate(cols[i].bounds);
-                return b.extents.magnitude;
-            }
-            Renderer rend = rb.GetComponentInChildren<Renderer>();
-            return rend != null ? rend.bounds.extents.magnitude : 0.25f;
-        }
-
-        // Disable/re-enable *Pickup behaviours so an attracted consumable isn't auto-collected while
-        // it's flying to / orbiting the hand. Returns the behaviours it disabled (to restore later).
-        private MonoBehaviour[] SuppressPickups(GameObject go, bool suppress, MonoBehaviour[] known = null)
-        {
-            if (!suppress)
-            {
-                if (known != null)
-                    foreach (var mb in known)
-                        if (mb != null) mb.enabled = true;
-                return null;
-            }
-
-            var list = new List<MonoBehaviour>();
-            foreach (var mb in go.GetComponents<MonoBehaviour>())
-            {
-                if (mb != null && mb.enabled && mb.GetType().Name.EndsWith("Pickup"))
-                {
-                    mb.enabled = false;
-                    list.Add(mb);
-                }
-            }
-            return list.ToArray();
-        }
-
-        // ── Charge blast (used by ChargeBlast / Blast) ───────────
         public void SetChargeSlow(float chargeNormalized)
         {
-            if (playerMovement != null)
-                playerMovement.ChargeSpeedMultiplier = Mathf.Lerp(1f, minChargeSpeed, chargeNormalized);
+            if (player != null)
+                player.ChargeSpeedMultiplier = Mathf.Lerp(1f, minChargeSpeed, chargeNormalized);
         }
 
         public void ClearChargeSlow()
         {
-            if (playerMovement != null)
-                playerMovement.ChargeSpeedMultiplier = 1f;
+            if (player != null)
+                player.ChargeSpeedMultiplier = 1f;
         }
 
-        public void SpawnBlast(float chargeNormalized)
+        /*public void SpawnBlast(float chargeNormalized)
         {
             Vector3 origin = gloveHandAnchor != null ? gloveHandAnchor.position
-                            : (Cam != null ? Cam.transform.position + Cam.transform.forward : transform.position);
-            Vector3 dir = Cam != null ? Cam.transform.forward : transform.forward;
+                            : (Camera.main != null ? Camera.main.transform.position + Camera.main.transform.forward : transform.position);
+            Vector3 dir = Camera.main != null ? Camera.main.transform.forward : transform.forward;
 
             GloveBlastProjectile proj;
             if (blastPrefab != null)
@@ -489,8 +251,7 @@ namespace Burntwax
 
             if (camShake != null) camShake.GenerateImpulse(dir);
             IsFiring = true;
-        }
+        } */
 
-        public void EndFire() => IsFiring = false;
     }
 }

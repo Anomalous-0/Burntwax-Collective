@@ -11,7 +11,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.SetStopSign(false); // palm-up idle
+            Ctx.PlayGloveAnimation(Ctx.idleHash);
             InitializeSubState();
         }
 
@@ -22,7 +22,7 @@ namespace Burntwax
             if (InputManager.Instance == null || !InputManager.Instance.gloveEquipped)
                 return;
 
-            Ctx.RunDetection();
+
             CheckSwitchStates();
         }
 

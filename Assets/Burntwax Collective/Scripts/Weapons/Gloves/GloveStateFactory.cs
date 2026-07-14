@@ -34,8 +34,7 @@ namespace Burntwax
             states[GloveState.Hold] = new GloveHoldState(context, this);
             states[GloveState.ReleaseObject] = new GloveReleaseObjectState(context, this);
             states[GloveState.ChargeBlast] = new GloveChargeBlastState(context, this);
-            states[GloveState.EM] = new GloveEMState(context, this);
-            states[GloveState.Blast] = new GloveBlastState(context, this);
+            states[GloveState.Blast] = new GloveBlastEMState(context, this);
 
 
         }

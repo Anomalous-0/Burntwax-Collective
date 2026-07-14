@@ -22,7 +22,7 @@ namespace Burntwax
 
         void Start()
         {
-            player = FindFirstObjectByType<PlayerStateMachine>();
+            player = FindAnyObjectByType<PlayerStateMachine>();
             ObjectManager.Instance.Register(gameObject);
         }
 
