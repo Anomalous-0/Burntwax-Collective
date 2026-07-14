@@ -27,13 +27,9 @@ namespace Burntwax
         [SerializeField] private PlayerStateMachine player;
         [SerializeField] private GameObject gloveModel;
         [SerializeField] private Rig handIK;
-        [Tooltip("Where an attracted object flies to and orbits. Auto-created under the glove model if left empty.")]
-        [SerializeField] private Transform gloveHandAnchor;
-        [Tooltip("The Arms animator that owns the masked left-arm Glove layer.")]
         [SerializeField] private Animator armsAnimator;
-        [Tooltip("The left-hand IK constraint. Its weight is released while the glove layer is raised.")]
         [SerializeField] private TwoBoneIKConstraint leftHandIK;
-        [SerializeField] private CinemachineImpulseSource camShake;
+        // [SerializeField] private CinemachineImpulseSource camShake;
 
         [Header("Arm Override")]
         [SerializeField] private string gloveLayerName = "Glove";
@@ -44,21 +40,24 @@ namespace Burntwax
 
         [Header("States")]
         [SerializeField] private float equipWaitTime = 1f;
+        public bool BlastEndAnim = false;
 
         [SerializeField] private bool enterAttract = false;
         [SerializeField] private bool enterCharge = false;
 
         [Header("Detection")]
+        public GameObject detectedObject;
+        [SerializeField] private bool canAttract = false;
         [SerializeField] private float detectDistance = 9f;        // max reach of the glove
         [SerializeField] private float castRadius = 0.6f;          // spherecast radius = aim margin of error
         [SerializeField] private LayerMask attractableLayer;       // set to the Consumable layer
 
-        [Header("Highlight")]
-        [SerializeField] private Color attractTint = Color.cyan;
-        [Range(0f, 1f)][SerializeField] private float tintStrength = 0.5f;
-
-        [Header("Attract Physics")]
-        [SerializeField] private bool canAttract = false;
+        [Header("Holding")]
+        public GameObject heldObject;
+        public GameObject restPos;
+        [SerializeField] private float attractionForce = 8f;
+        [SerializeField] private float restDistance = 0.8f;
+        [SerializeField] private float holdLerpSpeed = 18f;
 
         [Header("Charge Blast")]
         [Range(0f, 1f)][SerializeField] private float minChargeSpeed = 0.45f; // player speed scale at full charge
@@ -76,6 +75,9 @@ namespace Burntwax
         public float DetectDistance => detectDistance;
         public LayerMask AttractableLayer => attractableLayer;
         public float EquipWaitTime => equipWaitTime;
+        public float AttractionForce => attractionForce;
+        public float RestDistance => restDistance;
+        public float HoldLerpSpeed => holdLerpSpeed;
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
 
         public GloveBaseState CurrentState;
@@ -89,6 +91,15 @@ namespace Burntwax
         private float baseLeftHandWeight = 1f;
         private bool gloveEquipped;
         private bool unequippedAnimationPending;
+
+        private struct CollisionIgnoreRecord
+        {
+            public Collider heldCollider;
+            public Collider playerCollider;
+            public bool wasIgnored;
+        }
+
+        private readonly List<CollisionIgnoreRecord> heldPlayerCollisionIgnores = new();
 
         public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
 
@@ -121,17 +132,195 @@ namespace Burntwax
 
         private void Update()
         {
+            
             CurrentState.UpdateStates();
             UpdateArmOverride();
             currentStateText = CurrentState.GetType().Name;
             currentSubstateText = CurrentState.CurrentSubstate()?.GetType().Name ?? "None";
-
-            // Every glove gesture is consumed within this frame's state processing above, so clear
-            // the one-frame pulses now.
             if (InputManager.Instance != null)
                 InputManager.Instance.ConsumeGloveGestures();
+
+            canAttract = ObjectDetection();
         }
 
+        private void FixedUpdate()
+        {
+            CurrentState?.FixedUpdateStates();
+        }
+
+
+        public bool ObjectDetection()
+        {
+            detectedObject = null;
+
+            Camera playerCamera = Camera.main;
+            if (playerCamera == null)
+                return false;
+
+            Vector3 rayOrigin = playerCamera.transform.position;
+            Vector3 rayDirection = playerCamera.transform.forward;
+
+            if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit directHit,
+                detectDistance, attractableLayer, QueryTriggerInteraction.Collide))
+            {
+                detectedObject = GetDetectedObject(directHit);
+                return detectedObject != null;
+            }
+
+
+            RaycastHit[] nearbyHits = Physics.SphereCastAll(rayOrigin, castRadius, rayDirection,
+                detectDistance, attractableLayer, QueryTriggerInteraction.Collide);
+
+            float bestAimDistanceSqr = float.PositiveInfinity;
+            float bestForwardDistance = float.PositiveInfinity;
+
+            foreach (RaycastHit hit in nearbyHits)
+            {
+                GameObject candidate = GetDetectedObject(hit);
+                if (candidate == null)
+                    continue;
+
+                Vector3 candidatePosition = hit.collider.bounds.center;
+                Vector3 fromRayOrigin = candidatePosition - rayOrigin;
+                float forwardDistance = Mathf.Clamp(
+                    Vector3.Dot(fromRayOrigin, rayDirection), 0f, detectDistance);
+                Vector3 closestPointOnRay = rayOrigin + rayDirection * forwardDistance;
+                float aimDistanceSqr = (candidatePosition - closestPointOnRay).sqrMagnitude;
+
+                if (aimDistanceSqr < bestAimDistanceSqr ||
+                    (Mathf.Approximately(aimDistanceSqr, bestAimDistanceSqr) &&
+                     forwardDistance < bestForwardDistance))
+                {
+                    bestAimDistanceSqr = aimDistanceSqr;
+                    bestForwardDistance = forwardDistance;
+                    detectedObject = candidate;
+                }
+            }
+
+            return detectedObject != null && heldObject == null;
+        }
+
+        private static GameObject GetDetectedObject(RaycastHit hit)
+        {
+            if (hit.rigidbody != null)
+                return hit.rigidbody.gameObject;
+
+            return hit.collider != null ? hit.collider.gameObject : null;
+        }
+
+        public void BlastFinished()
+        {
+            BlastEndAnim = true;
+        }
+
+
+
+        public void PlayGloveAnimation(int stateHash)
+        {
+            if (armsAnimator != null && gloveLayerIndex >= 0)
+                armsAnimator.Play(stateHash, gloveLayerIndex, 0f);
+        }
+
+        public void SetChargeSlow(float chargeNormalized)
+        {
+            if (player != null)
+                player.ChargeSpeedMultiplier = Mathf.Lerp(1f, minChargeSpeed, chargeNormalized);
+        }
+
+        public void ClearChargeSlow()
+        {
+            if (player != null)
+                player.ChargeSpeedMultiplier = 1f;
+        }
+
+        public void IgnoreHeldObjectPlayerCollisions()
+        {
+            RestoreHeldObjectPlayerCollisions();
+
+            if (heldObject == null)
+                return;
+
+            GameObject playerObject = player != null ? player.gameObject : gameObject;
+            Collider[] heldColliders = heldObject.GetComponentsInChildren<Collider>(true);
+            Collider[] playerColliders = playerObject.GetComponentsInChildren<Collider>(true);
+
+            foreach (Collider heldCollider in heldColliders)
+            {
+                if (heldCollider == null)
+                    continue;
+
+                foreach (Collider playerCollider in playerColliders)
+                {
+                    if (playerCollider == null || playerCollider == heldCollider)
+                        continue;
+
+                    bool wasIgnored = Physics.GetIgnoreCollision(heldCollider, playerCollider);
+                    heldPlayerCollisionIgnores.Add(new CollisionIgnoreRecord
+                    {
+                        heldCollider = heldCollider,
+                        playerCollider = playerCollider,
+                        wasIgnored = wasIgnored
+                    });
+
+                    if (!wasIgnored)
+                        Physics.IgnoreCollision(heldCollider, playerCollider, true);
+                }
+            }
+        }
+
+        public void RestoreHeldObjectPlayerCollisions()
+        {
+            foreach (CollisionIgnoreRecord record in heldPlayerCollisionIgnores)
+            {
+                if (record.heldCollider != null && record.playerCollider != null)
+                {
+                    Physics.IgnoreCollision(record.heldCollider, record.playerCollider,
+                        record.wasIgnored);
+                }
+            }
+
+            heldPlayerCollisionIgnores.Clear();
+        }
+
+        /*public void SpawnBlast(float chargeNormalized)
+        {
+            Vector3 origin = gloveHandAnchor != null ? gloveHandAnchor.position
+                            : (Camera.main != null ? Camera.main.transform.position + Camera.main.transform.forward : transform.position);
+            Vector3 dir = Camera.main != null ? Camera.main.transform.forward : transform.forward;
+
+            GloveBlastProjectile proj;
+            if (blastPrefab != null)
+            {
+                proj = Instantiate(blastPrefab, origin, Quaternion.LookRotation(dir));
+            }
+            else
+            {
+                // Runtime placeholder: emissive sphere so the feature is testable before real VFX.
+                var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                go.name = "GloveBlast (placeholder)";
+                go.transform.position = origin;
+                go.transform.localScale = Vector3.one * 0.4f;
+                var col = go.GetComponent<Collider>();
+                if (col != null) Destroy(col); // the projectile makes its own trigger spheres
+                var rb = go.AddComponent<Rigidbody>();
+                rb.useGravity = false;
+                var rend = go.GetComponent<Renderer>();
+                if (rend != null)
+                {
+                    rend.material.color = attractTint;
+                    rend.material.EnableKeyword("_EMISSION");
+                    rend.material.SetColor("_EmissionColor", attractTint * 2f);
+                }
+                proj = go.AddComponent<GloveBlastProjectile>();
+            }
+
+            float damage = Mathf.Lerp(blastMinDamage, blastMaxDamage, chargeNormalized);
+            float force = Mathf.Lerp(blastMinForce, blastMaxForce, chargeNormalized);
+            proj.Launch(dir * blastSpeed, chargeNormalized, damage, force);
+
+            if (camShake != null) camShake.GenerateImpulse(dir);
+            IsFiring = true;
+        } */
         private void InitializeArmOverride()
         {
             if (armsAnimator == null)
@@ -196,65 +385,9 @@ namespace Burntwax
                 InputManager.Instance.gloveEquipped = equipped;
         }
 
-        
-
-        public void PlayGloveAnimation(int stateHash)
+        private void OnDisable()
         {
-            if (armsAnimator != null && gloveLayerIndex >= 0)
-                armsAnimator.Play(stateHash, gloveLayerIndex, 0f);
+            RestoreHeldObjectPlayerCollisions();
         }
-
-        public void SetChargeSlow(float chargeNormalized)
-        {
-            if (player != null)
-                player.ChargeSpeedMultiplier = Mathf.Lerp(1f, minChargeSpeed, chargeNormalized);
-        }
-
-        public void ClearChargeSlow()
-        {
-            if (player != null)
-                player.ChargeSpeedMultiplier = 1f;
-        }
-
-        /*public void SpawnBlast(float chargeNormalized)
-        {
-            Vector3 origin = gloveHandAnchor != null ? gloveHandAnchor.position
-                            : (Camera.main != null ? Camera.main.transform.position + Camera.main.transform.forward : transform.position);
-            Vector3 dir = Camera.main != null ? Camera.main.transform.forward : transform.forward;
-
-            GloveBlastProjectile proj;
-            if (blastPrefab != null)
-            {
-                proj = Instantiate(blastPrefab, origin, Quaternion.LookRotation(dir));
-            }
-            else
-            {
-                // Runtime placeholder: emissive sphere so the feature is testable before real VFX.
-                var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                go.name = "GloveBlast (placeholder)";
-                go.transform.position = origin;
-                go.transform.localScale = Vector3.one * 0.4f;
-                var col = go.GetComponent<Collider>();
-                if (col != null) Destroy(col); // the projectile makes its own trigger spheres
-                var rb = go.AddComponent<Rigidbody>();
-                rb.useGravity = false;
-                var rend = go.GetComponent<Renderer>();
-                if (rend != null)
-                {
-                    rend.material.color = attractTint;
-                    rend.material.EnableKeyword("_EMISSION");
-                    rend.material.SetColor("_EmissionColor", attractTint * 2f);
-                }
-                proj = go.AddComponent<GloveBlastProjectile>();
-            }
-
-            float damage = Mathf.Lerp(blastMinDamage, blastMaxDamage, chargeNormalized);
-            float force = Mathf.Lerp(blastMinForce, blastMaxForce, chargeNormalized);
-            proj.Launch(dir * blastSpeed, chargeNormalized, damage, force);
-
-            if (camShake != null) camShake.GenerateImpulse(dir);
-            IsFiring = true;
-        } */
-
     }
 }

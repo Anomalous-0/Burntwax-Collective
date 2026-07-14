@@ -27,7 +27,7 @@ namespace Burntwax
             if (InputManager.Instance == null)
                 return;
 
-            if (InputManager.Instance.gloveTap)
+            if (InputManager.Instance.gloveTap || !Ctx.CanAttractObject && InputManager.Instance.gloveDoubleTap)
             {
                 SwitchState(Factory.Equipped());
             }

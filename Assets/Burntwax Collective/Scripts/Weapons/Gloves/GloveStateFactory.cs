@@ -12,9 +12,9 @@ namespace Burntwax
         Hold,
         ReleaseObject,
         ChargeBlast,
-
-        EM,
         Blast,
+
+        BlastProjectile
     }
 
     public class GloveStateFactory
@@ -34,7 +34,8 @@ namespace Burntwax
             states[GloveState.Hold] = new GloveHoldState(context, this);
             states[GloveState.ReleaseObject] = new GloveReleaseObjectState(context, this);
             states[GloveState.ChargeBlast] = new GloveChargeBlastState(context, this);
-            states[GloveState.Blast] = new GloveBlastEMState(context, this);
+            states[GloveState.Blast] = new GloveBlastState(context, this);
+            states[GloveState.BlastProjectile] = new GloveBlastProjectileState(context, this);
 
 
         }
@@ -83,10 +84,11 @@ namespace Burntwax
             return states[GloveState.Blast];
         }
 
-        public GloveBaseState EM()
+        public GloveBaseState BlastProjectile()
         {
-            return states[GloveState.EM];
+            return states[GloveState.BlastProjectile];
         }
+
 
     }
 

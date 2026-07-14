@@ -4,11 +4,11 @@ namespace Burntwax
 {
     // Branch B, step 2: release pulse. Spawns the plasma projectile (charge-scaled) and returns to
     // Idle after a brief pose window.
-    public class GloveBlastEMState : GloveBaseState
+    public class GloveBlastState : GloveBaseState
     {
 
 
-        public GloveBlastEMState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
+        public GloveBlastState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         { }
 
@@ -31,6 +31,11 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
+            if(Ctx.BlastEndAnim)
+            {
+                Ctx.BlastEndAnim = false;
+                SwitchState(Factory.Idle());    
+            }
 
         }
 

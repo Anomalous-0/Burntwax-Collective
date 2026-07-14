@@ -34,6 +34,8 @@ namespace Burntwax
 
         public abstract void UpdateState();
 
+        public virtual void FixedUpdateState() { }
+
         public abstract void ExitState();
 
         public abstract void CheckSwitchStates();
@@ -62,6 +64,13 @@ namespace Burntwax
             {
                 currentSuperState.EnterSubState(newState);
             }
+        }
+
+        public void FixedUpdateStates()
+        {
+            FixedUpdateState();
+            if (currentSubState != null)
+                currentSubState.FixedUpdateStates();
         }
 
         protected void SetSuperState(GloveBaseState newSuperState)
