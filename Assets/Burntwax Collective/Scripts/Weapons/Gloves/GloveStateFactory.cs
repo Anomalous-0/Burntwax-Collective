@@ -10,7 +10,6 @@ namespace Burntwax
         ReadyAttract,
         Attract,
         Hold,
-        ReleaseObject,
         ChargeBlast,
 
         EM,
@@ -32,7 +31,6 @@ namespace Burntwax
             states[GloveState.Attract] = new GloveAttractState(context, this);
             states[GloveState.Idle] = new GloveIdleState(context, this);
             states[GloveState.Hold] = new GloveHoldState(context, this);
-            states[GloveState.ReleaseObject] = new GloveReleaseObjectState(context, this);
             states[GloveState.ChargeBlast] = new GloveChargeBlastState(context, this);
             states[GloveState.EM] = new GloveEMState(context, this);
             states[GloveState.Blast] = new GloveBlastState(context, this);
@@ -67,11 +65,6 @@ namespace Burntwax
         public GloveBaseState Hold()
         {
             return states[GloveState.Hold];
-        }
-
-        public GloveBaseState ReleaseObject()
-        {
-            return states[GloveState.ReleaseObject];
         }
 
         public GloveBaseState ChargeBlast()

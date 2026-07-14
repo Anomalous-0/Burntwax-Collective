@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.Interactions;
 
 namespace Burntwax
 {
@@ -24,43 +25,9 @@ namespace Burntwax
         public int weaponSelectID { get; private set; } = -1;
         public bool HasWeaponSelectInput { get { return weaponSelectID >= 0; } }
         [HideInInspector] public bool katanaSelect;
-
-        // ── Glove gesture API ─────────────────────────────────────
-        // The Gloves button (F) is a plain Button now; all tap / double-tap / hold-charge
-        // disambiguation happens here so the GloveStateMachine only reads semantic flags.
-        //   • gloveEquipped        – written BY GloveStateMachine every frame (single source of
-        //                            truth). The recognizer reads it to decide whether to defer a
-        //                            single tap (only deferred while equipped), and the ADS gate /
-        //                            GloveController read it too.
-        //   • gloveTap             – committed single tap (one-frame pulse). Instant while
-        //                            unequipped (equip is snappy); deferred by the double-tap
-        //                            window while equipped so it can't be the first half of a
-        //                            double tap.
-        //   • gloveDoubleTap       – one-frame pulse, only emitted while equipped.
-        //   • gloveCharging        – continuous, true while a hold is charging (equipped only).
-        //   • gloveChargeNormalized– 0..1 charge progress, capped at gloveChargeDuration.
-        //   • gloveBlastFired      – one-frame pulse on release of a charge; gloveBlastCharge holds
-        //                            the captured 0..1 charge at that instant.
-        // Pulses are cleared by GloveStateMachine via ConsumeGloveGestures() after it ticks.
-        [HideInInspector] public bool gloveEquipped;
-        [HideInInspector] public bool gloveTap;
-        [HideInInspector] public bool gloveDoubleTap;
-        [HideInInspector] public bool gloveCharging;
-        [HideInInspector] public float gloveChargeNormalized;
-        [HideInInspector] public bool gloveBlastFired;
-        [HideInInspector] public float gloveBlastCharge;
-
-        [Header("Glove Gesture Tuning")]
-        [SerializeField] float gloveHoldThreshold = 0.18f;   // press longer than this = charge, not tap
-        [SerializeField] float gloveDoubleTapWindow = 0.25f; // second tap must land within this
-        [SerializeField] float gloveChargeDuration = 1f;     // seconds to reach full charge (cap)
-
-        // recognizer runtime state
-        bool gloveButtonDown;
-        float glovePressStartTime;
-        bool glovePendingTap;
-        float glovePendingTapTime;
-        bool gloveChargeActive;
+        public bool gloveHold = false;    
+        public bool glovePressed = false;
+        public bool useGloves {get { return gloveHold || glovePressed; }}  // true if either the hold or tap input is active
 
 
         [HideInInspector] public bool aimIsPressed = false;
@@ -124,8 +91,8 @@ namespace Burntwax
             input.OnFoot.KatanaSelect.canceled += SetKatanaSelect;
             input.OnFoot.Interact.started += SetInteract;
             input.OnFoot.Interact.canceled += SetInteract;
-            input.OnFoot.Gloves.started += OnGlovePressed;
-            input.OnFoot.Gloves.canceled += OnGloveReleased;
+            input.OnFoot.Gloves.performed += OnGloves;
+            input.OnFoot.Gloves.canceled += OnGloves;
             input.OnFoot.Save.started += SetSave;
             input.OnFoot.Save.canceled += SetSave;
             input.OnFoot.Load.started += SetLoad;
@@ -160,8 +127,8 @@ namespace Burntwax
             input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
             input.OnFoot.Interact.started -= SetInteract;
             input.OnFoot.Interact.canceled -= SetInteract;
-            input.OnFoot.Gloves.started -= OnGlovePressed;
-            input.OnFoot.Gloves.canceled -= OnGloveReleased;
+            input.OnFoot.Gloves.performed -= OnGloves;
+            input.OnFoot.Gloves.canceled -= OnGloves;
             input.OnFoot.Save.started -= SetSave;
             input.OnFoot.Save.canceled -= SetSave;
             input.OnFoot.Load.started -= SetLoad;
@@ -173,9 +140,6 @@ namespace Burntwax
         // ── MODIFIED Update ────────────────────────────────────
         private void Update()
         {
-            // Glove gestures are independent of weapon mode (the glove lives alongside the arsenal),
-            // so tick them before the katana-only early-return below.
-            TickGloveGestures();
 
             if (arsenal && arsenal.currentMode != Arsenal.WeaponMode.Katana)
                 return;
@@ -280,92 +244,22 @@ namespace Burntwax
         }
         private void SetKatanaSelect(InputAction.CallbackContext ctx) => katanaSelect = ctx.started;
         private void SetInteract(InputAction.CallbackContext ctx) => interactIsPressed = ctx.started;
-
-        // ── Glove gesture recognizer ──────────────────────────────
-        // The Gloves button is a plain Button; we get raw press/release here and derive
-        // tap / double-tap / hold-charge in TickGloveGestures().
-        private void OnGlovePressed(InputAction.CallbackContext ctx)
+        // F is shared. The Gloves action has BOTH a Tap and a Hold interaction; ctx.interaction
+        // tells us which one fired:
+        //   • quick TAP  → toggle the stop-sign overlay (glovesRaised), consumed by GloveController
+        //                  and the ADS gate.
+        //   • press-HOLD → drive the gravity glove (useGloves), consumed by GloveStateMachine.
+        private void OnGloves(InputAction.CallbackContext ctx)
         {
-            gloveButtonDown = true;
-            glovePressStartTime = Time.unscaledTime;
-            gloveChargeActive = false;
-        }
-
-        private void OnGloveReleased(InputAction.CallbackContext ctx)
-        {
-            gloveButtonDown = false;
-
-            if (gloveChargeActive)
+            if (ctx.interaction is TapInteraction)
             {
-                // A charge was in progress → fire the blast with whatever charge we reached.
-                gloveBlastFired = true;
-                gloveBlastCharge = gloveChargeNormalized;
-                gloveChargeActive = false;
-                gloveCharging = false;
-                gloveChargeNormalized = 0f;
-                glovePendingTap = false;   // a charge is never also a tap
-                return;
+                if (ctx.performed) glovePressed = !glovePressed;   // released within tap time → toggle overlay
             }
-
-            // Released before the hold threshold → it's a tap.
-            if (!gloveEquipped)
+            else if (ctx.interaction is HoldInteraction)
             {
-                // Unequipped: the only meaningful action is equip, so commit instantly (no double
-                // tap to disambiguate against).
-                gloveTap = true;
+                if (ctx.performed) gloveHold = true;               // held past hold time → gravity glove on
+                else if (ctx.canceled) gloveHold = false;          // released → gravity glove off
             }
-            else if (glovePendingTap && Time.unscaledTime - glovePendingTapTime <= gloveDoubleTapWindow)
-            {
-                // Second quick tap → double tap.
-                gloveDoubleTap = true;
-                glovePendingTap = false;
-            }
-            else
-            {
-                // First tap → wait to see if a second one lands (committed in TickGloveGestures).
-                glovePendingTap = true;
-                glovePendingTapTime = Time.unscaledTime;
-            }
-        }
-
-        private void TickGloveGestures()
-        {
-            // Promote a held press into a charge (only while equipped — a hold from unequipped just
-            // equips on release).
-            if (gloveButtonDown && !gloveChargeActive && gloveEquipped
-                && Time.unscaledTime - glovePressStartTime >= gloveHoldThreshold)
-            {
-                gloveChargeActive = true;
-            }
-
-            if (gloveChargeActive)
-            {
-                gloveCharging = true;
-                gloveChargeNormalized = Mathf.Clamp01(
-                    (Time.unscaledTime - glovePressStartTime) / gloveChargeDuration);
-            }
-            else
-            {
-                gloveCharging = false;
-            }
-
-            // Commit a pending single tap once the double-tap window closes with no second tap.
-            if (glovePendingTap && Time.unscaledTime - glovePendingTapTime > gloveDoubleTapWindow)
-            {
-                gloveTap = true;
-                glovePendingTap = false;
-            }
-        }
-
-        /// <summary>
-        /// Clears the one-frame glove gesture pulses. Called by GloveStateMachine at the end of its
-        /// Update so each tap / double-tap / blast is consumed exactly once.
-        /// </summary>
-        public void ConsumeGloveGestures()
-        {
-            gloveTap = false;
-            gloveDoubleTap = false;
-            gloveBlastFired = false;
         }
         private void SetSave(InputAction.CallbackContext ctx) => saveIsPressed = ctx.started;
         private void SetLoad(InputAction.CallbackContext ctx) => loadIsPressed = ctx.started;

@@ -64,10 +64,10 @@ namespace Burntwax
 
         public bool AimIsPriority()
         {
-            // Glove equipped (tap F) blocks ADS for both the gun and the camera, which both gate
+            // Glove raised (tap F) blocks ADS for both the gun and the camera, which both gate
             // their aim transitions on this method. Weapon use/switch/reload are unaffected.
             return inputPriority.IndexOf(aim) == inputPriority.Count - 1 && inputPriority.Count >= 1
-                && !InputManager.Instance.gloveEquipped;
+                && !InputManager.Instance.useGloves;
         }
 
         public bool AttackIsPriority()

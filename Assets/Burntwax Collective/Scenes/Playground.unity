@@ -7022,16 +7022,8 @@ MonoBehaviour:
   jumpIsPressed: 0
   pauseIsPressed: 0
   katanaSelect: 0
-  gloveEquipped: 0
-  gloveTap: 0
-  gloveDoubleTap: 0
-  gloveCharging: 0
-  gloveChargeNormalized: 0
-  gloveBlastFired: 0
-  gloveBlastCharge: 0
-  gloveHoldThreshold: 0.18
-  gloveDoubleTapWindow: 0.25
-  gloveChargeDuration: 1
+  useGloves: 0
+  glovesRaised: 0
   aimIsPressed: 0
   attackIsPressed: 0
   slash: 0
@@ -9260,7 +9252,6 @@ Transform:
   m_Children:
   - {fileID: 1725696124}
   - {fileID: 125125206}
-  - {fileID: 1018434370}
   m_Father: {fileID: 1142371221871575083}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &517291632 stripped
@@ -16537,37 +16528,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1016793760}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1018434369
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1018434370}
-  m_Layer: 0
-  m_Name: GloveHandAnchor
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1018434370
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1018434369}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 510963325}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1020014354
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -37169,39 +37129,12 @@ MonoBehaviour:
   player: {fileID: 669723134}
   gloveModel: {fileID: 510963324}
   handIK: {fileID: 1142371221871575082}
-  gloveHandAnchor: {fileID: 1018434370}
-  armsAnimator: {fileID: 8915226981332152389}
-  stopSignParam: stopSign
-  camShake: {fileID: 0}
   detectDistance: 9
-  castRadius: 0.6
   attractableLayer:
     serializedVersion: 2
-    m_Bits: 2048
-  attractTint: {r: 0, g: 1, b: 1, a: 1}
-  tintStrength: 0.5
-  maxApproachSpeed: 14
-  approachSlowRadius: 2.5
-  latchDistance: 0.5
-  spinMaxSpeed: 140
-  spinVariation: 0.4
-  launchImpulse: 25
-  katanaLaunchDistance: 2.5
-  minChargeSpeed: 0.45
-  blastPrefab: {fileID: 0}
-  blastSpeed: 45
-  blastMinDamage: 8
-  blastMaxDamage: 40
-  blastMinForce: 6
-  blastMaxForce: 30
+    m_Bits: 32713
   equipWaitTime: 1
   substateWaitTime: 0.4
---- !u!95 &8915226981332152389 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 8982893999631422072, guid: 4339d97cde5264747a29eaf7ae86e4b5,
-    type: 3}
-  m_PrefabInstance: {fileID: 1142371221871575081}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8967501273172980240
 Transform:
   m_ObjectHideFlags: 0

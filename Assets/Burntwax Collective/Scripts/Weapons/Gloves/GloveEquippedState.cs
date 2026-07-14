@@ -1,9 +1,15 @@
+using System.Collections;
+using UnityEngine;
+
 namespace Burntwax
 {
-    // Root state while the glove is out. Idle is the hub substate; the two ability branches
-    // (attract / charge) live under it. This root only owns equip publishing and the unequip tap.
     public class GloveEquippedState : GloveBaseState
     {
+        private bool canChooseSubstate;
+        private bool canCheckForUnequip;
+        private Coroutine substateDelayCoroutine;
+        private Coroutine unequipDelayCoroutine;
+
         public GloveEquippedState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
         {
@@ -12,8 +18,11 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.SetEquipped(true);
-            InitializeSubState();
+            canChooseSubstate = false;
+            canCheckForUnequip = false;
+            substateDelayCoroutine = Ctx.StartCoroutine(BeginSubstateSelectionAfterDelay());
+            unequipDelayCoroutine = Ctx.StartCoroutine(BeginUnequipCheckAfterDelay());
+
         }
 
         public override void UpdateState()
@@ -21,13 +30,27 @@ namespace Burntwax
             CheckSwitchStates();
         }
 
-        public override void ExitState() { }
+        public override void ExitState()
+        {
+            canChooseSubstate = false;
+            canCheckForUnequip = false;
+
+            if (substateDelayCoroutine != null)
+            {
+                Ctx.StopCoroutine(substateDelayCoroutine);
+                substateDelayCoroutine = null;
+            }
+
+            if (unequipDelayCoroutine != null)
+            {
+                Ctx.StopCoroutine(unequipDelayCoroutine);
+                unequipDelayCoroutine = null;
+            }
+        }
 
         public override void CheckSwitchStates()
         {
-            // Unequip only from the resting palm-up Idle (so a tap that means "launch the held
-            // object" isn't misread as "put the glove away"). Other substates handle their own taps.
-            if (CurrentSubstate() == Ctx.states.Idle() && InputManager.Instance.gloveTap)
+            if (CurrentSubstate() != Ctx.states.Hold() && !InputManager.Instance.useGloves && canCheckForUnequip)
             {
                 SwitchState(Factory.Unequipped());
             }
@@ -35,9 +58,38 @@ namespace Burntwax
 
         public override void InitializeSubState()
         {
-            GloveBaseState idle = Factory.Idle();
-            SetSubState(idle);
-            idle.EnterState();
+            if (canChooseSubstate)
+            {
+                if (Ctx.CanAttractObject)
+                {
+                    SetSubState(Factory.ReadyAttract());
+                }
+                else if (InputManager.Instance.gloveHold)
+                {
+                    SetSubState(Factory.ChargeBlast());
+                }
+                else
+                {
+                    SetSubState(Factory.Idle());
+                }
+            }
+
+
+        }
+
+        private IEnumerator BeginSubstateSelectionAfterDelay()
+        {
+            yield return new WaitForSeconds(Ctx.SubstateWaitTime);
+            canChooseSubstate = true;
+            InitializeSubState();
+            substateDelayCoroutine = null;
+        }
+
+        private IEnumerator BeginUnequipCheckAfterDelay()
+        {
+            yield return new WaitForSeconds(Ctx.EquipWaitTime);
+            canCheckForUnequip = true;
+            unequipDelayCoroutine = null;
         }
     }
 }

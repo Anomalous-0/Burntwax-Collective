@@ -4,19 +4,16 @@ using UnityEngine.Animations.Rigging;
 namespace Burntwax
 {
     /// <summary>
-    /// Drives the left-hand "glove" RAISE. While the glove is equipped
-    /// (<c>InputManager.Instance.gloveEquipped</c>, toggled by tapping F), the left hand blends out
-    /// of the weapon grip into the raised glove pose; when unequipped it lowers back onto the gun.
-    /// The blend lerps toward the target so it's smooth however fast the toggle flips.
+    /// Drives the left-hand "glove". Tapping the Gloves input (default: tap F) toggles the left
+    /// hand out of the weapon grip into a stop-sign pose; tapping again lowers it onto the gun.
+    /// (Holding F is intentionally left free for a future ability.) The blend itself is always
+    /// smooth regardless of how fast the toggle flips, because it lerps toward the target.
     ///
     /// Design notes:
-    ///  - This only controls the raised-vs-lowered blend. The raised pose defaults to the palm-up
-    ///    IDLE; the STOP-SIGN action pose is a separate animator state that the GloveStateMachine
-    ///    action states switch to (via a `stopSign` animator bool). See GloveStateMachine.
     ///  - The glove is deliberately NOT part of the Arsenal / GunStateMachine weapon cycle, so it
-    ///    can be equipped while any weapon is equipped and while switching weapons.
+    ///    can be raised while any weapon is equipped and while switching weapons.
     ///  - ADS blocking is handled centrally, NOT here: <see cref="InputPrioritySorter.AimIsPriority"/>
-    ///    and the gun/camera aim states read <c>InputManager.Instance.gloveEquipped</c>. Shooting,
+    ///    and the gun/camera aim states read <c>InputManager.Instance.useGloves</c>. Shooting,
     ///    switching and reloading are on untouched code paths, so they keep working while raised.
     ///  - The raise is purely visual/mechanical here: a masked (left-arm only) animator override
     ///    layer is blended in by weight, while the LEFT-hand IK constraint weight is lerped to 0 so
@@ -70,7 +67,7 @@ namespace Burntwax
 
         void Update()
         {
-            bool wantUp = InputManager.Instance != null && InputManager.Instance.gloveEquipped;
+            bool wantUp = InputManager.Instance != null && InputManager.Instance.useGloves;
 
             float target = wantUp ? 1f : 0f;
             raiseAmount = Mathf.MoveTowards(raiseAmount, target, raiseSpeed * Time.deltaTime);

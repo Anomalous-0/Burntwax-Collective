@@ -94,10 +94,6 @@ namespace Burntwax
         // For states
         public PlayerBaseState CurrentState { get { return currentState; } set { currentState = value; } }
 
-        // External runtime speed scale (1 = normal). The glove charge-blast state lerps this down
-        // so the player moves slower the more the blast is charged; it's reset to 1 on release.
-        public float ChargeSpeedMultiplier { get; set; } = 1f;
-
 
         // Movement
 
@@ -261,7 +257,7 @@ namespace Burntwax
 
                 }
 
-                rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier * ChargeSpeedMultiplier);
+                rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier);
             }
             else
             {
@@ -290,22 +286,20 @@ namespace Burntwax
         private void SpeedControl()
         {
 
-            float speedCap = playerVelocity * ChargeSpeedMultiplier;
-
             if (currentState == states.Slope())
             {
-                if (rb.linearVelocity.magnitude > speedCap)
+                if (rb.linearVelocity.magnitude > playerVelocity)
                 {
-                    rb.linearVelocity = rb.linearVelocity.normalized * speedCap;
+                    rb.linearVelocity = rb.linearVelocity.normalized * playerVelocity;
                 }
             }
 
             else
             {
                 Vector3 flatVel = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
-                if (flatVel.magnitude > speedCap)
+                if (flatVel.magnitude > playerVelocity)
                 {
-                    Vector3 limitedVel = flatVel.normalized * speedCap;
+                    Vector3 limitedVel = flatVel.normalized * playerVelocity;
                     rb.linearVelocity = new Vector3(limitedVel.x, rb.linearVelocity.y, limitedVel.z);
                 }
             }
