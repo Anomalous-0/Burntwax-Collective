@@ -90,7 +90,7 @@ namespace Burntwax
         private bool gloveEquipped;
         private bool unequippedAnimationPending;
 
-        public int idleHash, emptyHash, attractHash, blastHash, blastProjectileHash, holdHash;
+        public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
 
 
         private MaterialPropertyBlock mpb;
@@ -104,10 +104,13 @@ namespace Burntwax
             katanaStateMachine = GetComponent<KatanaStateMachine>();
 
             mpb = new MaterialPropertyBlock();
-            idleHash = Animator.StringToHash("idle_Glove");
             emptyHash = Animator.StringToHash("empty_Glove");
+            idleHash = Animator.StringToHash("idle_Glove");
+            chargeHash = Animator.StringToHash("charge_blast_Glove");
             blastHash = Animator.StringToHash("blast_Glove");
-            blastProjectileHash = Animator.StringToHash("blastProjectile_Glove");
+            holdHash = Animator.StringToHash("hold_Glove");
+            attractHash = Animator.StringToHash("attract_Glove");
+            blastProjectileHash = Animator.StringToHash("blast_projectile_Glove");
 
             InitializeArmOverride();
 

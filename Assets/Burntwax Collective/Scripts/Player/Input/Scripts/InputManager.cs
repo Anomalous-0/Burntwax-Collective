@@ -28,24 +28,18 @@ namespace Burntwax
         // ── Glove gesture API ─────────────────────────────────────
         // The Gloves button (F) is a plain Button now; all tap / double-tap / hold-charge
         // disambiguation happens here so the GloveStateMachine only reads semantic flags.
-        //   • gloveEquipped        – written BY GloveStateMachine every frame (single source of
-        //                            truth). The recognizer reads it to decide whether to defer a
-        //                            single tap (only deferred while equipped), and the ADS gate /
-        //                            GloveStateMachine uses it for the arm override too.
-        //   • gloveTap             – committed single tap (one-frame pulse). Instant while
-        //                            unequipped (equip is snappy); deferred by the double-tap
-        //                            window while equipped so it can't be the first half of a
-        //                            double tap.
-        //   • gloveDoubleTap       – one-frame pulse, only emitted while equipped.
-        //   • gloveCharging        – continuous, true while a hold is charging (equipped only).
+        //   • gloveEquipped        – written BY GloveStateMachine and read by gameplay input gates.
+        //   • gloveTap             – committed single tap after the double-tap window expires.
+        //   • gloveDoubleTap       – one-frame pulse on a second quick tap.
+        //   • gloveCharging        – continuous while a hold is charging.
         //   • gloveChargeNormalized– 0..1 charge progress, capped at gloveChargeDuration.
         //   • gloveBlastFired      – one-frame pulse on release of a charge; gloveBlastCharge holds
         //                            the captured 0..1 charge at that instant.
         // Pulses are cleared by GloveStateMachine via ConsumeGloveGestures() after it ticks.
-        [HideInInspector] public bool gloveEquipped;
-        [HideInInspector] public bool gloveTap;
-        [HideInInspector] public bool gloveDoubleTap;
-        [HideInInspector] public bool gloveCharging;
+        public bool gloveEquipped;
+        public bool gloveTap;
+        public bool gloveDoubleTap;
+        public bool gloveCharging;
         [HideInInspector] public float gloveChargeNormalized;
         [HideInInspector] public bool gloveBlastFired;
         [HideInInspector] public float gloveBlastCharge;
@@ -307,14 +301,9 @@ namespace Burntwax
                 return;
             }
 
-            // Released before the hold threshold → it's a tap.
-            if (!gloveEquipped)
-            {
-                // Unequipped: the only meaningful action is equip, so commit instantly (no double
-                // tap to disambiguate against).
-                gloveTap = true;
-            }
-            else if (glovePendingTap && Time.unscaledTime - glovePendingTapTime <= gloveDoubleTapWindow)
+            // Released before the hold threshold → defer the first tap so both equipped and
+            // unequipped input can still resolve to a double tap.
+            if (glovePendingTap && Time.unscaledTime - glovePendingTapTime <= gloveDoubleTapWindow)
             {
                 // Second quick tap → double tap.
                 gloveDoubleTap = true;
@@ -330,12 +319,13 @@ namespace Burntwax
 
         private void TickGloveGestures()
         {
-            // Promote a held press into a charge (only while equipped — a hold from unequipped just
-            // equips on release).
-            if (gloveButtonDown && !gloveChargeActive && gloveEquipped
+            // Charge recognition is independent of whether the glove is currently equipped. The
+            // state machine can raise the glove directly into its Charge substate.
+            if (gloveButtonDown && !gloveChargeActive
                 && Time.unscaledTime - glovePressStartTime >= gloveHoldThreshold)
             {
                 gloveChargeActive = true;
+                glovePendingTap = false;
             }
 
             if (gloveChargeActive)
@@ -350,7 +340,8 @@ namespace Burntwax
             }
 
             // Commit a pending single tap once the double-tap window closes with no second tap.
-            if (glovePendingTap && Time.unscaledTime - glovePendingTapTime > gloveDoubleTapWindow)
+            if (glovePendingTap && !gloveButtonDown &&
+                Time.unscaledTime - glovePendingTapTime > gloveDoubleTapWindow)
             {
                 gloveTap = true;
                 glovePendingTap = false;

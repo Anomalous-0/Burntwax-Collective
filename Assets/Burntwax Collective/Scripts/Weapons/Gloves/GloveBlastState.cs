@@ -6,8 +6,7 @@ namespace Burntwax
     // Idle after a brief pose window.
     public class GloveBlastEMState : GloveBaseState
     {
-        private const float FireDuration = 0.15f;
-        private float enterTime;
+
 
         public GloveBlastEMState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
@@ -15,8 +14,8 @@ namespace Burntwax
 
         public override void EnterState()
         {
-           
-            enterTime = Time.time;
+
+            Ctx.PlayGloveAnimation(Ctx.blastHash);
             InitializeSubState();
         }
 
@@ -27,15 +26,12 @@ namespace Burntwax
 
         public override void ExitState()
         {
-          
+
         }
 
         public override void CheckSwitchStates()
         {
-            if (Time.time - enterTime >= FireDuration)
-            {
-                SwitchState(Factory.Idle());
-            }
+
         }
 
         public override void InitializeSubState() { }

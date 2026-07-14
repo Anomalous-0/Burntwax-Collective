@@ -44,7 +44,6 @@ namespace Burntwax
             {
                 SwitchState(Factory.ChargeBlast());
             }
-            // (A plain tap here is consumed by the Equipped root as "unequip".)
         }
 
         public override void InitializeSubState() { }

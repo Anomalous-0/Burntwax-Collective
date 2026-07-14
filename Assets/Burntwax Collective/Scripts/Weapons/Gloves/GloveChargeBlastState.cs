@@ -11,7 +11,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-           
+            Ctx.PlayGloveAnimation(Ctx.chargeHash);
             InitializeSubState();
         }
 
