@@ -138,10 +138,9 @@ namespace Burntwax
             Vector3 pullDirection = toRestPosition / pathDistance;
             arcDirection = Vector3.ProjectOnPlane(Vector3.up, pullDirection).normalized;
 
-            arcHeight = Mathf.Clamp(
+            arcHeight = Mathf.Min(
                 pathDistance * Ctx.ArcHeightPerMeter,
-                Ctx.MinimumArcHeight,
-                Mathf.Max(Ctx.MinimumArcHeight, Ctx.MaximumArcHeight));
+                Ctx.MaximumArcHeight);
         }
 
         private void ApplyInitialVelocity()

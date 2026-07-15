@@ -67,7 +67,6 @@ namespace Burntwax
         [Tooltip("Where the arc reaches full height. Higher values keep the object rising for longer.")]
         [SerializeField, Range(0.05f, 0.95f)] private float arcPeakPosition = 0.6f;
         [SerializeField, Min(0f)] private float arcHeightPerMeter = 0.18f;
-        [SerializeField, Min(0f)] private float minimumArcHeight = 0.35f;
         [SerializeField, Min(0f)] private float maximumArcHeight = 1.5f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
@@ -88,7 +87,6 @@ namespace Burntwax
         public float AttractionSlowdownRate => attractionSlowdownRate;
         public float ArcPeakPosition => arcPeakPosition;
         public float ArcHeightPerMeter => arcHeightPerMeter;
-        public float MinimumArcHeight => minimumArcHeight;
         public float MaximumArcHeight => maximumArcHeight;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
