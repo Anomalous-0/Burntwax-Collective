@@ -41,12 +41,14 @@ namespace Burntwax
 
         public override void ExitState()
         {
-            if (heldBody != null) {
+            if (heldBody != null)
+            {
                 heldBody.isKinematic = wasKinematic;
                 heldBody.interpolation = RigidbodyInterpolation.Interpolate;
 
             }
-                
+            Ctx.heldObject = null;
+
         }
 
         public override void CheckSwitchStates()
@@ -55,16 +57,16 @@ namespace Burntwax
             {
                 SwitchState(Factory.ReleaseObject());
             }
-            else if(InputManager.Instance.gloveCharging)
+            else if (InputManager.Instance.gloveCharging)
             {
                 SwitchState(Factory.BlastProjectile());
             }
-            else if(heldBody == null || Ctx.heldObject == null)
+            else if (heldBody == null || Ctx.heldObject == null)
             {
-                Ctx.heldObject = null;
+
                 SwitchState(Factory.Idle());
             }
-            
+
         }
 
         public override void InitializeSubState() { }

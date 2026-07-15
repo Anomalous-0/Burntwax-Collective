@@ -53,7 +53,20 @@ namespace Burntwax
         public GameObject heldObject;
         public GameObject restPos;
         [Header("Attraction")]
-        [SerializeField, Min(0f)] private float attractionForce = 35f;
+        [Tooltip("How strongly the object corrects toward the arc.")]
+        [SerializeField, Min(0f)] private float attractionSteeringAcceleration = 35f;
+        [Tooltip("Instantaneous mass-independent launch speed applied when attraction begins.")]
+        [SerializeField, Min(0f)] private float initialAttractionVelocity = 18f;
+        [Tooltip("Lower speed the object settles toward after the initial launch.")]
+        [SerializeField, Min(0f)] private float attractionCruiseVelocity = 9f;
+        [Tooltip("How quickly the object transitions from its initial velocity to its cruise velocity.")]
+        [SerializeField, Min(0f)] private float attractionSlowdownRate = 10f;
+        [Header("Attraction Arc")]
+        [Tooltip("Where the arc reaches full height. Higher values keep the object rising for longer.")]
+        [SerializeField, Range(0.05f, 0.95f)] private float arcPeakPosition = 0.6f;
+        [SerializeField, Min(0f)] private float arcHeightPerMeter = 0.18f;
+        [SerializeField, Min(0f)] private float minimumArcHeight = 0.35f;
+        [SerializeField, Min(0f)] private float maximumArcHeight = 1.5f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
         [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
@@ -66,7 +79,14 @@ namespace Burntwax
         public bool EnterCharge { get { return enterCharge; } set { enterCharge = value; } }
         // ── Exposed to states ──
         public float EquipWaitTime => equipWaitTime;
-        public float AttractionForce => attractionForce;
+        public float AttractionForce => attractionSteeringAcceleration;
+        public float InitialAttractionVelocity => initialAttractionVelocity;
+        public float AttractionCruiseVelocity => attractionCruiseVelocity;
+        public float AttractionSlowdownRate => attractionSlowdownRate;
+        public float ArcPeakPosition => arcPeakPosition;
+        public float ArcHeightPerMeter => arcHeightPerMeter;
+        public float MinimumArcHeight => minimumArcHeight;
+        public float MaximumArcHeight => maximumArcHeight;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
 

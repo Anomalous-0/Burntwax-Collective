@@ -37205,8 +37205,15 @@ MonoBehaviour:
     m_Bits: 2048
   heldObject: {fileID: 0}
   restPos: {fileID: 1614787211}
-  attractionForce: 4
-  restDistance: 1.2
+  attractionSteeringAcceleration: 35
+  initialAttractionVelocity: 16
+  attractionCruiseVelocity: 9
+  attractionSlowdownRate: 5
+  arcPeakPosition: 0.6
+  arcHeightPerMeter: 0.18
+  minimumArcHeight: 0.35
+  maximumArcHeight: 0.36
+  restDistance: 0.7
   holdLerpSpeed: 100
   postDropCollisionDelay: 0.2
   minChargeSpeed: 0.45

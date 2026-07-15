@@ -50,8 +50,10 @@ namespace Burntwax
                 prefabToIDMap[id] = prefab;
             }
 
-            if (GameManager.Instance.IsLoadingFromSave)
+            if (GameManager.Instance && GameManager.Instance.IsLoadingFromSave)
                 return;
+            else
+                Debug.LogWarning("GameManager not found. Save data will not be loaded.");
 
             objects.Clear();
 
