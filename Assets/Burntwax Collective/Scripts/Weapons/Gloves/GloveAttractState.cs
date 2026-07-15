@@ -7,6 +7,8 @@ namespace Burntwax
     public class GloveAttractState : GloveBaseState
     {
         private Rigidbody attractedBody;
+        private float initialDistance;
+        private Vector3 curveDirection;
 
         public GloveAttractState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
@@ -21,6 +23,16 @@ namespace Burntwax
             attractedBody = Ctx.heldObject != null
                 ? Ctx.heldObject.GetComponent<Rigidbody>()
                 : null;
+
+            if (attractedBody != null && Ctx.restPos != null)
+            {
+                initialDistance = Mathf.Max(
+                    Vector3.Distance(attractedBody.position, Ctx.restPos.transform.position),
+                    Ctx.RestDistance);
+
+                Camera playerCamera = Camera.main;
+                curveDirection = playerCamera != null ? playerCamera.transform.up : Vector3.up;
+            }
 
         }
 
@@ -65,9 +77,28 @@ namespace Burntwax
                 return;
 
             Vector3 toRestPosition = Ctx.restPos.transform.position - attractedBody.position;
-            if (toRestPosition.sqrMagnitude > 0f)
-                attractedBody.AddForce(toRestPosition.normalized * Ctx.AttractionForce,
-                    ForceMode.Impulse);
+            float distance = toRestPosition.magnitude;
+            if (distance <= 0f)
+                return;
+
+            float travelProgress = 1f - Mathf.Clamp01(distance / initialDistance);
+            float curveOffset = Mathf.Sin(travelProgress * Mathf.PI) * Ctx.AttractionCurveHeight;
+            Vector3 curvedTarget = Ctx.restPos.transform.position + curveDirection * curveOffset;
+            Vector3 displacement = curvedTarget - attractedBody.position;
+
+            Vector3 acceleration =
+                displacement * Ctx.AttractionSpringStrength -
+                attractedBody.linearVelocity * Ctx.AttractionDamping;
+            acceleration = Vector3.ClampMagnitude(acceleration, Ctx.MaxAttractionAcceleration);
+
+            attractedBody.AddForce(acceleration, ForceMode.Acceleration);
+
+            if (attractedBody.linearVelocity.sqrMagnitude >
+                Ctx.MaxAttractionSpeed * Ctx.MaxAttractionSpeed)
+            {
+                attractedBody.linearVelocity =
+                    attractedBody.linearVelocity.normalized * Ctx.MaxAttractionSpeed;
+            }
         }
     }
 }

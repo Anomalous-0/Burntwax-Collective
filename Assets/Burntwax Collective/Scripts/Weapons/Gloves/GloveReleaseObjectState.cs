@@ -16,7 +16,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.RestoreHeldObjectPlayerCollisions();
+            Ctx.DropHeldObjectWithCollisionDelay();
             enterTime = Time.time;
             InitializeSubState();
         }

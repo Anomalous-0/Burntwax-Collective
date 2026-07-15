@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
@@ -55,9 +56,16 @@ namespace Burntwax
         [Header("Holding")]
         public GameObject heldObject;
         public GameObject restPos;
-        [SerializeField] private float attractionForce = 8f;
+        [Header("Attraction Feel")]
+        [SerializeField, Min(0f)] private float attractionSpringStrength = 18f;
+        [SerializeField, Min(0f)] private float attractionDamping = 6f;
+        [SerializeField, Min(0f)] private float maxAttractionAcceleration = 35f;
+        [SerializeField, Min(0f)] private float maxAttractionSpeed = 12f;
+        [SerializeField, Min(0f)] private float attractionCurveHeight = 1.25f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
+        [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
+        [SerializeField, Min(0f)] private float postDropCollisionDelay = 0.35f;
 
         [Header("Charge Blast")]
         [Range(0f, 1f)][SerializeField] private float minChargeSpeed = 0.45f; // player speed scale at full charge
@@ -75,7 +83,11 @@ namespace Burntwax
         public float DetectDistance => detectDistance;
         public LayerMask AttractableLayer => attractableLayer;
         public float EquipWaitTime => equipWaitTime;
-        public float AttractionForce => attractionForce;
+        public float AttractionSpringStrength => attractionSpringStrength;
+        public float AttractionDamping => attractionDamping;
+        public float MaxAttractionAcceleration => maxAttractionAcceleration;
+        public float MaxAttractionSpeed => maxAttractionSpeed;
+        public float AttractionCurveHeight => attractionCurveHeight;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
@@ -100,6 +112,8 @@ namespace Burntwax
         }
 
         private readonly List<CollisionIgnoreRecord> heldPlayerCollisionIgnores = new();
+        private Coroutine restorePlayerCollisionsCoroutine;
+        private bool waitingToRestorePlayerCollisions;
 
         public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
 
@@ -132,15 +146,14 @@ namespace Burntwax
 
         private void Update()
         {
-            
+            // Refresh the target before states inspect this frame's input.
+            canAttract = ObjectDetection();
             CurrentState.UpdateStates();
             UpdateArmOverride();
             currentStateText = CurrentState.GetType().Name;
             currentSubstateText = CurrentState.CurrentSubstate()?.GetType().Name ?? "None";
             if (InputManager.Instance != null)
                 InputManager.Instance.ConsumeGloveGestures();
-
-            canAttract = ObjectDetection();
         }
 
         private void FixedUpdate()
@@ -153,6 +166,9 @@ namespace Burntwax
         {
             detectedObject = null;
 
+            if (heldObject != null || waitingToRestorePlayerCollisions)
+                return false;
+
             Camera playerCamera = Camera.main;
             if (playerCamera == null)
                 return false;
@@ -164,7 +180,7 @@ namespace Burntwax
                 detectDistance, attractableLayer, QueryTriggerInteraction.Collide))
             {
                 detectedObject = GetDetectedObject(directHit);
-                return detectedObject != null;
+                return detectedObject != null && heldObject == null;
             }
 
 
@@ -282,6 +298,33 @@ namespace Burntwax
             heldPlayerCollisionIgnores.Clear();
         }
 
+        public void DropHeldObjectWithCollisionDelay()
+        {
+            heldObject = null;
+
+            if (restorePlayerCollisionsCoroutine != null)
+                StopCoroutine(restorePlayerCollisionsCoroutine);
+
+            if (postDropCollisionDelay <= 0f)
+            {
+                waitingToRestorePlayerCollisions = false;
+                RestoreHeldObjectPlayerCollisions();
+                restorePlayerCollisionsCoroutine = null;
+                return;
+            }
+
+            waitingToRestorePlayerCollisions = true;
+            restorePlayerCollisionsCoroutine = StartCoroutine(RestorePlayerCollisionsAfterDelay());
+        }
+
+        private IEnumerator RestorePlayerCollisionsAfterDelay()
+        {
+            yield return new WaitForSeconds(postDropCollisionDelay);
+            RestoreHeldObjectPlayerCollisions();
+            waitingToRestorePlayerCollisions = false;
+            restorePlayerCollisionsCoroutine = null;
+        }
+
         /*public void SpawnBlast(float chargeNormalized)
         {
             Vector3 origin = gloveHandAnchor != null ? gloveHandAnchor.position
@@ -387,6 +430,13 @@ namespace Burntwax
 
         private void OnDisable()
         {
+            if (restorePlayerCollisionsCoroutine != null)
+            {
+                StopCoroutine(restorePlayerCollisionsCoroutine);
+                restorePlayerCollisionsCoroutine = null;
+            }
+
+            waitingToRestorePlayerCollisions = false;
             RestoreHeldObjectPlayerCollisions();
         }
     }

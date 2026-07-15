@@ -41,8 +41,12 @@ namespace Burntwax
 
         public override void ExitState()
         {
-            if (heldBody != null)
+            if (heldBody != null) {
                 heldBody.isKinematic = wasKinematic;
+                heldBody.interpolation = RigidbodyInterpolation.Interpolate;
+                
+            }
+                
         }
 
         public override void CheckSwitchStates()
