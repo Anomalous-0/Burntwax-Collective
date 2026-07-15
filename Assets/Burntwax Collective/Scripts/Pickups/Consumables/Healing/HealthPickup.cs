@@ -14,7 +14,7 @@ namespace Burntwax
 
         void Awake()
         {
-            GetComponent<Rigidbody>().transform.localScale = new Vector3(0.4f, 0.2f, 0.4f);
+            
         }
 
         //Collect health

@@ -43,7 +43,7 @@ namespace Burntwax
 
         void Awake()
         {
-            GetComponent<Rigidbody>().transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+            // GetComponent<Rigidbody>().transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
         }
 
         public void Destruct(Vector3 pos)

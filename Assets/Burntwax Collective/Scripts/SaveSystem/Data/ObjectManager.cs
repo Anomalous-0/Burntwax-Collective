@@ -154,7 +154,7 @@ namespace Burntwax
         public void LoadData(ObjectConsumableData data)
         {
 
-            PrefabGuid[] existingObjects = FindObjectsByType<PrefabGuid>(FindObjectsSortMode.None);
+            PrefabGuid[] existingObjects = FindObjectsByType<PrefabGuid>();
             foreach (var existing in existingObjects)
             {
                 if (existing != null && existing.gameObject != null)
