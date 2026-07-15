@@ -98,7 +98,7 @@ namespace Burntwax
             currentTargetVelocity = Mathf.MoveTowards(
                 currentTargetVelocity,
                 cruiseVelocity,
-                Ctx.AttractionSlowdownRate * Time.fixedDeltaTime);
+                Ctx.AttractionSlowdownRate * velocityDistanceScale * Time.fixedDeltaTime);
             pathProgress = Mathf.MoveTowards(
                 pathProgress,
                 1f,

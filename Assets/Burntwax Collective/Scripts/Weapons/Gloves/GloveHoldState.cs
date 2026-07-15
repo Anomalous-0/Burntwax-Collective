@@ -47,7 +47,6 @@ namespace Burntwax
                 heldBody.interpolation = RigidbodyInterpolation.Interpolate;
 
             }
-            Ctx.heldObject = null;
 
         }
 

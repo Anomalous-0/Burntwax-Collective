@@ -25301,7 +25301,7 @@ Transform:
   m_GameObject: {fileID: 1614787211}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.0495, z: 0}
+  m_LocalPosition: {x: -0, y: -0.1009, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -37207,6 +37207,7 @@ MonoBehaviour:
   restPos: {fileID: 1614787211}
   attractionSteeringAcceleration: 35
   initialAttractionVelocity: 16
+  fullAttractionVelocityDistance: 8
   attractionCruiseVelocity: 9
   attractionSlowdownRate: 5
   arcPeakPosition: 0.6
@@ -37215,7 +37216,10 @@ MonoBehaviour:
   maximumArcHeight: 0.36
   restDistance: 0.7
   holdLerpSpeed: 100
-  postDropCollisionDelay: 0.2
+  dropForwardOffset: 0
+  dropForwardVelocity: 3.5
+  playerVelocityInheritance: 1
+  postDropCollisionDelay: 0.35
   minChargeSpeed: 0.45
   emptyHash: 0
   idleHash: 0

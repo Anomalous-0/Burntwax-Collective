@@ -71,6 +71,10 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float maximumArcHeight = 1.5f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
+        [Header("Dropping")]
+        [SerializeField, Min(0f)] private float dropForwardOffset = 0.4f;
+        [SerializeField, Min(0f)] private float dropForwardVelocity = 1.5f;
+        [SerializeField, Range(0f, 1f)] private float playerVelocityInheritance = 1f;
         [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
         [SerializeField, Min(0f)] private float postDropCollisionDelay = 0.35f;
 
@@ -318,6 +322,37 @@ namespace Burntwax
 
             waitingToRestorePlayerCollisions = true;
             restorePlayerCollisionsCoroutine = StartCoroutine(RestorePlayerCollisionsAfterDelay());
+        }
+
+        public void ReleaseHeldObject()
+        {
+            if (heldObject != null)
+            {
+                Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
+                if (heldBody != null)
+                {
+                    if (playerCamera == null)
+                        playerCamera = Camera.main;
+
+                    Vector3 forward = playerCamera != null
+                        ? playerCamera.transform.forward
+                        : transform.forward;
+                    Vector3 releaseOrigin = restPos != null
+                        ? restPos.transform.position
+                        : heldBody.position;
+                    Vector3 playerVelocity = player != null && player.rb != null
+                        ? player.rb.linearVelocity
+                        : Vector3.zero;
+
+                    heldBody.position = releaseOrigin + forward * dropForwardOffset;
+                    heldBody.linearVelocity =
+                        playerVelocity * playerVelocityInheritance +
+                        forward * dropForwardVelocity;
+                    heldBody.angularVelocity = Vector3.zero;
+                }
+            }
+
+            DropHeldObjectWithCollisionDelay();
         }
 
         private IEnumerator RestorePlayerCollisionsAfterDelay()
