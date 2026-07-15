@@ -13,6 +13,7 @@ namespace Burntwax
         private float pathDistance;
         private float pathProgress;
         private float currentTargetVelocity;
+        private float velocityDistanceScale;
         private bool originalUseGravity;
         private bool gravityOverrideActive;
         private RigidbodyInterpolation originalInterpolation;
@@ -93,7 +94,7 @@ namespace Burntwax
 
             float cruiseVelocity = Mathf.Min(
                 Ctx.AttractionCruiseVelocity,
-                Ctx.InitialAttractionVelocity);
+                Ctx.InitialAttractionVelocity) * velocityDistanceScale;
             currentTargetVelocity = Mathf.MoveTowards(
                 currentTargetVelocity,
                 cruiseVelocity,
@@ -131,6 +132,8 @@ namespace Burntwax
             Vector3 toRestPosition = Ctx.restPos.transform.position - pathStart;
             pathDistance = Mathf.Max(toRestPosition.magnitude, 0.01f);
             pathProgress = 0f;
+            velocityDistanceScale = Mathf.Clamp01(
+                pathDistance / Ctx.FullAttractionVelocityDistance);
 
             Vector3 pullDirection = toRestPosition / pathDistance;
             arcDirection = Vector3.ProjectOnPlane(Vector3.up, pullDirection).normalized;
@@ -145,7 +148,7 @@ namespace Burntwax
         {
             currentTargetVelocity = Mathf.Max(
                 Ctx.InitialAttractionVelocity,
-                Ctx.AttractionCruiseVelocity);
+                Ctx.AttractionCruiseVelocity) * velocityDistanceScale;
 
             float launchSampleProgress = Mathf.Clamp(
                 currentTargetVelocity * Time.fixedDeltaTime / pathDistance,

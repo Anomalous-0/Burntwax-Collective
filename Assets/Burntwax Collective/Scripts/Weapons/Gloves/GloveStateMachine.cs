@@ -57,6 +57,8 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float attractionSteeringAcceleration = 35f;
         [Tooltip("Instantaneous mass-independent launch speed applied when attraction begins.")]
         [SerializeField, Min(0f)] private float initialAttractionVelocity = 18f;
+        [Tooltip("Objects at this starting distance or farther use full attraction velocity. Closer objects are proportionally slower.")]
+        [SerializeField, Min(0.01f)] private float fullAttractionVelocityDistance = 8f;
         [Tooltip("Lower speed the object settles toward after the initial launch.")]
         [SerializeField, Min(0f)] private float attractionCruiseVelocity = 9f;
         [Tooltip("How quickly the object transitions from its initial velocity to its cruise velocity.")]
@@ -81,6 +83,7 @@ namespace Burntwax
         public float EquipWaitTime => equipWaitTime;
         public float AttractionForce => attractionSteeringAcceleration;
         public float InitialAttractionVelocity => initialAttractionVelocity;
+        public float FullAttractionVelocityDistance => fullAttractionVelocityDistance;
         public float AttractionCruiseVelocity => attractionCruiseVelocity;
         public float AttractionSlowdownRate => attractionSlowdownRate;
         public float ArcPeakPosition => arcPeakPosition;
