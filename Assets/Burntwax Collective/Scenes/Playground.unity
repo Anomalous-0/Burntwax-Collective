@@ -15895,26 +15895,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796215344}
     m_Modifications:
-    - target: {fileID: 1927820067518834455, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: playerHealth
-      value: 
-      objectReference: {fileID: 401126581}
-    - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.2
-      objectReference: {fileID: 0}
     - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -15969,11 +15949,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Health Pickup (8)
-      objectReference: {fileID: 0}
-    - target: {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_Layer
-      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -35607,18 +35582,6 @@ PrefabInstance:
       insertIndex: 5
       addedObject: {fileID: 8915226981332152388}
   m_SourcePrefab: {fileID: 100100000, guid: 4339d97cde5264747a29eaf7ae86e4b5, type: 3}
---- !u!114 &1142371221871575082 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3406981270840785279, guid: 4339d97cde5264747a29eaf7ae86e4b5,
-    type: 3}
-  m_PrefabInstance: {fileID: 1142371221871575081}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Animation.Rigging::UnityEngine.Animations.Rigging.Rig
 --- !u!4 &1142371221871575083 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6380251893118126120, guid: 4339d97cde5264747a29eaf7ae86e4b5,
@@ -37224,12 +37187,10 @@ MonoBehaviour:
   currentStateText: 
   currentSubstateText: 
   player: {fileID: 401126580}
-  gloveModel: {fileID: 510963324}
-  handIK: {fileID: 1142371221871575082}
   armsAnimator: {fileID: 8915226981332152389}
   leftHandIK: {fileID: 0}
   gloveLayerName: Glove
-  raiseSpeed: 6
+  raiseSpeed: 5
   raiseAmount: 0
   equipWaitTime: 4
   BlastEndAnim: 0
@@ -37244,21 +37205,11 @@ MonoBehaviour:
     m_Bits: 2048
   heldObject: {fileID: 0}
   restPos: {fileID: 1614787211}
-  attractionSpringStrength: 18
-  attractionDamping: 6
-  maxAttractionAcceleration: 35
-  maxAttractionSpeed: 12
-  attractionCurveHeight: 1.25
+  attractionForce: 4
   restDistance: 1.2
   holdLerpSpeed: 100
   postDropCollisionDelay: 0.2
   minChargeSpeed: 0.45
-  blastPrefab: {fileID: 0}
-  blastSpeed: 45
-  blastMinDamage: 8
-  blastMaxDamage: 40
-  blastMinForce: 6
-  blastMaxForce: 30
   emptyHash: 0
   idleHash: 0
   chargeHash: 0

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -26,11 +25,8 @@ namespace Burntwax
 
         [Header("References")]
         [SerializeField] private PlayerStateMachine player;
-        [SerializeField] private GameObject gloveModel;
-        [SerializeField] private Rig handIK;
         [SerializeField] private Animator armsAnimator;
         [SerializeField] private TwoBoneIKConstraint leftHandIK;
-        // [SerializeField] private CinemachineImpulseSource camShake;
 
         [Header("Arm Override")]
         [SerializeField] private string gloveLayerName = "Glove";
@@ -56,19 +52,8 @@ namespace Burntwax
         [Header("Holding")]
         public GameObject heldObject;
         public GameObject restPos;
-        [Header("Attraction Feel")]
-        [SerializeField, Min(0f)] private float attractionSpringStrength = 18f;
-        [SerializeField, Min(0f)] private float attractionDamping = 6f;
-        [SerializeField, Min(0f)] private float maxAttractionAcceleration = 35f;
-        [SerializeField, Min(0f)] private float maxAttractionSpeed = 12f;
-        [SerializeField, Min(0f)] private float minimumAttractionSpeed = 1f;
-        [Tooltip("X is normalized path progress (0 = pickup, 1 = hand). Y is the normalized velocity.")]
-        [SerializeField] private AnimationCurve attractionVelocityCurve = new(
-            new Keyframe(0f, 0.15f),
-            new Keyframe(0.2f, 1f),
-            new Keyframe(0.75f, 1f),
-            new Keyframe(1f, 0f));
-        [SerializeField, Min(0f)] private float attractionCurveHeight = 1.25f;
+        [Header("Attraction")]
+        [SerializeField, Min(0f)] private float attractionForce = 35f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
         [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
@@ -76,38 +61,20 @@ namespace Burntwax
 
         [Header("Charge Blast")]
         [Range(0f, 1f)][SerializeField] private float minChargeSpeed = 0.45f; // player speed scale at full charge
-        [Tooltip("Optional. If empty, a placeholder emissive sphere is spawned at runtime.")]
-        [SerializeField] private GloveBlastProjectile blastPrefab;
-        [SerializeField] private float blastSpeed = 45f;
-        [SerializeField] private float blastMinDamage = 8f;
-        [SerializeField] private float blastMaxDamage = 40f;
-        [SerializeField] private float blastMinForce = 6f;
-        [SerializeField] private float blastMaxForce = 30f;
         public bool CanAttractObject { get { return canAttract; } set { canAttract = value; } }
         public bool EnterAttract { get { return enterAttract; } set { enterAttract = value; } }
         public bool EnterCharge { get { return enterCharge; } set { enterCharge = value; } }
         // ── Exposed to states ──
-        public float DetectDistance => detectDistance;
-        public LayerMask AttractableLayer => attractableLayer;
         public float EquipWaitTime => equipWaitTime;
-        public float AttractionSpringStrength => attractionSpringStrength;
-        public float AttractionDamping => attractionDamping;
-        public float MaxAttractionAcceleration => maxAttractionAcceleration;
-        public float MaxAttractionSpeed => maxAttractionSpeed;
-        public float MinimumAttractionSpeed => minimumAttractionSpeed;
-        public AnimationCurve AttractionVelocityCurve => attractionVelocityCurve;
-        public float AttractionCurveHeight => attractionCurveHeight;
+        public float AttractionForce => attractionForce;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
-        public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
 
         public GloveBaseState CurrentState;
         public GloveStateFactory states;
 
         // ── Wired refs ──
-        private Arsenal arsenal;
-        private GunStateMachine gunStateMachine;
-        private KatanaStateMachine katanaStateMachine;
+        private Camera playerCamera;
         private int gloveLayerIndex = -1;
         private float baseLeftHandWeight = 1f;
         private bool gloveEquipped;
@@ -121,23 +88,15 @@ namespace Burntwax
         }
 
         private readonly List<CollisionIgnoreRecord> heldPlayerCollisionIgnores = new();
+        private readonly RaycastHit[] detectionHits = new RaycastHit[16];
         private Coroutine restorePlayerCollisionsCoroutine;
         private bool waitingToRestorePlayerCollisions;
 
         public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
 
-
-        private MaterialPropertyBlock mpb;
-        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
-        private static readonly int ColorId = Shader.PropertyToID("_Color");
-
         private void Awake()
         {
-            arsenal = GetComponent<Arsenal>();
-            gunStateMachine = GetComponent<GunStateMachine>();
-            katanaStateMachine = GetComponent<KatanaStateMachine>();
-
-            mpb = new MaterialPropertyBlock();
+            playerCamera = Camera.main;
             emptyHash = Animator.StringToHash("empty_Glove");
             idleHash = Animator.StringToHash("idle_Glove");
             chargeHash = Animator.StringToHash("charge_blast_Glove");
@@ -178,7 +137,9 @@ namespace Burntwax
             if (heldObject != null || waitingToRestorePlayerCollisions)
                 return false;
 
-            Camera playerCamera = Camera.main;
+            if (playerCamera == null)
+                playerCamera = Camera.main;
+
             if (playerCamera == null)
                 return false;
 
@@ -193,14 +154,21 @@ namespace Burntwax
             }
 
 
-            RaycastHit[] nearbyHits = Physics.SphereCastAll(rayOrigin, castRadius, rayDirection,
-                detectDistance, attractableLayer, QueryTriggerInteraction.Collide);
+            int nearbyHitCount = Physics.SphereCastNonAlloc(
+                rayOrigin,
+                castRadius,
+                rayDirection,
+                detectionHits,
+                detectDistance,
+                attractableLayer,
+                QueryTriggerInteraction.Collide);
 
             float bestAimDistanceSqr = float.PositiveInfinity;
             float bestForwardDistance = float.PositiveInfinity;
 
-            foreach (RaycastHit hit in nearbyHits)
+            for (int i = 0; i < nearbyHitCount; i++)
             {
+                RaycastHit hit = detectionHits[i];
                 GameObject candidate = GetDetectedObject(hit);
                 if (candidate == null)
                     continue;
@@ -337,45 +305,6 @@ namespace Burntwax
             restorePlayerCollisionsCoroutine = null;
         }
 
-        /*public void SpawnBlast(float chargeNormalized)
-        {
-            Vector3 origin = gloveHandAnchor != null ? gloveHandAnchor.position
-                            : (Camera.main != null ? Camera.main.transform.position + Camera.main.transform.forward : transform.position);
-            Vector3 dir = Camera.main != null ? Camera.main.transform.forward : transform.forward;
-
-            GloveBlastProjectile proj;
-            if (blastPrefab != null)
-            {
-                proj = Instantiate(blastPrefab, origin, Quaternion.LookRotation(dir));
-            }
-            else
-            {
-                // Runtime placeholder: emissive sphere so the feature is testable before real VFX.
-                var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                go.name = "GloveBlast (placeholder)";
-                go.transform.position = origin;
-                go.transform.localScale = Vector3.one * 0.4f;
-                var col = go.GetComponent<Collider>();
-                if (col != null) Destroy(col); // the projectile makes its own trigger spheres
-                var rb = go.AddComponent<Rigidbody>();
-                rb.useGravity = false;
-                var rend = go.GetComponent<Renderer>();
-                if (rend != null)
-                {
-                    rend.material.color = attractTint;
-                    rend.material.EnableKeyword("_EMISSION");
-                    rend.material.SetColor("_EmissionColor", attractTint * 2f);
-                }
-                proj = go.AddComponent<GloveBlastProjectile>();
-            }
-
-            float damage = Mathf.Lerp(blastMinDamage, blastMaxDamage, chargeNormalized);
-            float force = Mathf.Lerp(blastMinForce, blastMaxForce, chargeNormalized);
-            proj.Launch(dir * blastSpeed, chargeNormalized, damage, force);
-
-            if (camShake != null) camShake.GenerateImpulse(dir);
-            IsFiring = true;
-        } */
         private void InitializeArmOverride()
         {
             if (armsAnimator == null)
