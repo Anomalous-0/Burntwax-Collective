@@ -44,7 +44,7 @@ namespace Burntwax
             if (heldBody != null) {
                 heldBody.isKinematic = wasKinematic;
                 heldBody.interpolation = RigidbodyInterpolation.Interpolate;
-                
+
             }
                 
         }
@@ -58,6 +58,11 @@ namespace Burntwax
             else if(InputManager.Instance.gloveCharging)
             {
                 SwitchState(Factory.BlastProjectile());
+            }
+            else if(heldBody == null || Ctx.heldObject == null)
+            {
+                Ctx.heldObject = null;
+                SwitchState(Factory.Idle());
             }
             
         }

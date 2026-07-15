@@ -61,6 +61,13 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float attractionDamping = 6f;
         [SerializeField, Min(0f)] private float maxAttractionAcceleration = 35f;
         [SerializeField, Min(0f)] private float maxAttractionSpeed = 12f;
+        [SerializeField, Min(0f)] private float minimumAttractionSpeed = 1f;
+        [Tooltip("X is normalized path progress (0 = pickup, 1 = hand). Y is the normalized velocity.")]
+        [SerializeField] private AnimationCurve attractionVelocityCurve = new(
+            new Keyframe(0f, 0.15f),
+            new Keyframe(0.2f, 1f),
+            new Keyframe(0.75f, 1f),
+            new Keyframe(1f, 0f));
         [SerializeField, Min(0f)] private float attractionCurveHeight = 1.25f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
@@ -87,6 +94,8 @@ namespace Burntwax
         public float AttractionDamping => attractionDamping;
         public float MaxAttractionAcceleration => maxAttractionAcceleration;
         public float MaxAttractionSpeed => maxAttractionSpeed;
+        public float MinimumAttractionSpeed => minimumAttractionSpeed;
+        public AnimationCurve AttractionVelocityCurve => attractionVelocityCurve;
         public float AttractionCurveHeight => attractionCurveHeight;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
@@ -262,12 +271,15 @@ namespace Burntwax
 
             foreach (Collider heldCollider in heldColliders)
             {
-                if (heldCollider == null)
+                // Trigger contacts must stay active so pickups and other gameplay volumes can
+                // react while the object's solid geometry passes harmlessly through the player.
+                if (heldCollider == null || heldCollider.isTrigger)
                     continue;
 
                 foreach (Collider playerCollider in playerColliders)
                 {
-                    if (playerCollider == null || playerCollider == heldCollider)
+                    if (playerCollider == null || playerCollider == heldCollider ||
+                        playerCollider.isTrigger)
                         continue;
 
                     bool wasIgnored = Physics.GetIgnoreCollision(heldCollider, playerCollider);

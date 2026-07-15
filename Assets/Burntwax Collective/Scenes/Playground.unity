@@ -37244,9 +37244,14 @@ MonoBehaviour:
     m_Bits: 2048
   heldObject: {fileID: 0}
   restPos: {fileID: 1614787211}
-  attractionForce: 2
+  attractionSpringStrength: 18
+  attractionDamping: 6
+  maxAttractionAcceleration: 35
+  maxAttractionSpeed: 12
+  attractionCurveHeight: 1.25
   restDistance: 1.2
-  holdLerpSpeed: 67
+  holdLerpSpeed: 100
+  postDropCollisionDelay: 0.2
   minChargeSpeed: 0.45
   blastPrefab: {fileID: 0}
   blastSpeed: 45
