@@ -2,8 +2,9 @@ using UnityEngine;
 
 namespace Burntwax
 {
-    // Branch B, step 2: release pulse. Spawns the plasma projectile (charge-scaled) and returns to
-    // Idle after a brief pose window.
+    // Hold → charge: fling the currently held object out as the projectile, then return to Idle after
+    // a brief pose window. Launching also clears heldObject, which is what frees detection back up so
+    // objects can be attracted again afterward.
     public class GloveBlastProjectileState : GloveBaseState
     {
 
@@ -16,6 +17,7 @@ namespace Burntwax
         {
 
             Ctx.PlayGloveAnimation(Ctx.blastHash);
+            Ctx.ReleaseHeldObject();
             InitializeSubState();
         }
 

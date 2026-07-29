@@ -34,10 +34,10 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            // Branch A: attract (needs a valid target in reach).
+            // Branch A: attract (needs a valid target in reach). Winds up first, then pulls.
             if (InputManager.Instance.gloveDoubleTap && Ctx.CanAttractObject)
             {
-                SwitchState(Factory.Attract());
+                SwitchState(Factory.ReadyAttract());
             }
             // Branch B: charge pulse.
             else if (InputManager.Instance.gloveCharging)

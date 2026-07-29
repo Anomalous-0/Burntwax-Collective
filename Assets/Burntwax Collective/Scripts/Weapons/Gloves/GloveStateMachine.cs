@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -48,6 +49,11 @@ namespace Burntwax
         [SerializeField] private float detectDistance = 9f;        // max reach of the glove
         [SerializeField] private float castRadius = 0.6f;          // spherecast radius = aim margin of error
         [SerializeField] private LayerMask attractableLayer;       // set to the Consumable layer
+        [Tooltip("Colour the primary target is tinted toward while the glove is equipped.")]
+        [SerializeField] private Color detectionTint = Color.cyan;
+        [Range(0f, 1f)]
+        [Tooltip("How far the primary target is tinted toward Detection Tint (0 = none).")]
+        [SerializeField] private float detectionTintStrength = 0.35f;
 
         [Header("Holding")]
         public GameObject heldObject;
@@ -71,15 +77,37 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float maximumArcHeight = 1.5f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
+        [Tooltip("Spin speed (deg/sec) of the object while it orbits in the hand.")]
+        [SerializeField] private float holdSpinSpeed = 90f;
+        [Header("Secondary Attraction")]
+        [Tooltip("Pull applied to non-primary consumables in reach. Scaled down by distance from the primary.")]
+        [SerializeField, Min(0f)] private float secondaryAttractionForce = 12f;
         [Header("Dropping")]
         [SerializeField, Min(0f)] private float dropForwardOffset = 0.4f;
         [SerializeField, Min(0f)] private float dropForwardVelocity = 1.5f;
         [SerializeField, Range(0f, 1f)] private float playerVelocityInheritance = 1f;
         [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
         [SerializeField, Min(0f)] private float postDropCollisionDelay = 0.35f;
+        [Header("Katana Launch")]
+        [Tooltip("Speed the attracted object is hurled along the camera forward when you click with the katana equipped.")]
+        [SerializeField, Min(0f)] private float katanaLaunchSpeed = 30f;
+        [Tooltip("Random tumble applied to the launched object.")]
+        [SerializeField, Min(0f)] private float katanaLaunchSpin = 6f;
 
         [Header("Charge Blast")]
         [Range(0f, 1f)][SerializeField] private float minChargeSpeed = 0.45f; // player speed scale at full charge
+        [Tooltip("Optional. If empty, a runtime emissive sphere is spawned so the blast is testable without art.")]
+        [SerializeField] private GloveBlastProjectile blastPrefab;
+        [Tooltip("Launch speed of the plasma blast along the camera forward.")]
+        [SerializeField] private float blastSpeed = 45f;
+        [SerializeField] private float blastMinDamage = 8f;
+        [SerializeField] private float blastMaxDamage = 40f;
+        [SerializeField] private float blastMinForce = 6f;
+        [SerializeField] private float blastMaxForce = 30f;
+        [Tooltip("Camera kick on fire. Auto-fetched from this object if left empty.")]
+        [SerializeField] private CinemachineImpulseSource blastShake;
+        [SerializeField] private float blastMinShake = 0.4f;
+        [SerializeField] private float blastMaxShake = 1.4f;
         public bool CanAttractObject { get { return canAttract; } set { canAttract = value; } }
         public bool EnterAttract { get { return enterAttract; } set { enterAttract = value; } }
         public bool EnterCharge { get { return enterCharge; } set { enterCharge = value; } }
@@ -96,6 +124,13 @@ namespace Burntwax
         public float MaximumArcHeight => maximumArcHeight;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
+        public float HoldSpinSpeed => holdSpinSpeed;
+        // Read-only gate: lets Attract/Hold offer the katana-slash early launch without the glove
+        // being a WeaponMode. The glove still lives alongside the Arsenal, it just reads its mode.
+        public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
+        // Raise progress of the arm-override layer, read by the Equipping / Unequipping action states.
+        public bool GloveRaised => raiseAmount >= 0.99f;
+        public bool GloveLowered => raiseAmount <= 0.01f;
 
         public GloveBaseState CurrentState;
         public GloveStateFactory states;
@@ -116,6 +151,12 @@ namespace Burntwax
 
         private readonly List<CollisionIgnoreRecord> heldPlayerCollisionIgnores = new();
         private readonly RaycastHit[] detectionHits = new RaycastHit[16];
+        private readonly Collider[] secondaryBuffer = new Collider[16];
+        private Arsenal arsenal;
+        private MaterialPropertyBlock detectionMpb;
+        private Renderer tintedRenderer;
+        private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+        private static readonly int ColorId = Shader.PropertyToID("_Color");
         private Coroutine restorePlayerCollisionsCoroutine;
         private bool waitingToRestorePlayerCollisions;
 
@@ -124,6 +165,10 @@ namespace Burntwax
         private void Awake()
         {
             playerCamera = Camera.main;
+            arsenal = GetComponent<Arsenal>();
+            detectionMpb = new MaterialPropertyBlock();
+            if (blastShake == null)
+                blastShake = GetComponent<CinemachineImpulseSource>();
             emptyHash = Animator.StringToHash("empty_Glove");
             idleHash = Animator.StringToHash("idle_Glove");
             chargeHash = Animator.StringToHash("charge_blast_Glove");
@@ -143,6 +188,7 @@ namespace Burntwax
         {
             // Refresh the target before states inspect this frame's input.
             canAttract = ObjectDetection();
+            UpdateDetectionTint();
             CurrentState.UpdateStates();
             UpdateArmOverride();
             currentStateText = CurrentState.GetType().Name;
@@ -228,6 +274,92 @@ namespace Burntwax
             return hit.collider != null ? hit.collider.gameObject : null;
         }
 
+        // ── Detection tint ─────────────────────────────────────────
+        // Non-destructive cyan tint on the primary target so the player can see which object will
+        // latch. Uses a MaterialPropertyBlock (no material instancing) and is cleared the instant the
+        // target changes, the object is grabbed, or the glove is put away.
+        private void UpdateDetectionTint()
+        {
+            if (gloveEquipped && detectedObject != null && heldObject == null)
+                ApplyDetectionTint(detectedObject);
+            else
+                ClearDetectionTint();
+        }
+
+        private void ApplyDetectionTint(GameObject target)
+        {
+            Renderer targetRenderer = target.GetComponentInChildren<Renderer>();
+            if (targetRenderer == null)
+            {
+                ClearDetectionTint();
+                return;
+            }
+
+            if (targetRenderer == tintedRenderer)
+                return;
+
+            // A different object is now primary — drop the old one's tint first.
+            ClearDetectionTint();
+
+            Material material = targetRenderer.sharedMaterial;
+            Color baseColor = Color.white;
+            if (material != null)
+            {
+                if (material.HasProperty(BaseColorId)) baseColor = material.GetColor(BaseColorId);
+                else if (material.HasProperty(ColorId)) baseColor = material.GetColor(ColorId);
+            }
+
+            Color tinted = Color.Lerp(baseColor, detectionTint, detectionTintStrength);
+            detectionMpb.Clear();
+            detectionMpb.SetColor(BaseColorId, tinted);
+            detectionMpb.SetColor(ColorId, tinted);
+            targetRenderer.SetPropertyBlock(detectionMpb);
+            tintedRenderer = targetRenderer;
+        }
+
+        private void ClearDetectionTint()
+        {
+            if (tintedRenderer != null)
+                tintedRenderer.SetPropertyBlock(null);
+
+            tintedRenderer = null;
+        }
+
+        // ── Secondary attraction ───────────────────────────────────
+        // While the primary object is being pulled in, give every other consumable in reach a gentler
+        // tug toward the hand — weaker the farther it sits from the primary, so only one ever latches.
+        // Called from GloveAttractState.FixedUpdateState so it runs on the physics clock.
+        public void PullSecondaryObjects(GameObject primary, Vector3 towardPosition)
+        {
+            if (primary == null || secondaryAttractionForce <= 0f)
+                return;
+
+            Vector3 origin = playerCamera != null ? playerCamera.transform.position : transform.position;
+            int count = Physics.OverlapSphereNonAlloc(
+                origin, detectDistance, secondaryBuffer, attractableLayer,
+                QueryTriggerInteraction.Collide);
+
+            for (int i = 0; i < count; i++)
+            {
+                Rigidbody body = secondaryBuffer[i] != null ? secondaryBuffer[i].attachedRigidbody : null;
+                if (body == null)
+                    continue;
+
+                GameObject candidate = body.gameObject;
+                if (candidate == primary || candidate == heldObject)
+                    continue;
+
+                // Nearer the primary → stronger pull; beyond reach → nothing.
+                float distanceFromPrimary = Vector3.Distance(body.position, primary.transform.position);
+                float weight = Mathf.Clamp01(1f - distanceFromPrimary / detectDistance);
+                if (weight <= 0f)
+                    continue;
+
+                Vector3 pullDir = (towardPosition - body.position).normalized;
+                body.AddForce(pullDir * (secondaryAttractionForce * weight), ForceMode.Acceleration);
+            }
+        }
+
         public void BlastFinished()
         {
             BlastEndAnim = true;
@@ -251,6 +383,35 @@ namespace Burntwax
         {
             if (player != null)
                 player.ChargeSpeedMultiplier = 1f;
+        }
+
+        /// <summary>
+        /// Fires the plasma blast for the charge branch. Called by <see cref="GloveBlastState"/> on enter.
+        /// Origin and direction come from the player camera; damage and force (and, inside the projectile,
+        /// the field radii) are scaled by how long the blast was charged. Falls back to a runtime plasma
+        /// ball (see <see cref="GloveBlastVisual"/>) when no prefab is wired so the branch stays testable.
+        /// </summary>
+        public void SpawnBlast(float chargeNormalized)
+        {
+            chargeNormalized = Mathf.Clamp01(chargeNormalized);
+
+            if (playerCamera == null)
+                playerCamera = Camera.main;
+
+            Vector3 dir = playerCamera != null ? playerCamera.transform.forward : transform.forward;
+            Vector3 origin = (playerCamera != null ? playerCamera.transform.position : transform.position) + dir;
+
+            GloveBlastProjectile projectile = blastPrefab != null
+                ? Instantiate(blastPrefab, origin, Quaternion.LookRotation(dir))
+                : GloveBlastVisual.Create(origin);
+
+            float damage = Mathf.Lerp(blastMinDamage, blastMaxDamage, chargeNormalized);
+            float force = Mathf.Lerp(blastMinForce, blastMaxForce, chargeNormalized);
+            projectile.Launch(dir * blastSpeed, chargeNormalized, damage, force);
+
+            // Recoil-style kick back toward the player, harder the more the blast was charged.
+            if (blastShake != null)
+                blastShake.GenerateImpulse(-dir * Mathf.Lerp(blastMinShake, blastMaxShake, chargeNormalized));
         }
 
         public void IgnoreHeldObjectPlayerCollisions()
@@ -355,6 +516,35 @@ namespace Burntwax
             DropHeldObjectWithCollisionDelay();
         }
 
+        /// <summary>
+        /// Hurls the attracted/held object hard along the camera forward — the katana-slash launch.
+        /// Distinct from <see cref="ReleaseHeldObject"/>'s gentle drop; this is a deliberate throw.
+        /// </summary>
+        public void LaunchHeldObjectForward()
+        {
+            if (heldObject != null)
+            {
+                Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
+                if (heldBody != null)
+                {
+                    if (playerCamera == null)
+                        playerCamera = Camera.main;
+
+                    Vector3 forward = playerCamera != null
+                        ? playerCamera.transform.forward
+                        : transform.forward;
+
+                    // Attracting keeps the body dynamic; a held body is kinematic — make sure it's
+                    // dynamic before we hand it a velocity.
+                    heldBody.isKinematic = false;
+                    heldBody.linearVelocity = forward * katanaLaunchSpeed;
+                    heldBody.angularVelocity = Random.insideUnitSphere * katanaLaunchSpin;
+                }
+            }
+
+            DropHeldObjectWithCollisionDelay();
+        }
+
         private IEnumerator RestorePlayerCollisionsAfterDelay()
         {
             yield return new WaitForSeconds(postDropCollisionDelay);
@@ -437,6 +627,7 @@ namespace Burntwax
 
             waitingToRestorePlayerCollisions = false;
             RestoreHeldObjectPlayerCollisions();
+            ClearDetectionTint();
         }
     }
 }

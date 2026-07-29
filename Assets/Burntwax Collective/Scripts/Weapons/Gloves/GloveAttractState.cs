@@ -53,6 +53,9 @@ namespace Burntwax
         public override void FixedUpdateState()
         {
             AttractObject();
+            // Everything else in reach gets a gentler tug in behind the primary.
+            if (Ctx.restPos != null)
+                Ctx.PullSecondaryObjects(Ctx.heldObject, Ctx.restPos.transform.position);
         }
 
         public override void ExitState()
@@ -72,6 +75,16 @@ namespace Burntwax
             {
                 Ctx.RestoreHeldObjectPlayerCollisions();
                 Ctx.heldObject = null;
+                SwitchState(Factory.Idle());
+                return;
+            }
+
+            // Click with the katana equipped launches the incoming object hard along the camera
+            // forward — before it ever reaches the hand. The katana still swings independently; the
+            // glove just reads the same attack input and hurls what it's pulling.
+            if (Ctx.KatanaEquipped && InputManager.Instance.attackIsPressed)
+            {
+                Ctx.LaunchHeldObjectForward();
                 SwitchState(Factory.Idle());
                 return;
             }

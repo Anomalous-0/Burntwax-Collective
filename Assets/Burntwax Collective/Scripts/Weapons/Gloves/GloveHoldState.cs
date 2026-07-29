@@ -52,7 +52,14 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputManager.Instance.gloveTap)
+            // Click with the katana equipped hurls the held object hard along the camera forward;
+            // a plain F tap does the normal release throw.
+            if (Ctx.KatanaEquipped && InputManager.Instance.attackIsPressed)
+            {
+                Ctx.LaunchHeldObjectForward();
+                SwitchState(Factory.Idle());
+            }
+            else if (InputManager.Instance.gloveTap)
             {
                 SwitchState(Factory.ReleaseObject());
             }
@@ -80,6 +87,10 @@ namespace Burntwax
                 Ctx.heldObject.transform.position,
                 Ctx.restPos.transform.position,
                 lerpAmount);
+
+            // Slow orbit-in-hand spin so the held object reads as actively suspended.
+            Ctx.heldObject.transform.Rotate(
+                Vector3.up * (Ctx.HoldSpinSpeed * Time.deltaTime), Space.Self);
         }
     }
 }

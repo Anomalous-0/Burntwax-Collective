@@ -16,6 +16,7 @@ namespace Burntwax
         {
 
             Ctx.PlayGloveAnimation(Ctx.blastHash);
+            Ctx.SpawnBlast(InputManager.Instance.gloveBlastCharge);
             InitializeSubState();
         }
 

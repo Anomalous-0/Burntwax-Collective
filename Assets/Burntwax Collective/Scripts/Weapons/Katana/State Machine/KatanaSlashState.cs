@@ -31,7 +31,7 @@ namespace Burntwax
             {
                 Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
             }
-           
+
 
             CheckSwitchStates();
         }

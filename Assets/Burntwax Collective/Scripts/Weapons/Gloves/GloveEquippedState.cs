@@ -41,7 +41,7 @@ namespace Burntwax
         {
             if (CurrentSubstate() == Ctx.states.Idle() && canCheckForUnequip)
             {
-                SwitchState(Factory.Unequipped());
+                SwitchState(Factory.Unequipping());
             }
         }
 
@@ -52,7 +52,8 @@ namespace Burntwax
             if (Ctx.EnterAttract)
             {
                 Ctx.EnterAttract = false;
-                initialState = Factory.Attract();
+                // Route through the attract wind-up so the pull always has its own lead-in action.
+                initialState = Factory.ReadyAttract();
             }
             else if (Ctx.EnterCharge)
             {
@@ -61,7 +62,8 @@ namespace Burntwax
             }
             else
             {
-                initialState = Factory.Idle();
+                // Default equip: play the raise action, which settles into Idle once fully up.
+                initialState = Factory.Equipping();
             }
 
             EnterSubState(initialState);

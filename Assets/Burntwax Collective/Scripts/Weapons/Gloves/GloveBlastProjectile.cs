@@ -1,14 +1,16 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Burntwax
 {
     /// <summary>
     /// The plasma blast fired by the glove's charge branch. It zips along the camera forward and
-    /// carries TWO concentric trigger fields for future enemy reactions:
-    ///   • outer field (large)  → stun,
-    ///   • inner field (small)  → extra stun + damage.
-    /// Enemies don't exist yet, so the field callbacks are stubs. Damage / force / radii are scaled
-    /// by how long the blast was charged (passed in via <see cref="Launch"/>).
+    /// carries TWO concentric trigger fields:
+    ///   • outer field (large)  → light knockback (the physical stand-in for a stun),
+    ///   • inner field (small)  → Damage + stronger knockback.
+    /// Reactions go through the same <see cref="Destructable"/> + Rigidbody channels the guns use, so
+    /// the blast is functional now; dedicated enemy/stun behaviour can layer on later. Damage / force /
+    /// radii are scaled by how long the blast was charged (passed in via <see cref="Launch"/>).
     ///
     /// The two fields are separate <see cref="SphereCollider"/> triggers; a small <see cref="BlastField"/>
     /// forwarder on each tells this script which tier was entered. If you don't assign them, they're
@@ -78,12 +80,46 @@ namespace Burntwax
             return field;
         }
 
-        // ── Future enemy reactions (wired once enemies exist) ────
+        // A body can sit inside both fields at once; track who we've already handled so nothing is
+        // damaged or shoved twice by the same blast.
+        private readonly HashSet<GameObject> processedTargets = new HashSet<GameObject>();
+
+        // ── Field reactions ─────────────────────────────────────────
         public void OnFieldEnter(Tier tier, Collider other)
         {
-            // TODO(enemies): if `other` is an enemy →
-            //   Outer: apply stun (duration scaled by Charge)
-            //   Inner: apply stronger stun + Damage, and knockback along (other - transform).normalized * Force
+            if (other == null)
+                return;
+
+            Rigidbody body = other.attachedRigidbody;
+            GameObject target = body != null ? body.gameObject : other.gameObject;
+
+            // Never let the blast damage or launch the player who fired it.
+            if (target.GetComponentInParent<PlayerStateMachine>() != null)
+                return;
+
+            if (!processedTargets.Add(target))
+                return;
+
+            Vector3 pushDir = (target.transform.position - transform.position).normalized;
+            if (pushDir == Vector3.zero)
+                pushDir = transform.forward;
+
+            if (tier == Tier.Inner)
+            {
+                // Inner field: full charge-scaled damage plus a solid shove.
+                Destructable destructable = other.GetComponentInParent<Destructable>();
+                if (destructable != null)
+                    destructable.TakeDamage(Damage);
+
+                if (body != null)
+                    body.AddForce(pushDir * Force, ForceMode.Impulse);
+            }
+            else
+            {
+                // Outer field: lighter shove only (stand-in for the eventual stun).
+                if (body != null)
+                    body.AddForce(pushDir * (Force * 0.5f), ForceMode.Impulse);
+            }
         }
     }
 
