@@ -7,6 +7,11 @@ namespace Burntwax
     [DisallowMultipleComponent]
     public class KatanaStateMachine : MonoBehaviour
     {
+
+        [Header("Debug (read-only)")]
+        public string currentStateText;
+
+
         [HideInInspector] public Arsenal arsenal;
         [HideInInspector] public KatanaDriver katanaDriver;
 
@@ -78,6 +83,8 @@ namespace Burntwax
         {
             if (ActiveKatanaScriptable != null)
                 currentState.UpdateStates();
+
+            currentStateText = CurrentState.GetType().Name;
         }
 
         public void Despawn(KatanaScriptableObject activeKatana)

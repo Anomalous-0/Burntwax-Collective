@@ -14,7 +14,6 @@ namespace Burntwax
         {
 
             InputManager.Instance.parry = false;
-            Ctx.katanaDriver.BeginSwing(InputManager.Instance.slashStartDirection, "Parry");
 
             Ctx.camStateMachine.SetCameraInputActive(false);
 
@@ -26,11 +25,11 @@ namespace Burntwax
         public override void UpdateState()
         {
 
-            // ── NEW: Feed live mouse input ──
-            if (InputManager.Instance.isTrackingParry)
-            {
-                Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
-            }
+            // // ── NEW: Feed live mouse input ──
+            // if (InputManager.Instance.isTrackingParry)
+            // {
+            //     Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
+            // }
             
             CheckSwitchStates();
         }
@@ -47,11 +46,7 @@ namespace Burntwax
         {
             if (!Ctx.isParrying && !InputManager.Instance.aimIsPressed)
             {
-                if (InputManager.Instance.slash)
-                {
-                    SwitchState(Factory.Slash());
-                }
-                else if (InputPrioritySorter.Instance.SprintIsPriority()
+                if (InputPrioritySorter.Instance.SprintIsPriority()
                     && Ctx.stateMachine.currentState.CurrentSubstate()
                         != Ctx.stateMachine.states.Idle())
                 {
