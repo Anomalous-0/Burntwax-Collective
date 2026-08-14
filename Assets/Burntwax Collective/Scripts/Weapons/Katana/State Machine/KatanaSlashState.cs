@@ -17,7 +17,7 @@ namespace Burntwax
             InputManager.Instance.slash = false;
             Ctx.katanaDriver.BeginSwing(InputManager.Instance.slashStartDirection, "Slash");
 
-            Ctx.camStateMachine.SetCameraInputActive(false);
+            Ctx.camStateMachine.SlowCam(true);
 
             Ctx.anim.SetBool(Ctx.slashHash, true);
             Ctx.isSlashing = true;
@@ -39,7 +39,7 @@ namespace Burntwax
         public override void ExitState()
         {
             Ctx.katanaDriver.EndSwing();
-            Ctx.camStateMachine.SetCameraInputActive(true);
+            Ctx.camStateMachine.SlowCam(false);
             Ctx.anim.SetBool(Ctx.slashHash, false);
 
 

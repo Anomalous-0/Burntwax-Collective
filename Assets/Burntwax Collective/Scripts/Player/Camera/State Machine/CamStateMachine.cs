@@ -97,11 +97,11 @@ namespace Burntwax
 
         }
 
-        public void SetCameraInputActive(bool active)
+        public void SlowCam(bool active)
         {
             if (pov == null) return;
 
-            if (!active)
+            if (active)
             {
                 cachedHorizontalSpeed = pov.m_HorizontalAxis.m_MaxSpeed;
                 cachedVerticalSpeed = pov.m_VerticalAxis.m_MaxSpeed;
