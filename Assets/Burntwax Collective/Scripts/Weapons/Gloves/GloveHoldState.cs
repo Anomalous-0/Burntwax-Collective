@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Burntwax
 {
-    // Branch A, step 2: the primary object orbits in the hand until a tap (or katana slash) throws
+    // Branch A, step 2: the primary object orbits in the hand until a tap or katana parry throws
     // it out. Ignores charge input — the two ability branches never overlap.
     public class GloveHoldState : GloveBaseState
     {
@@ -52,14 +52,19 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            // Click with the katana equipped hurls the held object hard along the camera forward;
-            // a plain F tap does the normal release throw.
-            if (Ctx.KatanaEquipped && InputManager.Instance.attackIsPressed)
+            // A katana parry hurls the held object along the camera forward. Glove gestures keep
+            // their existing release and blast behaviors.
+            // if (Ctx.KatanaParrying)
+            // {
+            //     Ctx.LaunchHeldObjectForward();
+            //     SwitchState(Factory.Idle());
+            // }
+            if (InputManager.Instance.gloveTap)
             {
                 Ctx.LaunchHeldObjectForward();
                 SwitchState(Factory.Idle());
             }
-            else if (InputManager.Instance.gloveTap)
+            else if (InputManager.Instance.gloveDoubleTap)
             {
                 SwitchState(Factory.ReleaseObject());
             }

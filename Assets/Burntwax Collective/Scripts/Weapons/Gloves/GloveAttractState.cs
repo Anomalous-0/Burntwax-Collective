@@ -79,10 +79,9 @@ namespace Burntwax
                 return;
             }
 
-            // Click with the katana equipped launches the incoming object hard along the camera
-            // forward — before it ever reaches the hand. The katana still swings independently; the
-            // glove just reads the same attack input and hurls what it's pulling.
-            if (Ctx.KatanaEquipped && InputManager.Instance.attackIsPressed)
+            // A confirmed katana parry launches the incoming object before it reaches the hand.
+            // Wait for the katana state machine instead of reacting to the raw aim input.
+            if (Ctx.KatanaParrying /*&& Ctx.player.withinBattingRange*/)
             {
                 Ctx.LaunchHeldObjectForward();
                 SwitchState(Factory.Idle());

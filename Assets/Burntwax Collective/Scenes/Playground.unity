@@ -37373,9 +37373,9 @@ MonoBehaviour:
   castRadius: 0.6
   attractableLayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 72704
   detectionTint: {r: 0, g: 1, b: 1, a: 1}
-  detectionTintStrength: 0.35
+  detectionTintStrength: 0.096
   heldObject: {fileID: 0}
   restPos: {fileID: 1614787211}
   attractionSteeringAcceleration: 35
@@ -37383,7 +37383,7 @@ MonoBehaviour:
   fullAttractionVelocityDistance: 8
   attractionCruiseVelocity: 9
   attractionSlowdownRate: 5
-  arcPeakPosition: 0.6
+  arcPeakPosition: 0.701
   arcHeightPerMeter: 0.18
   minimumArcHeight: 0.35
   maximumArcHeight: 0.36
@@ -37395,15 +37395,15 @@ MonoBehaviour:
   dropForwardVelocity: 3.5
   playerVelocityInheritance: 1
   postDropCollisionDelay: 0.35
-  katanaLaunchSpeed: 30
+  katanaLaunchSpeed: 20
   katanaLaunchSpin: 6
   minChargeSpeed: 0.45
   blastPrefab: {fileID: 0}
   blastSpeed: 45
   blastMinDamage: 8
   blastMaxDamage: 40
-  blastMinForce: 6
-  blastMaxForce: 30
+  blastMinForce: 1
+  blastMaxForce: 4
   blastShake: {fileID: 0}
   blastMinShake: 0.4
   blastMaxShake: 1.4

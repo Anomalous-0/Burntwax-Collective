@@ -90,7 +90,7 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float postDropCollisionDelay = 0.35f;
         [Header("Katana Launch")]
         [Tooltip("Speed the attracted object is hurled along the camera forward when you click with the katana equipped.")]
-        [SerializeField, Min(0f)] private float katanaLaunchSpeed = 30f;
+        [SerializeField, Min(0f)] private float katanaLaunchSpeed = 20f;
         [Tooltip("Random tumble applied to the launched object.")]
         [SerializeField, Min(0f)] private float katanaLaunchSpin = 6f;
 
@@ -128,6 +128,9 @@ namespace Burntwax
         // Read-only gate: lets Attract/Hold offer the katana-slash early launch without the glove
         // being a WeaponMode. The glove still lives alongside the Arsenal, it just reads its mode.
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
+        public bool KatanaParrying => KatanaEquipped
+            && arsenal.katanaStateMachine != null
+            && arsenal.katanaStateMachine.isParrying;
         // Raise progress of the arm-override layer, read by the Equipping / Unequipping action states.
         public bool GloveRaised => raiseAmount >= 0.99f;
         public bool GloveLowered => raiseAmount <= 0.01f;
@@ -160,7 +163,7 @@ namespace Burntwax
         private Coroutine restorePlayerCollisionsCoroutine;
         private bool waitingToRestorePlayerCollisions;
 
-        public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
+        [HideInInspector] public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
 
         private void Awake()
         {
