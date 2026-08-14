@@ -49,7 +49,7 @@ namespace Burntwax
             {
                 SwitchState(Factory.Slash());
             }
-            else if (InputManager.Instance.parry)
+            else if (InputManager.Instance.aimIsPressed)
             {
                 SwitchState(Factory.Parry());
             }

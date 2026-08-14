@@ -11,7 +11,11 @@ namespace Burntwax
 
         void Awake()
         {
-            GameManager.Instance.SceneData = this;
+            if(GameManager.Instance != null)
+            {
+                GameManager.Instance.SceneData = this;    
+            }
+            
         }
 
 

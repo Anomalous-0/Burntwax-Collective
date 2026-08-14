@@ -21903,6 +21903,21 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 475c3963ce15c11438f651abf472c1cd,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.854
       objectReference: {fileID: 0}
@@ -37369,7 +37384,7 @@ MonoBehaviour:
   enterCharge: 0
   detectedObject: {fileID: 0}
   canAttract: 0
-  detectDistance: 12
+  detectDistance: 13
   castRadius: 0.6
   attractableLayer:
     serializedVersion: 2
@@ -37390,12 +37405,12 @@ MonoBehaviour:
   restDistance: 0.7
   holdLerpSpeed: 100
   holdSpinSpeed: 90
-  secondaryAttractionForce: 12
+  secondaryAttractionForce: 3
   dropForwardOffset: 0
   dropForwardVelocity: 3.5
   playerVelocityInheritance: 1
   postDropCollisionDelay: 0.35
-  katanaLaunchSpeed: 20
+  katanaLaunchSpeed: 25
   katanaLaunchSpin: 6
   minChargeSpeed: 0.45
   blastPrefab: {fileID: 0}

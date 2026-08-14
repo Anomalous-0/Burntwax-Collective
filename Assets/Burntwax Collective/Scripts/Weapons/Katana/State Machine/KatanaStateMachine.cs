@@ -241,6 +241,7 @@ namespace Burntwax
             crosshair?.SetKatanaCrosshair(ActiveKatanaScriptable);
 
             currentState = states.Idle();
+            anim.Play("equip_Katana");
             currentState.EnterState();
 
             if (handIK != null)

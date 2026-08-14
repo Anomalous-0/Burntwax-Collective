@@ -52,7 +52,7 @@ namespace Burntwax
 
             if (GameManager.Instance && GameManager.Instance.IsLoadingFromSave)
                 return;
-            else
+            else if(GameManager.Instance == null)
                 Debug.LogWarning("GameManager not found. Save data will not be loaded.");
 
             objects.Clear();

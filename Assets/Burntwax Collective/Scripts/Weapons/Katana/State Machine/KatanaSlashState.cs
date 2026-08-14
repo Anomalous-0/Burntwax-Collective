@@ -9,6 +9,7 @@ namespace Burntwax
         private const float RightSlashBlend = 1f / 3f;
         private const float UpSlashBlend = 2f / 3f;
         private const float DownSlashBlend = 1f;
+        private Vector2 slashDirection;
 
         public KatanaSlashState(KatanaStateMachine currentContext, KatanaStateFactory katanaStateFactory)
         : base(currentContext, katanaStateFactory)
@@ -19,7 +20,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Vector2 slashDirection = InputManager.Instance.slashStartDirection;
+            slashDirection = InputManager.Instance.slashStartDirection;
 
             InputManager.Instance.slash = false;
             Ctx.katanaDriver.BeginSwing(slashDirection, "Slash");
@@ -54,7 +55,7 @@ namespace Burntwax
         public override void ExitState()
         {
             Ctx.katanaDriver.EndSwing();
-            
+            Ctx.camStateMachine.SlowCam(false);
             Ctx.anim.SetBool(Ctx.slashHash, false);
             Ctx.ableToSlashInMiddleOfAnimation = false;
 
@@ -81,11 +82,21 @@ namespace Burntwax
                     SwitchState(Factory.Idle());
                 }
             }
-            else if (Ctx.ableToSlashInMiddleOfAnimation && InputManager.Instance.slash)
+            else if (Ctx.ableToSlashInMiddleOfAnimation)
             {
+                if(InputManager.Instance.slash && InputManager.Instance.slashStartDirection != slashDirection)
+                {
+                    SwitchState(Factory.Slash());   
+                }
+    
+                else if(InputPrioritySorter.Instance.AimIsPriority())
+                {
+                    SwitchState(Factory.Parry());
+                }
+            } 
 
-                SwitchState(Factory.Slash());
-            }
+                
+            
         }
 
         public override void InitializeSubState() { }
