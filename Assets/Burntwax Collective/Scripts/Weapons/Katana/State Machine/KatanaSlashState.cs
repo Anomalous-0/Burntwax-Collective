@@ -54,7 +54,7 @@ namespace Burntwax
         public override void ExitState()
         {
             Ctx.katanaDriver.EndSwing();
-            Ctx.camStateMachine.SlowCam(false);
+            
             Ctx.anim.SetBool(Ctx.slashHash, false);
             Ctx.ableToSlashInMiddleOfAnimation = false;
 
@@ -83,7 +83,8 @@ namespace Burntwax
             }
             else if (Ctx.ableToSlashInMiddleOfAnimation && InputManager.Instance.slash)
             {
-                SwitchState(Factory.Ready());
+
+                SwitchState(Factory.Slash());
             }
         }
 

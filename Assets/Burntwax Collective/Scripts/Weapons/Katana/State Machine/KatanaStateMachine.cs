@@ -183,6 +183,7 @@ namespace Burntwax
         public void SlashChain ()
         {
             ableToSlashInMiddleOfAnimation = true;
+            camStateMachine.SlowCam(false);
             
         }
 
