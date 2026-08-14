@@ -50,7 +50,8 @@ namespace Burntwax
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
-        [HideInInspector] public int readyHash, slashHash, parryHash, stowHash;
+        [HideInInspector]
+        public int readyHash, slashHash, parryHash, stowHash, slashBlendHash, slashAnimationHash;
         public KatanaScriptableObject ActiveKatanaScriptable;
 
         private KatanaBaseState currentState;
@@ -80,6 +81,8 @@ namespace Burntwax
             slashHash = Animator.StringToHash("slash");
             parryHash = Animator.StringToHash("parry");
             stowHash = Animator.StringToHash("stow");
+            slashBlendHash = Animator.StringToHash("Blend");
+            slashAnimationHash = Animator.StringToHash("slash_Katana");
 
             stateMachine = player.GetComponent<PlayerStateMachine>();
             camStateMachine = player.GetComponent<CamStateMachine>();
@@ -177,6 +180,12 @@ namespace Burntwax
 
         }
 
+        public void SlashChain ()
+        {
+            ableToSlashInMiddleOfAnimation = true;
+            
+        }
+
 
         private IEnumerator ParryWindow()
         {
@@ -196,10 +205,7 @@ namespace Burntwax
 
             parryWindowCoroutine = StartCoroutine(ParryWindow());
         }
-        public void AbleToSlashInMiddleOfAnimation()
-        {
-            ableToSlashInMiddleOfAnimation = true;
-        }
+    
 
         // ── Save / Load ──────────────────────────────────────────
 

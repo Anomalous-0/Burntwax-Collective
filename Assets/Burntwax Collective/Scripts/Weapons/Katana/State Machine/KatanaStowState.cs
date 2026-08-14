@@ -39,7 +39,7 @@ namespace Burntwax
             {
                 SwitchState(Factory.Ready());
             }
-            else if (InputManager.Instance.aimIsPressed && InputPrioritySorter.Instance.AimIsPriority())
+            else if (InputPrioritySorter.Instance.AimIsPriority())
             {
                 SwitchState(Factory.Parry());
             }

@@ -30,11 +30,11 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if ( InputManager.Instance.attackIsPressed)
+            if (InputManager.Instance.attackIsPressed)
             {
                 SwitchState(Factory.Ready());
             }
-            else if(InputManager.Instance.aimIsPressed)
+            else if(InputPrioritySorter.Instance.AimIsPriority())
             {
                 SwitchState(Factory.Parry());
             }
