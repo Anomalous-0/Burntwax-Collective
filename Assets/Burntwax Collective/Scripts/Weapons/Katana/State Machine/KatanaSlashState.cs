@@ -81,7 +81,7 @@ namespace Burntwax
                     SwitchState(Factory.Idle());
                 }
             }
-            else if (Ctx.ableToSlashInMiddleOfAnimation && InputManager.Instance.attackIsPressed)
+            else if (Ctx.ableToSlashInMiddleOfAnimation && InputManager.Instance.slash)
             {
                 SwitchState(Factory.Ready());
             }
