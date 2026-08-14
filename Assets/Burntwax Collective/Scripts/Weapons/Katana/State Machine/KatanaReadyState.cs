@@ -17,7 +17,7 @@ namespace Burntwax
             Debug.Log("Ready state");
 
 
-            Ctx.camStateMachine.SetCameraInputActive(false);
+            Ctx.camStateMachine.SlowCam(true);
             Ctx.anim.SetBool(Ctx.readyHash, true);
 
 
@@ -37,7 +37,7 @@ namespace Burntwax
         public override void ExitState()
         {
 
-            Ctx.camStateMachine.SetCameraInputActive(true);
+            Ctx.camStateMachine.SlowCam(false);
             Ctx.anim.SetBool(Ctx.readyHash, false);
 
 

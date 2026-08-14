@@ -37,7 +37,7 @@ namespace Burntwax
         public override void ExitState()
         {
             Ctx.katanaDriver.EndSwing();
-            Ctx.camStateMachine.SetCameraInputActive(true);
+            Ctx.camStateMachine.SlowCam(false);
             Ctx.anim.SetBool(Ctx.parryHash, false);
             Ctx.isParryWindowActive = false;
 
