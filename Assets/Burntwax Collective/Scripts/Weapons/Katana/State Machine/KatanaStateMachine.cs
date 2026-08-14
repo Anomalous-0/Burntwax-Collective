@@ -111,6 +111,8 @@ namespace Burntwax
 
         private void Spawn(KatanaScriptableObject activeKatana)
         {
+            if(activeKatana == null)
+                return;
             if (Katana != null)
                 Katana.SetActive(true);
 
