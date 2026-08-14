@@ -111,7 +111,7 @@ namespace Burntwax
 
         private void Spawn(KatanaScriptableObject activeKatana)
         {
-            if(activeKatana == null)
+            if (activeKatana == null)
                 return;
             if (Katana != null)
                 Katana.SetActive(true);
@@ -182,11 +182,11 @@ namespace Burntwax
 
         }
 
-        public void SlashChain ()
+        public void SlashChain()
         {
             ableToSlashInMiddleOfAnimation = true;
             camStateMachine.SlowCam(false);
-            
+
         }
 
 
@@ -199,16 +199,20 @@ namespace Burntwax
             parryWindowCoroutine = null;
         }
 
-        public void EndParry()
+        public void StartParry()
         {
-            ableToSlashInMiddleOfAnimation = false;
-            isParrying = false;
             if (parryWindowCoroutine != null)
                 StopCoroutine(parryWindowCoroutine);
 
             parryWindowCoroutine = StartCoroutine(ParryWindow());
         }
-    
+
+        public void EndParry()
+        {
+            isParrying = false;
+            
+        }
+
 
         // ── Save / Load ──────────────────────────────────────────
 

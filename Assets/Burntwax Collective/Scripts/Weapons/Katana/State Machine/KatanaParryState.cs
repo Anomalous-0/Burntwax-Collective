@@ -25,11 +25,6 @@ namespace Burntwax
         public override void UpdateState()
         {
 
-            // // ── NEW: Feed live mouse input ──
-            // if (InputManager.Instance.isTrackingParry)
-            // {
-            //     Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
-            // }
             
             CheckSwitchStates();
         }
@@ -53,6 +48,14 @@ namespace Burntwax
                         != Ctx.stateMachine.states.Idle())
                 {
                     SwitchState(Factory.Stow());
+                }
+                else if(InputManager.Instance.attackIsPressed)
+                {
+                    SwitchState(Factory.Ready());
+                }
+                else if(InputManager.Instance.slash)
+                {
+                    SwitchState(Factory.Slash());
                 }
                 else
                 {
