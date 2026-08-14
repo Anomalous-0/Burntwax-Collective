@@ -35466,7 +35466,7 @@ PrefabInstance:
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: camSlowdown
-      value: 0.05
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
@@ -37203,6 +37203,8 @@ MonoBehaviour:
   attractableLayer:
     serializedVersion: 2
     m_Bits: 2048
+  detectionTint: {r: 0, g: 1, b: 1, a: 1}
+  detectionTintStrength: 0.35
   heldObject: {fileID: 0}
   restPos: {fileID: 1614787211}
   attractionSteeringAcceleration: 35
@@ -37216,11 +37218,24 @@ MonoBehaviour:
   maximumArcHeight: 0.36
   restDistance: 0.7
   holdLerpSpeed: 100
+  holdSpinSpeed: 90
+  secondaryAttractionForce: 12
   dropForwardOffset: 0
   dropForwardVelocity: 3.5
   playerVelocityInheritance: 1
   postDropCollisionDelay: 0.35
+  katanaLaunchSpeed: 30
+  katanaLaunchSpin: 6
   minChargeSpeed: 0.45
+  blastPrefab: {fileID: 0}
+  blastSpeed: 45
+  blastMinDamage: 8
+  blastMaxDamage: 40
+  blastMinForce: 6
+  blastMaxForce: 30
+  blastShake: {fileID: 0}
+  blastMinShake: 0.4
+  blastMaxShake: 1.4
   emptyHash: 0
   idleHash: 0
   chargeHash: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
+using System.Collections;
 
 namespace Burntwax
 {
@@ -21,8 +22,17 @@ namespace Burntwax
         [HideInInspector] public CamStateMachine camStateMachine;
         [HideInInspector] public PlayerCrosshair crosshair;
 
+
         [Space]
-        [Header("Mechanics")]
+        [Header("Parry")]
+        public float parryWindow = 0.2f;
+        public float timeSlowRate = 0.1f;
+
+        public bool isParryWindowActive = false;
+        private Coroutine parryWindowCoroutine;
+
+        [Space]
+        [Header("Camera")]
         public float camSlowdown = 0.02f;
 
 
@@ -163,12 +173,28 @@ namespace Burntwax
         {
             ableToSlashInMiddleOfAnimation = false;
             isSlashing = false;
+
+
+        }
+
+
+        private IEnumerator ParryWindow()
+        {
+            Debug.Log("Parry window started");
+            isParryWindowActive = true;
+            yield return new WaitForSeconds(parryWindow);
+            isParryWindowActive = false;
+            parryWindowCoroutine = null;
         }
 
         public void EndParry()
         {
             ableToSlashInMiddleOfAnimation = false;
             isParrying = false;
+            if (parryWindowCoroutine != null)
+                StopCoroutine(parryWindowCoroutine);
+
+            parryWindowCoroutine = StartCoroutine(ParryWindow());
         }
         public void AbleToSlashInMiddleOfAnimation()
         {
