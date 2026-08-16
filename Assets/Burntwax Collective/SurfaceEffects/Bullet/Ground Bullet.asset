@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11232370222023b4b8eb6587eb2d686d, type: 3}
-  m_Name: Ground
+  m_Name: Ground Bullet
   m_EditorClassIdentifier: 
   surfaceTag: Ground
+  damageTypes: -1
   vfxPrefab: {fileID: 100002, guid: fc7f8379080d0a844ad699b91bfd56f0, type: 3}
   impactSounds:
   - {fileID: 8300000, guid: 32542d25e319bfd4d83b44a8ba7f7ab9, type: 3}
   - {fileID: 8300000, guid: 439b989059fac934581595c375f33be4, type: 3}
   - {fileID: 8300000, guid: be7058d5497c9df4bb1b9e9d9f4e2466, type: 3}
+  alignVfxToHitDirection: 0
+  hitDirectionRotationOffset: 0
   volume: 1

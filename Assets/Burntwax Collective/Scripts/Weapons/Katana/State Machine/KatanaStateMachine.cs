@@ -72,9 +72,12 @@ namespace Burntwax
         [Header("Current Attack")]
         [SerializeField] private KatanaAttackStrength currentAttackStrength =
             KatanaAttackStrength.Light;
+        [SerializeField] private KatanaSlashDirection currentSlashDirection =
+            KatanaSlashDirection.None;
         [SerializeField] private bool isDamageWindowActive;
 
         public KatanaAttackStrength CurrentAttackStrength => currentAttackStrength;
+        public KatanaSlashDirection CurrentSlashDirection => currentSlashDirection;
         public bool IsDamageWindowActive => isDamageWindowActive;
 
         [HideInInspector] public bool selectedByArsenal;
@@ -188,6 +191,11 @@ namespace Burntwax
         public void SetAttackStrength(KatanaAttackStrength attackStrength)
         {
             currentAttackStrength = attackStrength;
+        }
+
+        public void SetSlashDirection(KatanaSlashDirection slashDirection)
+        {
+            currentSlashDirection = slashDirection;
         }
 
         public void OpenDamageWindow()

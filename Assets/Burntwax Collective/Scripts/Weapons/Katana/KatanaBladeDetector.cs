@@ -184,6 +184,13 @@ namespace Burntwax
                 GameObject instigator = stateMachine.player != null
                     ? stateMachine.player
                     : stateMachine.gameObject;
+                Vector3 impulse = activeKatana.ImpactConfig != null
+                    ? activeKatana.ImpactConfig.GetImpulse(
+                        stateMachine.CurrentAttackStrength,
+                        stateMachine.CurrentSlashDirection,
+                        instigator.transform,
+                        hitPoint)
+                    : Vector3.zero;
 
                 DamageInfo damage = new DamageInfo(
                     damageConfig.GetDamage(stateMachine.CurrentAttackStrength),
@@ -192,9 +199,10 @@ namespace Burntwax
                     hitNormal,
                     currentSwingDirection,
                     gameObject,
-                    instigator);
+                    instigator,
+                    impulse);
 
-                damageApplied = DamageResolver.TryApplyDamage(
+                damageApplied = HitResolver.ResolveHit(
                     detectedCollider,
                     damage);
             }

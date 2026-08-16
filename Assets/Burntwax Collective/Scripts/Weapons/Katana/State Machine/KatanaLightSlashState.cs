@@ -21,17 +21,22 @@ namespace Burntwax
         public override void EnterState()
         {
             slashDirection = InputManager.Instance.slashStartDirection;
+            KatanaSlashDirection classifiedDirection =
+                ClassifySlashDirection(slashDirection);
 
             InputManager.Instance.slash = false;
             Ctx.CloseDamageWindow();
             Ctx.SetAttackStrength(KatanaAttackStrength.Light);
+            Ctx.SetSlashDirection(classifiedDirection);
             Ctx.katanaDriver.BeginSwing(slashDirection, "Slash");
 
             Ctx.camStateMachine.SlowCam(true);
 
             // The slash Blend Tree uses exact thresholds as a four-way clip selector.
             // Set the direction before entering the slash state so it starts on the right clip.
-            Ctx.anim.SetFloat(Ctx.slashBlendHash, GetSlashBlend(slashDirection));
+            Ctx.anim.SetFloat(
+                Ctx.slashBlendHash,
+                GetSlashBlend(classifiedDirection));
             Ctx.anim.SetBool(Ctx.slashHash, true);
 
             // A new gameplay slash can begin before the Animator has fully transitioned out of
@@ -104,12 +109,36 @@ namespace Burntwax
 
         public override void InitializeSubState() { }
 
-        private static float GetSlashBlend(Vector2 direction)
+        private static KatanaSlashDirection ClassifySlashDirection(
+            Vector2 direction)
         {
             if (Mathf.Abs(direction.x) >= Mathf.Abs(direction.y))
-                return direction.x < 0f ? LeftSlashBlend : RightSlashBlend;
+            {
+                return direction.x < 0f
+                    ? KatanaSlashDirection.Left
+                    : KatanaSlashDirection.Right;
+            }
 
-            return direction.y > 0f ? UpSlashBlend : DownSlashBlend;
+            return direction.y > 0f
+                ? KatanaSlashDirection.Up
+                : KatanaSlashDirection.Down;
+        }
+
+        private static float GetSlashBlend(KatanaSlashDirection direction)
+        {
+            switch (direction)
+            {
+                case KatanaSlashDirection.Left:
+                    return LeftSlashBlend;
+                case KatanaSlashDirection.Right:
+                    return RightSlashBlend;
+                case KatanaSlashDirection.Up:
+                    return UpSlashBlend;
+                case KatanaSlashDirection.Down:
+                    return DownSlashBlend;
+                default:
+                    return RightSlashBlend;
+            }
         }
     }
 }

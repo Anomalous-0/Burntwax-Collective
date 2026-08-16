@@ -377,7 +377,7 @@ MonoBehaviour:
   bladeRadius: 0.04
   hittableLayers:
     serializedVersion: 2
-    m_Bits: 11728
+    m_Bits: 15825
   triggerInteraction: 2
   logDetections: 1
 --- !u!1 &33148859
@@ -18409,7 +18409,7 @@ GameObject:
   - component: {fileID: 1147107199}
   - component: {fileID: 1147107198}
   m_Layer: 0
-  m_Name: BulletSurfaceManager
+  m_Name: ImpactSurfaceManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20689,7 +20689,7 @@ GameObject:
   - component: {fileID: 1348157525}
   - component: {fileID: 1348157524}
   - component: {fileID: 1348157523}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Ground
   m_TagString: Ground
   m_Icon: {fileID: 0}
@@ -30181,7 +30181,7 @@ GameObject:
   - component: {fileID: 1830847042}
   - component: {fileID: 1830847041}
   - component: {fileID: 1830847040}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Cube
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -35639,6 +35639,11 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 401126580}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: blastSpeed
+      value: 79.2
+      objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: player
@@ -35692,7 +35697,7 @@ PrefabInstance:
     - target: {fileID: 7120825543759020784, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7409600953642053044, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}

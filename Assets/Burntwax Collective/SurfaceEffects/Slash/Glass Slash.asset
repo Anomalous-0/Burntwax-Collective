@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11232370222023b4b8eb6587eb2d686d, type: 3}
-  m_Name: Metal
+  m_Name: Glass Slash
   m_EditorClassIdentifier: 
-  surfaceTag: Metal
+  surfaceTag: Glass
+  damageTypes: -1
   vfxPrefab: {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
   impactSounds:
-  - {fileID: 8300000, guid: 7bce85880d9f86948b8529a7460baa79, type: 3}
-  - {fileID: 8300000, guid: 40fa345deebeb8e48accd998f51ec00d, type: 3}
-  - {fileID: 8300000, guid: be18b310a00f7f84a8f485b507ae5046, type: 3}
+  - {fileID: 8300000, guid: 1b5c15cf6624f7a4aaf1167c8f60eee1, type: 3}
+  - {fileID: 8300000, guid: b9c7d3a12db77c545a11572332fd82fa, type: 3}
+  - {fileID: 8300000, guid: 24886a2d0b034d64886e5a34ee7bfe5a, type: 3}
+  alignVfxToHitDirection: 0
+  hitDirectionRotationOffset: 0
   volume: 1

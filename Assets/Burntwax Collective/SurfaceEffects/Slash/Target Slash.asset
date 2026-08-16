@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11232370222023b4b8eb6587eb2d686d, type: 3}
-  m_Name: Crate
+  m_Name: Target Slash
   m_EditorClassIdentifier: 
-  surfaceTag: Crate
-  vfxPrefab: {fileID: 100002, guid: ac1aa04288fad804ba1cd769f4377aaf, type: 3}
+  surfaceTag: Target
+  damageTypes: -1
+  vfxPrefab: {fileID: 100002, guid: 6890a03af913b874092fbb1e8337747d, type: 3}
   impactSounds:
-  - {fileID: 8300000, guid: 10484a19d22ab0049b06480730ba0883, type: 3}
-  - {fileID: 8300000, guid: 027068841a2917544a25eac4bab56e20, type: 3}
-  - {fileID: 8300000, guid: 4eeda3508469ef144b7344d1b4f5fd1b, type: 3}
+  - {fileID: 8300000, guid: 2b5113f3055d0594491d694615f34d8b, type: 3}
+  alignVfxToHitDirection: 0
+  hitDirectionRotationOffset: 0
   volume: 1

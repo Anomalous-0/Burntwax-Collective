@@ -14,6 +14,7 @@ namespace Burntwax
         public Vector3 Point { get; }
         public Vector3 Normal { get; }
         public Vector3 Direction { get; }
+        public Vector3 Impulse { get; }
 
         public GameObject Source { get; }
         public GameObject Instigator { get; }
@@ -26,6 +27,27 @@ namespace Burntwax
             Vector3 direction,
             GameObject source,
             GameObject instigator)
+            : this(
+                amount,
+                type,
+                point,
+                normal,
+                direction,
+                source,
+                instigator,
+                Vector3.zero)
+        {
+        }
+
+        public DamageInfo(
+            float amount,
+            DamageType type,
+            Vector3 point,
+            Vector3 normal,
+            Vector3 direction,
+            GameObject source,
+            GameObject instigator,
+            Vector3 impulse)
         {
             Amount = Mathf.Max(0f, amount);
             Type = type;
@@ -34,6 +56,7 @@ namespace Burntwax
             Direction = direction.sqrMagnitude > 0f ? direction.normalized : Vector3.zero;
             Source = source;
             Instigator = instigator;
+            Impulse = impulse;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Burntwax
 
         [Header("Configs")]
         public KatanaDamageConfig DamageConfig;
+        public KatanaImpactConfig ImpactConfig;
         public KatanaAudioConfig AudioConfig;
         public KatanaCrosshairConfig CrosshairConfig;
 

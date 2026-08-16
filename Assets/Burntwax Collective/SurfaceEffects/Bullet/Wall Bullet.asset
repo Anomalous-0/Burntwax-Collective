@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11232370222023b4b8eb6587eb2d686d, type: 3}
-  m_Name: Wall
+  m_Name: Wall Bullet
   m_EditorClassIdentifier: 
   surfaceTag: Wall
+  damageTypes: -1
   vfxPrefab: {fileID: 100002, guid: 20b31fcfaed0cb842a56fbbe2419428f, type: 3}
   impactSounds:
   - {fileID: 8300000, guid: f23db60f69ce22843a52a959886a7682, type: 3}
   - {fileID: 8300000, guid: 311efbcc4d2ee1e4f934978635265b8a, type: 3}
   - {fileID: 8300000, guid: 69dd59858d281014bb873d11e4ddc9ae, type: 3}
+  alignVfxToHitDirection: 0
+  hitDirectionRotationOffset: 0
   volume: 1

@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11232370222023b4b8eb6587eb2d686d, type: 3}
-  m_Name: Glass
+  m_Name: Target Bullet
   m_EditorClassIdentifier: 
-  surfaceTag: Glass
-  vfxPrefab: {fileID: 100002, guid: 00fedc70b62a31e448e8ccc298257b56, type: 3}
+  surfaceTag: Target
+  damageTypes: -1
+  vfxPrefab: {fileID: 100002, guid: 6890a03af913b874092fbb1e8337747d, type: 3}
   impactSounds:
-  - {fileID: 8300000, guid: 1b5c15cf6624f7a4aaf1167c8f60eee1, type: 3}
-  - {fileID: 8300000, guid: b9c7d3a12db77c545a11572332fd82fa, type: 3}
-  - {fileID: 8300000, guid: 24886a2d0b034d64886e5a34ee7bfe5a, type: 3}
+  - {fileID: 8300000, guid: 2b5113f3055d0594491d694615f34d8b, type: 3}
+  alignVfxToHitDirection: 0
+  hitDirectionRotationOffset: 0
   volume: 1

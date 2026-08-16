@@ -34,6 +34,7 @@ namespace Burntwax
         public AudioConfig AudioConfig;
         private AudioSource ShootingAudioSource;
         public DamageConfig DamageConfig;
+        public GunImpactConfig ImpactConfig;
         public TrailConfig TrailConfig;
         public CrosshairConfig CrosshairConfig;
 
@@ -55,7 +56,6 @@ namespace Burntwax
             TrailPool = new ObjectPool<TrailRenderer>(CreateTrail);
             ShootSystem = currentGun.GetComponentInChildren<ParticleSystem>();
             ShootingAudioSource = player.GetComponent<AudioSource>();
-            BulletImpactEffects.Instance = FindAnyObjectByType<BulletImpactEffects>();
         }
 
         public void Despawn(MonoBehaviour ActiveMonoBehaviour)
@@ -139,11 +139,9 @@ namespace Burntwax
             {
                 float rolledDamage = DamageConfig.GetDamage(distance);
                 Vector3 hitDirection = (EndPoint - StartPoint).normalized;
-
-                if (Hit.collider.GetComponent<Rigidbody>())
-                {
-                    Hit.collider.GetComponent<Rigidbody>().AddForce(hitDirection * rolledDamage, ForceMode.Impulse);
-                }
+                float impactMagnitude = ImpactConfig != null
+                    ? ImpactConfig.GetImpulse(distance)
+                    : 0f;
 
                 DamageInfo damageInfo = new DamageInfo(
                     rolledDamage,
@@ -152,19 +150,18 @@ namespace Burntwax
                     Hit.normal,
                     hitDirection,
                     ShootSystem != null ? ShootSystem.gameObject : null,
-                    ActiveMonoBehaviour != null ? ActiveMonoBehaviour.gameObject : null);
-
-                DamageResolver.TryApplyDamage(Hit.collider, damageInfo);
+                    ActiveMonoBehaviour != null ? ActiveMonoBehaviour.gameObject : null,
+                    hitDirection * impactMagnitude);
 
                 string surfaceTag = Hit.collider.tag;
-                Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;
-                Quaternion impactRotation = Quaternion.LookRotation(Hit.normal);
-                BulletImpactEffects.Instance.ImpactVFX(surfaceTag, impactPosition, impactRotation);
-                if (!surfaces.Contains(surfaceTag))
-                {
+                bool playImpactAudio = !surfaces.Contains(surfaceTag);
+                if (playImpactAudio)
                     surfaces.Add(surfaceTag);
-                    BulletImpactEffects.Instance.ImpactAudio(surfaceTag, impactPosition, impactRotation);
-                }
+
+                HitResolver.ResolveHit(
+                    Hit.collider,
+                    damageInfo,
+                    playImpactAudio);
 
 
 
