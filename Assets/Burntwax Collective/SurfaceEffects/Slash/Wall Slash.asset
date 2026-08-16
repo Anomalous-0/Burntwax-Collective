@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wall Slash
   m_EditorClassIdentifier: 
   surfaceTag: Wall
-  damageTypes: -1
+  damageTypes: 4
   vfxPrefab: {fileID: 100002, guid: 20b31fcfaed0cb842a56fbbe2419428f, type: 3}
   impactSounds:
   - {fileID: 8300000, guid: f23db60f69ce22843a52a959886a7682, type: 3}

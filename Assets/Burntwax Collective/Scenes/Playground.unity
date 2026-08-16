@@ -8573,6 +8573,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777,
         type: 3}
       propertyPath: m_Name
@@ -18435,6 +18439,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8fe94b2cad944eb4a9bd638266aa1f0c, type: 2}
   - {fileID: 11400000, guid: 54b940fb93ad392479303121ac268322, type: 2}
   - {fileID: 11400000, guid: 15a31222738759b4ea9f8225777eaada, type: 2}
+  - {fileID: 11400000, guid: 91c1e53a97cf4a91890b04e574a2d441, type: 2}
+  - {fileID: 11400000, guid: a2d2f64ba8d04baa993c15f685b3e552, type: 2}
+  - {fileID: 11400000, guid: b3e3075cb9e14cbb8a4d260796c4f663, type: 2}
+  - {fileID: 11400000, guid: c4f4186dca024dcc9b5e3718a7d50774, type: 2}
+  - {fileID: 11400000, guid: d505297edb134eddac6f4829b8e61885, type: 2}
+  - {fileID: 11400000, guid: e6163a8fec244fee8d70593ac9f72996, type: 2}
+  - {fileID: 11400000, guid: f7274b90fd3550ff9e816a4bda083aa7, type: 2}
+  - {fileID: 11400000, guid: 4b8234964a7832342b03c508ae835f2b, type: 2}
+  - {fileID: 11400000, guid: f2ab97734fa939a49a27743238ffa8a0, type: 2}
+  - {fileID: 11400000, guid: ac2d09d7acedce248af7f6a23317b516, type: 2}
+  - {fileID: 11400000, guid: 174caa7dbbf1dd743b93eeb020eff24e, type: 2}
+  - {fileID: 11400000, guid: c5d2b47a293bbb34d92cdfe3650461b3, type: 2}
+  - {fileID: 11400000, guid: 44b3a8e8175e8db438d45c48e93e174a, type: 2}
+  - {fileID: 11400000, guid: 469e630def8d1c34dba99c42ecf7001c, type: 2}
 --- !u!4 &1147107199
 Transform:
   m_ObjectHideFlags: 0
@@ -18541,24 +18559,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 796215344}
     m_Modifications:
-    - target: {fileID: 1927820067518834455, guid: 569a885bdb695bf4fbaf0914fde33777,
+    - target: {fileID: -377070453218575813, guid: 569a885bdb695bf4fbaf0914fde33777,
         type: 3}
-      propertyPath: playerHealth
-      value: 
-      objectReference: {fileID: 401126581}
-    - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_LocalScale.z
+      propertyPath: m_Mass
       value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 2534855556683237600, guid: 569a885bdb695bf4fbaf0914fde33777,
@@ -18615,11 +18618,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Health Pickup (3)
-      objectReference: {fileID: 0}
-    - target: {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
-      propertyPath: m_Layer
-      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -25357,13 +25355,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3161494543826322948, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: m_Radius
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 3161494543826322948, guid: 569a885bdb695bf4fbaf0914fde33777,
-        type: 3}
+    - target: {fileID: 0}
       propertyPath: m_ProvidesContacts
       value: 0
       objectReference: {fileID: 0}
@@ -30210,7 +30206,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
@@ -35649,6 +35645,11 @@ PrefabInstance:
         type: 3}
       propertyPath: blastSpeed
       value: 79.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: attractableLayer.m_Bits
+      value: 72704
       objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}

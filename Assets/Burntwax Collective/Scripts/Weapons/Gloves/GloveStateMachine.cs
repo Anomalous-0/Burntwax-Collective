@@ -547,6 +547,18 @@ namespace Burntwax
                     heldBody.isKinematic = false;
                     heldBody.linearVelocity = forward * katanaLaunchSpeed;
                     heldBody.angularVelocity = Random.insideUnitSphere * katanaLaunchSpin;
+
+                    // Only a deliberate high-speed launch becomes an attack. Objects without
+                    // the opt-in damage source remain ordinary physics props.
+                    VelocityImpactDamageSource impactDamageSource =
+                        heldObject.GetComponent<VelocityImpactDamageSource>();
+                    if (impactDamageSource != null)
+                    {
+                        GameObject thrower = player != null
+                            ? player.gameObject
+                            : gameObject;
+                        impactDamageSource.Arm(thrower);
+                    }
                 }
             }
 

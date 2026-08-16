@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 4463103168759893677}
   - component: {fileID: 327280279557472106}
   - component: {fileID: 5401304969906306710}
+  - component: {fileID: 750716246601546953}
+  - component: {fileID: -8212281008966098081}
   m_Layer: 11
   m_Name: Katana Pickup
   m_TagString: Metal
@@ -134,6 +136,34 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.1, y: 0.2, z: 1.5}
   m_Center: {x: 0, y: 0.15, z: -0.05}
+--- !u!114 &750716246601546953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419120966271812492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
+  minimumAudioSpeed: 0.5
+  majorImpactAudioSpeed: 10
+  audioCooldown: 0.1
+--- !u!114 &-8212281008966098081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419120966271812492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
+  config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
 --- !u!1 &569071943058703690
 GameObject:
   m_ObjectHideFlags: 0

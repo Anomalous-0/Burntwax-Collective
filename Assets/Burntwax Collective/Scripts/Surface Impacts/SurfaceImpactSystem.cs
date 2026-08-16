@@ -50,10 +50,12 @@ namespace Burntwax
 
             SurfaceEffectSO effect = FindEffect(
                 hitCollider.tag,
-                damage.Type);
+                damage.PresentationType);
             if (effect == null)
             {
-                WarnAboutMissingEffect(hitCollider.tag, damage.Type);
+                WarnAboutMissingEffect(
+                    hitCollider.tag,
+                    damage.PresentationType);
                 return false;
             }
 

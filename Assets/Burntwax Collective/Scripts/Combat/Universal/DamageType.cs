@@ -14,6 +14,10 @@ namespace Burntwax
         Impact = 1 << 1,
         Slash = 1 << 2,
         Explosion = 1 << 3,
-        Energy = 1 << 4
+        Energy = 1 << 4,
+
+        // Presentation-only category for small Rigidbody bumps. It is never sent to
+        // IDamageable targets and exists so minor audio can use its own surface profiles.
+        MinorImpact = 1 << 5
     }
 }

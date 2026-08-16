@@ -1020,6 +1020,8 @@ GameObject:
   - component: {fileID: 8772033290904586764}
   - component: {fileID: -6572766593157695850}
   - component: {fileID: 2284273309233806591}
+  - component: {fileID: -6608809541156989612}
+  - component: {fileID: -855734136171318050}
   m_Layer: 11
   m_Name: Revolver Pickup
   m_TagString: Metal
@@ -1139,6 +1141,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-6608809541156989612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019881249754144703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
+  minimumAudioSpeed: 0.5
+  majorImpactAudioSpeed: 10
+  audioCooldown: 0.1
+--- !u!114 &-855734136171318050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2019881249754144703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
+  config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
 --- !u!1 &2986807112246738141
 GameObject:
   m_ObjectHideFlags: 0

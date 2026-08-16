@@ -284,6 +284,8 @@ GameObject:
   - component: {fileID: -199172209931897743}
   - component: {fileID: 2573148226408101060}
   - component: {fileID: -2620854715334352064}
+  - component: {fileID: -8677775146278389905}
+  - component: {fileID: -8970088140865010605}
   m_Layer: 11
   m_Name: Shotgun Ammo
   m_TagString: Metal
@@ -405,3 +407,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Prefab
   guid: 417e1002-3f59-4aab-be8e-8394bb7525f0
+--- !u!114 &-8677775146278389905
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
+  minimumAudioSpeed: 0.5
+  majorImpactAudioSpeed: 10
+  audioCooldown: 0.1
+--- !u!114 &-8970088140865010605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
+  config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}

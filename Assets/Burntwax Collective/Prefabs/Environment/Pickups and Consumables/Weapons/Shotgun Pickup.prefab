@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: -3478815061821974044}
   - component: {fileID: 1378781934921160141}
   - component: {fileID: -6960977610114791289}
+  - component: {fileID: 8293085245174026672}
+  - component: {fileID: 3002569203832878223}
   m_Layer: 11
   m_Name: Shotgun Pickup
   m_TagString: Metal
@@ -133,6 +135,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Prefab
   guid: 3cc8b6df-6b5a-4ad0-bb39-a34b84b348ed
+--- !u!114 &8293085245174026672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7927989591502400544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
+  minimumAudioSpeed: 0.5
+  majorImpactAudioSpeed: 10
+  audioCooldown: 0.1
+--- !u!114 &3002569203832878223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7927989591502400544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
+  config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
 --- !u!1001 &1888807050842661032
 PrefabInstance:
   m_ObjectHideFlags: 0
