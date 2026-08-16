@@ -137,19 +137,24 @@ namespace Burntwax
 
             if (Hit.collider != null)
             {
+                float rolledDamage = DamageConfig.GetDamage(distance);
+                Vector3 hitDirection = (EndPoint - StartPoint).normalized;
 
                 if (Hit.collider.GetComponent<Rigidbody>())
                 {
-                    Hit.collider.GetComponent<Rigidbody>().AddForce((EndPoint - StartPoint).normalized * DamageConfig.GetDamage(distance), ForceMode.Impulse);
+                    Hit.collider.GetComponent<Rigidbody>().AddForce(hitDirection * rolledDamage, ForceMode.Impulse);
                 }
-                if (Hit.collider.TryGetComponent(out Destructable destructable))
-                {
-                    destructable.TakeDamage(DamageConfig.GetDamage(distance) / 2);
-                }
-                if (Hit.collider.TryGetComponent(out Target target))
-                {
-                    target.Teleport();
-                }
+
+                DamageInfo damageInfo = new DamageInfo(
+                    rolledDamage,
+                    DamageType.Bullet,
+                    Hit.point,
+                    Hit.normal,
+                    hitDirection,
+                    ShootSystem != null ? ShootSystem.gameObject : null,
+                    ActiveMonoBehaviour != null ? ActiveMonoBehaviour.gameObject : null);
+
+                DamageResolver.TryApplyDamage(Hit.collider, damageInfo);
 
                 string surfaceTag = Hit.collider.tag;
                 Vector3 impactPosition = Hit.point + Hit.normal * 0.01f;

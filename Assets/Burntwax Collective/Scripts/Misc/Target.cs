@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Burntwax
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Target : MonoBehaviour
+    public class Target : MonoBehaviour, IDamageable
     {
 
         [Header("Settings")]
@@ -55,6 +55,11 @@ namespace Burntwax
             teleportPosition.y = player.transform.position.y + randomHeightOffset;
 
             transform.position = teleportPosition;
+        }
+
+        public void ApplyDamage(DamageInfo damage)
+        {
+            Teleport();
         }
 
 

@@ -47,7 +47,7 @@ namespace Burntwax
         {
             if (InputManager.Instance.slash)
             {
-                SwitchState(Factory.Slash());
+                SwitchState(Factory.LightSlash());
             }
             else if (InputManager.Instance.aimIsPressed)
             {

@@ -8,7 +8,7 @@ namespace Burntwax
 {
 
     [RequireComponent(typeof(Rigidbody))]
-    public class Crate : MonoBehaviour, Destructable
+    public class Crate : MonoBehaviour, Destructable, IDamageable
     {
 
         [Header("Health")]
@@ -30,6 +30,11 @@ namespace Burntwax
                 Destruct(transform.position);
 
             }
+        }
+
+        public void ApplyDamage(DamageInfo damage)
+        {
+            TakeDamage(damage.Amount);
         }
 
         private void SpawnResources(Vector3 pos)

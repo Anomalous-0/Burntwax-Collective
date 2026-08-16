@@ -69,6 +69,14 @@ namespace Burntwax
         public bool ableToSlashInMiddleOfAnimation;
         public bool fullyEquipped;
 
+        [Header("Current Attack")]
+        [SerializeField] private KatanaAttackStrength currentAttackStrength =
+            KatanaAttackStrength.Light;
+        [SerializeField] private bool isDamageWindowActive;
+
+        public KatanaAttackStrength CurrentAttackStrength => currentAttackStrength;
+        public bool IsDamageWindowActive => isDamageWindowActive;
+
         [HideInInspector] public bool selectedByArsenal;
 
         private void Awake()
@@ -102,6 +110,8 @@ namespace Burntwax
 
         public void Despawn(KatanaScriptableObject activeKatana)
         {
+            CloseDamageWindow();
+
             if (Katana != null)
                 Katana.SetActive(false);
 
@@ -161,6 +171,7 @@ namespace Burntwax
 
         private void ResetAnimationFlags()
         {
+            CloseDamageWindow();
             anim.SetBool(readyHash, false);
             anim.SetBool(slashHash, false);
             anim.SetBool(parryHash, false);
@@ -174,8 +185,24 @@ namespace Burntwax
             fullyEquipped = true;
         }
 
+        public void SetAttackStrength(KatanaAttackStrength attackStrength)
+        {
+            currentAttackStrength = attackStrength;
+        }
+
+        public void OpenDamageWindow()
+        {
+            isDamageWindowActive = true;
+        }
+
+        public void CloseDamageWindow()
+        {
+            isDamageWindowActive = false;
+        }
+
         public void EndSlash()
         {
+            CloseDamageWindow();
             ableToSlashInMiddleOfAnimation = false;
             isSlashing = false;
 
@@ -185,7 +212,7 @@ namespace Burntwax
         public void SlashChain()
         {
             ableToSlashInMiddleOfAnimation = true;
-            camStateMachine.SlowCam(false);
+            // camStateMachine.SlowCam(false);
 
         }
 
@@ -211,6 +238,11 @@ namespace Burntwax
         {
             isParrying = false;
             
+        }
+
+        private void OnDisable()
+        {
+            CloseDamageWindow();
         }
 
 

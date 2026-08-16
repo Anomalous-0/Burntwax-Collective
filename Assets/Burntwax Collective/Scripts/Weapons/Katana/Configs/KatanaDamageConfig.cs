@@ -1,8 +1,4 @@
-using System;
-using Burntwax.Guns;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
-using Random = UnityEngine.Random;
 
 namespace Burntwax
 {
@@ -10,18 +6,15 @@ namespace Burntwax
     [CreateAssetMenu(fileName = "Katana Damage Config", menuName = "Katana/Damage Config", order = 1)]
     public class KatanaDamageConfig : ScriptableObject
     {
-        public MinMaxCurve damageCurve;
+        [Header("Attack Damage")]
+        [Min(0f)] public float lightAttackDamage = 20f;
+        [Min(0f)] public float heavyAttackDamage = 40f;
 
-        private void Reset()
+        public float GetDamage(KatanaAttackStrength attackStrength)
         {
-            damageCurve.mode = ParticleSystemCurveMode.Curve;
+            return attackStrength == KatanaAttackStrength.Heavy
+                ? heavyAttackDamage
+                : lightAttackDamage;
         }
-
-        public int GetDamage(float distance = 0)
-        {
-            return Mathf.CeilToInt(damageCurve.Evaluate(distance, Random.value));
-        }
-
-        
     }
 }

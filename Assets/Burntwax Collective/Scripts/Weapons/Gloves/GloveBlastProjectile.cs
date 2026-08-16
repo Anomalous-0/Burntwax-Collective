@@ -8,9 +8,9 @@ namespace Burntwax
     /// carries TWO concentric trigger fields:
     ///   • outer field (large)  → light knockback (the physical stand-in for a stun),
     ///   • inner field (small)  → Damage + stronger knockback.
-    /// Reactions go through the same <see cref="Destructable"/> + Rigidbody channels the guns use, so
-    /// the blast is functional now; dedicated enemy/stun behaviour can layer on later. Damage / force /
-    /// radii are scaled by how long the blast was charged (passed in via <see cref="Launch"/>).
+    /// Damage goes through the shared damage resolver while knockback remains a physical reaction.
+    /// Damage, force, and radii are scaled by how long the blast was charged (passed in via
+    /// <see cref="Launch"/>).
     ///
     /// The two fields are separate <see cref="SphereCollider"/> triggers; a small <see cref="BlastField"/>
     /// forwarder on each tells this script which tier was entered. If you don't assign them, they're
@@ -40,6 +40,7 @@ namespace Burntwax
         public float Charge { get; private set; }
 
         private Rigidbody rb;
+        private GameObject instigator;
 
         private void Awake()
         {
@@ -54,11 +55,17 @@ namespace Burntwax
         /// <param name="chargeNormalized">0..1 charge at release.</param>
         /// <param name="damage">Already charge-scaled damage.</param>
         /// <param name="force">Already charge-scaled knockback force.</param>
-        public void Launch(Vector3 velocity, float chargeNormalized, float damage, float force)
+        public void Launch(
+            Vector3 velocity,
+            float chargeNormalized,
+            float damage,
+            float force,
+            GameObject instigator)
         {
             Charge = chargeNormalized;
             Damage = damage;
             Force = force;
+            this.instigator = instigator;
 
             float grow = 1f + radiusChargeBonus * chargeNormalized;
             if (outerField != null) outerField.SetRadius(outerRadius * grow);
@@ -80,9 +87,10 @@ namespace Burntwax
             return field;
         }
 
-        // A body can sit inside both fields at once; track who we've already handled so nothing is
-        // damaged or shoved twice by the same blast.
-        private readonly HashSet<GameObject> processedTargets = new HashSet<GameObject>();
+        // The outer field normally fires first. Track force and damage independently so entering
+        // the outer field cannot prevent the inner field from dealing damage.
+        private readonly HashSet<GameObject> outerPushTargets = new HashSet<GameObject>();
+        private readonly HashSet<GameObject> innerDamageTargets = new HashSet<GameObject>();
 
         // ── Field reactions ─────────────────────────────────────────
         public void OnFieldEnter(Tier tier, Collider other)
@@ -91,13 +99,24 @@ namespace Burntwax
                 return;
 
             Rigidbody body = other.attachedRigidbody;
-            GameObject target = body != null ? body.gameObject : other.gameObject;
+            IDamageable damageable = other.GetComponentInParent<IDamageable>();
+            Component damageReceiver = damageable as Component;
+            GameObject target = damageReceiver != null
+                ? damageReceiver.gameObject
+                : body != null ? body.gameObject : other.gameObject;
 
             // Never let the blast damage or launch the player who fired it.
-            if (target.GetComponentInParent<PlayerStateMachine>() != null)
+            if (instigator != null
+                && (target == instigator
+                    || target.transform.IsChildOf(instigator.transform)))
+            {
                 return;
+            }
 
-            if (!processedTargets.Add(target))
+            // Preserve the previous player-safety fallback if an older caller launches without
+            // providing an instigator.
+            if (instigator == null
+                && target.GetComponentInParent<PlayerStateMachine>() != null)
                 return;
 
             Vector3 pushDir = (target.transform.position - transform.position).normalized;
@@ -106,16 +125,33 @@ namespace Burntwax
 
             if (tier == Tier.Inner)
             {
-                // Inner field: full charge-scaled damage plus a solid shove.
-                Destructable destructable = other.GetComponentInParent<Destructable>();
-                if (destructable != null)
-                    destructable.TakeDamage(Damage);
+                if (!innerDamageTargets.Add(target))
+                    return;
+
+                DamageInfo damageInfo = new DamageInfo(
+                    Damage,
+                    DamageType.Energy | DamageType.Impact,
+                    other.ClosestPoint(transform.position),
+                    -pushDir,
+                    pushDir,
+                    gameObject,
+                    instigator);
+
+                DamageResolver.TryApplyDamage(other, damageInfo);
 
                 if (body != null)
-                    body.AddForce(pushDir * Force, ForceMode.Impulse);
+                {
+                    float remainingForce = outerPushTargets.Contains(target)
+                        ? Force * 0.5f
+                        : Force;
+                    body.AddForce(pushDir * remainingForce, ForceMode.Impulse);
+                }
             }
             else
             {
+                if (!outerPushTargets.Add(target))
+                    return;
+
                 // Outer field: lighter shove only (stand-in for the eventual stun).
                 if (body != null)
                     body.AddForce(pushDir * (Force * 0.5f), ForceMode.Impulse);

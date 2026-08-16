@@ -3,7 +3,7 @@ using Debug = UnityEngine.Debug;
 
 namespace Burntwax
 {
-    public class KatanaSlashState : KatanaBaseState
+    public class KatanaLightSlashState : KatanaBaseState
     {
         private const float LeftSlashBlend = 0f;
         private const float RightSlashBlend = 1f / 3f;
@@ -11,7 +11,7 @@ namespace Burntwax
         private const float DownSlashBlend = 1f;
         private Vector2 slashDirection;
 
-        public KatanaSlashState(KatanaStateMachine currentContext, KatanaStateFactory katanaStateFactory)
+        public KatanaLightSlashState(KatanaStateMachine currentContext, KatanaStateFactory katanaStateFactory)
         : base(currentContext, katanaStateFactory)
         {
             IsRootState = true;
@@ -23,6 +23,8 @@ namespace Burntwax
             slashDirection = InputManager.Instance.slashStartDirection;
 
             InputManager.Instance.slash = false;
+            Ctx.CloseDamageWindow();
+            Ctx.SetAttackStrength(KatanaAttackStrength.Light);
             Ctx.katanaDriver.BeginSwing(slashDirection, "Slash");
 
             Ctx.camStateMachine.SlowCam(true);
@@ -54,6 +56,7 @@ namespace Burntwax
 
         public override void ExitState()
         {
+            Ctx.CloseDamageWindow();
             Ctx.katanaDriver.EndSwing();
             Ctx.camStateMachine.SlowCam(false);
             Ctx.anim.SetBool(Ctx.slashHash, false);
@@ -86,7 +89,7 @@ namespace Burntwax
             {
                 if(InputManager.Instance.slash && InputManager.Instance.slashStartDirection != slashDirection)
                 {
-                    SwitchState(Factory.Slash());   
+                    SwitchState(Factory.LightSlash());   
                 }
     
                 else if(InputPrioritySorter.Instance.AimIsPriority())

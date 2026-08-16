@@ -410,7 +410,12 @@ namespace Burntwax
 
             float damage = Mathf.Lerp(blastMinDamage, blastMaxDamage, chargeNormalized);
             float force = Mathf.Lerp(blastMinForce, blastMaxForce, chargeNormalized);
-            projectile.Launch(dir * blastSpeed, chargeNormalized, damage, force);
+            projectile.Launch(
+                dir * blastSpeed,
+                chargeNormalized,
+                damage,
+                force,
+                player != null ? player.gameObject : gameObject);
 
             // Recoil-style kick back toward the player, harder the more the blast was charged.
             if (blastShake != null)

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Burntwax
 {
-    public class PlayerHealth : MonoBehaviour
+    public class PlayerHealth : MonoBehaviour, IDamageable
     {
         private float health;
         private float lerpTimer;
@@ -52,6 +52,11 @@ namespace Burntwax
         {
             health -= damage;
             lerpTimer = 0f;
+        }
+
+        public void ApplyDamage(DamageInfo damage)
+        {
+            TakeDamage(damage.Amount);
         }
 
         public void RestoreHealth(float healAmount)
