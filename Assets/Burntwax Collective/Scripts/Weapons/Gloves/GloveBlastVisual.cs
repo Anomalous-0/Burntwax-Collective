@@ -20,11 +20,11 @@ namespace Burntwax
             go.transform.position = position;
             go.transform.localScale = Vector3.one * 0.5f;
 
-            // The projectile spawns its own concentric trigger fields; the visible ball must not
-            // physically collide, so drop the primitive's collider.
-            Collider visibleCollider = go.GetComponent<Collider>();
-            if (visibleCollider != null)
-                SafeDestroy(visibleCollider);
+            // The root sphere sizes the projectile's swept collision check. It remains a trigger
+            // so Rigidbody collision momentum can never overpower the configured blast impulse.
+            SphereCollider collisionCollider = go.GetComponent<SphereCollider>();
+            if (collisionCollider != null)
+                collisionCollider.isTrigger = true;
 
             Material material = sharedMaterial != null ? sharedMaterial : CreatePlasmaMaterial();
 
@@ -80,15 +80,6 @@ namespace Burntwax
             material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
 
             return material;
-        }
-
-        // Works whether called at runtime (play mode) or from the editor baker (edit mode).
-        private static void SafeDestroy(Object target)
-        {
-            if (Application.isPlaying)
-                Object.Destroy(target);
-            else
-                Object.DestroyImmediate(target);
         }
     }
 }

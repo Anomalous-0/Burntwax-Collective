@@ -12,15 +12,19 @@ namespace Burntwax
         public static bool ResolveHit(
             Collider hitCollider,
             DamageInfo damage,
-            bool playImpactAudio = true)
+            bool playImpactAudio = true,
+            bool playSurfaceImpact = true)
         {
             if (hitCollider == null)
                 return false;
 
-            SurfaceImpactSystem.Instance?.PlayImpact(
-                hitCollider,
-                damage,
-                playImpactAudio);
+            if (playSurfaceImpact)
+            {
+                SurfaceImpactSystem.Instance?.PlayImpact(
+                    hitCollider,
+                    damage,
+                    playImpactAudio);
+            }
 
             ImpactResolver.TryApplyImpact(hitCollider, damage);
 
