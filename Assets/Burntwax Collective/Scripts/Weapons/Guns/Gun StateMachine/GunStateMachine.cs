@@ -29,6 +29,10 @@ namespace Burntwax
         public List<GunScriptableObject> CurrentGuns = new();
         public List<GameObject> OrderedGuns = new();
 
+        [Header("Save/Load Catalog")]
+        [Tooltip("Every gun asset that can be restored from a save file. IDs must be unique.")]
+        [SerializeField] private List<GunScriptableObject> gunCatalog = new();
+
         [Header("Current Gun")]
         public GunScriptableObject ActiveGunScriptable;
         public GameObject CurrentGunModel;
@@ -47,6 +51,7 @@ namespace Burntwax
         public GunStateFactory states;
 
         private readonly Dictionary<int, GunScriptableObject> gunLookup = new();
+        private readonly Dictionary<int, GunScriptableObject> gunCatalogLookup = new();
 
         private AudioSource playerAudioSource;
 
@@ -78,6 +83,7 @@ namespace Burntwax
             crosshair = player.GetComponentInChildren<PlayerCrosshair>();
             playerAudioSource = player.GetComponent<AudioSource>();
 
+            RebuildGunCatalogLookup();
             RebuildGunLookup();
 
             arsenal = GetComponent<Arsenal>();
@@ -102,6 +108,25 @@ namespace Burntwax
                 GunScriptableObject gun = CurrentGuns[i];
                 if (gun != null)
                     gunLookup[gun.ID] = gun;
+            }
+        }
+
+        private void RebuildGunCatalogLookup()
+        {
+            gunCatalogLookup.Clear();
+
+            if (gunCatalog == null)
+                return;
+
+            foreach (GunScriptableObject gun in gunCatalog)
+            {
+                if (gun == null)
+                    continue;
+
+                if (gunCatalogLookup.ContainsKey(gun.ID))
+                    Debug.LogWarning($"Gun save catalog contains duplicate ID {gun.ID} ('{gun.name}').", this);
+
+                gunCatalogLookup[gun.ID] = gun;
             }
         }
 
@@ -400,28 +425,29 @@ namespace Burntwax
 
         public void SaveData(ref GunSaveData data)
         {
-            data.CurrentGuns = new List<GunScriptableObject>(CurrentGuns);
-            data.ActiveGunScriptable = ActiveGunScriptable;
-            data.GunModel = CurrentGunModel;
             data.currentID = currentID;
+            data.activeGunID = ActiveGunScriptable != null ? ActiveGunScriptable.ID : -1;
+            data.ownedGunIDs = new List<int>();
+            data.ammo = new List<GunAmmoSaveData>();
 
-            int count = CurrentGuns.Count;
-            data.clipAmmo = new List<int>(count);
-            data.reserveAmmo = new List<int>(count);
+            if (CurrentGuns == null)
+                return;
 
-            for (int i = 0; i < count; i++)
+            foreach (GunScriptableObject gun in CurrentGuns)
             {
-                GunScriptableObject gun = CurrentGuns[i];
-                if (gun != null)
+                if (gun == null)
+                    continue;
+
+                data.ownedGunIDs.Add(gun.ID);
+                data.ammo.Add(new GunAmmoSaveData
                 {
-                    data.clipAmmo.Add(gun.AmmoConfig.currentClip);
-                    data.reserveAmmo.Add(gun.AmmoConfig.currentAmmo);
-                }
-                else
-                {
-                    data.clipAmmo.Add(0);
-                    data.reserveAmmo.Add(0);
-                }
+                    gunID = gun.ID,
+                    clipAmmo = gun.AmmoConfig.currentClip,
+                    reserveAmmo = gun.AmmoConfig.currentAmmo
+                });
+
+                if (!gunCatalogLookup.ContainsKey(gun.ID))
+                    Debug.LogWarning($"Owned gun '{gun.name}' (ID {gun.ID}) is not in the save/load catalog and cannot be restored after restarting the game.", this);
             }
         }
 
@@ -429,15 +455,40 @@ namespace Burntwax
         {
             // Restore inventory without activating anything — Arsenal handles activation
             
-            CurrentGuns = data.CurrentGuns ?? new List<GunScriptableObject>();
+            if (gunCatalogLookup.Count == 0)
+                RebuildGunCatalogLookup();
+
+            CurrentGuns = new List<GunScriptableObject>();
+
+            if (data.ownedGunIDs != null)
+            {
+                foreach (int gunID in data.ownedGunIDs)
+                {
+                    if (gunCatalogLookup.TryGetValue(gunID, out GunScriptableObject gun) && gun != null)
+                    {
+                        if (!CurrentGuns.Contains(gun))
+                            CurrentGuns.Add(gun);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Saved gun ID {gunID} is not present in the GunStateMachine save/load catalog.", this);
+                    }
+                }
+            }
+
             RebuildGunLookup();
 
             // Restore ammo counts
-            int ammoCount = Mathf.Min(CurrentGuns.Count, data.clipAmmo?.Count ?? 0, data.reserveAmmo?.Count ?? 0);
-            for (int i = 0; i < ammoCount; i++)
+            if (data.ammo == null)
+                return;
+
+            foreach (GunAmmoSaveData ammoData in data.ammo)
             {
-                CurrentGuns[i].AmmoConfig.currentClip = data.clipAmmo[i];
-                CurrentGuns[i].AmmoConfig.currentAmmo = data.reserveAmmo[i];
+                if (!gunLookup.TryGetValue(ammoData.gunID, out GunScriptableObject gun) || gun == null)
+                    continue;
+
+                gun.AmmoConfig.currentClip = ammoData.clipAmmo;
+                gun.AmmoConfig.currentAmmo = ammoData.reserveAmmo;
             }
         }
 
@@ -447,7 +498,7 @@ namespace Burntwax
         /// </summary>
         public void SetupAfterLoad(GunSaveData data)
         {
-            if (data.ActiveGunScriptable == null)
+            if (!gunLookup.TryGetValue(data.activeGunID, out GunScriptableObject savedActiveGun) || savedActiveGun == null)
             {
                 if (CurrentGunModel != null)
                     CurrentGunModel.SetActive(false);
@@ -459,7 +510,7 @@ namespace Burntwax
                 return;
             }
 
-            ActiveGunScriptable = data.ActiveGunScriptable;
+            ActiveGunScriptable = savedActiveGun;
             currentID = data.currentID;
 
             SetupGun();
@@ -474,11 +525,17 @@ namespace Burntwax
     [System.Serializable]
     public struct GunSaveData
     {
-        public List<GunScriptableObject> CurrentGuns;
-        public GameObject GunModel;
-        public GunScriptableObject ActiveGunScriptable;
+        public List<int> ownedGunIDs;
+        public int activeGunID;
         public int currentID;
-        public List<int> clipAmmo;
-        public List<int> reserveAmmo;
+        public List<GunAmmoSaveData> ammo;
+    }
+
+    [System.Serializable]
+    public struct GunAmmoSaveData
+    {
+        public int gunID;
+        public int clipAmmo;
+        public int reserveAmmo;
     }
 }

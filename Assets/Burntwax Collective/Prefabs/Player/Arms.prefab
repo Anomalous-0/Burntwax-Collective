@@ -5214,6 +5214,11 @@ MonoBehaviour:
   - {fileID: 3184336020973318531}
   - {fileID: 1264225467186196250}
   - {fileID: 9151681469183567627}
+  gunCatalog:
+  - {fileID: 11400000, guid: c2f1d42b3210893408d68408ee3faee5, type: 2}
+  - {fileID: 11400000, guid: c005e2334a632c24ea68bd9c423e0c72, type: 2}
+  - {fileID: 11400000, guid: 8dbed6a7b55c222418bf6fd85f666cbd, type: 2}
+  - {fileID: 11400000, guid: cdf736977e88a034280829a6d0d61d7e, type: 2}
   ActiveGunScriptable: {fileID: 0}
   CurrentGunModel: {fileID: 0}
   recoil: {fileID: 5465173363379185540}
@@ -5326,6 +5331,8 @@ MonoBehaviour:
   camShake: {fileID: 3983912548163265846}
   handIK: {fileID: 3406981270840785279}
   KatanaScriptable: {fileID: 0}
+  katanaCatalog:
+  - {fileID: 11400000, guid: 6ca5b7445e1dfe944b42fa3c2c82e715, type: 2}
   Katana: {fileID: 7120825543759020784}
   anim: {fileID: 8982893999631422072}
   readyHash: 0

@@ -14,6 +14,9 @@ namespace Burntwax
 
         
 
+        [Tooltip("Stable save/load ID. Every katana asset must use a unique value.")]
+        public int ID;
+
         [Header("General")]
 
         [HideInInspector] public GameObject Model;

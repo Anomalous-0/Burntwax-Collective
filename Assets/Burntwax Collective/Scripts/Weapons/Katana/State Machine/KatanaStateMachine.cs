@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Burntwax
 {
@@ -47,6 +48,10 @@ namespace Burntwax
         [Space]
         public KatanaScriptableObject KatanaScriptable;
 
+        [Header("Save/Load Catalog")]
+        [Tooltip("Every katana asset that can be restored from a save file. IDs must be unique.")]
+        [SerializeField] private List<KatanaScriptableObject> katanaCatalog = new();
+
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
@@ -82,6 +87,8 @@ namespace Burntwax
 
         [HideInInspector] public bool selectedByArsenal;
 
+        private readonly Dictionary<int, KatanaScriptableObject> katanaCatalogLookup = new();
+
         private void Awake()
         {
             states = new KatanaStateFactory(this);
@@ -101,6 +108,26 @@ namespace Burntwax
 
             arsenal = GetComponent<Arsenal>();
             katanaDriver = GetComponent<KatanaDriver>();
+            RebuildKatanaCatalogLookup();
+        }
+
+        private void RebuildKatanaCatalogLookup()
+        {
+            katanaCatalogLookup.Clear();
+
+            if (katanaCatalog == null)
+                return;
+
+            foreach (KatanaScriptableObject katana in katanaCatalog)
+            {
+                if (katana == null)
+                    continue;
+
+                if (katanaCatalogLookup.ContainsKey(katana.ID))
+                    Debug.LogWarning($"Katana save catalog contains duplicate ID {katana.ID} ('{katana.name}').", this);
+
+                katanaCatalogLookup[katana.ID] = katana;
+            }
         }
 
         private void Update()
@@ -258,14 +285,33 @@ namespace Burntwax
 
         public void SaveData(ref KatanaSaveData data)
         {
-            data.KatanaScriptable = KatanaScriptable;
-            data.ActiveKatanaScriptable = ActiveKatanaScriptable;
+            data.ownsKatana = KatanaScriptable != null;
+            data.katanaID = KatanaScriptable != null ? KatanaScriptable.ID : -1;
+
+            if (KatanaScriptable != null && !katanaCatalogLookup.ContainsKey(KatanaScriptable.ID))
+                Debug.LogWarning($"Owned katana '{KatanaScriptable.name}' (ID {KatanaScriptable.ID}) is not in the save/load catalog and cannot be restored after restarting the game.", this);
         }
 
         public void LoadData(KatanaSaveData data)
         {
             // Restore the katana reference (whether or not it's the active weapon)
-            KatanaScriptable = data.KatanaScriptable;
+            if (!data.ownsKatana)
+            {
+                KatanaScriptable = null;
+                return;
+            }
+
+            if (katanaCatalogLookup.Count == 0)
+                RebuildKatanaCatalogLookup();
+
+            if (!katanaCatalogLookup.TryGetValue(data.katanaID, out KatanaScriptableObject savedKatana))
+            {
+                KatanaScriptable = null;
+                Debug.LogWarning($"Saved katana ID {data.katanaID} is not present in the KatanaStateMachine save/load catalog.", this);
+                return;
+            }
+
+            KatanaScriptable = savedKatana;
         }
 
         /// <summary>
@@ -306,7 +352,7 @@ namespace Burntwax
     [System.Serializable]
     public struct KatanaSaveData
     {
-        public KatanaScriptableObject KatanaScriptable;
-        public KatanaScriptableObject ActiveKatanaScriptable;
+        public bool ownsKatana;
+        public int katanaID;
     }
 }

@@ -40,16 +40,15 @@ namespace Burntwax
             basicList = new List<BasicData>();
             destructableList = new List<DestructableData>();
 
+            // Loading can begin as soon as the sceneLoaded event fires, which is
+            // before Start. Build this lookup in Awake so restored objects always
+            // have access to their prefab definitions.
+            BuildPrefabLookup();
+
         }
 
         void Start()
         {
-            foreach (var prefab in prefabs)
-            {
-                var id = prefab.prefabAsset.GetComponent<PrefabGuid>().guid;
-                prefabToIDMap[id] = prefab;
-            }
-
             if (GameManager.Instance && GameManager.Instance.IsLoadingFromSave)
                 return;
             else if(GameManager.Instance == null)
@@ -60,13 +59,45 @@ namespace Burntwax
             PrefabGuid[] sceneObjects = FindObjectsByType<PrefabGuid>();
             foreach (var obj in sceneObjects)
             {
-                objects.Add(obj.gameObject);
+                Register(obj.gameObject);
+            }
+        }
+
+        private void BuildPrefabLookup()
+        {
+            prefabToIDMap.Clear();
+
+            if (prefabs == null)
+                return;
+
+            foreach (var prefab in prefabs)
+            {
+                if (prefab == null || prefab.prefabAsset == null)
+                {
+                    Debug.LogWarning("ObjectManager has an empty prefab configuration entry.", this);
+                    continue;
+                }
+
+                PrefabGuid prefabGuid = prefab.prefabAsset.GetComponent<PrefabGuid>();
+                if (prefabGuid == null || string.IsNullOrWhiteSpace(prefabGuid.guid))
+                {
+                    Debug.LogWarning($"Saveable prefab '{prefab.prefabAsset.name}' is missing a valid PrefabGuid.", prefab.prefabAsset);
+                    continue;
+                }
+
+                if (prefabToIDMap.ContainsKey(prefabGuid.guid))
+                    Debug.LogWarning($"Duplicate save prefab GUID '{prefabGuid.guid}' found on '{prefab.prefabAsset.name}'.", prefab.prefabAsset);
+
+                prefabToIDMap[prefabGuid.guid] = prefab;
             }
         }
 
 
         public void Register(GameObject obj)
         {
+            if (obj == null || objects.Contains(obj))
+                return;
+
             objects.Add(obj);
             // if (obj.layer == LayerMask.NameToLayer("Consumable") ||
             //    (obj.layer == LayerMask.NameToLayer("Default") && obj.GetComponent<Rigidbody>()))
@@ -87,6 +118,10 @@ namespace Burntwax
 
         public void SaveData(ref ObjectConsumableData data)
         {
+            consumableList ??= new List<ConsumableData>();
+            basicList ??= new List<BasicData>();
+            destructableList ??= new List<DestructableData>();
+
             consumableList.Clear();
             basicList.Clear();
             destructableList.Clear();
@@ -104,21 +139,24 @@ namespace Burntwax
                 if (prefab == null) continue;
                 string id = prefab.guid;
 
+                Rigidbody rb = objects[i].GetComponent<Rigidbody>();
+                Destructable destructable = objects[i].GetComponent<Destructable>();
 
-                if (objects[i].layer == LayerMask.NameToLayer("Consumable") || (objects[i].layer == LayerMask.NameToLayer("Default") && objects[i].GetComponent<Rigidbody>()))
+                // Component capabilities determine the saved state. A layer alone
+                // does not guarantee that an object has health (Target is one
+                // example), so destructible objects are identified by interface.
+                if (destructable != null)
                 {
-                    var rb = objects[i].GetComponent<Rigidbody>();
-
-                    consumableList.Add(new ConsumableData
+                    destructableList.Add(new DestructableData
                     {
                         guid = id,
                         scale = objects[i].transform.localScale,
-                        position = rb.position,
-                        rotation = rb.rotation.normalized,
-                        velocity = rb.linearVelocity
+                        position = rb != null ? rb.position : objects[i].transform.position,
+                        rotation = rb != null ? rb.rotation.normalized : objects[i].transform.rotation.normalized,
+                        velocity = rb != null ? rb.linearVelocity : Vector3.zero,
+                        currentHealth = destructable.CurrentHealth
                     });
                 }
-
                 else if (objects[i].layer == LayerMask.NameToLayer("Basic"))
                 {
                     basicList.Add(new BasicData
@@ -130,20 +168,25 @@ namespace Burntwax
                     });
                     // Debug.Log($"Saved Basic Object: {id} at Position: {objects[i].transform.position}");
                 }
-
-                else if (objects[i].layer == LayerMask.NameToLayer("Destructable"))
+                else if (rb != null)
                 {
-                    var rb = objects[i].GetComponent<Rigidbody>();
-                    var destructable = objects[i].GetComponent<Destructable>();
-
-                    destructableList.Add(new DestructableData
+                    consumableList.Add(new ConsumableData
                     {
                         guid = id,
                         scale = objects[i].transform.localScale,
                         position = rb.position,
                         rotation = rb.rotation.normalized,
-                        velocity = rb.linearVelocity,
-                        currentHealth = destructable.CurrentHealth
+                        velocity = rb.linearVelocity
+                    });
+                }
+                else
+                {
+                    basicList.Add(new BasicData
+                    {
+                        guid = id,
+                        scale = objects[i].transform.localScale,
+                        position = objects[i].transform.position,
+                        rotation = objects[i].transform.rotation
                     });
                 }
             }
@@ -156,6 +199,11 @@ namespace Burntwax
         public void LoadData(ObjectConsumableData data)
         {
 
+            // Awake normally builds this. Rebuilding here also makes direct calls
+            // safe if Unity lifecycle order changes during development.
+            if (prefabToIDMap.Count == 0)
+                BuildPrefabLookup();
+
             PrefabGuid[] existingObjects = FindObjectsByType<PrefabGuid>();
             foreach (var existing in existingObjects)
             {
@@ -164,41 +212,60 @@ namespace Burntwax
             }
             objects.Clear();
 
-            consumableList = data.consumableList;
-            basicList = data.basicList;
-            destructableList = data.destructableList; ;
+            consumableList = data.consumableList ?? new List<ConsumableData>();
+            basicList = data.basicList ?? new List<BasicData>();
+            destructableList = data.destructableList ?? new List<DestructableData>();
 
             foreach (var obj in consumableList)
             {
                 if (prefabToIDMap.TryGetValue(obj.guid, out PrefabData prefab))
                 {
-                    GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
+                    Transform parent = prefab.parent != null ? prefab.parent.transform : null;
+                    GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, parent);
                     newObj.transform.localScale = obj.scale;
-                    newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
-                    objects.Add(newObj);
+                    Rigidbody rb = newObj.GetComponent<Rigidbody>();
+                    if (rb != null && !rb.isKinematic)
+                        rb.linearVelocity = obj.velocity;
+                    Register(newObj);
                 }
+                else
+                    Debug.LogWarning($"No configured prefab found for saved GUID '{obj.guid}'.", this);
             }
 
             foreach (var obj in basicList)
             {
                 if (prefabToIDMap.TryGetValue(obj.guid, out PrefabData prefab))
                 {
-                    GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
+                    Transform parent = prefab.parent != null ? prefab.parent.transform : null;
+                    GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, parent);
                     newObj.transform.localScale = obj.scale;
-                    objects.Add(newObj);
+                    Register(newObj);
                 }
+                else
+                    Debug.LogWarning($"No configured prefab found for saved GUID '{obj.guid}'.", this);
             }
 
             foreach (var obj in destructableList)
             {
                 if (prefabToIDMap.TryGetValue(obj.guid, out PrefabData prefab))
                 {
-                    GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, prefab.parent.transform);
+                    Transform parent = prefab.parent != null ? prefab.parent.transform : null;
+                    GameObject newObj = Instantiate(prefab.prefabAsset, obj.position, obj.rotation, parent);
                     newObj.transform.localScale = obj.scale;
-                    newObj.GetComponent<Rigidbody>().linearVelocity = obj.velocity;
-                    newObj.GetComponent<Destructable>().CurrentHealth = obj.currentHealth;
-                    objects.Add(newObj);
+                    Rigidbody rb = newObj.GetComponent<Rigidbody>();
+                    if (rb != null && !rb.isKinematic)
+                        rb.linearVelocity = obj.velocity;
+
+                    Destructable destructable = newObj.GetComponent<Destructable>();
+                    if (destructable != null)
+                        destructable.CurrentHealth = obj.currentHealth;
+                    else
+                        Debug.LogWarning($"Saved destructible prefab '{newObj.name}' no longer implements Destructable.", newObj);
+
+                    Register(newObj);
                 }
+                else
+                    Debug.LogWarning($"No configured prefab found for saved GUID '{obj.guid}'.", this);
             }
 
 
