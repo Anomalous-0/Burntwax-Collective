@@ -4,8 +4,8 @@ using UnityEngine;
 namespace Burntwax
 {
     /// <summary>
-    /// Detects targets crossed by the curved blade during its active damage window.
-    /// This component only reports detections
+    /// Detects targets crossed by the curved blade during its active damage window
+    /// and applies one slash-damage event to each target per window.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class KatanaBladeDetector : MonoBehaviour
@@ -36,6 +36,8 @@ namespace Burntwax
 
         private Vector3[] previousPointPositions;
         private bool wasDamageWindowActive;
+        private Vector3 currentBladeCenter;
+        private Vector3 currentSwingDirection;
 
         private void Awake()
         {
@@ -62,11 +64,13 @@ namespace Burntwax
             {
                 detectedTargets.Clear();
                 CaptureCurrentPositions();
+                UpdateHitContext();
                 CheckCurrentBladeSegments();
                 wasDamageWindowActive = true;
                 return;
             }
 
+            UpdateHitContext();
             CheckCurrentBladeSegments();
             SweepBladePoints();
             SweepSegmentMidpoints();
@@ -164,12 +168,76 @@ namespace Burntwax
             if (!detectedTargets.Add(target))
                 return;
 
+            bool damageApplied = false;
+            KatanaScriptableObject activeKatana = stateMachine.ActiveKatanaScriptable;
+            KatanaDamageConfig damageConfig = activeKatana != null
+                ? activeKatana.DamageConfig
+                : null;
+
+            if (damageConfig != null)
+            {
+                Vector3 hitPoint = detectedCollider.ClosestPoint(currentBladeCenter);
+                Vector3 hitNormal = hitPoint - currentBladeCenter;
+                if (hitNormal.sqrMagnitude <= Mathf.Epsilon)
+                    hitNormal = -currentSwingDirection;
+
+                GameObject instigator = stateMachine.player != null
+                    ? stateMachine.player
+                    : stateMachine.gameObject;
+
+                DamageInfo damage = new DamageInfo(
+                    damageConfig.GetDamage(stateMachine.CurrentAttackStrength),
+                    DamageType.Slash,
+                    hitPoint,
+                    hitNormal,
+                    currentSwingDirection,
+                    gameObject,
+                    instigator);
+
+                damageApplied = DamageResolver.TryApplyDamage(
+                    detectedCollider,
+                    damage);
+            }
+
             if (logDetections)
             {
                 Debug.Log(
-                    $"[KatanaBladeDetector] Detected {target.name}",
+                    $"[KatanaBladeDetector] Detected {target.name} "
+                        + $"(damage applied: {damageApplied})",
                     target);
             }
+        }
+
+        private void UpdateHitContext()
+        {
+            Vector3 bladeCenter = Vector3.zero;
+            Vector3 totalMovement = Vector3.zero;
+            int validPointCount = 0;
+
+            for (int i = 0; i < bladePoints.Length; i++)
+            {
+                if (bladePoints[i] == null)
+                    continue;
+
+                Vector3 currentPosition = bladePoints[i].position;
+                bladeCenter += currentPosition;
+                totalMovement += currentPosition - previousPointPositions[i];
+                validPointCount++;
+            }
+
+            currentBladeCenter = validPointCount > 0
+                ? bladeCenter / validPointCount
+                : transform.position;
+
+            if (totalMovement.sqrMagnitude > Mathf.Epsilon)
+            {
+                currentSwingDirection = totalMovement.normalized;
+                return;
+            }
+
+            currentSwingDirection = stateMachine.player != null
+                ? stateMachine.player.transform.forward
+                : stateMachine.transform.forward;
         }
 
         private bool HasEnoughBladePoints()
