@@ -8,6 +8,8 @@ namespace Burntwax
     {
         private Rigidbody heldBody;
         private bool wasKinematic;
+        private Quaternion rotationOffsetFromHoldPoint;
+        private bool hasRotationOffset;
 
         public GloveHoldState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
@@ -28,6 +30,14 @@ namespace Burntwax
                 heldBody.angularVelocity = Vector3.zero;
                 heldBody.isKinematic = true;
                 heldBody.interpolation = RigidbodyInterpolation.None;
+
+                if (Ctx.restPos != null)
+                {
+                    rotationOffsetFromHoldPoint =
+                        Quaternion.Inverse(Ctx.restPos.transform.rotation)
+                        * heldBody.rotation;
+                    hasRotationOffset = true;
+                }
             }
 
             InitializeSubState();
@@ -93,9 +103,21 @@ namespace Burntwax
                 Ctx.restPos.transform.position,
                 lerpAmount);
 
-            // Slow orbit-in-hand spin so the held object reads as actively suspended.
-            Ctx.heldObject.transform.Rotate(
-                Vector3.up * (Ctx.HoldSpinSpeed * Time.deltaTime), Space.Self);
+            if (!hasRotationOffset)
+            {
+                rotationOffsetFromHoldPoint =
+                    Quaternion.Inverse(Ctx.restPos.transform.rotation)
+                    * Ctx.heldObject.transform.rotation;
+                hasRotationOffset = true;
+            }
+
+            // Keep the grabbed orientation relative to the player while preserving
+            // the slow local hover spin that makes the object read as suspended.
+            rotationOffsetFromHoldPoint *= Quaternion.AngleAxis(
+                Ctx.HoldSpinSpeed * Time.deltaTime,
+                Vector3.up);
+            Ctx.heldObject.transform.rotation =
+                Ctx.restPos.transform.rotation * rotationOffsetFromHoldPoint;
         }
     }
 }
