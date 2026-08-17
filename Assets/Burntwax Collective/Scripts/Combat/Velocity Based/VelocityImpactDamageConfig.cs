@@ -19,6 +19,9 @@ namespace Burntwax
         [Tooltip("Fixed base damage dealt whenever an armed impact passes the speed gate.")]
         [SerializeField, Min(0f)] private float damage = 20f;
 
+        [Tooltip("Fixed Impact damage the thrown object receives from its own qualifying collision. Set to 0 to disable self-damage.")]
+        [SerializeField, Min(0f)] private float damageTakenOnImpact = 20f;
+
         [Header("Armed behavior")]
         [Tooltip("Seconds before a thrown object becomes harmless. Set to 0 to remain armed until its impacts are spent.")]
         [SerializeField, Min(0f)] private float armedLifetime = 5f;
@@ -28,6 +31,7 @@ namespace Burntwax
 
         public float MinimumImpactSpeed => minimumImpactSpeed;
         public float Damage => damage;
+        public float DamageTakenOnImpact => damageTakenOnImpact;
         public float ArmedLifetime => armedLifetime;
         public int MaximumImpacts => maximumImpacts;
 
@@ -40,6 +44,7 @@ namespace Burntwax
         {
             minimumImpactSpeed = Mathf.Max(0f, minimumImpactSpeed);
             damage = Mathf.Max(0f, damage);
+            damageTakenOnImpact = Mathf.Max(0f, damageTakenOnImpact);
             armedLifetime = Mathf.Max(0f, armedLifetime);
             maximumImpacts = Mathf.Max(1, maximumImpacts);
         }

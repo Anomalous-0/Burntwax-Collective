@@ -39,7 +39,7 @@ namespace Burntwax
             set => currentHealth = Mathf.Clamp(value, 0f, maxHealth);
         }
 
-        public void ApplyDamage(DamageInfo damage)
+        public virtual void ApplyDamage(DamageInfo damage)
         {
             if (IsBroken
                 || damage.Amount <= 0f

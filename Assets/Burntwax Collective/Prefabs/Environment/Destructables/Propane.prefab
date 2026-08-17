@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &100000
+--- !u!1 &4313691801465481320
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,51 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 400000}
-  - component: {fileID: 3300000}
-  - component: {fileID: 2300000}
-  - component: {fileID: -9153457256246313240}
-  - component: {fileID: 3854084933285805719}
-  - component: {fileID: 8043384798801752794}
-  - component: {fileID: 747270363771587189}
-  - component: {fileID: 8640030263490712852}
-  m_Layer: 0
+  - component: {fileID: 5330551178805509102}
+  - component: {fileID: 3192973456024148921}
+  - component: {fileID: 7605765867816484758}
+  - component: {fileID: 3071530407730138527}
+  m_Layer: 7
   m_Name: Propane_Tank_Large
-  m_TagString: Untagged
+  m_TagString: Metal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &400000
+--- !u!4 &5330551178805509102
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 4313691801465481320}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.81}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!33 &3300000
+  m_Father: {fileID: 7795125079660477330}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &3192973456024148921
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 4313691801465481320}
   m_Mesh: {fileID: 4300000, guid: 98fc9a80f1406504aa6c2ea1d8d50f06, type: 3}
---- !u!23 &2300000
+--- !u!23 &7605765867816484758
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 4313691801465481320}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -95,13 +91,13 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &-9153457256246313240
+--- !u!64 &3071530407730138527
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 4313691801465481320}
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -117,15 +113,52 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 98fc9a80f1406504aa6c2ea1d8d50f06, type: 3}
---- !u!54 &3854084933285805719
+--- !u!1 &5218505677414877962
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7795125079660477330}
+  - component: {fileID: 4522137456037803207}
+  - component: {fileID: 1654998996253454262}
+  - component: {fileID: 4269750541574541789}
+  - component: {fileID: 9056509028880618470}
+  - component: {fileID: 4747924488795029042}
+  m_Layer: 7
+  m_Name: Propane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7795125079660477330
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218505677414877962}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710677}
+  m_LocalPosition: {x: 54.34, y: -0.90566504, z: -27.53}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5330551178805509102}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &4522137456037803207
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 5218505677414877962}
   serializedVersion: 5
-  m_Mass: 1
+  m_Mass: 6
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -144,13 +177,13 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!114 &8043384798801752794
+--- !u!114 &1654998996253454262
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 5218505677414877962}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
@@ -159,13 +192,13 @@ MonoBehaviour:
   minimumAudioSpeed: 0.5
   majorImpactAudioSpeed: 7
   audioCooldown: 0.1
---- !u!114 &747270363771587189
+--- !u!114 &4269750541574541789
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 5218505677414877962}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
@@ -173,16 +206,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
   behavior: 0
---- !u!114 &8640030263490712852
+--- !u!114 &9056509028880618470
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
+  m_GameObject: {fileID: 5218505677414877962}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 591b17ccc74935f448e7b9403853c51f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.PrefabGuid
   guid: c80daa49-92e1-4951-b7d1-dfa89b9b8c0c
+--- !u!114 &4747924488795029042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218505677414877962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0abed8e2a7fd4aca9238673f2b51ea09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.Explosive
+  maxHealth: 10
+  currentHealth: 10
+  acceptedDamageTypes: -1
+  instantBreakDamageTypes: 4
+  minimumDamagePerHit: 0
+  destroyObjectOnBreak: 1
+  explosionConfig: {fileID: 11400000, guid: 6422e6f8cdcd48f69cc0a80c31093740, type: 2}
+  explosionOrigin: {fileID: 0}

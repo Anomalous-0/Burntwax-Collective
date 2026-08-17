@@ -32,12 +32,14 @@ namespace Burntwax
         public GameObject Instigator { get; private set; }
 
         private RigidbodyImpactReporter impactReporter;
+        private Collider selfDamageCollider;
         private int remainingImpacts;
         private float disarmTime = -1f;
 
         private void Awake()
         {
             impactReporter = GetComponent<RigidbodyImpactReporter>();
+            selfDamageCollider = FindOwnedCollider();
         }
 
         private void OnEnable()
@@ -130,6 +132,8 @@ namespace Burntwax
             impact.MarkPresentationHandled();
             HitResolver.ResolveHit(hitCollider, damage);
 
+            ApplySelfDamage(impact, hitCollider);
+
             remainingImpacts--;
             if (remainingImpacts <= 0)
                 Disarm();
@@ -143,6 +147,51 @@ namespace Burntwax
             Transform instigatorTransform = Instigator.transform;
             return other.gameObject == Instigator
                 || other.transform.IsChildOf(instigatorTransform);
+        }
+
+        private void ApplySelfDamage(
+            RigidbodyImpact impact,
+            Collider hitCollider)
+        {
+            if (config.DamageTakenOnImpact <= 0f)
+                return;
+
+            if (selfDamageCollider == null)
+                selfDamageCollider = FindOwnedCollider();
+
+            if (selfDamageCollider == null)
+                return;
+
+            DamageInfo selfDamage = new DamageInfo(
+                config.DamageTakenOnImpact,
+                DamageType.Impact,
+                impact.Point,
+                -impact.Normal,
+                -impact.Direction,
+                hitCollider.gameObject,
+                Instigator);
+
+            // The outward hit already owns presentation and Unity already resolved
+            // collision momentum. Only route gameplay damage back into this object.
+            DamageResolver.TryApplyDamage(selfDamageCollider, selfDamage);
+        }
+
+        private Collider FindOwnedCollider()
+        {
+            Rigidbody body = GetComponent<Rigidbody>();
+            Collider[] colliders = GetComponentsInChildren<Collider>(true);
+
+            foreach (Collider candidate in colliders)
+            {
+                if (candidate != null
+                    && !candidate.isTrigger
+                    && candidate.attachedRigidbody == body)
+                {
+                    return candidate;
+                }
+            }
+
+            return null;
         }
 
         private void OnDisable()

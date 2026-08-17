@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Soft Object Impact
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageConfig
   minimumImpactSpeed: 7
-  damage: 3
+  damage: 2
+  damageTakenOnImpact: 0
   armedLifetime: 5
   maximumImpacts: 2

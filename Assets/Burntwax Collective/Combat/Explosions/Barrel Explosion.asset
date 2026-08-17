@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99237da359dc49a48dbd6dd94717edb0, type: 3}
   m_Name: Barrel Explosion
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.ExplosionConfig
-  radius: 6
-  maximumDamage: 30
+  radius: 4
+  maximumDamage: 12
   damageFalloff:
     serializedVersion: 2
     m_Curve:
@@ -38,19 +38,28 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maximumImpulse: 8
+  maximumImpulse: 15
   impulseFalloff:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.009855547
       value: 1
-      inSlope: -1
-      outSlope: -1
+      inSlope: 0.006329845
+      outSlope: 0.006329845
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.3475398
+    - serializedVersion: 3
+      time: 0.6914435
+      value: 0.648941
+      inSlope: -1.160456
+      outSlope: -1.160456
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 0

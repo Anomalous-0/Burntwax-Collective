@@ -303,7 +303,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.3, z: 0.1}
+  m_LocalScale: {x: 0.2, y: 0.3, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8846101969242388851}
@@ -435,3 +435,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
+  behavior: 0
