@@ -101,10 +101,13 @@ GameObject:
   - component: {fileID: 2534855556683237600}
   - component: {fileID: 1927820067518834455}
   - component: {fileID: 8630092187043240614}
+  - component: {fileID: 2190250465274558281}
   - component: {fileID: -377070453218575813}
   - component: {fileID: 5758259747828505683}
   - component: {fileID: 4211015344514638723}
   - component: {fileID: 4299280609273735343}
+  - component: {fileID: 8999299518910622010}
+  - component: {fileID: 995510972910738561}
   m_Layer: 11
   m_Name: Health Pickup
   m_TagString: Ground
@@ -157,6 +160,27 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &2190250465274558281
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -230,3 +254,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: c13819f28dfeee44da00d0cb3eb1758d, type: 2}
+  behavior: 0
+--- !u!114 &8999299518910622010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8923cb6268c917248993d7e1083d2ecc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  continuous: 0
+  onInteract:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9176256781164373382}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  ID: 0
+--- !u!114 &995510972910738561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1cc2570848b47ae8faeb54cc46cd94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.GloveHoldProfile
+  holdPose: 0
+  localPositionOffset: {x: 0, y: 0, z: 0.06}
+  overrideRotation: 1
+  localHeldRotation: {x: 30, y: 0, z: 0}
+  hoverSpinMultiplier: 1

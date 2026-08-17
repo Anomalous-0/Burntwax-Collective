@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1909682022586496250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3280453096729169439}
+  m_Layer: 7
+  m_Name: FuseLoc
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3280453096729169439
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1909682022586496250}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.936}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7795125079660477330}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4313691801465481320
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +158,7 @@ GameObject:
   - component: {fileID: 4269750541574541789}
   - component: {fileID: 9056509028880618470}
   - component: {fileID: 4747924488795029042}
+  - component: {fileID: 2794182754540330546}
   m_Layer: 7
   m_Name: Propane
   m_TagString: Untagged
@@ -142,14 +174,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5218505677414877962}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710677}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 54.34, y: -0.90566504, z: -27.53}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5330551178805509102}
+  - {fileID: 3280453096729169439}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!54 &4522137456037803207
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -231,11 +264,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0abed8e2a7fd4aca9238673f2b51ea09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.Explosive
-  maxHealth: 10
-  currentHealth: 10
+  maxHealth: 20
+  currentHealth: 20
   acceptedDamageTypes: -1
   instantBreakDamageTypes: 4
   minimumDamagePerHit: 0
   destroyObjectOnBreak: 1
   explosionConfig: {fileID: 11400000, guid: 6422e6f8cdcd48f69cc0a80c31093740, type: 2}
   explosionOrigin: {fileID: 0}
+  fuseDuration: 2
+  fuseVfxPrefab: {fileID: 100000, guid: 6a3cb4ac8fa12944ba1233cbec0e9c69, type: 3}
+  fuseVfxOrigin: {fileID: 3280453096729169439}
+--- !u!114 &2794182754540330546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5218505677414877962}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1cc2570848b47ae8faeb54cc46cd94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.GloveHoldProfile
+  holdPose: 0
+  localPositionOffset: {x: 0, y: 0.08, z: 0}
+  overrideRotation: 1
+  localHeldRotation: {x: 28, y: -60, z: 0}
+  hoverSpinMultiplier: 0

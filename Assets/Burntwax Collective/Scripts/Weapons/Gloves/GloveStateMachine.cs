@@ -38,7 +38,7 @@ namespace Burntwax
 
         [Header("States")]
         [SerializeField] private float equipWaitTime = 1f;
-        public bool BlastEndAnim = false;
+        public bool blastWindow = true;
 
         [SerializeField] private bool enterAttract = false;
         [SerializeField] private bool enterCharge = false;
@@ -58,16 +58,22 @@ namespace Burntwax
         [Header("Holding")]
         public GameObject heldObject;
         public GameObject restPos;
+        [Tooltip("Animator state used for objects with the Small hold pose or no GloveHoldProfile.")]
+        [SerializeField] private string smallHoldAnimationState = "hold_Glove";
+        [Tooltip("Animator state used for objects with the Large hold pose. Falls back to the small state when missing.")]
+        [SerializeField] private string largeHoldAnimationState = "hold_large_Glove";
         [Header("Attraction")]
         [Tooltip("How strongly the object corrects toward the arc.")]
         [SerializeField, Min(0f)] private float attractionSteeringAcceleration = 35f;
+        [Tooltip("Closest-range attraction speed. Prevents nearby objects from becoming permanently slow if the player moves away.")]
+        [SerializeField, Min(0f)] private float minimumAttractionVelocity = 3f;
         [Tooltip("Instantaneous mass-independent launch speed applied when attraction begins.")]
         [SerializeField, Min(0f)] private float initialAttractionVelocity = 18f;
         [Tooltip("Objects at this starting distance or farther use full attraction velocity. Closer objects are proportionally slower.")]
         [SerializeField, Min(0.01f)] private float fullAttractionVelocityDistance = 8f;
         [Tooltip("Lower speed the object settles toward after the initial launch.")]
         [SerializeField, Min(0f)] private float attractionCruiseVelocity = 9f;
-        [Tooltip("How quickly the object transitions from its initial velocity to its cruise velocity.")]
+        [Tooltip("How quickly attraction speed adapts when the object's distance changes.")]
         [SerializeField, Min(0f)] private float attractionSlowdownRate = 10f;
         [Header("Attraction Arc")]
         [Tooltip("Where the arc reaches full height. Higher values keep the object rising for longer.")]
@@ -75,6 +81,11 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float arcHeightPerMeter = 0.18f;
         [SerializeField, Min(0f)] private float minimumArcHeight = 0.35f;
         [SerializeField, Min(0f)] private float maximumArcHeight = 1.5f;
+        [Header("Attraction Spin")]
+        [Tooltip("Minimum random angular speed in radians per second while an object is being attracted.")]
+        [SerializeField, Min(0f)] private float minimumAttractionSpin = 1f;
+        [Tooltip("Maximum random angular speed in radians per second while an object is being attracted.")]
+        [SerializeField, Min(0f)] private float maximumAttractionSpin = 4f;
         [SerializeField] private float restDistance = 0.8f;
         [SerializeField] private float holdLerpSpeed = 18f;
         [Tooltip("Spin speed (deg/sec) of the object while it orbits in the hand.")]
@@ -93,6 +104,12 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float katanaLaunchSpeed = 20f;
         [Tooltip("Random tumble applied to the launched object.")]
         [SerializeField, Min(0f)] private float katanaLaunchSpin = 6f;
+
+        [Header("Physical Projectile Aiming")]
+        [Tooltip("Maximum distance checked from the camera center when aiming a launched held object.")]
+        [SerializeField, Min(0.1f)] private float physicalProjectileAimDistance = 100f;
+        [Tooltip("Layers the camera-center aim ray can target.")]
+        [SerializeField] private LayerMask physicalProjectileAimLayers = ~0;
 
         [Header("Charge Blast")]
         [Range(0f, 1f)][SerializeField] private float minChargeSpeed = 0.45f; // player speed scale at full charge
@@ -114,6 +131,7 @@ namespace Burntwax
         // ── Exposed to states ──
         public float EquipWaitTime => equipWaitTime;
         public float AttractionForce => attractionSteeringAcceleration;
+        public float MinimumAttractionVelocity => minimumAttractionVelocity;
         public float InitialAttractionVelocity => initialAttractionVelocity;
         public float FullAttractionVelocityDistance => fullAttractionVelocityDistance;
         public float AttractionCruiseVelocity => attractionCruiseVelocity;
@@ -122,6 +140,8 @@ namespace Burntwax
         public float ArcHeightPerMeter => arcHeightPerMeter;
         public float MinimumArcHeight => minimumArcHeight;
         public float MaximumArcHeight => maximumArcHeight;
+        public float MinimumAttractionSpin => minimumAttractionSpin;
+        public float MaximumAttractionSpin => maximumAttractionSpin;
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
         public float HoldSpinSpeed => holdSpinSpeed;
@@ -155,6 +175,7 @@ namespace Burntwax
         private readonly List<CollisionIgnoreRecord> heldPlayerCollisionIgnores = new();
         private readonly RaycastHit[] detectionHits = new RaycastHit[16];
         private readonly Collider[] secondaryBuffer = new Collider[16];
+        private readonly RaycastHit[] physicalProjectileAimHits = new RaycastHit[16];
         private Arsenal arsenal;
         private MaterialPropertyBlock detectionMpb;
         private Renderer tintedRenderer;
@@ -164,6 +185,7 @@ namespace Burntwax
         private bool waitingToRestorePlayerCollisions;
 
         [HideInInspector] public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
+        private int largeHoldHash;
 
         private void Awake()
         {
@@ -176,7 +198,8 @@ namespace Burntwax
             idleHash = Animator.StringToHash("idle_Glove");
             chargeHash = Animator.StringToHash("charge_blast_Glove");
             blastHash = Animator.StringToHash("blast_Glove");
-            holdHash = Animator.StringToHash("hold_Glove");
+            holdHash = Animator.StringToHash(smallHoldAnimationState);
+            largeHoldHash = Animator.StringToHash(largeHoldAnimationState);
             attractHash = Animator.StringToHash("attract_Glove");
             blastProjectileHash = Animator.StringToHash("blast_projectile_Glove");
 
@@ -203,6 +226,16 @@ namespace Burntwax
         private void FixedUpdate()
         {
             CurrentState?.FixedUpdateStates();
+        }
+
+        public void StartBlast()
+        {
+            blastWindow = true;
+        }
+
+        public void EndBlast()
+        {
+            blastWindow = false;
         }
 
 
@@ -363,17 +396,27 @@ namespace Burntwax
             }
         }
 
-        public void BlastFinished()
-        {
-            BlastEndAnim = true;
-        }
-
 
 
         public void PlayGloveAnimation(int stateHash)
         {
             if (armsAnimator != null && gloveLayerIndex >= 0)
                 armsAnimator.Play(stateHash, gloveLayerIndex, 0f);
+        }
+
+        public void PlayHoldAnimation(GloveHoldPose holdPose)
+        {
+            if (armsAnimator == null || gloveLayerIndex < 0)
+                return;
+
+            int requestedHash = holdPose == GloveHoldPose.Large
+                ? largeHoldHash
+                : holdHash;
+
+            if (!armsAnimator.HasState(gloveLayerIndex, requestedHash))
+                requestedHash = holdHash;
+
+            armsAnimator.Play(requestedHash, gloveLayerIndex, 0f);
         }
 
         public void SetChargeSlow(float chargeNormalized)
@@ -538,14 +581,13 @@ namespace Burntwax
                     if (playerCamera == null)
                         playerCamera = Camera.main;
 
-                    Vector3 forward = playerCamera != null
-                        ? playerCamera.transform.forward
-                        : transform.forward;
+                    Vector3 launchDirection = GetPhysicalProjectileAimDirection(
+                        heldBody.worldCenterOfMass);
 
                     // Attracting keeps the body dynamic; a held body is kinematic — make sure it's
                     // dynamic before we hand it a velocity.
                     heldBody.isKinematic = false;
-                    heldBody.linearVelocity = forward * katanaLaunchSpeed;
+                    heldBody.linearVelocity = launchDirection * katanaLaunchSpeed;
                     heldBody.angularVelocity = Random.insideUnitSphere * katanaLaunchSpin;
 
                     // Only a deliberate high-speed launch becomes an attack. Objects without
@@ -563,6 +605,74 @@ namespace Burntwax
             }
 
             DropHeldObjectWithCollisionDelay();
+        }
+
+        private Vector3 GetPhysicalProjectileAimDirection(
+            Vector3 projectileOrigin)
+        {
+            if (playerCamera == null)
+                playerCamera = Camera.main;
+
+            Vector3 rayOrigin = playerCamera != null
+                ? playerCamera.transform.position
+                : transform.position;
+            Vector3 rayDirection = playerCamera != null
+                ? playerCamera.transform.forward
+                : transform.forward;
+            Vector3 aimPoint = rayOrigin
+                + rayDirection * physicalProjectileAimDistance;
+
+            int hitCount = Physics.RaycastNonAlloc(
+                rayOrigin,
+                rayDirection,
+                physicalProjectileAimHits,
+                physicalProjectileAimDistance,
+                physicalProjectileAimLayers,
+                QueryTriggerInteraction.Ignore);
+
+            float nearestDistance = float.PositiveInfinity;
+            for (int i = 0; i < hitCount; i++)
+            {
+                RaycastHit hit = physicalProjectileAimHits[i];
+                if (hit.collider == null
+                    || IsPhysicalProjectileAimIgnored(hit.collider)
+                    || hit.distance >= nearestDistance)
+                {
+                    continue;
+                }
+
+                nearestDistance = hit.distance;
+                aimPoint = hit.point;
+            }
+
+            Vector3 towardAimPoint = aimPoint - projectileOrigin;
+            return towardAimPoint.sqrMagnitude > Mathf.Epsilon
+                ? towardAimPoint.normalized
+                : rayDirection;
+        }
+
+        private bool IsPhysicalProjectileAimIgnored(Collider candidate)
+        {
+            if (candidate == null)
+                return true;
+
+            if (IsColliderPartOf(candidate, heldObject)
+                || IsColliderPartOf(candidate, gameObject))
+            {
+                return true;
+            }
+
+            return player != null
+                && IsColliderPartOf(candidate, player.gameObject);
+        }
+
+        private static bool IsColliderPartOf(
+            Collider candidate,
+            GameObject root)
+        {
+            return root != null
+                && (candidate.gameObject == root
+                    || candidate.transform.IsChildOf(root.transform));
         }
 
         private IEnumerator RestorePlayerCollisionsAfterDelay()

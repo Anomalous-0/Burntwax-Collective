@@ -8,8 +8,10 @@ namespace Burntwax
     {
         private Rigidbody heldBody;
         private bool wasKinematic;
+        private GloveHoldProfile holdProfile;
         private Quaternion rotationOffsetFromHoldPoint;
         private bool hasRotationOffset;
+        private float accumulatedHoverSpin;
 
         public GloveHoldState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
@@ -18,7 +20,15 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            Ctx.PlayGloveAnimation(Ctx.holdHash);
+            hasRotationOffset = false;
+            accumulatedHoverSpin = 0f;
+            holdProfile = Ctx.heldObject != null
+                ? Ctx.heldObject.GetComponent<GloveHoldProfile>()
+                : null;
+            Ctx.PlayHoldAnimation(
+                holdProfile != null
+                    ? holdProfile.HoldPose
+                    : GloveHoldPose.Small);
             heldBody = Ctx.heldObject != null
                 ? Ctx.heldObject.GetComponent<Rigidbody>()
                 : null;
@@ -71,16 +81,11 @@ namespace Burntwax
             // }
             if (InputManager.Instance.gloveTap)
             {
-                Ctx.LaunchHeldObjectForward();
-                SwitchState(Factory.Idle());
+                SwitchState(Factory.BlastProjectile());
             }
             else if (InputManager.Instance.gloveDoubleTap)
             {
                 SwitchState(Factory.ReleaseObject());
-            }
-            else if (InputManager.Instance.gloveCharging)
-            {
-                SwitchState(Factory.BlastProjectile());
             }
             else if (heldBody == null || Ctx.heldObject == null)
             {
@@ -98,9 +103,14 @@ namespace Burntwax
                 return;
 
             float lerpAmount = Mathf.Clamp01(Ctx.HoldLerpSpeed * Time.deltaTime);
+            Vector3 localPositionOffset = holdProfile != null
+                ? holdProfile.LocalPositionOffset
+                : Vector3.zero;
+            Vector3 targetPosition = Ctx.restPos.transform.TransformPoint(
+                localPositionOffset);
             Ctx.heldObject.transform.position = Vector3.Lerp(
                 Ctx.heldObject.transform.position,
-                Ctx.restPos.transform.position,
+                targetPosition,
                 lerpAmount);
 
             if (!hasRotationOffset)
@@ -113,11 +123,35 @@ namespace Burntwax
 
             // Keep the grabbed orientation relative to the player while preserving
             // the slow local hover spin that makes the object read as suspended.
-            rotationOffsetFromHoldPoint *= Quaternion.AngleAxis(
-                Ctx.HoldSpinSpeed * Time.deltaTime,
+            float hoverSpinMultiplier = holdProfile != null
+                ? holdProfile.HoverSpinMultiplier
+                : 1f;
+
+            if (hoverSpinMultiplier > 0f)
+            {
+                accumulatedHoverSpin = Mathf.Repeat(
+                    accumulatedHoverSpin
+                        + Ctx.HoldSpinSpeed
+                        * hoverSpinMultiplier
+                        * Time.deltaTime,
+                    360f);
+            }
+            else
+            {
+                accumulatedHoverSpin = 0f;
+            }
+
+            Quaternion baseRotationOffset = holdProfile != null
+                && holdProfile.OverrideRotation
+                    ? holdProfile.LocalHeldRotation
+                    : rotationOffsetFromHoldPoint;
+            Quaternion hoverSpin = Quaternion.AngleAxis(
+                accumulatedHoverSpin,
                 Vector3.up);
             Ctx.heldObject.transform.rotation =
-                Ctx.restPos.transform.rotation * rotationOffsetFromHoldPoint;
+                Ctx.restPos.transform.rotation
+                * baseRotationOffset
+                * hoverSpin;
         }
     }
 }

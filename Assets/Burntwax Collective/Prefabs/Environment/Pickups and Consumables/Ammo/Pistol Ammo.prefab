@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: -7723172581133971576}
   - component: {fileID: 4763814825716097673}
   - component: {fileID: -1911616994060823021}
+  - component: {fileID: 7215362633640789664}
   m_Layer: 11
   m_Name: Pistol Ammo
   m_TagString: Metal
@@ -303,7 +304,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.6, z: 0.2}
+  m_LocalScale: {x: 0.1, y: 0.3, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8846101969242388851}
@@ -436,3 +437,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
   behavior: 0
+--- !u!114 &7215362633640789664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9176256781164373382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1cc2570848b47ae8faeb54cc46cd94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.GloveHoldProfile
+  holdPose: 0
+  localPositionOffset: {x: 0, y: 0, z: 0}
+  overrideRotation: 0
+  localHeldRotation: {x: 0, y: 0, z: 0}
+  hoverSpinMultiplier: 1

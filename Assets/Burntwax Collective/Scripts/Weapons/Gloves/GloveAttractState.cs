@@ -13,7 +13,6 @@ namespace Burntwax
         private float pathDistance;
         private float pathProgress;
         private float currentTargetVelocity;
-        private float velocityDistanceScale;
         private bool originalUseGravity;
         private bool gravityOverrideActive;
         private RigidbodyInterpolation originalInterpolation;
@@ -104,13 +103,24 @@ namespace Burntwax
             if (attractedBody == null || Ctx.restPos == null)
                 return;
 
-            float cruiseVelocity = Mathf.Min(
+            float maximumCruiseVelocity = Mathf.Min(
                 Ctx.AttractionCruiseVelocity,
-                Ctx.InitialAttractionVelocity) * velocityDistanceScale;
+                Ctx.InitialAttractionVelocity);
+            float minimumCruiseVelocity = Mathf.Min(
+                Ctx.MinimumAttractionVelocity,
+                maximumCruiseVelocity);
+            float currentDistance = Vector3.Distance(
+                attractedBody.position,
+                Ctx.restPos.transform.position);
+            float distanceScale = GetDistanceVelocityScale(currentDistance);
+            float cruiseVelocity = Mathf.Lerp(
+                minimumCruiseVelocity,
+                maximumCruiseVelocity,
+                distanceScale);
             currentTargetVelocity = Mathf.MoveTowards(
                 currentTargetVelocity,
                 cruiseVelocity,
-                Ctx.AttractionSlowdownRate * velocityDistanceScale * Time.fixedDeltaTime);
+                Ctx.AttractionSlowdownRate * Time.fixedDeltaTime);
             pathProgress = Mathf.MoveTowards(
                 pathProgress,
                 1f,
@@ -144,8 +154,6 @@ namespace Burntwax
             Vector3 toRestPosition = Ctx.restPos.transform.position - pathStart;
             pathDistance = Mathf.Max(toRestPosition.magnitude, 0.01f);
             pathProgress = 0f;
-            velocityDistanceScale = Mathf.Clamp01(
-                pathDistance / Ctx.FullAttractionVelocityDistance);
 
             Vector3 pullDirection = toRestPosition / pathDistance;
             arcDirection = Vector3.ProjectOnPlane(Vector3.up, pullDirection).normalized;
@@ -158,9 +166,16 @@ namespace Burntwax
 
         private void ApplyInitialVelocity()
         {
-            currentTargetVelocity = Mathf.Max(
+            float maximumInitialVelocity = Mathf.Max(
                 Ctx.InitialAttractionVelocity,
-                Ctx.AttractionCruiseVelocity) * velocityDistanceScale;
+                Ctx.AttractionCruiseVelocity);
+            float minimumInitialVelocity = Mathf.Min(
+                Ctx.MinimumAttractionVelocity,
+                maximumInitialVelocity);
+            currentTargetVelocity = Mathf.Lerp(
+                minimumInitialVelocity,
+                maximumInitialVelocity,
+                GetDistanceVelocityScale(pathDistance));
 
             float launchSampleProgress = Mathf.Clamp(
                 currentTargetVelocity * Time.fixedDeltaTime / pathDistance,
@@ -177,10 +192,37 @@ namespace Burntwax
             Vector3 launchDirection = (launchTarget - pathStart).normalized;
 
             attractedBody.linearVelocity = Vector3.zero;
-            attractedBody.angularVelocity = Vector3.zero;
+            attractedBody.angularVelocity = GetRandomAttractionSpin();
             attractedBody.AddForce(
                 launchDirection * currentTargetVelocity,
                 ForceMode.VelocityChange);
+        }
+
+        private float GetDistanceVelocityScale(float distance)
+        {
+            return Mathf.Clamp01(
+                distance / Mathf.Max(
+                    Ctx.FullAttractionVelocityDistance,
+                    0.01f));
+        }
+
+        private Vector3 GetRandomAttractionSpin()
+        {
+            float minimumSpin = Mathf.Max(0f, Ctx.MinimumAttractionSpin);
+            float maximumSpin = Mathf.Max(
+                minimumSpin,
+                Ctx.MaximumAttractionSpin);
+
+            if (maximumSpin <= Mathf.Epsilon)
+                return Vector3.zero;
+
+            float massMultiplier = attractedBody != null
+                ? 1f / Mathf.Max(1f, attractedBody.mass)
+                : 1f;
+
+            return Random.onUnitSphere
+                * Random.Range(minimumSpin, maximumSpin)
+                * massMultiplier;
         }
 
         private static Vector3 EvaluateArcPath(

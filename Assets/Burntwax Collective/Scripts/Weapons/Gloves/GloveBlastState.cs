@@ -32,9 +32,9 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if(Ctx.BlastEndAnim)
+            if(Ctx.blastWindow == false)
             {
-                Ctx.BlastEndAnim = false;
+                
                 SwitchState(Factory.Idle());    
             }
 

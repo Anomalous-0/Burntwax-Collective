@@ -11,22 +11,22 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 48.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
@@ -36,7 +36,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -59.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
@@ -46,7 +46,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.000000081460335
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
@@ -56,7 +56,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
@@ -116,6 +116,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6439281750648327012}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 47e38743406f91040a67be23822c9052,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 416094598511454998}
   m_SourcePrefab: {fileID: 100100000, guid: 47e38743406f91040a67be23822c9052, type: 3}
 --- !u!1 &5201577882718282995 stripped
 GameObject:
@@ -130,7 +134,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5201577882718282995}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5d42b92f9b004474e941e10dc78e6f94, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -219,7 +223,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
   minimumAudioSpeed: 1.5
   majorImpactAudioSpeed: 6
@@ -234,6 +238,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
+  behavior: 0
+--- !u!114 &416094598511454998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5201577882718282995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1cc2570848b47ae8faeb54cc46cd94e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.GloveHoldProfile
+  holdPose: 1
+  localPositionOffset: {x: 0, y: 0, z: 0}
+  overrideRotation: 0
+  localHeldRotation: {x: 0, y: 0, z: 0}
+  hoverSpinMultiplier: 1

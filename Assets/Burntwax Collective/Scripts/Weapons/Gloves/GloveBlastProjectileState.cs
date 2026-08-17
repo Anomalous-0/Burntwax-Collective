@@ -16,8 +16,8 @@ namespace Burntwax
         public override void EnterState()
         {
 
-            Ctx.PlayGloveAnimation(Ctx.blastHash);
-            Ctx.ReleaseHeldObject();
+            Ctx.PlayGloveAnimation(Ctx.blastProjectileHash);
+            Ctx.LaunchHeldObjectForward();
             InitializeSubState();
         }
 
@@ -33,13 +33,11 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if(Ctx.BlastEndAnim)
-            {
-                Ctx.BlastEndAnim = false;
-                SwitchState(Factory.Idle());    
-            }
-
+            if (!Ctx.blastWindow)
+                SwitchState(Factory.Idle());
         }
+
+
 
         public override void InitializeSubState() { }
     }
