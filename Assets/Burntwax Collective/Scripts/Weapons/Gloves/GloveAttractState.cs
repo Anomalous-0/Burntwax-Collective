@@ -24,6 +24,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
+            gravityOverrideActive = false;
             Ctx.PlayGloveAnimation(Ctx.attractHash);
             Ctx.heldObject = Ctx.detectedObject;
             Ctx.IgnoreHeldObjectPlayerCollisions();
@@ -80,7 +81,7 @@ namespace Burntwax
 
             // A confirmed katana parry launches the incoming object before it reaches the hand.
             // Wait for the katana state machine instead of reacting to the raw aim input.
-            if (Ctx.KatanaParrying /*&& Ctx.player.withinBattingRange*/)
+            if (Ctx.KatanaParrying)
             {
                 Ctx.LaunchHeldObjectForward();
                 SwitchState(Factory.Idle());
@@ -216,9 +217,7 @@ namespace Burntwax
             if (maximumSpin <= Mathf.Epsilon)
                 return Vector3.zero;
 
-            float massMultiplier = attractedBody != null
-                ? 1f / Mathf.Max(1f, attractedBody.mass)
-                : 1f;
+            float massMultiplier = 1f / Mathf.Max(1f, attractedBody.mass);
 
             return Random.onUnitSphere
                 * Random.Range(minimumSpin, maximumSpin)

@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Burntwax
 {
     // Branch B, step 2: release pulse. Spawns the plasma projectile (charge-scaled) and returns to
@@ -14,7 +12,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-
+            Ctx.StartBlast();
             Ctx.PlayGloveAnimation(Ctx.blastHash);
             Ctx.SpawnBlast(InputManager.Instance.gloveBlastCharge);
             InitializeSubState();
@@ -32,12 +30,8 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if(Ctx.blastWindow == false)
-            {
-                
-                SwitchState(Factory.Idle());    
-            }
-
+            if (!Ctx.BlastWindow)
+                SwitchState(Factory.Idle());
         }
 
         public override void InitializeSubState() { }

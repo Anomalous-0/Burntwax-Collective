@@ -38,7 +38,7 @@ namespace Burntwax
 
         [Header("States")]
         [SerializeField] private float equipWaitTime = 1f;
-        public bool blastWindow = true;
+        public bool BlastWindow { get; private set; }
 
         [SerializeField] private bool enterAttract = false;
         [SerializeField] private bool enterCharge = false;
@@ -184,7 +184,8 @@ namespace Burntwax
         private Coroutine restorePlayerCollisionsCoroutine;
         private bool waitingToRestorePlayerCollisions;
 
-        [HideInInspector] public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash, holdHash;
+        [HideInInspector] public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash;
+        private int holdHash;
         private int largeHoldHash;
 
         private void Awake()
@@ -230,12 +231,12 @@ namespace Burntwax
 
         public void StartBlast()
         {
-            blastWindow = true;
+            BlastWindow = true;
         }
 
         public void EndBlast()
         {
-            blastWindow = false;
+            BlastWindow = false;
         }
 
 

@@ -13,7 +13,7 @@ namespace Burntwax
         private const float DirectionEpsilon = 0.0001f;
         private const float LineOfSightPadding = 0.05f;
 
-        public static int Explode(
+        public static void Explode(
             Vector3 center,
             ExplosionConfig config,
             GameObject source,
@@ -22,7 +22,7 @@ namespace Burntwax
             if (config == null)
             {
                 Debug.LogWarning("An explosion was requested without an ExplosionConfig.");
-                return 0;
+                return;
             }
 
             PlayPresentation(center, config);
@@ -34,7 +34,6 @@ namespace Burntwax
                 QueryTriggerInteraction.Ignore);
 
             HashSet<EntityId> resolvedTargets = new HashSet<EntityId>();
-            int resolvedTargetCount = 0;
 
             foreach (Collider hitCollider in colliders)
             {
@@ -101,10 +100,7 @@ namespace Burntwax
                     playImpactAudio: false,
                     playSurfaceImpact: false);
 
-                resolvedTargetCount++;
             }
-
-            return resolvedTargetCount;
         }
 
         private static void PlayPresentation(

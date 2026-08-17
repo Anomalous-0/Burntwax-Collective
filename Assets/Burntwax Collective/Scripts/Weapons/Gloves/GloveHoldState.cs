@@ -8,6 +8,7 @@ namespace Burntwax
     {
         private Rigidbody heldBody;
         private bool wasKinematic;
+        private RigidbodyInterpolation originalInterpolation;
         private GloveHoldProfile holdProfile;
         private Quaternion rotationOffsetFromHoldPoint;
         private bool hasRotationOffset;
@@ -36,6 +37,7 @@ namespace Burntwax
             if (heldBody != null)
             {
                 wasKinematic = heldBody.isKinematic;
+                originalInterpolation = heldBody.interpolation;
                 heldBody.linearVelocity = Vector3.zero;
                 heldBody.angularVelocity = Vector3.zero;
                 heldBody.isKinematic = true;
@@ -64,21 +66,13 @@ namespace Burntwax
             if (heldBody != null)
             {
                 heldBody.isKinematic = wasKinematic;
-                heldBody.interpolation = RigidbodyInterpolation.Interpolate;
-
+                heldBody.interpolation = originalInterpolation;
             }
 
         }
 
         public override void CheckSwitchStates()
         {
-            // A katana parry hurls the held object along the camera forward. Glove gestures keep
-            // their existing release and blast behaviors.
-            // if (Ctx.KatanaParrying)
-            // {
-            //     Ctx.LaunchHeldObjectForward();
-            //     SwitchState(Factory.Idle());
-            // }
             if (InputManager.Instance.gloveTap)
             {
                 SwitchState(Factory.BlastProjectile());

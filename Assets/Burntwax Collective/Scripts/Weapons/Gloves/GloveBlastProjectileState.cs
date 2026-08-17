@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Burntwax
 {
     // Hold → charge: fling the currently held object out as the projectile, then return to Idle after
@@ -15,7 +13,7 @@ namespace Burntwax
 
         public override void EnterState()
         {
-
+            Ctx.StartBlast();
             Ctx.PlayGloveAnimation(Ctx.blastProjectileHash);
             Ctx.LaunchHeldObjectForward();
             InitializeSubState();
@@ -33,11 +31,9 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (!Ctx.blastWindow)
+            if (!Ctx.BlastWindow)
                 SwitchState(Factory.Idle());
         }
-
-
 
         public override void InitializeSubState() { }
     }

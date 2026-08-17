@@ -42,8 +42,6 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float vfxLifetime = 5f;
 
         public float Radius => radius;
-        public float MaximumDamage => maximumDamage;
-        public float MaximumImpulse => maximumImpulse;
         public float UpwardBias => upwardBias;
         public LayerMask AffectedLayers => affectedLayers;
         public bool RequireLineOfSight => requireLineOfSight;
