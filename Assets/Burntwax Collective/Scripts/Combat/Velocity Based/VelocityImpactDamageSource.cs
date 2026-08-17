@@ -3,6 +3,18 @@ using UnityEngine;
 namespace Burntwax
 {
     /// <summary>
+    /// Describes how an intentionally thrown object turns its authored impact strength
+    /// into gameplay damage. Dull is zero so existing serialized components retain
+    /// their current behavior when this setting is introduced.
+    /// </summary>
+    public enum VelocityImpactBehavior
+    {
+        Dull = 0,
+        Sharp = 1,
+        NoDamage = 2
+    }
+
+    /// <summary>
     /// Opt-in damage source for ordinary physics objects that have been deliberately thrown.
     /// A Rigidbody is harmless until a thrower calls <see cref="Arm"/>. This keeps generic
     /// velocity damage separate from guns, energy projectiles, and katana blade detection.
@@ -12,6 +24,9 @@ namespace Burntwax
     public sealed class VelocityImpactDamageSource : MonoBehaviour
     {
         [SerializeField] private VelocityImpactDamageConfig config;
+
+        [Tooltip("Dull deals Impact damage, Sharp adds Slash reactions, and No Damage leaves only passive collision effects.")]
+        [SerializeField] private VelocityImpactBehavior behavior = VelocityImpactBehavior.Dull;
 
         public bool IsArmed { get; private set; }
         public GameObject Instigator { get; private set; }
@@ -40,6 +55,12 @@ namespace Burntwax
         /// </summary>
         public void Arm(GameObject instigator)
         {
+            if (behavior == VelocityImpactBehavior.NoDamage)
+            {
+                Disarm();
+                return;
+            }
+
             if (config == null)
             {
                 Debug.LogWarning(
@@ -83,16 +104,24 @@ namespace Burntwax
             if (!config.MeetsDamageThreshold(impact.ClosingSpeed))
                 return;
 
+            bool isSharp = behavior == VelocityImpactBehavior.Sharp;
+            DamageType gameplayTypes = isSharp
+                ? DamageType.Impact | DamageType.Slash
+                : DamageType.Impact;
+            DamageType presentationType = isSharp
+                ? DamageType.Slash
+                : DamageType.Impact;
+
             DamageInfo damage = new DamageInfo(
                 config.Damage,
-                config.DamageTypes,
+                gameplayTypes,
                 impact.Point,
                 impact.Normal,
                 impact.Direction,
                 gameObject,
                 Instigator,
                 Vector3.zero,
-                config.PresentationType);
+                presentationType);
 
             // Unity's collision has already transferred physical momentum. A zero gameplay
             // impulse prevents HitResolver from applying that force a second time.

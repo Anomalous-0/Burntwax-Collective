@@ -183,8 +183,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be26f0e726acebe43ac6baf674052e7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Crate
+  maxHealth: 15
   currentHealth: 15
-  destroy: 0
+  acceptedDamageTypes: -1
+  instantBreakDamageTypes: 0
+  minimumDamagePerHit: 0
+  destroyObjectOnBreak: 1
   itemsToSpawn: 3
   resources_prefabs:
   - {fileID: 9176256781164373382, guid: 569a885bdb695bf4fbaf0914fde33777, type: 3}
