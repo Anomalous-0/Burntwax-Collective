@@ -12,9 +12,6 @@ namespace Burntwax
 
         public override void EnterState()
         {
-
-            InputManager.Instance.parry = false;
-
             // Ctx.camStateMachine.SetCameraInputActive(false);
 
             Ctx.anim.SetBool(Ctx.parryHash, true);
@@ -52,10 +49,6 @@ namespace Burntwax
                 else if(InputManager.Instance.attackIsPressed)
                 {
                     SwitchState(Factory.Ready());
-                }
-                else if(InputManager.Instance.slash)
-                {
-                    SwitchState(Factory.LightSlash());
                 }
                 else
                 {

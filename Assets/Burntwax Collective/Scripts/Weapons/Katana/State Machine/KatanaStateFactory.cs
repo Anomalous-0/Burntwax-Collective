@@ -6,7 +6,9 @@ namespace Burntwax
     {
         idle,
         ready,
+        heavyCharge,
         lightSlash,
+        heavySlash,
         parry,
         stow
 
@@ -23,7 +25,9 @@ namespace Burntwax
         {
             context = currentContext;
             states[KatanaStates.idle] = new KatanaIdleState(context, this);
+            states[KatanaStates.heavyCharge] = new KatanaHeavyChargeState(context, this);
             states[KatanaStates.lightSlash] = new KatanaLightSlashState(context, this);
+            states[KatanaStates.heavySlash] = new KatanaHeavySlashState(context, this);
             states[KatanaStates.parry] = new KatanaParryState(context, this);
             states[KatanaStates.stow] = new KatanaStowState(context, this);
             states[KatanaStates.ready] = new KatanaReadyState(context, this); 
@@ -42,6 +46,16 @@ namespace Burntwax
         public KatanaBaseState LightSlash()
         {
             return states[KatanaStates.lightSlash];
+        }
+
+        public KatanaBaseState HeavyCharge()
+        {
+            return states[KatanaStates.heavyCharge];
+        }
+
+        public KatanaBaseState HeavySlash()
+        {
+            return states[KatanaStates.heavySlash];
         }
 
         public KatanaBaseState Parry()

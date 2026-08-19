@@ -54,7 +54,9 @@ namespace Burntwax
 
             if (gunStateMachine.CurrentGuns.Count > 0 && katanaStateMachine.fullyEquipped && 
             katanaStateMachine.CurrentState != katanaStateMachine.states.Parry() && 
-            katanaStateMachine.CurrentState != katanaStateMachine.states.LightSlash() && 
+            katanaStateMachine.CurrentState != katanaStateMachine.states.LightSlash() &&
+            katanaStateMachine.CurrentState != katanaStateMachine.states.HeavyCharge() &&
+            katanaStateMachine.CurrentState != katanaStateMachine.states.HeavySlash() &&
             gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
                 if (hasWeaponNumberInput)

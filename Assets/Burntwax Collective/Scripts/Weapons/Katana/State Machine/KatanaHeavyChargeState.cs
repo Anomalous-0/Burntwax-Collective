@@ -1,0 +1,83 @@
+using UnityEngine;
+
+namespace Burntwax
+{
+    /// <summary>
+    /// Owns a speed-qualified initial flick. Releasing now performs a light
+    /// slash; continuing to hold and reversing performs a heavy slash.
+    /// </summary>
+    public sealed class KatanaHeavyChargeState : KatanaBaseState
+    {
+        private bool hasRecognizedAttack;
+        private KatanaAttackIntent recognizedAttack;
+
+        public KatanaHeavyChargeState(
+            KatanaStateMachine currentContext,
+            KatanaStateFactory katanaStateFactory)
+            : base(currentContext, katanaStateFactory)
+        {
+            IsRootState = true;
+        }
+
+        public override void EnterState()
+        {
+            hasRecognizedAttack = false;
+            recognizedAttack = default;
+
+            Ctx.camStateMachine.SlowCam(true);
+            Ctx.anim.SetBool(Ctx.readyHash, true);
+            Debug.Log(
+                $"[Katana] Heavy charge started. Initial direction: " +
+                $"{Ctx.InitialSlashDirection}.");
+            InitializeSubState();
+        }
+
+        public override void UpdateState()
+        {
+            hasRecognizedAttack = Ctx.TryRecognizeAttack(
+                out recognizedAttack);
+
+            CheckSwitchStates();
+        }
+
+        public override void ExitState()
+        {
+            Ctx.camStateMachine.SlowCam(false);
+            Ctx.anim.SetBool(Ctx.readyHash, false);
+        }
+
+        public override void CheckSwitchStates()
+        {
+            if (hasRecognizedAttack)
+            {
+                Ctx.QueueAttackIntent(recognizedAttack);
+
+                if (recognizedAttack.Strength == KatanaAttackStrength.Heavy)
+                    SwitchState(Factory.HeavySlash());
+                else
+                    SwitchState(Factory.LightSlash());
+            }
+            else if (!InputManager.Instance.attackIsPressed)
+            {
+                Ctx.ResetGestureRecognition();
+                SwitchState(Factory.Idle());
+            }
+            else if (InputManager.Instance.aimIsPressed)
+            {
+                Ctx.ResetGestureRecognition();
+                SwitchState(Factory.Parry());
+            }
+            else if (InputPrioritySorter.Instance.SprintIsPriority()
+                && Ctx.stateMachine.currentState.CurrentSubstate()
+                    != Ctx.stateMachine.states.Idle())
+            {
+                Ctx.ResetGestureRecognition();
+                SwitchState(Factory.Stow());
+            }
+        }
+
+        public override void InitializeSubState()
+        {
+        }
+    }
+}

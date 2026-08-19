@@ -3,15 +3,19 @@ using Debug = UnityEngine.Debug;
 
 namespace Burntwax
 {
-    public class KatanaLightSlashState : KatanaBaseState
+    public abstract class KatanaSlashState : KatanaBaseState
     {
         private const float LeftSlashBlend = 0f;
         private const float RightSlashBlend = 1f / 3f;
         private const float UpSlashBlend = 2f / 3f;
         private const float DownSlashBlend = 1f;
         private Vector2 slashDirection;
+        private KatanaAttackIntent bufferedNextAttack;
+        private bool hasBufferedNextAttack;
 
-        public KatanaLightSlashState(KatanaStateMachine currentContext, KatanaStateFactory katanaStateFactory)
+        protected abstract KatanaAttackStrength AttackStrength { get; }
+
+        protected KatanaSlashState(KatanaStateMachine currentContext, KatanaStateFactory katanaStateFactory)
         : base(currentContext, katanaStateFactory)
         {
             IsRootState = true;
@@ -20,15 +24,33 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            slashDirection = InputManager.Instance.slashStartDirection;
-            KatanaSlashDirection classifiedDirection =
-                ClassifySlashDirection(slashDirection);
+            bufferedNextAttack = default;
+            hasBufferedNextAttack = false;
 
-            InputManager.Instance.slash = false;
+            if (Ctx.TryConsumeAttackIntent(out KatanaAttackIntent intent))
+                slashDirection = intent.ReleaseInput;
+            else
+            {
+                slashDirection = InputManager.Instance.LookInput;
+                Debug.LogWarning(
+                    "[Katana] Slash state entered without a recognized " +
+                    "attack intent. Using current look input as a fallback.");
+            }
+
+            KatanaSlashDirection classifiedDirection =
+                KatanaAttackIntent.ClassifyDirection(slashDirection);
+
             Ctx.CloseDamageWindow();
-            Ctx.SetAttackStrength(KatanaAttackStrength.Light);
+            Ctx.SetAttackStrength(AttackStrength);
             Ctx.SetSlashDirection(classifiedDirection);
-            Ctx.katanaDriver.BeginSwing(slashDirection, "Slash");
+            Ctx.katanaDriver.BeginSwing(
+                slashDirection,
+                $"{AttackStrength} Slash");
+
+            Debug.Log(
+                $"[Katana] {AttackStrength} slash started: " +
+                $"{classifiedDirection} ({slashDirection.x:F2}, " +
+                $"{slashDirection.y:F2}).");
 
             Ctx.camStateMachine.SlowCam(true);
 
@@ -50,9 +72,15 @@ namespace Burntwax
 
         public override void UpdateState()
         {
-            if (InputManager.Instance.isTrackingSlash)
-            {
+            if (InputManager.Instance.attackIsPressed)
                 Ctx.katanaDriver.FeedInput(InputManager.Instance.LookInput);
+
+            if (!hasBufferedNextAttack
+                && Ctx.TryRecognizeAttack(
+                    out KatanaAttackIntent nextIntent))
+            {
+                bufferedNextAttack = nextIntent;
+                hasBufferedNextAttack = true;
             }
 
 
@@ -74,7 +102,7 @@ namespace Burntwax
         {
             if (!Ctx.isSlashing && !InputManager.Instance.attackIsPressed)
             {
-                if (InputManager.Instance.parry)
+                if (InputManager.Instance.aimIsPressed)
                 {
                     SwitchState(Factory.Parry());
                 }
@@ -92,11 +120,20 @@ namespace Burntwax
             }
             else if (Ctx.ableToSlashInMiddleOfAnimation)
             {
-                if(InputManager.Instance.slash && InputManager.Instance.slashStartDirection != slashDirection)
+                if (hasBufferedNextAttack)
                 {
-                    SwitchState(Factory.LightSlash());   
+                    Ctx.QueueAttackIntent(bufferedNextAttack);
+
+                    if (bufferedNextAttack.Strength
+                        == KatanaAttackStrength.Heavy)
+                        SwitchState(Factory.HeavySlash());
+                    else
+                        SwitchState(Factory.LightSlash());
                 }
-    
+                else if (Ctx.IsInitialSlashQualified)
+                {
+                    SwitchState(Factory.HeavyCharge());
+                }
                 else if(InputPrioritySorter.Instance.AimIsPriority())
                 {
                     SwitchState(Factory.Parry());
@@ -108,21 +145,6 @@ namespace Burntwax
         }
 
         public override void InitializeSubState() { }
-
-        private static KatanaSlashDirection ClassifySlashDirection(
-            Vector2 direction)
-        {
-            if (Mathf.Abs(direction.x) >= Mathf.Abs(direction.y))
-            {
-                return direction.x < 0f
-                    ? KatanaSlashDirection.Left
-                    : KatanaSlashDirection.Right;
-            }
-
-            return direction.y > 0f
-                ? KatanaSlashDirection.Up
-                : KatanaSlashDirection.Down;
-        }
 
         private static float GetSlashBlend(KatanaSlashDirection direction)
         {
@@ -139,6 +161,19 @@ namespace Burntwax
                 default:
                     return RightSlashBlend;
             }
+        }
+    }
+
+    public sealed class KatanaLightSlashState : KatanaSlashState
+    {
+        protected override KatanaAttackStrength AttackStrength =>
+            KatanaAttackStrength.Light;
+
+        public KatanaLightSlashState(
+            KatanaStateMachine currentContext,
+            KatanaStateFactory katanaStateFactory)
+            : base(currentContext, katanaStateFactory)
+        {
         }
     }
 }

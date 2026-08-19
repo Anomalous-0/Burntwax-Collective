@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -7,8 +6,6 @@ namespace Burntwax
 {
     public class InputManager : MonoBehaviour
     {
-        private Arsenal arsenal;
-
         public static InputManager Instance;
         public Vector2 MoveInput = Vector2.zero;
         public Vector2 LookInput = Vector2.zero;
@@ -60,27 +57,17 @@ namespace Burntwax
         [HideInInspector] public bool aimIsPressed = false;
         [HideInInspector] public bool attackIsPressed = false;
 
-        [HideInInspector] public bool slash;
-        [HideInInspector] public bool parry;
         public bool reloadIsPressed { get; private set; } = false;
         public bool sprintIsPressed { get; private set; } = false;
 
         public bool saveIsPressed { get; private set; } = false;
         public bool loadIsPressed { get; private set; } = false;
 
-        // ── NEW: Directional tracking ──────────────────────────
-        [HideInInspector] public bool isTrackingSlash = false;
-        [HideInInspector] public bool isTrackingParry = false;
-        [HideInInspector] public Vector2 slashStartDirection;
-        [HideInInspector] public Vector2 parryStartDirection;
-        // ────────────────────────────────────────────────────────
-
         PlayerInput input;
 
         void Awake()
         {
             Instance = this;
-            arsenal = FindAnyObjectByType<Arsenal>();
         }
 
         // ── OnEnable / OnDisable remain IDENTICAL to your current code ──
@@ -164,44 +151,9 @@ namespace Burntwax
             input.OnFoot.Disable();
         }
 
-        // ── MODIFIED Update ────────────────────────────────────
         private void Update()
         {
-            // Glove gestures are independent of weapon mode (the glove lives alongside the arsenal),
-            // so tick them before the katana-only early-return below.
             TickGloveGestures();
-
-            if (arsenal && arsenal.currentMode != Arsenal.WeaponMode.Katana)
-                return;
-
-            bool enoughForce = Math.Abs(LookInput.magnitude) > 0.95f;
-
-            // ── SLASH tracking ──
-            if (enoughForce && attackIsPressed && !isTrackingSlash)
-            {
-                // First qualifying frame — trigger state transition + start tracking
-                isTrackingSlash = true;
-                slashStartDirection = LookInput.normalized;
-                slash = true;  // consumed by KatanaIdleState.CheckSwitchStates()
-            }
-            else if (isTrackingSlash && !attackIsPressed)
-            {
-                // Button released — stop tracking
-                // (the state's timeout will handle returning to idle)
-                isTrackingSlash = false;
-            }
-
-            // ── PARRY tracking ──
-            if (enoughForce && aimIsPressed && !isTrackingParry)
-            {
-                isTrackingParry = true;
-                parryStartDirection = LookInput.normalized;
-                parry = true;
-            }
-            else if (isTrackingParry && !aimIsPressed)
-            {
-                isTrackingParry = false;
-            }
         }
         private void SetMove(InputAction.CallbackContext ctx)
         {

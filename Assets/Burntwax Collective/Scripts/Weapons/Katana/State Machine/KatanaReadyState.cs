@@ -13,9 +13,9 @@ namespace Burntwax
 
         public override void EnterState()
         {
-
             Debug.Log("Ready state");
 
+            Ctx.ResetGestureRecognition();
 
             Ctx.camStateMachine.SlowCam(true);
             Ctx.anim.SetBool(Ctx.readyHash, true);
@@ -45,9 +45,18 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputManager.Instance.slash)
+            if (Ctx.TryRecognizeAttack(out KatanaAttackIntent intent))
             {
-                SwitchState(Factory.LightSlash());
+                Ctx.QueueAttackIntent(intent);
+
+                if (intent.Strength == KatanaAttackStrength.Heavy)
+                    SwitchState(Factory.HeavySlash());
+                else
+                    SwitchState(Factory.LightSlash());
+            }
+            else if (Ctx.IsInitialSlashQualified)
+            {
+                SwitchState(Factory.HeavyCharge());
             }
             else if (InputManager.Instance.aimIsPressed)
             {

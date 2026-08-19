@@ -81,13 +81,29 @@ namespace Burntwax
             KatanaSlashDirection.None;
         [SerializeField] private bool isDamageWindowActive;
 
+        [Header("Gesture Debug (read-only)")]
+        [SerializeField] private string lastRecognizedGesture = "None";
+        [SerializeField] private Vector2 currentLookVelocity;
+        [SerializeField] private float currentLookSpeed;
+        [SerializeField] private float initialQualificationSpeed;
+        [SerializeField] private float lastHeavyReversalSpeed;
+        [SerializeField] private float lastReversalAlignment;
+        [SerializeField] private bool isInitialSlashQualified;
+
         public KatanaAttackStrength CurrentAttackStrength => currentAttackStrength;
         public KatanaSlashDirection CurrentSlashDirection => currentSlashDirection;
         public bool IsDamageWindowActive => isDamageWindowActive;
+        public bool IsInitialSlashQualified =>
+            gestureRecognizer.IsInitialSlashQualified;
+        public Vector2 InitialSlashDirection =>
+            gestureRecognizer.InitialSlashDirection;
 
         [HideInInspector] public bool selectedByArsenal;
 
         private readonly Dictionary<int, KatanaScriptableObject> katanaCatalogLookup = new();
+        private readonly KatanaGestureRecognizer gestureRecognizer = new();
+        private KatanaAttackIntent pendingAttackIntent;
+        private bool hasPendingAttackIntent;
 
         private void Awake()
         {
@@ -138,6 +154,91 @@ namespace Burntwax
             currentStateText = CurrentState.GetType().Name;
         }
 
+        public bool TryRecognizeAttack(out KatanaAttackIntent intent)
+        {
+            intent = default;
+            KatanaGestureConfig gestureConfig = GetGestureConfig();
+
+            if (gestureConfig == null || InputManager.Instance == null)
+            {
+                ResetGestureRecognition();
+                return false;
+            }
+
+            bool wasQualified =
+                gestureRecognizer.IsInitialSlashQualified;
+            bool recognized = gestureRecognizer.TryRecognize(
+                InputManager.Instance.LookInput,
+                InputManager.Instance.attackIsPressed,
+                Time.unscaledDeltaTime,
+                gestureConfig,
+                out intent);
+
+            if (recognized)
+            {
+                lastRecognizedGesture =
+                    $"{intent.Strength} {intent.SlashDirection}";
+            }
+            else if (!wasQualified
+                && gestureRecognizer.IsInitialSlashQualified)
+            {
+                lastRecognizedGesture = "Initial Flick Qualified";
+            }
+
+            SyncGestureDebug();
+            return recognized;
+        }
+
+        public void ResetGestureRecognition()
+        {
+            gestureRecognizer.Reset();
+            currentLookVelocity = Vector2.zero;
+            currentLookSpeed = 0f;
+            initialQualificationSpeed = 0f;
+            lastHeavyReversalSpeed = 0f;
+            lastReversalAlignment = 0f;
+            isInitialSlashQualified = false;
+            lastRecognizedGesture = "None";
+            pendingAttackIntent = default;
+            hasPendingAttackIntent = false;
+        }
+
+        public void QueueAttackIntent(KatanaAttackIntent intent)
+        {
+            pendingAttackIntent = intent;
+            hasPendingAttackIntent = intent.IsValid;
+        }
+
+        public bool TryConsumeAttackIntent(out KatanaAttackIntent intent)
+        {
+            intent = pendingAttackIntent;
+            bool hadIntent = hasPendingAttackIntent;
+            pendingAttackIntent = default;
+            hasPendingAttackIntent = false;
+            return hadIntent;
+        }
+
+        private KatanaGestureConfig GetGestureConfig()
+        {
+            return ActiveKatanaScriptable != null
+                ? ActiveKatanaScriptable.GestureConfig
+                : null;
+        }
+
+        private void SyncGestureDebug()
+        {
+            currentLookVelocity = gestureRecognizer.CurrentLookVelocity;
+            currentLookSpeed = gestureRecognizer.CurrentLookSpeed;
+            initialQualificationSpeed =
+                gestureRecognizer.InitialQualificationSpeed;
+            lastHeavyReversalSpeed =
+                gestureRecognizer.LastHeavyReversalSpeed;
+            lastReversalAlignment =
+                gestureRecognizer.LastReversalAlignment;
+            isInitialSlashQualified =
+                gestureRecognizer.IsInitialSlashQualified;
+        }
+
         public void Despawn(KatanaScriptableObject activeKatana)
         {
             CloseDamageWindow();
@@ -158,6 +259,14 @@ namespace Burntwax
 
             activeKatana.Spawn(player, Katana, this);
             ActiveKatanaScriptable = activeKatana;
+
+            if (activeKatana.GestureConfig == null)
+            {
+                Debug.LogWarning(
+                    $"Katana '{activeKatana.name}' has no Gesture Config. " +
+                    "It cannot recognize light or heavy slashes.",
+                    this);
+            }
         }
 
         public void Pickup(KatanaScriptableObject katana)
@@ -278,6 +387,7 @@ namespace Burntwax
         private void OnDisable()
         {
             CloseDamageWindow();
+            ResetGestureRecognition();
         }
 
 
