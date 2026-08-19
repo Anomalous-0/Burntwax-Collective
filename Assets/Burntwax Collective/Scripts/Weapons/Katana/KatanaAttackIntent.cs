@@ -34,16 +34,27 @@ namespace Burntwax
             if (direction.sqrMagnitude <= Mathf.Epsilon)
                 return KatanaSlashDirection.None;
 
-            if (Mathf.Abs(direction.x) >= Mathf.Abs(direction.y))
-            {
-                return direction.x < 0f
-                    ? KatanaSlashDirection.Left
-                    : KatanaSlashDirection.Right;
-            }
+            float angle = Mathf.Atan2(direction.y, direction.x)
+                * Mathf.Rad2Deg;
+            if (angle < 0f)
+                angle += 360f;
 
-            return direction.y > 0f
-                ? KatanaSlashDirection.Up
-                : KatanaSlashDirection.Down;
+            // Choose the nearest available animation direction. Horizontal
+            // clips are centered on 0/180 degrees; diagonal clips are centered
+            // on 45/135/225/315 degrees. Because there are no straight up or
+            // down clips, those axes divide their neighboring diagonals.
+            if (angle <= 22.5f || angle >= 337.5f)
+                return KatanaSlashDirection.Right;
+            if (angle <= 90f)
+                return KatanaSlashDirection.UpRight;
+            if (angle < 157.5f)
+                return KatanaSlashDirection.UpLeft;
+            if (angle <= 202.5f)
+                return KatanaSlashDirection.Left;
+            if (angle < 270f)
+                return KatanaSlashDirection.DownLeft;
+
+            return KatanaSlashDirection.DownRight;
         }
     }
 }

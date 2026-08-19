@@ -72,10 +72,14 @@ namespace Burntwax
                     return -attackerRight;
                 case KatanaSlashDirection.Right:
                     return attackerRight;
-                case KatanaSlashDirection.Up:
-                    return Vector3.up;
-                case KatanaSlashDirection.Down:
-                    return Vector3.down;
+                case KatanaSlashDirection.UpLeft:
+                    return (-attackerRight + Vector3.up).normalized;
+                case KatanaSlashDirection.UpRight:
+                    return (attackerRight + Vector3.up).normalized;
+                case KatanaSlashDirection.DownLeft:
+                    return (-attackerRight + Vector3.down).normalized;
+                case KatanaSlashDirection.DownRight:
+                    return (attackerRight + Vector3.down).normalized;
                 default:
                     return Vector3.zero;
             }
