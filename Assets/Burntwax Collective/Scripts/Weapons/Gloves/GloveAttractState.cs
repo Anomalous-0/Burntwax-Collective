@@ -65,6 +65,10 @@ namespace Burntwax
                 attractedBody.useGravity = originalUseGravity;
                 attractedBody.interpolation = originalInterpolation;
             }
+
+            // Whichever way the pull ended, let the objects that trailed in behind the primary
+            // settle instead of coasting into the player.
+            Ctx.SettleSecondaryObjects();
         }
 
 

@@ -13,6 +13,7 @@ namespace Burntwax
         private Quaternion rotationOffsetFromHoldPoint;
         private bool hasRotationOffset;
         private float accumulatedHoverSpin;
+        private float bobPhase;
 
         public GloveHoldState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
@@ -23,6 +24,7 @@ namespace Burntwax
         {
             hasRotationOffset = false;
             accumulatedHoverSpin = 0f;
+            bobPhase = 0f;
             holdProfile = Ctx.heldObject != null
                 ? Ctx.heldObject.GetComponent<GloveHoldProfile>()
                 : null;
@@ -102,6 +104,22 @@ namespace Burntwax
                 : Vector3.zero;
             Vector3 targetPosition = Ctx.restPos.transform.TransformPoint(
                 localPositionOffset);
+
+            // Subtle vertical bob so the object reads as floating in a field rather than pinned.
+            // Added to the target (not the object) so the hold lerp smooths it automatically.
+            float bobMultiplier = holdProfile != null
+                ? holdProfile.HoverBobMultiplier
+                : 1f;
+            float bobAmplitude = Ctx.HoldBobAmplitude * bobMultiplier;
+            if (bobAmplitude > 0f && Ctx.HoldBobFrequency > 0f)
+            {
+                bobPhase = Mathf.Repeat(
+                    bobPhase + Ctx.HoldBobFrequency * Time.deltaTime,
+                    1f);
+                float bobOffset = Mathf.Sin(bobPhase * Mathf.PI * 2f) * bobAmplitude;
+                targetPosition += Vector3.up * bobOffset;
+            }
+
             Ctx.heldObject.transform.position = Vector3.Lerp(
                 Ctx.heldObject.transform.position,
                 targetPosition,

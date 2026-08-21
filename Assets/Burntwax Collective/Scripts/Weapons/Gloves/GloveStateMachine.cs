@@ -90,9 +90,15 @@ namespace Burntwax
         [SerializeField] private float holdLerpSpeed = 18f;
         [Tooltip("Spin speed (deg/sec) of the object while it orbits in the hand.")]
         [SerializeField] private float holdSpinSpeed = 90f;
+        [Tooltip("Vertical bob height (metres) of the held object, so it reads as suspended in a field rather than pinned to a point. Per-object scaled by GloveHoldProfile.")]
+        [SerializeField, Min(0f)] private float holdBobAmplitude = 0.04f;
+        [Tooltip("Bob cycles per second of the held object.")]
+        [SerializeField, Min(0f)] private float holdBobFrequency = 0.8f;
         [Header("Secondary Attraction")]
         [Tooltip("Pull applied to non-primary consumables in reach. Scaled down by distance from the primary.")]
         [SerializeField, Min(0f)] private float secondaryAttractionForce = 12f;
+        [Tooltip("Fraction of momentum kept by tugged non-primary objects once the pull ends. Lower = they settle faster instead of rushing the player.")]
+        [SerializeField, Range(0f, 1f)] private float secondarySettleDamping = 0.25f;
         [Header("Dropping")]
         [SerializeField, Min(0f)] private float dropForwardOffset = 0.4f;
         [SerializeField, Min(0f)] private float dropForwardVelocity = 1.5f;
@@ -145,6 +151,8 @@ namespace Burntwax
         public float RestDistance => restDistance;
         public float HoldLerpSpeed => holdLerpSpeed;
         public float HoldSpinSpeed => holdSpinSpeed;
+        public float HoldBobAmplitude => holdBobAmplitude;
+        public float HoldBobFrequency => holdBobFrequency;
         // Read-only gate: lets Attract/Hold offer the katana-slash early launch without the glove
         // being a WeaponMode. The glove still lives alongside the Arsenal, it just reads its mode.
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
@@ -175,6 +183,9 @@ namespace Burntwax
         private readonly List<CollisionIgnoreRecord> heldPlayerCollisionIgnores = new();
         private readonly RaycastHit[] detectionHits = new RaycastHit[16];
         private readonly Collider[] secondaryBuffer = new Collider[16];
+        // Every non-primary body tugged during the current attract, so their momentum can be bled
+        // off cleanly when the pull ends instead of leaving them rushing the player.
+        private readonly HashSet<Rigidbody> pulledSecondaryBodies = new();
         private readonly RaycastHit[] physicalProjectileAimHits = new RaycastHit[16];
         private Arsenal arsenal;
         private MaterialPropertyBlock detectionMpb;
@@ -394,7 +405,30 @@ namespace Burntwax
 
                 Vector3 pullDir = (towardPosition - body.position).normalized;
                 body.AddForce(pullDir * (secondaryAttractionForce * weight), ForceMode.Acceleration);
+                pulledSecondaryBodies.Add(body);
             }
+        }
+
+        /// <summary>
+        /// Called when the attract pull ends (the primary latched, launched, or the pull was aborted).
+        /// Bleeds the inward momentum off every non-primary object that was tugged in behind the primary
+        /// so they settle in place instead of continuing to rush the player, then clears the tracking set.
+        /// </summary>
+        public void SettleSecondaryObjects()
+        {
+            foreach (Rigidbody body in pulledSecondaryBodies)
+            {
+                if (body == null)
+                    continue;
+
+                // The primary is handled by the attract/hold states themselves; never damp it here.
+                if (heldObject != null && body.gameObject == heldObject)
+                    continue;
+
+                body.linearVelocity *= secondarySettleDamping;
+            }
+
+            pulledSecondaryBodies.Clear();
         }
 
 

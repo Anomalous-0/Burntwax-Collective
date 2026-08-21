@@ -32,15 +32,20 @@ namespace Burntwax
         [Tooltip("Multiplies the glove's normal hover spin. Set to 0 to keep the authored rotation locked.")]
         [SerializeField, Min(0f)] private float hoverSpinMultiplier = 1f;
 
+        [Tooltip("Multiplies the glove's vertical hover bob amplitude. Set to 0 to suspend the object without bobbing.")]
+        [SerializeField, Min(0f)] private float hoverBobMultiplier = 1f;
+
         public GloveHoldPose HoldPose => holdPose;
         public Vector3 LocalPositionOffset => localPositionOffset;
         public bool OverrideRotation => overrideRotation;
         public Quaternion LocalHeldRotation => Quaternion.Euler(localHeldRotation);
         public float HoverSpinMultiplier => hoverSpinMultiplier;
+        public float HoverBobMultiplier => hoverBobMultiplier;
 
         private void OnValidate()
         {
             hoverSpinMultiplier = Mathf.Max(0f, hoverSpinMultiplier);
+            hoverBobMultiplier = Mathf.Max(0f, hoverBobMultiplier);
         }
     }
 }
