@@ -80,6 +80,8 @@ namespace Burntwax
                     return (-attackerRight + Vector3.down).normalized;
                 case KatanaSlashDirection.DownRight:
                     return (attackerRight + Vector3.down).normalized;
+                case KatanaSlashDirection.Down:
+                    return Vector3.down;
                 default:
                     return Vector3.zero;
             }

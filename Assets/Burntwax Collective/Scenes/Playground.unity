@@ -6539,12 +6539,6 @@ MonoBehaviour:
   gloveChargeDuration: 1
   aimIsPressed: 0
   attackIsPressed: 0
-  slash: 0
-  parry: 0
-  isTrackingSlash: 0
-  isTrackingParry: 0
-  slashStartDirection: {x: 0, y: 0}
-  parryStartDirection: {x: 0, y: 0}
 --- !u!4 &371505449
 Transform:
   m_ObjectHideFlags: 0
@@ -33520,7 +33514,7 @@ PrefabInstance:
     - target: {fileID: 7120825543759020784, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7409600953642053044, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}

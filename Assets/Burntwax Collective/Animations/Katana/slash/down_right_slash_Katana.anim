@@ -37,7 +37,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.16666667
-        value: {x: 81.761, y: 0, z: 0}
+        value: {x: 41.068, y: 137.77, z: 119.306}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -1024,7 +1024,7 @@ AnimationClip:
         outWeight: {x: 0.33333334, y: 0.33333334, z: 0.33333334}
       - serializedVersion: 3
         time: 0.16666667
-        value: {x: 0, y: -0.618, z: 0.198}
+        value: {x: 0.174, y: -0.618, z: 0.198}
         inSlope: {x: 0, y: 0, z: 0}
         outSlope: {x: 0, y: 0, z: 0}
         tangentMode: 0
@@ -1749,7 +1749,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.16666667
-        value: 0
+        value: 0.174
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1866,7 +1866,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.16666667
-        value: 81.761
+        value: 41.068
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1905,7 +1905,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.16666667
-        value: 0
+        value: 137.77
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1944,7 +1944,7 @@ AnimationClip:
         outWeight: 0.33333334
       - serializedVersion: 3
         time: 0.16666667
-        value: 0
+        value: 119.306
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -6135,7 +6135,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: WeaponHolder/WeaponPivot
+    path: root/upperarm_R/lowerarm_R/hand_R/thumb_1_R/thumb_2_R/thumb_3_R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6147,7 +6147,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: WeaponHolder/WeaponPivot
+    path: root/upperarm_R/lowerarm_R/hand_R/thumb_1_R/thumb_2_R/thumb_3_R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -6159,7 +6159,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: WeaponHolder/WeaponPivot
+    path: root/upperarm_R/lowerarm_R/hand_R/thumb_1_R/thumb_2_R/thumb_3_R
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -7071,7 +7071,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: root/upperarm_R/lowerarm_R/hand_R/thumb_1_R/thumb_2_R/thumb_3_R
+    path: WeaponHolder/WeaponPivot
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -7083,7 +7083,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: root/upperarm_R/lowerarm_R/hand_R/thumb_1_R/thumb_2_R/thumb_3_R
+    path: WeaponHolder/WeaponPivot
     classID: 4
     script: {fileID: 0}
     flags: 0
@@ -7095,7 +7095,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: root/upperarm_R/lowerarm_R/hand_R/thumb_1_R/thumb_2_R/thumb_3_R
+    path: WeaponHolder/WeaponPivot
     classID: 4
     script: {fileID: 0}
     flags: 0

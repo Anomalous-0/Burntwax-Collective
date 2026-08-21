@@ -10,11 +10,12 @@ namespace Burntwax
     public abstract class KatanaSlashStateBase : KatanaBaseState
     {
         private const float LeftSlashBlend = 0f;
-        private const float RightSlashBlend = 0.2f;
-        private const float UpLeftSlashBlend = 0.4f;
-        private const float UpRightSlashBlend = 0.6f;
-        private const float DownLeftSlashBlend = 0.8f;
-        private const float DownRightSlashBlend = 1f;
+        private const float RightSlashBlend = 0.16666667f;
+        private const float UpLeftSlashBlend = 0.33333334f;
+        private const float UpRightSlashBlend = 0.5f;
+        private const float DownLeftSlashBlend = 0.6666667f;
+        private const float DownRightSlashBlend = 0.8333333f;
+        private const float DownSlashBlend = 1f;
 
         private Vector2 slashDirection;
         private KatanaAttackIntent bufferedNextAttack;
@@ -159,6 +160,8 @@ namespace Burntwax
                     return DownLeftSlashBlend;
                 case KatanaSlashDirection.DownRight:
                     return DownRightSlashBlend;
+                case KatanaSlashDirection.Down:
+                    return DownSlashBlend;
                 default:
                     return RightSlashBlend;
             }

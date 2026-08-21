@@ -39,10 +39,10 @@ namespace Burntwax
             if (angle < 0f)
                 angle += 360f;
 
-            // Choose the nearest available animation direction. Horizontal
-            // clips are centered on 0/180 degrees; diagonal clips are centered
-            // on 45/135/225/315 degrees. Because there are no straight up or
-            // down clips, those axes divide their neighboring diagonals.
+            // Choose the nearest available animation direction. There is no
+            // straight-up clip, so 90 degrees is the boundary between the two
+            // upward diagonals. The straight-down clip is centered on 270
+            // degrees and owns the 247.5-292.5 degree sector.
             if (angle <= 22.5f || angle >= 337.5f)
                 return KatanaSlashDirection.Right;
             if (angle <= 90f)
@@ -51,8 +51,10 @@ namespace Burntwax
                 return KatanaSlashDirection.UpLeft;
             if (angle <= 202.5f)
                 return KatanaSlashDirection.Left;
-            if (angle < 270f)
+            if (angle < 247.5f)
                 return KatanaSlashDirection.DownLeft;
+            if (angle <= 292.5f)
+                return KatanaSlashDirection.Down;
 
             return KatanaSlashDirection.DownRight;
         }
