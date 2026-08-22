@@ -5255,7 +5255,6 @@ MonoBehaviour:
   raiseSpeed: 5
   raiseAmount: 0
   equipWaitTime: 4
-  BlastEndAnim: 0
   enterAttract: 0
   enterCharge: 0
   detectedObject: {fileID: 0}
@@ -5264,37 +5263,49 @@ MonoBehaviour:
   castRadius: 0.6
   attractableLayer:
     serializedVersion: 2
-    m_Bits: 72704
+    m_Bits: 72832
   detectionTint: {r: 0, g: 1, b: 1, a: 1}
   detectionTintStrength: 0.096
   heldObject: {fileID: 0}
   restPos: {fileID: 2184561857381748581}
-  attractionSteeringAcceleration: 35
-  initialAttractionVelocity: 16
+  smallHoldAnimationState: hold_Glove
+  largeHoldAnimationState: hold_large_Glove
+  attractionSteeringAcceleration: 110
+  minimumAttractionVelocity: 11
+  initialAttractionVelocity: 12
   fullAttractionVelocityDistance: 8
-  attractionCruiseVelocity: 9
+  attractionCruiseVelocity: 11
   attractionSlowdownRate: 5
-  arcPeakPosition: 0.701
-  arcHeightPerMeter: 0.18
-  minimumArcHeight: 0.35
-  maximumArcHeight: 0.36
+  arcPeakPosition: 0.512
+  arcHeightPerMeter: 0.15
+  minimumArcHeight: 0.4
+  maximumArcHeight: 0.8
+  minimumAttractionSpin: 10
+  maximumAttractionSpin: 12
   restDistance: 0.7
   holdLerpSpeed: 100
-  holdSpinSpeed: 90
+  holdSpinSpeed: 0
+  holdBobAmplitude: 0.08
+  holdBobFrequency: 0.61
   secondaryAttractionForce: 3
+  secondarySettleDamping: 0.25
   dropForwardOffset: 0
   dropForwardVelocity: 3.5
   playerVelocityInheritance: 1
   postDropCollisionDelay: 0.35
-  katanaLaunchSpeed: 25
-  katanaLaunchSpin: 6
+  katanaLaunchSpeed: 35
+  katanaLaunchSpin: 0
+  physicalProjectileAimDistance: 100
+  physicalProjectileAimLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   minChargeSpeed: 0.45
   blastPrefab: {fileID: 0}
-  blastSpeed: 45
-  blastMinDamage: 3
-  blastMaxDamage: 5
-  blastMinForce: 1
-  blastMaxForce: 4
+  blastSpeed: 80
+  blastMinDamage: 6
+  blastMaxDamage: 20
+  blastMinForce: 5
+  blastMaxForce: 11
   blastShake: {fileID: 0}
   blastMinShake: 0.4
   blastMaxShake: 1.4
@@ -5304,7 +5315,6 @@ MonoBehaviour:
   attractHash: 0
   blastHash: 0
   blastProjectileHash: 0
-  holdHash: 0
 --- !u!114 &2488700794300891772
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5346,8 +5356,18 @@ MonoBehaviour:
   isParrying: 0
   ableToSlashInMiddleOfAnimation: 0
   fullyEquipped: 0
+  currentDashCharges: 0
+  airborneDashesUsed: 0
   currentAttackStrength: 0
+  currentSlashDirection: 0
   isDamageWindowActive: 0
+  lastRecognizedGesture: None
+  currentLookVelocity: {x: 0, y: 0}
+  currentLookSpeed: 0
+  initialQualificationSpeed: 0
+  lastHeavyReversalSpeed: 0
+  lastReversalAlignment: 0
+  isInitialSlashQualified: 0
   selectedByArsenal: 0
 --- !u!114 &5715380160163415041
 MonoBehaviour:
@@ -79253,7 +79273,7 @@ Transform:
   m_GameObject: {fileID: 8919120757623232981}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.057, z: -0.556}
+  m_LocalPosition: {x: 0, y: -0.089, z: -0.581}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79284,7 +79304,7 @@ Transform:
   m_GameObject: {fileID: 8932593955787796730}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.064, z: -1.216}
+  m_LocalPosition: {x: 0, y: 0.016, z: -1.408}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -79660,7 +79680,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3274835466470407498, guid: 3836e303a14af3c44a6a43391ac3b389,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2182621963264042968}
+      addedObject: {fileID: 6469964116889907445}
   m_SourcePrefab: {fileID: 100100000, guid: 3836e303a14af3c44a6a43391ac3b389, type: 3}
 --- !u!114 &3983912548163265846 stripped
 MonoBehaviour:
@@ -79686,24 +79706,26 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5737810892294815674}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &2182621963264042968
-BoxCollider:
+--- !u!114 &6469964116889907445
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7120825543759020784}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.03, y: 0.2, z: 1.28}
-  m_Center: {x: 0, y: -0.03, z: -0.66}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a73840a763f64bc0ae4afe79e0b4ea1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaBladeDetector
+  stateMachine: {fileID: 2488700794300891772}
+  bladePoints:
+  - {fileID: 7655207716374304547}
+  - {fileID: 6833142930641391484}
+  - {fileID: 5096204380843056294}
+  bladeRadius: 0.04
+  hittableLayers:
+    serializedVersion: 2
+    m_Bits: 15825
+  triggerInteraction: 2
+  logDetections: 1

@@ -46,12 +46,12 @@ namespace Burntwax
 
         public override void InitializeSubState()
         {
-            if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
+            if (!InputManager.Instance.moveIsPressed)
             {
 
                 SetSubState(Factory.Idle());
             }
-            else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
+            else if (!InputManager.Instance.sprintIsPressed || !Ctx.CanSprint)
             {
 
                 SetSubState(Factory.Walk());

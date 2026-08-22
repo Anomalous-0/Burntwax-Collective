@@ -74,6 +74,35 @@ namespace Burntwax
         public bool ableToSlashInMiddleOfAnimation;
         public bool fullyEquipped;
 
+        [Header("Dash (read-only)")]
+        [SerializeField] private int currentDashCharges;
+        [SerializeField] private int airborneDashesUsed;
+
+        private readonly List<float> dashRechargeCompletionTimes = new();
+
+        public int CurrentDashCharges => currentDashCharges;
+        public int AirborneDashesUsed => airborneDashesUsed;
+        public bool HasDashCharge => currentDashCharges > 0;
+        public bool IsDashEquipped => enabled
+            && gameObject.activeInHierarchy
+            && arsenal != null
+            && arsenal.currentMode == Arsenal.WeaponMode.Katana
+            && ActiveKatanaScriptable != null
+            && fullyEquipped
+            && Katana != null
+            && Katana.activeInHierarchy;
+        public bool CanDash
+        {
+            get
+            {
+                if (!IsDashEquipped || !HasDashCharge)
+                    return false;
+
+                return IsPlayerGrounded()
+                    || airborneDashesUsed < ActiveKatanaScriptable.MaxDashCharges;
+            }
+        }
+
         [Header("Current Attack")]
         [SerializeField] private KatanaAttackStrength currentAttackStrength =
             KatanaAttackStrength.Light;
@@ -149,7 +178,14 @@ namespace Burntwax
         private void Update()
         {
             if (ActiveKatanaScriptable != null)
+            {
+                TickDashRecharge();
+
+                if (IsPlayerGrounded())
+                    airborneDashesUsed = 0;
+
                 currentState.UpdateStates();
+            }
 
             currentStateText = CurrentState.GetType().Name;
         }
@@ -242,6 +278,10 @@ namespace Burntwax
         public void Despawn(KatanaScriptableObject activeKatana)
         {
             CloseDamageWindow();
+            fullyEquipped = false;
+            currentDashCharges = 0;
+            airborneDashesUsed = 0;
+            dashRechargeCompletionTimes.Clear();
 
             if (Katana != null)
                 Katana.SetActive(false);
@@ -292,6 +332,7 @@ namespace Burntwax
             ableToSlashInMiddleOfAnimation = false;
 
             Spawn(KatanaScriptable);
+            RefillDashCharges();
             crosshair?.SetKatanaCrosshair(ActiveKatanaScriptable);
 
             currentState = states.Idle();
@@ -306,6 +347,53 @@ namespace Burntwax
                 camShake = Katana.GetComponent<CinemachineImpulseSource>();
 
             ResetAnimationFlags();
+        }
+
+        public bool TryConsumeDashCharge()
+        {
+            if (!CanDash)
+                return false;
+
+            currentDashCharges--;
+
+            if (!IsPlayerGrounded())
+                airborneDashesUsed++;
+
+            float rechargeDuration = Mathf.Max(
+                0.01f,
+                ActiveKatanaScriptable.DashRechargeDuration);
+            dashRechargeCompletionTimes.Add(Time.time + rechargeDuration);
+            return true;
+        }
+
+        public void RefillDashCharges()
+        {
+            dashRechargeCompletionTimes.Clear();
+            airborneDashesUsed = 0;
+            currentDashCharges = ActiveKatanaScriptable != null
+                ? Mathf.Max(0, ActiveKatanaScriptable.MaxDashCharges)
+                : 0;
+        }
+
+        private void TickDashRecharge()
+        {
+            for (int i = dashRechargeCompletionTimes.Count - 1; i >= 0; i--)
+            {
+                if (Time.time < dashRechargeCompletionTimes[i])
+                    continue;
+
+                currentDashCharges = Mathf.Min(
+                    currentDashCharges + 1,
+                    ActiveKatanaScriptable.MaxDashCharges);
+                dashRechargeCompletionTimes.RemoveAt(i);
+            }
+        }
+
+        private bool IsPlayerGrounded()
+        {
+            return stateMachine != null
+                && (stateMachine.CurrentState == stateMachine.states.Grounded()
+                    || stateMachine.CurrentState == stateMachine.states.Slope());
         }
 
         private void ResetAnimationFlags()
@@ -440,6 +528,7 @@ namespace Burntwax
             ableToSlashInMiddleOfAnimation = false;
 
             Spawn(KatanaScriptable);
+            RefillDashCharges();
             crosshair?.SetKatanaCrosshair(ActiveKatanaScriptable);
 
             currentState = states.Idle();

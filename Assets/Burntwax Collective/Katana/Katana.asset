@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaScriptableObject
   ID: 0
   Model: {fileID: 0}
+  MaxDashCharges: 3
+  DashSpeed: 20
+  DashDuration: 0.2
+  DashRechargeDuration: 1
   DamageConfig: {fileID: 11400000, guid: d0918050de81656449c21ab9c6b8abd8, type: 2}
   ImpactConfig: {fileID: 11400000, guid: 2b48d56ee01b484797b452415c40a67f, type: 2}
   GestureConfig: {fileID: 11400000, guid: af28772b1e4c4df58f212794dec6bdcd, type: 2}

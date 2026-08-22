@@ -67,13 +67,6 @@ namespace Burntwax
                 Ctx.ResetGestureRecognition();
                 SwitchState(Factory.Parry());
             }
-            else if (InputPrioritySorter.Instance.SprintIsPriority()
-                && Ctx.stateMachine.currentState.CurrentSubstate()
-                    != Ctx.stateMachine.states.Idle())
-            {
-                Ctx.ResetGestureRecognition();
-                SwitchState(Factory.Stow());
-            }
         }
 
         public override void InitializeSubState()

@@ -23,11 +23,14 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputManager.Instance.moveIsPressed && InputManager.Instance.sprintIsPressed && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot())
+            if (TryStartDash())
+                return;
+
+            if (InputManager.Instance.moveIsPressed && InputManager.Instance.sprintIsPressed && Ctx.CanSprint && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot() && Ctx.gunMachine.CurrentState.CurrentSubstate() != Ctx.gunMachine.states.Shoot())
             {
                 SwitchState(Factory.Sprint());
             }
-            else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
+            else if (InputManager.Instance.moveIsPressed)
             {
                 SwitchState(Factory.Walk());
             }

@@ -15,7 +15,8 @@ namespace Burntwax
         fall,
         wallrun,
         wallcharge,
-        walljump
+        walljump,
+        dash
     }
 
     public class PlayerStateFactory
@@ -35,9 +36,10 @@ namespace Burntwax
             states[PlayerStates.jump] = new PlayerJumpState(context, this);
             states[PlayerStates.grounded] = new PlayerGroundedState(context, this);
             states[PlayerStates.fall] = new PlayerFallState(context, this);
-            states[PlayerStates.wallrun] = new PlayerWallRunState(context, this);
-            states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
-            states[PlayerStates.wallcharge] = new PlayerWallChargeState(context, this);
+            states[PlayerStates.dash] = new PlayerDashState(context, this);
+            // states[PlayerStates.wallrun] = new PlayerWallRunState(context, this);
+            // states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
+            // states[PlayerStates.wallcharge] = new PlayerWallChargeState(context, this);
         }
 
         public PlayerBaseState Idle()
@@ -80,19 +82,24 @@ namespace Burntwax
             return states[PlayerStates.fall];
         }
 
-        public PlayerBaseState Wallrun()
+        public PlayerBaseState Dash()
         {
-            return states[PlayerStates.wallrun];
-        }
-        public PlayerBaseState Walljump()
-        {
-            return states[PlayerStates.walljump];
+            return states[PlayerStates.dash];
         }
 
-        public PlayerBaseState Wallcharge()
-        {
-            return states[PlayerStates.wallcharge];
-        }
+        // public PlayerBaseState Wallrun()
+        // {
+        //     return states[PlayerStates.wallrun];
+        // }
+        // public PlayerBaseState Walljump()
+        // {
+        //     return states[PlayerStates.walljump];
+        // }
+
+        // public PlayerBaseState Wallcharge()
+        // {
+        //     return states[PlayerStates.wallcharge];
+        // }
 
     }
 

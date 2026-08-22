@@ -13,6 +13,21 @@ namespace Burntwax
         protected PlayerStateMachine Ctx { get { return ctx; } }
         protected PlayerStateFactory Factory { get { return factory; } }
 
+        protected bool TryStartDash()
+        {
+            if (isRootState || InputManager.Instance == null
+                || !InputManager.Instance.dashIsPressed)
+                return false;
+
+            KatanaStateMachine katana = Ctx.KatanaMachine;
+            if (katana == null || !katana.CanDash)
+                return false;
+
+            InputManager.Instance.ConsumeDashInput();
+            SwitchState(Factory.Dash());
+            return true;
+        }
+
 
         public PlayerBaseState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
         {

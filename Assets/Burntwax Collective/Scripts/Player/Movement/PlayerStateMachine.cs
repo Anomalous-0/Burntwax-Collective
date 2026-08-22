@@ -17,6 +17,11 @@ namespace Burntwax
 
         [Header("State Machines")]
         public GunStateMachine gunMachine;
+        [HideInInspector] public KatanaStateMachine katanaMachine;
+
+        [Header("Dash Collision")]
+        [SerializeField] LayerMask dashBlockingLayers;
+        [SerializeField, Min(0f)] float dashCollisionSkin = 0.05f;
 
 
 
@@ -116,6 +121,17 @@ namespace Burntwax
         public float GroundDrag { get { return groundDrag; } }
         public float AirDrag { get { return airDrag; } }
         public float WallDrag { get { return wallDrag; } }
+        public KatanaStateMachine KatanaMachine { get { return katanaMachine; } }
+        public bool CanSprint
+        {
+            get
+            {
+                return katanaMachine == null
+                    || katanaMachine.arsenal == null
+                    || katanaMachine.arsenal.currentMode != Arsenal.WeaponMode.Katana;
+            }
+        }
+        public float DashCollisionSkin { get { return dashCollisionSkin; } }
 
 
         // Spring Capsule
@@ -162,6 +178,9 @@ namespace Burntwax
 
         private void Awake()
         {
+            if (gunMachine != null)
+                katanaMachine = gunMachine.GetComponent<KatanaStateMachine>();
+
             states = new PlayerStateFactory(this);
             currentState = states.Grounded();
             currentState.EnterState();
@@ -186,14 +205,16 @@ namespace Burntwax
             currentSubStateText = currentState.CurrentSubstate().GetType().Name;
             playerIsSloped = PlayerSlopeCheck();
             playerIsGrounded = PlayerGroundCheck();
-            if (currentState == states.Walljump() && !ableToWallJump)
-            {
-                StartCoroutine(WallJumpGracePeriod());
-            }
+            // if (currentState == states.Walljump() && !ableToWallJump)
+            // {
+            //     StartCoroutine(WallJumpGracePeriod());
+            // }
         }
 
         private void FixedUpdate()
         {
+            if (currentState.CurrentSubstate() == states.Dash())
+                ((PlayerDashState)states.Dash()).FixedUpdateState();
 
             ApplyFloatingForce();
             PlayerMove();
@@ -215,6 +236,9 @@ namespace Burntwax
 
         private void ApplyFloatingForce()
         {
+            if (currentState.CurrentSubstate() == states.Dash())
+                return;
+
             if ((playerIsGrounded || playerIsSloped) && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
             {
                 Vector3 vel = rb.linearVelocity;
@@ -246,14 +270,8 @@ namespace Burntwax
         {
             if (!disableMovement)
             {
-                if (currentState != states.Wallrun())
-                {
-                    moveDirection = player.forward * verticalInput + player.right * horizontalInput;
-                }
-                else
-                {
-                    moveDirection = Camera.main.transform.forward * verticalInput + Camera.main.transform.right * horizontalInput;
-                }
+                moveDirection = player.forward * verticalInput
+                    + player.right * horizontalInput;
 
                 if (PlayerSlopeCheck())
                 {
@@ -275,6 +293,66 @@ namespace Burntwax
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         }
 
+        public bool TryGetDashBlock(
+            Vector3 direction,
+            float distance,
+            out RaycastHit hit)
+        {
+            hit = default;
+
+            if (capsuleCollider == null || direction.sqrMagnitude <= 0f
+                || distance <= 0f || dashBlockingLayers.value == 0)
+                return false;
+
+            Transform capsuleTransform = capsuleCollider.transform;
+            Vector3 scale = capsuleTransform.lossyScale;
+            Vector3 absoluteScale = new Vector3(
+                Mathf.Abs(scale.x),
+                Mathf.Abs(scale.y),
+                Mathf.Abs(scale.z));
+
+            Vector3 localAxis;
+            float axisScale;
+            float radiusScale;
+
+            switch (capsuleCollider.direction)
+            {
+                case 0:
+                    localAxis = Vector3.right;
+                    axisScale = absoluteScale.x;
+                    radiusScale = Mathf.Max(absoluteScale.y, absoluteScale.z);
+                    break;
+                case 2:
+                    localAxis = Vector3.forward;
+                    axisScale = absoluteScale.z;
+                    radiusScale = Mathf.Max(absoluteScale.x, absoluteScale.y);
+                    break;
+                default:
+                    localAxis = Vector3.up;
+                    axisScale = absoluteScale.y;
+                    radiusScale = Mathf.Max(absoluteScale.x, absoluteScale.z);
+                    break;
+            }
+
+            Vector3 axis = capsuleTransform.TransformDirection(localAxis).normalized;
+            Vector3 center = capsuleTransform.TransformPoint(capsuleCollider.center);
+            float radius = capsuleCollider.radius * radiusScale;
+            float height = Mathf.Max(capsuleCollider.height * axisScale, radius * 2f);
+            float halfSegment = Mathf.Max(0f, height * 0.5f - radius);
+            Vector3 pointOne = center + axis * halfSegment;
+            Vector3 pointTwo = center - axis * halfSegment;
+
+            return Physics.CapsuleCast(
+                pointOne,
+                pointTwo,
+                radius,
+                direction.normalized,
+                out hit,
+                distance,
+                dashBlockingLayers,
+                QueryTriggerInteraction.Ignore);
+        }
+
         private bool PlayerGroundCheck()
         {
             Debug.DrawRay(rb.position, Vector3.down * rideHeight, Color.red);
@@ -289,6 +367,8 @@ namespace Burntwax
 
         private void SpeedControl()
         {
+            if (currentState.CurrentSubstate() == states.Dash())
+                return;
 
             float speedCap = playerVelocity * ChargeSpeedMultiplier;
 

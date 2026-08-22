@@ -101,7 +101,7 @@ namespace Burntwax
             GetInput();
 
             onSolid = player.currentState == player.states.Grounded()
-                      || player.currentState == player.states.Wallrun()
+                      /*|| player.currentState == player.states.Wallrun()*/
                       || player.currentState == player.states.Slope();
 
             if (InputManager.Instance.MoveInput != Vector2.zero && onSolid && cam.currentState != cam.states.Aim() && gun.CurrentState != gun.states.Shoot())

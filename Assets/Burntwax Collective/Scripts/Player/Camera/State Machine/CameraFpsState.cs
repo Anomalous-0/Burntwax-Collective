@@ -38,10 +38,10 @@ namespace Burntwax
                 SwitchState(Factory.Aim());
             }
 
-            else if (Ctx.player.currentState == Ctx.player.states.Wallcharge() )
-            {
-                SwitchState(Factory.Wallcharge());
-            }
+            // else if (Ctx.player.currentState == Ctx.player.states.Wallcharge() )
+            // {
+            //     SwitchState(Factory.Wallcharge());
+            // }
         }
 
         public override void InitializeSubState() { }

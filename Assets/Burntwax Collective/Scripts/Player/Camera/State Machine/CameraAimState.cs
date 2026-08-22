@@ -36,10 +36,10 @@ namespace Burntwax
                 // Un-zoom the camera if aim is released OR the glove is equipped mid-aim.
                 SwitchState(Factory.Fps());
             }
-            else if (Ctx.player.currentState == Ctx.player.states.Wallcharge())
-            {
-                SwitchState(Factory.Wallcharge());
-            }
+            // else if (Ctx.player.currentState == Ctx.player.states.Wallcharge())
+            // {
+            //     SwitchState(Factory.Wallcharge());
+            // }
 
 
 

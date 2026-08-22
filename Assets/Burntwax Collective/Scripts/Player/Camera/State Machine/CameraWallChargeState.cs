@@ -32,11 +32,11 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (Ctx.player.currentState != Ctx.player.states.Wallcharge())
-            {
+            // if (Ctx.player.currentState != Ctx.player.states.Wallcharge())
+            // {
 
-                SwitchState(Factory.Fps());
-            }
+            //     SwitchState(Factory.Fps());
+            // }
             if (InputPrioritySorter.Instance.AimIsPriority() && Ctx.gun.CurrentState != Ctx.gun.states.Reload() && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot())
             {
                 SwitchState(Factory.Aim());

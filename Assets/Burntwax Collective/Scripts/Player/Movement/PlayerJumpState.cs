@@ -53,18 +53,18 @@ namespace Burntwax
             }
             else if (Ctx.WallLeft || Ctx.WallRight || Ctx.WallFront || Ctx.WallBack)
             {
-                SwitchState(Factory.Wallrun());
+                // SwitchState(Factory.Wallrun());
             }
         }
 
         public override void InitializeSubState()
         {
-            if (!InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
+            if (!InputManager.Instance.moveIsPressed)
             {
 
                 SetSubState(Factory.Idle());
             }
-            else if (InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
+            else if (!InputManager.Instance.sprintIsPressed || !Ctx.CanSprint)
             {
                 SetSubState(Factory.Walk());
             }

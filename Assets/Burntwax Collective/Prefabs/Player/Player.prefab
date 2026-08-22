@@ -199,6 +199,10 @@ MonoBehaviour:
   rb: {fileID: 1186628176162295092}
   capsuleCollider: {fileID: 5705949197316518625}
   gunMachine: {fileID: 0}
+  dashBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 82176
+  dashCollisionSkin: 0.05
   disableMovement: 0
   playerVelocity: 4
   groundMultiplier: 1

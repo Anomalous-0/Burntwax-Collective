@@ -39,11 +39,6 @@ namespace Burntwax
             {
                 SwitchState(Factory.Parry());
             }
-            else if (InputPrioritySorter.Instance.SprintIsPriority() && Ctx.stateMachine.currentState.CurrentSubstate() != Ctx.stateMachine.states.Idle())
-            {
-                SwitchState(Factory.Stow());
-            }
-
         }
 
 

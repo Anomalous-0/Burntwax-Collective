@@ -21,6 +21,12 @@ namespace Burntwax
 
         [HideInInspector] public GameObject Model;
 
+        [Header("Dash")]
+        [Min(1)] public int MaxDashCharges = 3;
+        [Min(0f)] public float DashSpeed = 20f;
+        [Min(0.01f)] public float DashDuration = 0.2f;
+        [Min(0.01f)] public float DashRechargeDuration = 2f;
+
 
         [Header("Configs")]
         public KatanaDamageConfig DamageConfig;

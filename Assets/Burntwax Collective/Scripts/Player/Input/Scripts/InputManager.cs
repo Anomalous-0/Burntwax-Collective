@@ -59,6 +59,7 @@ namespace Burntwax
 
         public bool reloadIsPressed { get; private set; } = false;
         public bool sprintIsPressed { get; private set; } = false;
+        public bool dashIsPressed { get; private set; } = false;
 
         public bool saveIsPressed { get; private set; } = false;
         public bool loadIsPressed { get; private set; } = false;
@@ -155,6 +156,11 @@ namespace Burntwax
         {
             TickGloveGestures();
         }
+
+        private void LateUpdate()
+        {
+            dashIsPressed = false;
+        }
         private void SetMove(InputAction.CallbackContext ctx)
         {
             MoveInput = ctx.ReadValue<Vector2>();
@@ -166,7 +172,18 @@ namespace Burntwax
             LookInput = ctx.ReadValue<Vector2>();
         }
 
-        private void SetSprint(InputAction.CallbackContext ctx) => sprintIsPressed = ctx.started;
+        private void SetSprint(InputAction.CallbackContext ctx)
+        {
+            sprintIsPressed = ctx.started;
+
+            if (ctx.started)
+                dashIsPressed = true;
+        }
+
+        public void ConsumeDashInput()
+        {
+            dashIsPressed = false;
+        }
         private void SetAim(InputAction.CallbackContext ctx) => aimIsPressed = ctx.started;
         private void SetCrouch(InputAction.CallbackContext ctx) => crouchIsPressed = ctx.started;
         private void SetJump(InputAction.CallbackContext ctx) => jumpIsPressed = ctx.started;

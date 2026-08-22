@@ -47,11 +47,14 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
+            if (TryStartDash())
+                return;
+
             if (Physics.Raycast(Ctx.transform.position, Ctx.transform.TransformDirection(Vector3.up), out RaycastHit hit, 1f))
             {
                 return;
             }
-            else if (!InputManager.Instance.crouchIsPressed && InputManager.Instance.moveIsPressed && !InputManager.Instance.sprintIsPressed)
+            else if (!InputManager.Instance.crouchIsPressed && InputManager.Instance.moveIsPressed && (!InputManager.Instance.sprintIsPressed || !Ctx.CanSprint))
             {
                 SwitchState(Factory.Walk());
             }
@@ -59,7 +62,7 @@ namespace Burntwax
             {
                 SwitchState(Factory.Idle());
             }
-            else if (!InputManager.Instance.crouchIsPressed && InputManager.Instance.moveIsPressed && InputManager.Instance.sprintIsPressed)
+            else if (!InputManager.Instance.crouchIsPressed && InputManager.Instance.moveIsPressed && InputManager.Instance.sprintIsPressed && Ctx.CanSprint)
             {
                 SwitchState(Factory.Sprint());
             }
