@@ -90,10 +90,13 @@ namespace Burntwax
         [SerializeField] private float holdLerpSpeed = 18f;
         [Tooltip("Spin speed (deg/sec) of the object while it orbits in the hand.")]
         [SerializeField] private float holdSpinSpeed = 90f;
+        [Header("Hold Bob")]
         [Tooltip("Vertical bob height (metres) of the held object, so it reads as suspended in a field rather than pinned to a point. Per-object scaled by GloveHoldProfile.")]
-        [SerializeField, Min(0f)] private float holdBobAmplitude = 0.04f;
+        [Range(0f, 0.5f)]
+        [SerializeField] private float holdBobAmplitude = 0.04f;
         [Tooltip("Bob cycles per second of the held object.")]
-        [SerializeField, Min(0f)] private float holdBobFrequency = 0.8f;
+        [Range(0f, 5f)]
+        [SerializeField] private float holdBobFrequency = 0.8f;
         [Header("Secondary Attraction")]
         [Tooltip("Pull applied to non-primary consumables in reach. Scaled down by distance from the primary.")]
         [SerializeField, Min(0f)] private float secondaryAttractionForce = 12f;
