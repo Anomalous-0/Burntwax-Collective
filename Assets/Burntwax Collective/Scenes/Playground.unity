@@ -33325,6 +33325,16 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 401126580}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: holdBobAmplitude
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: holdBobFrequency
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: player
