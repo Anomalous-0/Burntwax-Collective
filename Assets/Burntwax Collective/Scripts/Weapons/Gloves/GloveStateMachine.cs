@@ -134,6 +134,16 @@ namespace Burntwax
         [SerializeField] private CinemachineImpulseSource blastShake;
         [SerializeField] private float blastMinShake = 0.4f;
         [SerializeField] private float blastMaxShake = 1.4f;
+
+        [Header("Attract / Repulse Shake")]
+        [Tooltip("Camera kick when an object latches onto the pull or is hurled off the glove. Auto-fetched from this object if left empty.")]
+        [SerializeField] private CinemachineImpulseSource attractShake;
+        [Tooltip("Shake for the lightest objects (Playground: ammo ~0.5 mass).")]
+        [SerializeField] private float minShake = 0.35f;
+        [Tooltip("Shake cap. Objects at or above Shake Mass For Max use this, so huge objects don't over-shake.")]
+        [SerializeField] private float maxShake = 1.3f;
+        [Tooltip("Object mass that reaches the maximum shake. Anything heavier is clamped to Max Shake (Playground: barrel = 6).")]
+        [SerializeField, Min(0.01f)] private float shakeMassForMax = 6f;
         public bool CanAttractObject { get { return canAttract; } set { canAttract = value; } }
         public bool EnterAttract { get { return enterAttract; } set { enterAttract = value; } }
         public bool EnterCharge { get { return enterCharge; } set { enterCharge = value; } }
@@ -210,6 +220,8 @@ namespace Burntwax
             detectionMpb = new MaterialPropertyBlock();
             if (blastShake == null)
                 blastShake = GetComponent<CinemachineImpulseSource>();
+            if (attractShake == null)
+                attractShake = GetComponent<CinemachineImpulseSource>();
             emptyHash = Animator.StringToHash("empty_Glove");
             idleHash = Animator.StringToHash("idle_Glove");
             chargeHash = Animator.StringToHash("charge_blast_Glove");
@@ -549,6 +561,22 @@ namespace Burntwax
                 blastShake.GenerateImpulse(-dir * Mathf.Lerp(blastMinShake, blastMaxShake, chargeNormalized));
         }
 
+        /// <summary>
+        /// Camera kick for the glove's attract and repulse actions, mirroring the gun's recoil shake so
+        /// the glove reads with the same weight. Scaled by the object's mass and clamped so heavy objects
+        /// hit hard without over-shaking. Called by <see cref="GloveAttractState"/> when a pull latches
+        /// on, and by the throw/drop paths as an object leaves the glove.
+        /// </summary>
+        public void ShakeGlove(float mass)
+        {
+            if (attractShake)
+            {
+                float massScale = Mathf.Clamp01(mass / shakeMassForMax);
+                float shake = Mathf.Lerp(minShake, maxShake, massScale);
+                attractShake.GenerateImpulse(Camera.main.transform.forward * shake);
+            }
+        }
+
         public void IgnoreHeldObjectPlayerCollisions()
         {
             RestoreHeldObjectPlayerCollisions();
@@ -648,6 +676,7 @@ namespace Burntwax
                 }
             }
 
+            // A gentle drop is deliberately silent — only catching and throwing kick the camera.
             DropHeldObjectWithCollisionDelay();
         }
 
@@ -685,6 +714,9 @@ namespace Burntwax
                             : gameObject;
                         impactDamageSource.Arm(thrower);
                     }
+
+                    // Repulse kick as the object is hurled away, scaled by its mass.
+                    ShakeGlove(heldBody.mass);
                 }
             }
 

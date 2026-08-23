@@ -97,6 +97,8 @@ namespace Burntwax
             {
                 attractedBody.linearVelocity = Vector3.zero;
                 attractedBody.angularVelocity = Vector3.zero;
+                // Camera kick the moment the object actually reaches the glove, scaled by its mass.
+                Ctx.ShakeGlove(attractedBody.mass);
                 SwitchState(Factory.Hold());
             }
         }

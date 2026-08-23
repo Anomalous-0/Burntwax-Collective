@@ -7,7 +7,8 @@ namespace Burntwax
     {
         fps,
         aim,
-        wallcharge
+        wallcharge,
+        glovecharge
     }
 
     public class CameraStateFactory
@@ -22,6 +23,7 @@ namespace Burntwax
             states[CameraStates.fps] = new CameraFpsState(context, this);
             states[CameraStates.aim] = new CameraAimState(context, this);
             states[CameraStates.wallcharge] = new CameraWallChargeState(context, this);
+            states[CameraStates.glovecharge] = new CameraGloveChargeState(context, this);
 
 
         }
@@ -39,6 +41,11 @@ namespace Burntwax
         public CameraBaseState Wallcharge()
         {
             return states[CameraStates.wallcharge];
+        }
+
+        public CameraBaseState GloveCharge()
+        {
+            return states[CameraStates.glovecharge];
         }
 
 

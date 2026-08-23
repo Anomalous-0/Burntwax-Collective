@@ -30,12 +30,17 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputPrioritySorter.Instance.AimIsPriority() 
-            && Ctx.gun.CurrentState != Ctx.gun.states.Reload() 
+            if (InputPrioritySorter.Instance.AimIsPriority()
+            && Ctx.gun.CurrentState != Ctx.gun.states.Reload()
             && Ctx.gun.CurrentState.CurrentSubstate() != Ctx.gun.states.Shoot()
             && Ctx.arsenal.currentMode == Arsenal.WeaponMode.Guns)
             {
                 SwitchState(Factory.Aim());
+            }
+            else if (InputManager.Instance.gloveCharging)
+            {
+                // Glove pulse charge zooms in like ADS, using the charge camera.
+                SwitchState(Factory.GloveCharge());
             }
 
             // else if (Ctx.player.currentState == Ctx.player.states.Wallcharge() )

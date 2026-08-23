@@ -28,6 +28,16 @@ namespace Burntwax
         public CinemachineVirtualCamera aimCam;
 
         public CinemachineVirtualCamera chargeCam;
+
+        [Header("Charge Zoom")]
+        [Tooltip("FOV the charge camera reaches at full glove charge. Lower = more zoom-in. Match it to the aim camera for an identical ADS feel.")]
+        public float chargeFov = 40f;
+        [Tooltip("How quickly the FOV eases toward the charge target. Lower = smoother/laggier, higher = snappier.")]
+        public float chargeZoomSmoothTime = 0.08f;
+        [Tooltip("Degrees the FOV briefly pushes past Charge Fov near full charge before settling back at max. 0 = no overshoot.")]
+        public float chargeZoomOvershoot = 4f;
+        private float chargeZoomVelocity;
+
         public CameraBaseState currentState;
         public CameraStateFactory states;
 
@@ -86,6 +96,44 @@ namespace Burntwax
         public void Charge()
         {
             SetCameraPriorities(chargeCam);
+        }
+
+        // Switch to the charge camera and snap it wide, so the glove pulse zoom always eases in from
+        // the normal FOV. Called on enter, mirroring how Aim() takes over the aim camera.
+        public void BeginChargeZoom()
+        {
+            if (activeCam != chargeCam)
+                Charge();
+
+            chargeZoomVelocity = 0f;
+            chargeCam.m_Lens.FieldOfView = fpsCam.m_Lens.FieldOfView;
+        }
+
+        // Progressive ADS-style zoom for the glove pulse: narrow the charge camera's FOV in step with
+        // the charge, easing toward the target (rather than snapping) with a small push past Charge Fov
+        // near full charge that settles back exactly at max.
+        public void SetChargeZoom(float chargeNormalized)
+        {
+            if (activeCam != chargeCam)
+                Charge();
+
+            chargeNormalized = Mathf.Clamp01(chargeNormalized);
+
+            float targetFov = Mathf.Lerp(fpsCam.m_Lens.FieldOfView, chargeFov, chargeNormalized);
+            // Peaks near full charge (~0.7) and returns to zero at max, so hitting full charge reads as
+            // a small punch-in that settles rather than a hard stop.
+            targetFov -= chargeZoomOvershoot *
+                Mathf.Sin(chargeNormalized * chargeNormalized * Mathf.PI);
+
+            chargeCam.m_Lens.FieldOfView = Mathf.SmoothDamp(
+                chargeCam.m_Lens.FieldOfView, targetFov, ref chargeZoomVelocity, chargeZoomSmoothTime);
+        }
+
+        // Restore the charge camera's FOV so the next pulse starts wide.
+        public void ResetChargeZoom()
+        {
+            chargeZoomVelocity = 0f;
+            chargeCam.m_Lens.FieldOfView = fpsCam.m_Lens.FieldOfView;
         }
 
         private void SetCameraPriorities(CinemachineVirtualCamera NewCameraMode)
