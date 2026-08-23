@@ -47,6 +47,9 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
+            if (TryStartMantle())
+                return;
+
             if (Ctx.playerIsSloped)
             {
                 // Debug.Log("FALL TO SLOPE");

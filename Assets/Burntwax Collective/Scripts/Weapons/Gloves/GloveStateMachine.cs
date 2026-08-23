@@ -175,6 +175,7 @@ namespace Burntwax
         private float baseLeftHandWeight = 1f;
         private bool gloveEquipped;
         private bool unequippedAnimationPending;
+        private bool gameplaySuppressed;
 
         private struct CollisionIgnoreRecord
         {
@@ -227,6 +228,12 @@ namespace Burntwax
 
         private void Update()
         {
+            if (gameplaySuppressed)
+            {
+                InputManager.Instance?.ConsumeGloveGestures();
+                return;
+            }
+
             // Refresh the target before states inspect this frame's input.
             canAttract = ObjectDetection();
             UpdateDetectionTint();
@@ -240,7 +247,46 @@ namespace Burntwax
 
         private void FixedUpdate()
         {
+            if (gameplaySuppressed)
+                return;
+
             CurrentState?.FixedUpdateStates();
+        }
+
+        public void SetGameplaySuppressed(bool suppressed)
+        {
+            if (gameplaySuppressed == suppressed)
+                return;
+
+            gameplaySuppressed = suppressed;
+
+            if (suppressed)
+            {
+                BlastWindow = false;
+                canAttract = false;
+                ClearChargeSlow();
+                SettleSecondaryObjects();
+                ReleaseHeldObject();
+                ClearDetectionTint();
+                InputManager.Instance?.ConsumeGloveGestures();
+
+                if (armsAnimator != null && gloveLayerIndex >= 0)
+                    armsAnimator.SetLayerWeight(gloveLayerIndex, 0f);
+
+                if (leftHandIK != null)
+                    leftHandIK.weight = baseLeftHandWeight;
+            }
+            else
+            {
+                if (armsAnimator != null && gloveLayerIndex >= 0)
+                    armsAnimator.SetLayerWeight(gloveLayerIndex, raiseAmount);
+
+                if (leftHandIK != null)
+                    leftHandIK.weight = Mathf.Lerp(
+                        baseLeftHandWeight,
+                        0f,
+                        raiseAmount);
+            }
         }
 
         public void StartBlast()

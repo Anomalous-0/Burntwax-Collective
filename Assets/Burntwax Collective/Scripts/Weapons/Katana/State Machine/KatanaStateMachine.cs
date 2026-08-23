@@ -177,6 +177,9 @@ namespace Burntwax
 
         private void Update()
         {
+            if (stateMachine != null && stateMachine.GameplayActionsLocked)
+                return;
+
             if (ActiveKatanaScriptable != null)
             {
                 TickDashRecharge();

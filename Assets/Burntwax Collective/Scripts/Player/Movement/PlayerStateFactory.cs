@@ -16,7 +16,8 @@ namespace Burntwax
         wallrun,
         wallcharge,
         walljump,
-        dash
+        dash,
+        mantle
     }
 
     public class PlayerStateFactory
@@ -37,6 +38,7 @@ namespace Burntwax
             states[PlayerStates.grounded] = new PlayerGroundedState(context, this);
             states[PlayerStates.fall] = new PlayerFallState(context, this);
             states[PlayerStates.dash] = new PlayerDashState(context, this);
+            states[PlayerStates.mantle] = new PlayerMantleState(context, this);
             // states[PlayerStates.wallrun] = new PlayerWallRunState(context, this);
             // states[PlayerStates.walljump] = new PlayerWallJumpState(context, this);
             // states[PlayerStates.wallcharge] = new PlayerWallChargeState(context, this);
@@ -85,6 +87,11 @@ namespace Burntwax
         public PlayerBaseState Dash()
         {
             return states[PlayerStates.dash];
+        }
+
+        public PlayerMantleState Mantle()
+        {
+            return (PlayerMantleState)states[PlayerStates.mantle];
         }
 
         // public PlayerBaseState Wallrun()

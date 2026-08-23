@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9e2859c50a84136af82dc6f0f5dce6f, type: 3}
+  m_Name: Mantle Config
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.PlayerMantleConfig
+  WallLayers:
+    serializedVersion: 2
+    m_Bits: 256
+  TopSurfaceLayers:
+    serializedVersion: 2
+    m_Bits: 82176
+  ClearanceBlockingLayers:
+    serializedVersion: 2
+    m_Bits: 98295
+  ForwardCheckDistance: 1
+  ChestHeightNormalized: 0.65
+  WallProbeRadiusScale: 0.65
+  MinimumMantleHeight: 0.1
+  MaximumMantleHeight: 2.95
+  LandingDepth: 0.45
+  MinimumTopUpDot: 0.7
+  ClearanceSkin: 0.03
+  MantleDuration: 0.3
+  MantleStartCurveHeight: 0.5
+  MantleEndCurveHeight: 0.25
+  DrawDebugChecks: 1

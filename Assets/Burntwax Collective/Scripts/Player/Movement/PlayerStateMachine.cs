@@ -23,6 +23,17 @@ namespace Burntwax
         [SerializeField] LayerMask dashBlockingLayers;
         [SerializeField, Min(0f)] float dashCollisionSkin = 0.05f;
 
+        [Header("Mantle")]
+        [SerializeField] PlayerMantleConfig mantleConfig;
+        [SerializeField] Animator mantleAnimator;
+        [SerializeField] string mantleBoolParameter = "mantle";
+        [SerializeField] string mantleProgressParameter = "mantleProgress";
+
+        private int mantleBoolHash;
+        private int mantleProgressHash;
+        private bool hasMantleBool;
+        private bool hasMantleProgress;
+
 
 
         [Header("Movement")]
@@ -132,6 +143,8 @@ namespace Burntwax
             }
         }
         public float DashCollisionSkin { get { return dashCollisionSkin; } }
+        public PlayerMantleConfig MantleConfig { get { return mantleConfig; } }
+        public bool GameplayActionsLocked { get; private set; }
 
 
         // Spring Capsule
@@ -181,6 +194,11 @@ namespace Burntwax
             if (gunMachine != null)
                 katanaMachine = gunMachine.GetComponent<KatanaStateMachine>();
 
+            if (mantleAnimator == null && gunMachine != null)
+                mantleAnimator = gunMachine.anim;
+
+            CacheMantleAnimationParameters();
+
             states = new PlayerStateFactory(this);
             currentState = states.Grounded();
             currentState.EnterState();
@@ -188,6 +206,50 @@ namespace Burntwax
             rideHeight = normalHeight;
             startYScale = transform.localScale.y;
 
+        }
+
+        public void SetMantleActive(bool active)
+        {
+            GameplayActionsLocked = active;
+
+            Arsenal arsenal = gunMachine != null
+                ? gunMachine.GetComponent<Arsenal>()
+                : null;
+            arsenal?.SetGameplaySuppressed(active);
+
+            if (mantleAnimator != null && hasMantleBool)
+                mantleAnimator.SetBool(mantleBoolHash, active);
+
+            if (!active && mantleAnimator != null && hasMantleProgress)
+                mantleAnimator.SetFloat(mantleProgressHash, 0f);
+        }
+
+        public void SetMantleAnimationProgress(float progress)
+        {
+            if (mantleAnimator != null && hasMantleProgress)
+                mantleAnimator.SetFloat(mantleProgressHash, Mathf.Clamp01(progress));
+        }
+
+        private void CacheMantleAnimationParameters()
+        {
+            mantleBoolHash = Animator.StringToHash(mantleBoolParameter);
+            mantleProgressHash = Animator.StringToHash(mantleProgressParameter);
+            hasMantleBool = false;
+            hasMantleProgress = false;
+
+            if (mantleAnimator == null)
+                return;
+
+            foreach (AnimatorControllerParameter parameter in mantleAnimator.parameters)
+            {
+                if (parameter.nameHash == mantleBoolHash
+                    && parameter.type == AnimatorControllerParameterType.Bool)
+                    hasMantleBool = true;
+
+                if (parameter.nameHash == mantleProgressHash
+                    && parameter.type == AnimatorControllerParameterType.Float)
+                    hasMantleProgress = true;
+            }
         }
 
 
@@ -202,9 +264,15 @@ namespace Burntwax
             GetMoveInput();
             currentState.UpdateStates();
             currentStateText = currentState.GetType().Name;
-            currentSubStateText = currentState.CurrentSubstate().GetType().Name;
+            currentSubStateText = currentState.CurrentSubstate() != null
+                ? currentState.CurrentSubstate().GetType().Name
+                : "None";
             playerIsSloped = PlayerSlopeCheck();
             playerIsGrounded = PlayerGroundCheck();
+
+            if (mantleConfig != null && mantleConfig.DrawDebugChecks
+                && (currentState == states.Jump() || currentState == states.Fall()))
+                TryGetMantleTarget(out _);
             // if (currentState == states.Walljump() && !ableToWallJump)
             // {
             //     StartCoroutine(WallJumpGracePeriod());
@@ -213,7 +281,9 @@ namespace Burntwax
 
         private void FixedUpdate()
         {
-            if (currentState.CurrentSubstate() == states.Dash())
+            if (currentState == states.Mantle())
+                states.Mantle().FixedUpdateState();
+            else if (currentState.CurrentSubstate() == states.Dash())
                 ((PlayerDashState)states.Dash()).FixedUpdateState();
 
             ApplyFloatingForce();
@@ -236,7 +306,8 @@ namespace Burntwax
 
         private void ApplyFloatingForce()
         {
-            if (currentState.CurrentSubstate() == states.Dash())
+            if (currentState == states.Mantle()
+                || currentState.CurrentSubstate() == states.Dash())
                 return;
 
             if ((playerIsGrounded || playerIsSloped) && Physics.Raycast(rb.position, Vector3.down, out groundCheckHit, rayDistance))
@@ -281,10 +352,6 @@ namespace Burntwax
 
                 rb.AddForce(moveDirection.normalized * 20f * playerVelocity * moveMultiplier * ChargeSpeedMultiplier);
             }
-            else
-            {
-                Debug.Log("Locked");
-            }
         }
 
         public void YFlat()
@@ -302,6 +369,150 @@ namespace Burntwax
 
             if (capsuleCollider == null || direction.sqrMagnitude <= 0f
                 || distance <= 0f || dashBlockingLayers.value == 0)
+                return false;
+
+            if (!TryGetWorldCapsule(
+                    out Vector3 pointOne,
+                    out Vector3 pointTwo,
+                    out float radius))
+                return false;
+
+            return Physics.CapsuleCast(
+                pointOne,
+                pointTwo,
+                radius,
+                direction.normalized,
+                out hit,
+                distance,
+                dashBlockingLayers,
+                QueryTriggerInteraction.Ignore);
+        }
+
+        public bool TryGetMantleTarget(out PlayerMantleTarget target)
+        {
+            target = default;
+
+            if (mantleConfig == null || player == null
+                || !TryGetWorldCapsule(
+                    out Vector3 pointOne,
+                    out Vector3 pointTwo,
+                    out float capsuleRadius))
+                return false;
+
+            Bounds bounds = capsuleCollider.bounds;
+            Vector3 forward = Vector3.ProjectOnPlane(player.forward, Vector3.up).normalized;
+            if (forward.sqrMagnitude <= Mathf.Epsilon)
+                return false;
+
+            Vector3 wallOrigin = new Vector3(
+                bounds.center.x,
+                Mathf.Lerp(
+                    bounds.min.y,
+                    bounds.max.y,
+                    mantleConfig.ChestHeightNormalized),
+                bounds.center.z);
+            float wallProbeRadius = capsuleRadius
+                * mantleConfig.WallProbeRadiusScale;
+
+            bool foundWall = Physics.SphereCast(
+                wallOrigin,
+                wallProbeRadius,
+                forward,
+                out RaycastHit wallHit,
+                mantleConfig.ForwardCheckDistance,
+                mantleConfig.WallLayers,
+                QueryTriggerInteraction.Ignore);
+
+            if (mantleConfig.DrawDebugChecks)
+            {
+                Debug.DrawLine(
+                    wallOrigin,
+                    wallOrigin + forward * mantleConfig.ForwardCheckDistance,
+                    foundWall ? Color.green : Color.red,
+                    0.1f);
+            }
+
+            if (!foundWall)
+                return false;
+
+            Vector3 intoWall = Vector3.ProjectOnPlane(
+                -wallHit.normal,
+                Vector3.up).normalized;
+            if (intoWall.sqrMagnitude <= Mathf.Epsilon)
+                return false;
+
+            float minimumHeight = Mathf.Min(
+                mantleConfig.MinimumMantleHeight,
+                mantleConfig.MaximumMantleHeight);
+            float maximumHeight = Mathf.Max(
+                mantleConfig.MinimumMantleHeight,
+                mantleConfig.MaximumMantleHeight);
+            Vector3 topProbeOrigin = wallHit.point
+                + intoWall * mantleConfig.LandingDepth;
+            topProbeOrigin.y = bounds.min.y
+                + maximumHeight;
+            float topProbeDistance = maximumHeight - minimumHeight;
+
+            bool foundTop = Physics.Raycast(
+                topProbeOrigin,
+                Vector3.down,
+                out RaycastHit topHit,
+                topProbeDistance,
+                mantleConfig.TopSurfaceLayers,
+                QueryTriggerInteraction.Ignore);
+
+            if (mantleConfig.DrawDebugChecks)
+            {
+                Debug.DrawLine(
+                    topProbeOrigin,
+                    topProbeOrigin + Vector3.down * topProbeDistance,
+                    foundTop ? Color.cyan : Color.yellow,
+                    0.1f);
+            }
+
+            if (!foundTop
+                || Vector3.Dot(topHit.normal, Vector3.up)
+                    < mantleConfig.MinimumTopUpDot)
+                return false;
+
+            float mantleHeight = topHit.point.y - bounds.min.y;
+            if (mantleHeight < minimumHeight
+                || mantleHeight > maximumHeight)
+                return false;
+
+            Vector3 targetCapsuleCenter = topHit.point
+                + Vector3.up * (bounds.extents.y + mantleConfig.ClearanceSkin);
+            Vector3 capsuleOffset = targetCapsuleCenter - bounds.center;
+            float clearanceRadius = Mathf.Max(
+                0.01f,
+                capsuleRadius - mantleConfig.ClearanceSkin);
+            bool landingBlocked = Physics.CheckCapsule(
+                pointOne + capsuleOffset,
+                pointTwo + capsuleOffset,
+                clearanceRadius,
+                mantleConfig.ClearanceBlockingLayers,
+                QueryTriggerInteraction.Ignore);
+
+            if (landingBlocked)
+                return false;
+
+            target = new PlayerMantleTarget(
+                rb.position + capsuleOffset,
+                wallHit,
+                topHit);
+            return true;
+        }
+
+        private bool TryGetWorldCapsule(
+            out Vector3 pointOne,
+            out Vector3 pointTwo,
+            out float radius)
+        {
+            pointOne = default;
+            pointTwo = default;
+            radius = 0f;
+
+            if (capsuleCollider == null)
                 return false;
 
             Transform capsuleTransform = capsuleCollider.transform;
@@ -336,21 +547,12 @@ namespace Burntwax
 
             Vector3 axis = capsuleTransform.TransformDirection(localAxis).normalized;
             Vector3 center = capsuleTransform.TransformPoint(capsuleCollider.center);
-            float radius = capsuleCollider.radius * radiusScale;
+            radius = capsuleCollider.radius * radiusScale;
             float height = Mathf.Max(capsuleCollider.height * axisScale, radius * 2f);
             float halfSegment = Mathf.Max(0f, height * 0.5f - radius);
-            Vector3 pointOne = center + axis * halfSegment;
-            Vector3 pointTwo = center - axis * halfSegment;
-
-            return Physics.CapsuleCast(
-                pointOne,
-                pointTwo,
-                radius,
-                direction.normalized,
-                out hit,
-                distance,
-                dashBlockingLayers,
-                QueryTriggerInteraction.Ignore);
+            pointOne = center + axis * halfSegment;
+            pointTwo = center - axis * halfSegment;
+            return true;
         }
 
         private bool PlayerGroundCheck()
@@ -367,7 +569,8 @@ namespace Burntwax
 
         private void SpeedControl()
         {
-            if (currentState.CurrentSubstate() == states.Dash())
+            if (currentState == states.Mantle()
+                || currentState.CurrentSubstate() == states.Dash())
                 return;
 
             float speedCap = playerVelocity * ChargeSpeedMultiplier;

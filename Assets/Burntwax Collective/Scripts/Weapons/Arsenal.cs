@@ -27,6 +27,13 @@ namespace Burntwax
         public int currentID = -1;
         public int lastID;
 
+        public bool GameplaySuppressed { get; private set; }
+
+        private GameObject suppressedGunModel;
+        private GameObject suppressedKatanaModel;
+        private bool suppressedGunWasActive;
+        private bool suppressedKatanaWasActive;
+
         private void Start()
         {
             if (gunStateMachine == null)
@@ -44,7 +51,48 @@ namespace Burntwax
             if (PauseMenu.Instance != null && PauseMenu.Instance.Paused)
                 return;
 
+            if (GameplaySuppressed)
+                return;
+
             WeaponSwitch();
+        }
+
+        public void SetGameplaySuppressed(bool suppressed)
+        {
+            if (GameplaySuppressed == suppressed)
+                return;
+
+            GameplaySuppressed = suppressed;
+
+            if (suppressed)
+            {
+                suppressedGunModel = gunStateMachine != null
+                    ? gunStateMachine.CurrentGunModel
+                    : null;
+                suppressedKatanaModel = katanaStateMachine != null
+                    ? katanaStateMachine.Katana
+                    : null;
+                suppressedGunWasActive = suppressedGunModel != null
+                    && suppressedGunModel.activeSelf;
+                suppressedKatanaWasActive = suppressedKatanaModel != null
+                    && suppressedKatanaModel.activeSelf;
+
+                suppressedGunModel?.SetActive(false);
+                suppressedKatanaModel?.SetActive(false);
+            }
+            else
+            {
+                if (suppressedGunModel != null)
+                    suppressedGunModel.SetActive(suppressedGunWasActive);
+
+                if (suppressedKatanaModel != null)
+                    suppressedKatanaModel.SetActive(suppressedKatanaWasActive);
+
+                suppressedGunModel = null;
+                suppressedKatanaModel = null;
+            }
+
+            gloveStateMachine?.SetGameplaySuppressed(suppressed);
         }
 
         private void WeaponSwitch()

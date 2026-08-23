@@ -38,6 +38,9 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
+            if (TryStartMantle())
+                return;
+
             if (Ctx.playerIsSloped && !Ctx.playerIsGrounded)
             {
                 SwitchState(Factory.Slope());
