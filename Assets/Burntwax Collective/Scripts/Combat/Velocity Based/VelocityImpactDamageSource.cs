@@ -15,9 +15,21 @@ namespace Burntwax
     }
 
     /// <summary>
-    /// Opt-in damage source for ordinary physics objects that have been deliberately thrown.
-    /// A Rigidbody is harmless until a thrower calls <see cref="Arm"/>. This keeps generic
-    /// velocity damage separate from guns, energy projectiles, and katana blade detection.
+    /// Controls whether an opted-in Rigidbody is dangerous only after a
+    /// deliberate throw or whenever its own collision speed passes the gate.
+    /// ArmedOnly is zero so existing serialized components preserve behavior.
+    /// </summary>
+    public enum VelocityImpactActivation
+    {
+        ArmedOnly = 0,
+        AlwaysActive = 1
+    }
+
+    /// <summary>
+    /// Opt-in damage source for ordinary physics objects. It can be dangerous
+    /// only after <see cref="Arm"/> or on every qualifying collision. Keeping
+    /// this behavior component-based excludes guns, energy projectiles, and
+    /// katana blade detection from generic velocity damage.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody), typeof(RigidbodyImpactReporter))]
@@ -25,11 +37,16 @@ namespace Burntwax
     {
         [SerializeField] private VelocityImpactDamageConfig config;
 
+        [Tooltip("Armed Only requires Arm() (for example, a glove throw). Always Active evaluates every collision using this Rigidbody's own speed.")]
+        [SerializeField] private VelocityImpactActivation activation =
+            VelocityImpactActivation.ArmedOnly;
+
         [Tooltip("Dull deals Impact damage, Sharp adds Slash reactions, and No Damage leaves only passive collision effects.")]
         [SerializeField] private VelocityImpactBehavior behavior = VelocityImpactBehavior.Dull;
 
         public bool IsArmed { get; private set; }
         public GameObject Instigator { get; private set; }
+        public VelocityImpactActivation Activation => activation;
 
         private RigidbodyImpactReporter impactReporter;
         private Collider selfDamageCollider;
@@ -49,6 +66,15 @@ namespace Burntwax
 
             if (impactReporter != null)
                 impactReporter.ImpactReported += OnImpactReported;
+
+            if (activation == VelocityImpactActivation.AlwaysActive
+                && behavior != VelocityImpactBehavior.NoDamage
+                && config == null)
+            {
+                Debug.LogWarning(
+                    $"[{nameof(VelocityImpactDamageSource)}] Always-active source '{name}' has no damage config.",
+                    this);
+            }
         }
 
         /// <summary>
@@ -96,15 +122,25 @@ namespace Burntwax
 
         private void OnImpactReported(RigidbodyImpact impact)
         {
-            if (!IsArmed || config == null)
+            bool canDealDamage = behavior != VelocityImpactBehavior.NoDamage
+                && config != null
+                && (IsArmed
+                    || activation == VelocityImpactActivation.AlwaysActive);
+
+            if (!canDealDamage)
                 return;
 
             Collider hitCollider = impact.HitCollider;
             if (hitCollider == null || IsInstigatorCollider(hitCollider))
                 return;
 
-            if (!config.MeetsDamageThreshold(impact.ClosingSpeed))
+            float damageScale = config.EvaluateDamageScale(
+                impact.SourceClosingSpeed);
+            if (damageScale <= 0f)
                 return;
+
+            float targetDamage = config.DamageAtFullSpeed * damageScale;
+            float selfDamage = config.SelfDamageAtFullSpeed * damageScale;
 
             bool isSharp = behavior == VelocityImpactBehavior.Sharp;
             DamageType gameplayTypes = isSharp
@@ -115,7 +151,7 @@ namespace Burntwax
                 : DamageType.Impact;
 
             DamageInfo damage = new DamageInfo(
-                config.Damage,
+                targetDamage,
                 gameplayTypes,
                 impact.Point,
                 impact.Normal,
@@ -132,11 +168,17 @@ namespace Burntwax
             impact.MarkPresentationHandled();
             HitResolver.ResolveHit(hitCollider, damage);
 
-            ApplySelfDamage(impact, hitCollider);
+            ApplySelfDamage(impact, hitCollider, selfDamage);
 
-            remainingImpacts--;
-            if (remainingImpacts <= 0)
-                Disarm();
+            // Always-active objects remain physically dangerous after their
+            // temporary throw attribution expires. Impact limits only consume
+            // the armed throw, never the general collision behavior.
+            if (IsArmed)
+            {
+                remainingImpacts--;
+                if (remainingImpacts <= 0)
+                    Disarm();
+            }
         }
 
         private bool IsInstigatorCollider(Collider other)
@@ -151,9 +193,10 @@ namespace Burntwax
 
         private void ApplySelfDamage(
             RigidbodyImpact impact,
-            Collider hitCollider)
+            Collider hitCollider,
+            float selfDamageAmount)
         {
-            if (config.DamageTakenOnImpact <= 0f)
+            if (selfDamageAmount <= 0f)
                 return;
 
             if (selfDamageCollider == null)
@@ -163,7 +206,7 @@ namespace Burntwax
                 return;
 
             DamageInfo selfDamage = new DamageInfo(
-                config.DamageTakenOnImpact,
+                selfDamageAmount,
                 DamageType.Impact,
                 impact.Point,
                 -impact.Normal,

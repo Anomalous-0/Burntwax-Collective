@@ -13,6 +13,8 @@ namespace Burntwax
         public Vector3 Point { get; }
         public Vector3 Normal { get; }
         public Vector3 Direction { get; }
+        public Vector3 SourceVelocity { get; }
+        public float SourceClosingSpeed { get; }
         public float ClosingSpeed { get; }
         public bool PresentationHandled { get; private set; }
 
@@ -21,12 +23,16 @@ namespace Burntwax
             Vector3 point,
             Vector3 normal,
             Vector3 direction,
+            Vector3 sourceVelocity,
+            float sourceClosingSpeed,
             float closingSpeed)
         {
             HitCollider = hitCollider;
             Point = point;
             Normal = normal;
             Direction = direction;
+            SourceVelocity = sourceVelocity;
+            SourceClosingSpeed = Mathf.Max(0f, sourceClosingSpeed);
             ClosingSpeed = Mathf.Max(0f, closingSpeed);
         }
 
@@ -89,6 +95,13 @@ namespace Burntwax
                 collision.relativeVelocity,
                 contact.normal));
 
+            // Gameplay damage belongs to this Rigidbody only when this body
+            // was itself moving into the contact. Relative speed remains the
+            // correct measurement for passive collision presentation.
+            float sourceClosingSpeed = Mathf.Max(
+                0f,
+                -Vector3.Dot(velocityBeforePhysics, contact.normal));
+
             Vector3 incomingDirection = velocityBeforePhysics.sqrMagnitude > Mathf.Epsilon
                 ? velocityBeforePhysics.normalized
                 : -contact.normal;
@@ -98,9 +111,11 @@ namespace Burntwax
                 contact.point,
                 contact.normal,
                 incomingDirection,
+                velocityBeforePhysics,
+                sourceClosingSpeed,
                 closingSpeed);
 
-            // Give an armed or specialized source first ownership of the collision. It can
+            // Give a gameplay or specialized source first ownership of the collision. It can
             // resolve damage and select presentation without the reporter duplicating effects.
             ImpactReported?.Invoke(impact);
 

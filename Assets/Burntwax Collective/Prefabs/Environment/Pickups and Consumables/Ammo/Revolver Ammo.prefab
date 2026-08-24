@@ -372,7 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27dab0227dd16b041a523646b88da179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ammoCount: 10
+  ammoCount: 6
   gun: {fileID: 11400000, guid: 8dbed6a7b55c222418bf6fd85f666cbd, type: 2}
 --- !u!65 &2573148226408101060
 BoxCollider:
@@ -421,7 +421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
   minimumAudioSpeed: 0.5
-  majorImpactAudioSpeed: 10
+  majorImpactAudioSpeed: 9
   audioCooldown: 0.1
 --- !u!114 &-1067437530896628561
 MonoBehaviour:
@@ -436,6 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
+  activation: 1
   behavior: 0
 --- !u!114 &3589746479121885612
 MonoBehaviour:
@@ -454,3 +455,4 @@ MonoBehaviour:
   overrideRotation: 0
   localHeldRotation: {x: 0, y: 0, z: 0}
   hoverSpinMultiplier: 1
+  hoverBobMultiplier: 1

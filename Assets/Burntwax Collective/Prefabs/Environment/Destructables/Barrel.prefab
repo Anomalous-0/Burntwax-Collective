@@ -110,7 +110,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
   minimumAudioSpeed: 0.5
-  majorImpactAudioSpeed: 7
+  majorImpactAudioSpeed: 9
   audioCooldown: 0.1
 --- !u!114 &8765546377460646724
 MonoBehaviour:
@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
+  activation: 1
   behavior: 0
 --- !u!114 &998599010219025191
 MonoBehaviour:
@@ -179,6 +180,7 @@ MonoBehaviour:
   overrideRotation: 0
   localHeldRotation: {x: 0, y: 0, z: 0}
   hoverSpinMultiplier: 0
+  hoverBobMultiplier: 1
 --- !u!1 &5595717023537666100
 GameObject:
   m_ObjectHideFlags: 0

@@ -6764,6 +6764,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 238953531}
     m_Modifications:
+    - target: {fileID: 1654998996253454262, guid: be287cf5107386d438557d555e826447,
+        type: 3}
+      propertyPath: majorImpactAudioSpeed
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 5218505677414877962, guid: be287cf5107386d438557d555e826447,
         type: 3}
       propertyPath: m_Name
@@ -10936,21 +10941,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1808880160}
     m_Modifications:
-    - target: {fileID: 4856119732195294793, guid: fc436496b631f3a458103d5a80f52290,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 4856119732195294793, guid: fc436496b631f3a458103d5a80f52290,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 4856119732195294793, guid: fc436496b631f3a458103d5a80f52290,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.25
-      objectReference: {fileID: 0}
     - target: {fileID: 4856119732195294793, guid: fc436496b631f3a458103d5a80f52290,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -17047,20 +17037,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8fe94b2cad944eb4a9bd638266aa1f0c, type: 2}
   - {fileID: 11400000, guid: 54b940fb93ad392479303121ac268322, type: 2}
   - {fileID: 11400000, guid: 15a31222738759b4ea9f8225777eaada, type: 2}
-  - {fileID: 11400000, guid: 91c1e53a97cf4a91890b04e574a2d441, type: 2}
-  - {fileID: 11400000, guid: a2d2f64ba8d04baa993c15f685b3e552, type: 2}
-  - {fileID: 11400000, guid: b3e3075cb9e14cbb8a4d260796c4f663, type: 2}
-  - {fileID: 11400000, guid: c4f4186dca024dcc9b5e3718a7d50774, type: 2}
-  - {fileID: 11400000, guid: d505297edb134eddac6f4829b8e61885, type: 2}
-  - {fileID: 11400000, guid: e6163a8fec244fee8d70593ac9f72996, type: 2}
-  - {fileID: 11400000, guid: f7274b90fd3550ff9e816a4bda083aa7, type: 2}
-  - {fileID: 11400000, guid: 4b8234964a7832342b03c508ae835f2b, type: 2}
-  - {fileID: 11400000, guid: f2ab97734fa939a49a27743238ffa8a0, type: 2}
-  - {fileID: 11400000, guid: ac2d09d7acedce248af7f6a23317b516, type: 2}
-  - {fileID: 11400000, guid: 174caa7dbbf1dd743b93eeb020eff24e, type: 2}
-  - {fileID: 11400000, guid: c5d2b47a293bbb34d92cdfe3650461b3, type: 2}
-  - {fileID: 11400000, guid: 44b3a8e8175e8db438d45c48e93e174a, type: 2}
-  - {fileID: 11400000, guid: 469e630def8d1c34dba99c42ecf7001c, type: 2}
 --- !u!4 &1147107199
 Transform:
   m_ObjectHideFlags: 0
@@ -27699,6 +27675,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crate_6
       objectReference: {fileID: 0}
+    - target: {fileID: 7328164092743159881, guid: fc436496b631f3a458103d5a80f52290,
+        type: 3}
+      propertyPath: minimumAudioSpeed
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7328164092743159881, guid: fc436496b631f3a458103d5a80f52290,
+        type: 3}
+      propertyPath: majorImpactAudioSpeed
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -34186,8 +34172,28 @@ PrefabInstance:
       objectReference: {fileID: 5254480661762349328}
     - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: mantleAnimator
+      value: 
+      objectReference: {fileID: 8915226981332152389}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: prioritySorter
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: disableMovement
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: maximumFallSpeed
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 2926336376552375138, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: fallGravityMultiplier
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 4099128921039393214, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
@@ -34307,7 +34313,19 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5918461596287933365}
+    - targetCorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5918461596287933366}
+    - targetCorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5918461596287933367}
   m_SourcePrefab: {fileID: 100100000, guid: 6b67e5e6b6c2e1b448ac119e473b1316, type: 3}
 --- !u!54 &5918461596287933361 stripped
 Rigidbody:
@@ -34315,6 +34333,50 @@ Rigidbody:
     type: 3}
   m_PrefabInstance: {fileID: 5918461596287933360}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5918461596287933365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
+  minimumAudioSpeed: 0.5
+  majorImpactAudioSpeed: 11
+  audioCooldown: 0.1
+--- !u!114 &5918461596287933366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d5f1c2473b4e6a9012bc7d8e5f3409, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.PlayerFallDamage
+  config: {fileID: 11400000, guid: 8ad7b8f9cf634fa4db25462d326b7c86, type: 2}
+  landingCooldown: 0.2
+--- !u!114 &5918461596287933367
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 669723134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc387c3e88fd4d30b8b442715954137b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
+  config: {fileID: 11400000, guid: 131ddc194bf12d94694861daad143870, type: 2}
+  activation: 1
+  behavior: 0
 --- !u!114 &5978745581241870198
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -35126,6 +35188,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4817ebf02a735444a85ac5324a5127b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.Arsenal
+--- !u!95 &8915226981332152389 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8982893999631422072, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1142371221871575081}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8967501273172980240
 Transform:
   m_ObjectHideFlags: 0

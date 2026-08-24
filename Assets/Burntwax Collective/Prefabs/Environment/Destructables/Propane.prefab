@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
+  activation: 1
   behavior: 0
 --- !u!114 &9056509028880618470
 MonoBehaviour:
@@ -292,3 +293,4 @@ MonoBehaviour:
   overrideRotation: 1
   localHeldRotation: {x: 28, y: -60, z: 0}
   hoverSpinMultiplier: 0
+  hoverBobMultiplier: 1

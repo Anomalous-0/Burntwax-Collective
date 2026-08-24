@@ -26,7 +26,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 48.8
+      value: 61.53
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
@@ -36,7 +36,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -59.2
+      value: -56.18
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 47e38743406f91040a67be23822c9052,
         type: 3}
@@ -225,8 +225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc7ca81feacf41fbaca818635e6c1294, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.RigidbodyImpactReporter
-  minimumAudioSpeed: 1.5
-  majorImpactAudioSpeed: 6
+  minimumAudioSpeed: 0.5
+  majorImpactAudioSpeed: 9
   audioCooldown: 0.1
 --- !u!114 &6439281750648327012
 MonoBehaviour:
@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: 5cc157df4bd045fdcf57162343ab8149, type: 2}
+  activation: 1
   behavior: 0
 --- !u!114 &416094598511454998
 MonoBehaviour:
@@ -259,3 +260,4 @@ MonoBehaviour:
   overrideRotation: 0
   localHeldRotation: {x: 0, y: 0, z: 0}
   hoverSpinMultiplier: 1
+  hoverBobMultiplier: 1

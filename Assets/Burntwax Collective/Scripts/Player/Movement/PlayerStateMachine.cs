@@ -51,6 +51,14 @@ namespace Burntwax
         [SerializeField] float groundDrag = 10f;
         [SerializeField] float airDrag = 0.5f;
         [SerializeField] float wallDrag = 6f;
+
+        [Header("Falling")]
+        [Tooltip("Multiplier applied to normal Physics gravity while in the Fall state. One uses normal gravity.")]
+        [SerializeField, Min(1f)] float fallGravityMultiplier = 2f;
+
+        [Tooltip("Maximum downward speed while falling. Set to 0 for no explicit limit.")]
+        [SerializeField, Min(0f)] float maximumFallSpeed = 35f;
+
         float horizontalInput;
         float verticalInput;
         [HideInInspector] public Vector3 moveDirection;
@@ -287,9 +295,32 @@ namespace Burntwax
             else if (currentState.CurrentSubstate() == states.Dash())
                 ((PlayerDashState)states.Dash()).FixedUpdateState();
 
+            ApplyFallGravity();
             ApplyFloatingForce();
             PlayerMove();
             SpeedControl();
+        }
+
+        private void ApplyFallGravity()
+        {
+            if (rb == null || currentState != states.Fall())
+                return;
+
+            float additionalGravityMultiplier = fallGravityMultiplier - 1f;
+            if (additionalGravityMultiplier > 0f)
+            {
+                rb.AddForce(
+                    Physics.gravity * additionalGravityMultiplier,
+                    ForceMode.Acceleration);
+            }
+
+            if (maximumFallSpeed <= 0f
+                || rb.linearVelocity.y >= -maximumFallSpeed)
+                return;
+
+            Vector3 velocity = rb.linearVelocity;
+            velocity.y = -maximumFallSpeed;
+            rb.linearVelocity = velocity;
         }
 
 
