@@ -47,14 +47,12 @@ namespace Burntwax
                     : Ctx.player.forward;
             }
 
-            bool isGrounded = Ctx.currentState == Ctx.states.Grounded()
-                || Ctx.currentState == Ctx.states.Slope();
-            if (isGrounded && dashDirection.y < 0f)
-            {
-                dashDirection.y = 0f;
+            dashDirection.y = 0f;
 
-                if (dashDirection.sqrMagnitude <= Mathf.Epsilon)
-                    dashDirection = Ctx.player.forward;
+            if (dashDirection.sqrMagnitude <= Mathf.Epsilon)
+            {
+                dashDirection = Ctx.player.forward;
+                dashDirection.y = 0f;
             }
 
             dashVelocity = dashDirection.normalized * dashConfig.DashSpeed;

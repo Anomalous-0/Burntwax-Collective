@@ -215,7 +215,8 @@ namespace Burntwax
             Arsenal arsenal = gunMachine != null
                 ? gunMachine.GetComponent<Arsenal>()
                 : null;
-            arsenal?.SetGameplaySuppressed(active);
+            if (arsenal != null)
+                arsenal.SetGameplaySuppressed(active);
 
             if (mantleAnimator != null && hasMantleBool)
                 mantleAnimator.SetBool(mantleBoolHash, active);

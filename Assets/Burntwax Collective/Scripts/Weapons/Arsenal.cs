@@ -77,8 +77,11 @@ namespace Burntwax
                 suppressedKatanaWasActive = suppressedKatanaModel != null
                     && suppressedKatanaModel.activeSelf;
 
-                suppressedGunModel?.SetActive(false);
-                suppressedKatanaModel?.SetActive(false);
+                if (suppressedGunModel != null)
+                    suppressedGunModel.SetActive(false);
+
+                if (suppressedKatanaModel != null)
+                    suppressedKatanaModel.SetActive(false);
             }
             else
             {
@@ -92,7 +95,8 @@ namespace Burntwax
                 suppressedKatanaModel = null;
             }
 
-            gloveStateMachine?.SetGameplaySuppressed(suppressed);
+            if (gloveStateMachine != null)
+                gloveStateMachine.SetGameplaySuppressed(suppressed);
         }
 
         private void WeaponSwitch()

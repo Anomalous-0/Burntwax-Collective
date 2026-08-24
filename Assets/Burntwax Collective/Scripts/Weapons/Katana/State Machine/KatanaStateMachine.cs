@@ -88,7 +88,6 @@ namespace Burntwax
             && arsenal != null
             && arsenal.currentMode == Arsenal.WeaponMode.Katana
             && ActiveKatanaScriptable != null
-            && fullyEquipped
             && Katana != null
             && Katana.activeInHierarchy;
         public bool CanDash
@@ -104,9 +103,11 @@ namespace Burntwax
         }
 
         [Header("Current Attack")]
-        [SerializeField] private KatanaAttackStrength currentAttackStrength =
+        [SerializeField]
+        private KatanaAttackStrength currentAttackStrength =
             KatanaAttackStrength.Light;
-        [SerializeField] private KatanaSlashDirection currentSlashDirection =
+        [SerializeField]
+        private KatanaSlashDirection currentSlashDirection =
             KatanaSlashDirection.None;
         [SerializeField] private bool isDamageWindowActive;
 
@@ -433,6 +434,7 @@ namespace Burntwax
         public void CloseDamageWindow()
         {
             isDamageWindowActive = false;
+            camStateMachine?.SlowCam(false);
         }
 
         public void EndSlash()
@@ -472,7 +474,7 @@ namespace Burntwax
         public void EndParry()
         {
             isParrying = false;
-            
+
         }
 
         private void OnDisable()
