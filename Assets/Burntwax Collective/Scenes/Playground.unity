@@ -10916,6 +10916,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 710951489}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &717657567 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3778932109638361647, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1142371221871575081}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ecf9b41d478f468eb3e9083753217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &724775034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -33327,6 +33339,21 @@ PrefabInstance:
       objectReference: {fileID: 401126580}
     - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
+      propertyPath: maxShake
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: minShake
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: attractShake
+      value: 
+      objectReference: {fileID: 717657567}
+    - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
       propertyPath: holdBobAmplitude
       value: 0
       objectReference: {fileID: 0}
@@ -34259,8 +34286,18 @@ PrefabInstance:
       objectReference: {fileID: 699535641}
     - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: objectCatchFovKick
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: chargeZoomSmoothTime
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: objectCatchFovDuration
+      value: 0.34
       objectReference: {fileID: 0}
     - target: {fileID: 7593056247257005254, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}

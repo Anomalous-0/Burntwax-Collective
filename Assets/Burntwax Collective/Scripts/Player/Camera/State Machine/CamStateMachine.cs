@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using Cinemachine;
 
@@ -37,6 +38,24 @@ namespace Burntwax
         [Tooltip("Degrees the FOV briefly pushes past Charge Fov near full charge before settling back at max. 0 = no overshoot.")]
         public float chargeZoomOvershoot = 4f;
         private float chargeZoomVelocity;
+
+        [Header("Object Catch FOV")]
+        [Tooltip("How many degrees the view widens when an attracted object reaches the glove.")]
+        [SerializeField, Min(0f)] private float objectCatchFovKick = 8f;
+
+        [Tooltip("Total duration of the widen-and-return animation.")]
+        [SerializeField, Min(0.01f)] private float objectCatchFovDuration = 0.25f;
+
+        [Tooltip("Normalized FOV offset over the animation: 0 = normal, 1 = full kick.")]
+        [SerializeField] private AnimationCurve objectCatchFovCurve =
+            new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(0.18f, 1f),
+                new Keyframe(1f, 0f));
+
+        private Coroutine objectCatchFovRoutine;
+        private CinemachineVirtualCamera objectCatchCamera;
+        private float objectCatchBaseFov;
 
         public CameraBaseState currentState;
         public CameraStateFactory states;
@@ -134,6 +153,62 @@ namespace Burntwax
         {
             chargeZoomVelocity = 0f;
             chargeCam.m_Lens.FieldOfView = fpsCam.m_Lens.FieldOfView;
+        }
+
+        public void PlayObjectCatchFovKick()
+        {
+            // Glove charging owns the charge camera's FOV.
+            if (activeCam == null || activeCam == chargeCam)
+                return;
+
+            RestoreObjectCatchFov();
+
+            objectCatchCamera = activeCam;
+            objectCatchBaseFov = objectCatchCamera.m_Lens.FieldOfView;
+            objectCatchFovRoutine = StartCoroutine(AnimateObjectCatchFov());
+        }
+
+        private IEnumerator AnimateObjectCatchFov()
+        {
+            float elapsed = 0f;
+
+            while (elapsed < objectCatchFovDuration &&
+                   objectCatchCamera != null &&
+                   objectCatchCamera == activeCam)
+            {
+                elapsed += Time.deltaTime;
+                float normalizedTime =
+                    Mathf.Clamp01(elapsed / objectCatchFovDuration);
+                float offset =
+                    objectCatchFovCurve.Evaluate(normalizedTime) *
+                    objectCatchFovKick;
+
+                objectCatchCamera.m_Lens.FieldOfView =
+                    objectCatchBaseFov + offset;
+
+                yield return null;
+            }
+
+            RestoreObjectCatchFov();
+        }
+
+        private void RestoreObjectCatchFov()
+        {
+            if (objectCatchFovRoutine != null)
+            {
+                StopCoroutine(objectCatchFovRoutine);
+                objectCatchFovRoutine = null;
+            }
+
+            if (objectCatchCamera != null)
+                objectCatchCamera.m_Lens.FieldOfView = objectCatchBaseFov;
+
+            objectCatchCamera = null;
+        }
+
+        private void OnDisable()
+        {
+            RestoreObjectCatchFov();
         }
 
         private void SetCameraPriorities(CinemachineVirtualCamera NewCameraMode)

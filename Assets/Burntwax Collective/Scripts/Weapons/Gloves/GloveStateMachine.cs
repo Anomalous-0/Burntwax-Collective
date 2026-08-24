@@ -26,6 +26,7 @@ namespace Burntwax
 
         [Header("References")]
         [SerializeField] private PlayerStateMachine player;
+        [SerializeField] private CamStateMachine camStateMachine;
         [SerializeField] private Animator armsAnimator;
         [SerializeField] private TwoBoneIKConstraint leftHandIK;
 
@@ -217,6 +218,8 @@ namespace Burntwax
         {
             playerCamera = Camera.main;
             arsenal = GetComponent<Arsenal>();
+            if (camStateMachine == null && player != null)
+                camStateMachine = player.GetComponent<CamStateMachine>();
             detectionMpb = new MaterialPropertyBlock();
             if (blastShake == null)
                 blastShake = GetComponent<CinemachineImpulseSource>();
@@ -575,6 +578,11 @@ namespace Burntwax
                 float shake = Mathf.Lerp(minShake, maxShake, massScale);
                 attractShake.GenerateImpulse(Camera.main.transform.forward * shake);
             }
+        }
+
+        public void PlayObjectCatchFovKick()
+        {
+            camStateMachine?.PlayObjectCatchFovKick();
         }
 
         public void IgnoreHeldObjectPlayerCollisions()
