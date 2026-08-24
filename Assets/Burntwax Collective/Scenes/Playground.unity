@@ -33328,12 +33328,12 @@ PrefabInstance:
     - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: holdBobAmplitude
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: holdBobFrequency
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
@@ -34234,9 +34234,19 @@ PrefabInstance:
       objectReference: {fileID: 8898618160970215624}
     - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
+      propertyPath: chargeFov
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
       propertyPath: pauseMenu
       value: 
       objectReference: {fileID: 699535641}
+    - target: {fileID: 4998941023216351194, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
+        type: 3}
+      propertyPath: chargeZoomSmoothTime
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7593056247257005254, guid: 6b67e5e6b6c2e1b448ac119e473b1316,
         type: 3}
       propertyPath: gunSelector
