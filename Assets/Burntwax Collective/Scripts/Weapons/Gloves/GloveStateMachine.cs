@@ -110,10 +110,14 @@ namespace Burntwax
         [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
         [SerializeField, Min(0f)] private float postDropCollisionDelay = 0.35f;
         [Header("Katana Launch")]
-        [Tooltip("Speed the attracted object is hurled along the camera forward when you click with the katana equipped.")]
+        [Tooltip("Speed the attracted object is hurled along the camera aim direction by the katana baseball interaction.")]
         [SerializeField, Min(0f)] private float katanaLaunchSpeed = 20f;
         [Tooltip("Random tumble applied to the launched object.")]
         [SerializeField, Min(0f)] private float katanaLaunchSpin = 6f;
+        [Tooltip("Maximum distance from the glove rest point at which a perfectly timed parry can bat an attracting object.")]
+        [SerializeField, Min(0f)] private float baseballBatDistance = 2f;
+        [Tooltip("Brief grace period after an attracting object enters Hold during which a perfect parry can still bat it.")]
+        [SerializeField, Min(0f)] private float baseballHoldForgivenessDuration = 0.25f;
 
         [Header("Physical Projectile Aiming")]
         [Tooltip("Maximum distance checked from the camera center when aiming a launched held object.")]
@@ -167,12 +171,15 @@ namespace Burntwax
         public float HoldSpinSpeed => holdSpinSpeed;
         public float HoldBobAmplitude => holdBobAmplitude;
         public float HoldBobFrequency => holdBobFrequency;
-        // Read-only gate: lets Attract/Hold offer the katana-slash early launch without the glove
-        // being a WeaponMode. The glove still lives alongside the Arsenal, it just reads its mode.
+        // Read-only gates let Attract coordinate with the equipped katana
+        // without making the glove itself an Arsenal WeaponMode.
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
-        public bool KatanaParrying => KatanaEquipped
+        public bool KatanaPerfectParryActive => KatanaEquipped
             && arsenal.katanaStateMachine != null
-            && arsenal.katanaStateMachine.isParrying;
+            && arsenal.katanaStateMachine.isParryWindowActive;
+        public float BaseballBatDistance => baseballBatDistance;
+        public float BaseballHoldForgivenessDuration =>
+            baseballHoldForgivenessDuration;
         // Raise progress of the arm-override layer, read by the Equipping / Unequipping action states.
         public bool GloveRaised => raiseAmount >= 0.99f;
         public bool GloveLowered => raiseAmount <= 0.01f;
@@ -729,6 +736,27 @@ namespace Burntwax
             }
 
             DropHeldObjectWithCollisionDelay();
+        }
+
+        /// <summary>
+        /// True while this collider belongs to the primary object currently
+        /// being attracted or held by the glove. Katana slash detection uses
+        /// this to avoid damaging the player's own suspended projectile.
+        /// </summary>
+        public bool OwnsControlledObject(Collider candidate)
+        {
+            if (heldObject == null || candidate == null)
+                return false;
+
+            if (candidate.attachedRigidbody != null
+                && candidate.attachedRigidbody.gameObject == heldObject)
+            {
+                return true;
+            }
+
+            Transform heldTransform = heldObject.transform;
+            return candidate.transform == heldTransform
+                || candidate.transform.IsChildOf(heldTransform);
         }
 
         private Vector3 GetPhysicalProjectileAimDirection(

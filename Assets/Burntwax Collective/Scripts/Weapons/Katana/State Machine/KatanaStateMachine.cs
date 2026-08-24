@@ -83,13 +83,14 @@ namespace Burntwax
         public int CurrentDashCharges => currentDashCharges;
         public int AirborneDashesUsed => airborneDashesUsed;
         public bool HasDashCharge => currentDashCharges > 0;
-        public bool IsDashEquipped => enabled
+        public bool IsKatanaEquipped => enabled
             && gameObject.activeInHierarchy
             && arsenal != null
             && arsenal.currentMode == Arsenal.WeaponMode.Katana
             && ActiveKatanaScriptable != null
             && Katana != null
             && Katana.activeInHierarchy;
+        public bool IsDashEquipped => IsKatanaEquipped;
         public bool CanDash
         {
             get
@@ -309,6 +310,14 @@ namespace Burntwax
                 Debug.LogWarning(
                     $"Katana '{activeKatana.name}' has no Gesture Config. " +
                     "It cannot recognize light or heavy slashes.",
+                    this);
+            }
+
+            if (activeKatana.ParryConfig == null)
+            {
+                Debug.LogWarning(
+                    $"Katana '{activeKatana.name}' has no Parry Config. "
+                        + "It cannot block or parry incoming hits.",
                     this);
             }
         }

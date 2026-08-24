@@ -144,10 +144,20 @@ namespace Burntwax
                 }
                 else
                 {
-                    SurfaceImpactSystem.Instance?.PlayAudio(
-                        hitCollider.tag,
+                    DamageInfo presentation = new DamageInfo(
+                        0f,
                         DamageType.MinorImpact,
-                        contact.point);
+                        contact.point,
+                        contact.normal,
+                        incomingDirection,
+                        gameObject,
+                        null);
+
+                    // Minor impacts are presentation-only, but use the same
+                    // surface route so their profiles may contain optional VFX.
+                    SurfaceImpactSystem.Instance?.PlayImpact(
+                        hitCollider,
+                        presentation);
                 }
 
                 nextAudioTime = Time.time + audioCooldown;

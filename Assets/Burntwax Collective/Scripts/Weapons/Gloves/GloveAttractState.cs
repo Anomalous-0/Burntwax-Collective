@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Burntwax
 {
     // Branch A, step 1: stop-sign pose, pulling object(s) toward the hand. The primary latches into
-    // Hold; a tap or (with katana equipped) a slash launches the incoming object early.
+    // Hold unless a correctly timed katana parry bats it while it is close enough.
     public class GloveAttractState : GloveBaseState
     {
         private Rigidbody attractedBody;
@@ -83,17 +83,21 @@ namespace Burntwax
                 return;
             }
 
-            // A confirmed katana parry launches the incoming object before it reaches the hand.
-            // Wait for the katana state machine instead of reacting to the raw aim input.
-            if (Ctx.KatanaParrying)
+            float distanceToRest = Vector3.Distance(
+                attractedBody.position,
+                Ctx.restPos.transform.position);
+
+            // Baseball interaction: entering the stance is not enough. The
+            // animation's perfect-parry window must overlap the object's arrival.
+            if (Ctx.KatanaPerfectParryActive
+                && distanceToRest <= Ctx.BaseballBatDistance)
             {
                 Ctx.LaunchHeldObjectForward();
                 SwitchState(Factory.Idle());
                 return;
             }
 
-            if (Vector3.Distance(attractedBody.position, Ctx.restPos.transform.position) <=
-                Ctx.RestDistance)
+            if (distanceToRest <= Ctx.RestDistance)
             {
                 attractedBody.linearVelocity = Vector3.zero;
                 attractedBody.angularVelocity = Vector3.zero;

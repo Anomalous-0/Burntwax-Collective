@@ -5,7 +5,8 @@ namespace Burntwax
     /// <summary>
     /// Shared entry point for a physical hit. It coordinates presentation and
     /// gameplay while keeping those systems independent from each damage source.
-    /// Future parry and defense checks can be inserted here before damage is applied.
+    /// A target defense receives the first response so a block may weaken the
+    /// hit and a perfect parry may cancel it before normal hit resolution.
     /// </summary>
     public static class HitResolver
     {
@@ -15,8 +16,39 @@ namespace Burntwax
             bool playImpactAudio = true,
             bool playSurfaceImpact = true)
         {
+            return ResolveHit(
+                hitCollider,
+                damage,
+                out _,
+                playImpactAudio,
+                playSurfaceImpact);
+        }
+
+        public static bool ResolveHit(
+            Collider hitCollider,
+            DamageInfo damage,
+            out HitDefenseResult defenseResult,
+            bool playImpactAudio = true,
+            bool playSurfaceImpact = true)
+        {
+            defenseResult = HitDefenseResult.Pass(damage);
+
             if (hitCollider == null)
                 return false;
+
+            IHitDefense defense =
+                hitCollider.GetComponentInParent<IHitDefense>();
+            if (defense != null)
+            {
+                defenseResult = defense.EvaluateHit(
+                    hitCollider,
+                    damage);
+
+                if (defenseResult.CancelsHit)
+                    return false;
+
+                damage = defenseResult.ResolvedHit;
+            }
 
             if (playSurfaceImpact)
             {

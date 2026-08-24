@@ -86,5 +86,26 @@ namespace Burntwax
             Instigator = instigator;
             Impulse = impulse;
         }
+
+        /// <summary>
+        /// Creates a copy with independently scaled gameplay damage and impulse.
+        /// Active defenses use this to weaken a hit without mutating its source,
+        /// direction, damage categories, or presentation category.
+        /// </summary>
+        public DamageInfo ScaleDamageAndImpulse(
+            float damageMultiplier,
+            float impulseMultiplier)
+        {
+            return new DamageInfo(
+                Amount * Mathf.Max(0f, damageMultiplier),
+                Type,
+                Point,
+                Normal,
+                Direction,
+                Source,
+                Instigator,
+                Impulse * Mathf.Max(0f, impulseMultiplier),
+                PresentationType);
+        }
     }
 }

@@ -27,6 +27,8 @@ namespace Burntwax
         [Header("Debug")]
         [SerializeField] private bool logDetections = true;
 
+        private GloveStateMachine gloveStateMachine;
+
         private readonly Collider[] overlapResults =
             new Collider[MaximumResultsPerCheck];
         private readonly RaycastHit[] sweepResults =
@@ -43,6 +45,9 @@ namespace Burntwax
         {
             if (stateMachine == null)
                 stateMachine = GetComponentInParent<KatanaStateMachine>();
+
+            if (stateMachine != null)
+                gloveStateMachine = stateMachine.GetComponent<GloveStateMachine>();
 
             EnsurePositionBuffer();
         }
@@ -155,6 +160,18 @@ namespace Burntwax
                 : stateMachine.transform.root;
             if (detectedCollider.transform.root == ownerRoot)
                 return;
+
+            // The glove owns the motion of its primary attracted/held object.
+            // Ignore it completely until the glove releases or launches it so
+            // an ordinary slash cannot damage the player's prepared projectile.
+            if (gloveStateMachine == null && stateMachine != null)
+                gloveStateMachine = stateMachine.GetComponent<GloveStateMachine>();
+
+            if (gloveStateMachine != null
+                && gloveStateMachine.OwnsControlledObject(detectedCollider))
+            {
+                return;
+            }
 
             IDamageable damageable =
                 detectedCollider.GetComponentInParent<IDamageable>();

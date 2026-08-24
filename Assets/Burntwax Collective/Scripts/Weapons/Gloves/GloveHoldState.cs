@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace Burntwax
 {
-    // Branch A, step 2: the primary object orbits in the hand until a tap or katana parry throws
-    // it out. Ignores charge input — the two ability branches never overlap.
+    // Branch A, step 2: the primary object orbits in the hand until a tap fires it
+    // or a double-tap drops it. Katana parries leave an already-held object alone.
     public class GloveHoldState : GloveBaseState
     {
         private Rigidbody heldBody;
@@ -14,6 +14,7 @@ namespace Burntwax
         private bool hasRotationOffset;
         private float accumulatedHoverSpin;
         private float bobPhase;
+        private float baseballForgivenessEndTime;
 
         public GloveHoldState(GloveStateMachine currentContext, GloveStateFactory gloveStateFactory)
         : base(currentContext, gloveStateFactory)
@@ -25,6 +26,8 @@ namespace Burntwax
             hasRotationOffset = false;
             accumulatedHoverSpin = 0f;
             bobPhase = 0f;
+            baseballForgivenessEndTime = Time.time
+                + Ctx.BaseballHoldForgivenessDuration;
             holdProfile = Ctx.heldObject != null
                 ? Ctx.heldObject.GetComponent<GloveHoldProfile>()
                 : null;
@@ -75,7 +78,17 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (InputManager.Instance.gloveTap)
+            bool canUseBaseballForgiveness =
+                Ctx.BaseballHoldForgivenessDuration > 0f
+                && Time.time <= baseballForgivenessEndTime;
+
+            if (canUseBaseballForgiveness
+                && Ctx.KatanaPerfectParryActive)
+            {
+                Ctx.LaunchHeldObjectForward();
+                SwitchState(Factory.Idle());
+            }
+            else if (InputManager.Instance.gloveTap)
             {
                 SwitchState(Factory.BlastProjectile());
             }

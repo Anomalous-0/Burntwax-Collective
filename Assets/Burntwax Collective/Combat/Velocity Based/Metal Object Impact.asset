@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Metal Object Impact
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageConfig
   minimumImpactSpeed: 5
-  fullDamageSpeed: 12
+  fullDamageSpeed: 9
   damageBySpeed:
     serializedVersion: 2
     m_Curve:
@@ -39,6 +39,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   damage: 7
-  damageTakenOnImpact: 15
+  damageTakenOnImpact: 20
   armedLifetime: 5
   maximumImpacts: 2
