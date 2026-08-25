@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e054bb1b8c5b6a46ae1960477f8b016, type: 3}
+  m_Name: Katana Defense Feedback Config
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaDefenseFeedbackConfig
+  blocked:
+    vfxPrefab: {fileID: 0}
+    audioClips:
+    - {fileID: 8300000, guid: f18bcbcd748fa8140ab228c7a907b96f, type: 3}
+    volume: 1
+  perfectParry:
+    vfxPrefab: {fileID: 1478077333470679038, guid: 59746fd474032c44c94d83600c6add43,
+      type: 3}
+    audioClips:
+    - {fileID: 8300000, guid: f18bcbcd748fa8140ab228c7a907b96f, type: 3}
+    volume: 1
+  guardBroken:
+    vfxPrefab: {fileID: 0}
+    audioClips:
+    - {fileID: 8300000, guid: 10484a19d22ab0049b06480730ba0883, type: 3}
+    volume: 1

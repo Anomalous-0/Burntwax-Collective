@@ -46,16 +46,22 @@ namespace Burntwax
 
         public bool IsArmed { get; private set; }
         public GameObject Instigator { get; private set; }
+        public GameObject LastArmedInstigator { get; private set; }
+        public float LastImpactClosingSpeed { get; private set; }
+        public float LastImpactSpeed { get; private set; }
         public VelocityImpactActivation Activation => activation;
 
         private RigidbodyImpactReporter impactReporter;
+        private Rigidbody sourceBody;
         private Collider selfDamageCollider;
         private int remainingImpacts;
         private float disarmTime = -1f;
+        private GameObject pendingArmInstigator;
 
         private void Awake()
         {
             impactReporter = GetComponent<RigidbodyImpactReporter>();
+            sourceBody = GetComponent<Rigidbody>();
             selfDamageCollider = FindOwnedCollider();
         }
 
@@ -99,6 +105,7 @@ namespace Burntwax
             }
 
             Instigator = instigator;
+            LastArmedInstigator = instigator;
             remainingImpacts = config.MaximumImpacts;
             disarmTime = config.ArmedLifetime > 0f
                 ? Time.time + config.ArmedLifetime
@@ -114,6 +121,15 @@ namespace Burntwax
             disarmTime = -1f;
         }
 
+        /// <summary>
+        /// Transfers a just-parried object's next damaging impact to a new
+        /// instigator after the collision currently being resolved is consumed.
+        /// </summary>
+        public void ArmAfterCurrentImpact(GameObject instigator)
+        {
+            pendingArmInstigator = instigator;
+        }
+
         private void FixedUpdate()
         {
             if (IsArmed && disarmTime >= 0f && Time.time >= disarmTime)
@@ -122,6 +138,9 @@ namespace Burntwax
 
         private void OnImpactReported(RigidbodyImpact impact)
         {
+            LastImpactClosingSpeed = impact.SourceClosingSpeed;
+            LastImpactSpeed = impact.SourceVelocity.magnitude;
+
             bool canDealDamage = behavior != VelocityImpactBehavior.NoDamage
                 && config != null
                 && (IsArmed
@@ -166,9 +185,16 @@ namespace Burntwax
             // Claim presentation before resolving the hit so the reporter cannot add a second,
             // generic Rigidbody effect after this profile's selected VFX/audio has played.
             impact.MarkPresentationHandled();
-            HitResolver.ResolveHit(hitCollider, damage);
+            HitResolver.ResolveHit(
+                hitCollider,
+                damage,
+                out HitDefenseResult defenseResult);
+            ApplyDefensePhysics(impact, hitCollider, defenseResult);
 
-            ApplySelfDamage(impact, hitCollider, selfDamage);
+            // A perfect parry cancels this contact as an attack and returns the
+            // object. Do not break the object from the contact that was denied.
+            if (defenseResult.Outcome != HitDefenseOutcome.Parried)
+                ApplySelfDamage(impact, hitCollider, selfDamage);
 
             // Always-active objects remain physically dangerous after their
             // temporary throw attribution expires. Impact limits only consume
@@ -179,6 +205,77 @@ namespace Burntwax
                 if (remainingImpacts <= 0)
                     Disarm();
             }
+
+            if (pendingArmInstigator != null)
+            {
+                GameObject newInstigator = pendingArmInstigator;
+                pendingArmInstigator = null;
+                Arm(newInstigator);
+            }
+        }
+
+        private void ApplyDefensePhysics(
+            RigidbodyImpact impact,
+            Collider hitCollider,
+            HitDefenseResult defenseResult)
+        {
+            if (defenseResult.Outcome != HitDefenseOutcome.Blocked
+                && defenseResult.Outcome != HitDefenseOutcome.Parried)
+            {
+                return;
+            }
+
+            Vector3 contactNormal = impact.Normal.sqrMagnitude > Mathf.Epsilon
+                ? impact.Normal.normalized
+                : -impact.Direction;
+            if (contactNormal.sqrMagnitude <= Mathf.Epsilon)
+                return;
+
+            Rigidbody defenderBody = hitCollider.attachedRigidbody;
+            if (defenderBody != null
+                && !defenderBody.isKinematic)
+            {
+                RigidbodyImpactReporter defenderReporter =
+                    defenderBody.GetComponent<RigidbodyImpactReporter>();
+                if (defenderReporter != null)
+                {
+                    Vector3 velocityBeforeCollision =
+                        defenderReporter.VelocityBeforePhysics;
+                    Vector3 velocityAfterCollision =
+                        defenderBody.linearVelocity;
+                    float normalSpeedBefore = Vector3.Dot(
+                        velocityBeforeCollision,
+                        contactNormal);
+                    float normalSpeedAfter = Vector3.Dot(
+                        velocityAfterCollision,
+                        contactNormal);
+                    float retainedNormalSpeed = Mathf.Lerp(
+                        normalSpeedBefore,
+                        normalSpeedAfter,
+                        defenseResult.CollisionImpulseMultiplier);
+
+                    defenderBody.linearVelocity = velocityAfterCollision
+                        + contactNormal
+                        * (retainedNormalSpeed - normalSpeedAfter);
+                }
+            }
+
+            if (defenseResult.SourceMotionHandled)
+                return;
+
+            if (sourceBody == null)
+                sourceBody = GetComponent<Rigidbody>();
+
+            if (sourceBody == null || sourceBody.isKinematic)
+                return;
+
+            Vector3 tangentialVelocity = Vector3.ProjectOnPlane(
+                sourceBody.linearVelocity,
+                contactNormal);
+            float reboundSpeed = impact.SourceClosingSpeed
+                * defenseResult.SourceReboundSpeedMultiplier;
+            sourceBody.linearVelocity = tangentialVelocity
+                + contactNormal * reboundSpeed;
         }
 
         private bool IsInstigatorCollider(Collider other)
@@ -243,6 +340,10 @@ namespace Burntwax
                 impactReporter.ImpactReported -= OnImpactReported;
 
             Disarm();
+            pendingArmInstigator = null;
+            LastArmedInstigator = null;
+            LastImpactClosingSpeed = 0f;
+            LastImpactSpeed = 0f;
         }
     }
 }

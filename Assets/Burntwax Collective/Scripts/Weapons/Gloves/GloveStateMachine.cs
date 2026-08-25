@@ -605,16 +605,19 @@ namespace Burntwax
 
             foreach (Collider heldCollider in heldColliders)
             {
-                // Trigger contacts must stay active so pickups and other gameplay volumes can
-                // react while the object's solid geometry passes harmlessly through the player.
+                // Pickup and equipment triggers must remain active so pulling
+                // an item to the player can still consume or equip it.
                 if (heldCollider == null || heldCollider.isTrigger)
                     continue;
 
                 foreach (Collider playerCollider in playerColliders)
                 {
-                    if (playerCollider == null || playerCollider == heldCollider ||
-                        playerCollider.isTrigger)
+                    if (playerCollider == null
+                        || playerCollider == heldCollider
+                        || playerCollider.isTrigger)
+                    {
                         continue;
+                    }
 
                     bool wasIgnored = Physics.GetIgnoreCollision(heldCollider, playerCollider);
                     heldPlayerCollisionIgnores.Add(new CollisionIgnoreRecord
@@ -701,41 +704,74 @@ namespace Burntwax
         /// </summary>
         public void LaunchHeldObjectForward()
         {
+            LaunchHeldObject();
+        }
+
+        /// <summary>
+        /// Baseball-launches the glove's attracted object using the glove's
+        /// authored launch speed and the player's camera aim. This deliberately
+        /// does not share enemy-projectile perfect-parry return rules.
+        /// </summary>
+        public void LaunchHeldObjectAsBaseball()
+        {
+            LaunchHeldObject();
+        }
+
+        private void LaunchHeldObject()
+        {
             if (heldObject != null)
             {
                 Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
                 if (heldBody != null)
-                {
-                    if (playerCamera == null)
-                        playerCamera = Camera.main;
-
-                    Vector3 launchDirection = GetPhysicalProjectileAimDirection(
-                        heldBody.worldCenterOfMass);
-
-                    // Attracting keeps the body dynamic; a held body is kinematic — make sure it's
-                    // dynamic before we hand it a velocity.
-                    heldBody.isKinematic = false;
-                    heldBody.linearVelocity = launchDirection * katanaLaunchSpeed;
-                    heldBody.angularVelocity = Random.insideUnitSphere * katanaLaunchSpin;
-
-                    // Only a deliberate high-speed launch becomes an attack. Objects without
-                    // the opt-in damage source remain ordinary physics props.
-                    VelocityImpactDamageSource impactDamageSource =
-                        heldObject.GetComponent<VelocityImpactDamageSource>();
-                    if (impactDamageSource != null)
-                    {
-                        GameObject thrower = player != null
-                            ? player.gameObject
-                            : gameObject;
-                        impactDamageSource.Arm(thrower);
-                    }
-
-                    // Repulse kick as the object is hurled away, scaled by its mass.
-                    ShakeGlove(heldBody.mass);
-                }
+                    LaunchGloveControlledRigidbody(heldBody);
             }
 
             DropHeldObjectWithCollisionDelay();
+        }
+
+        /// <summary>
+        /// Launches the Rigidbody currently owned by the glove. No damage-source
+        /// or enemy-instigator data is required for the physical launch.
+        /// </summary>
+        private bool LaunchGloveControlledRigidbody(Rigidbody body)
+        {
+            if (body == null)
+                return false;
+
+            if (playerCamera == null)
+                playerCamera = Camera.main;
+
+            Vector3 launchDirection = GetPhysicalProjectileAimDirection(
+                body.worldCenterOfMass,
+                body.gameObject);
+
+            body.isKinematic = false;
+            CurvedRigidbodyFlight existingFlight =
+                body.GetComponent<CurvedRigidbodyFlight>();
+            if (existingFlight != null)
+                existingFlight.CancelFlight();
+
+            if (katanaLaunchSpeed <= Mathf.Epsilon
+                || launchDirection.sqrMagnitude <= Mathf.Epsilon)
+            {
+                return false;
+            }
+
+            body.linearVelocity = launchDirection * katanaLaunchSpeed;
+            body.angularVelocity = Random.insideUnitSphere * katanaLaunchSpin;
+
+            VelocityImpactDamageSource impactDamageSource =
+                body.GetComponent<VelocityImpactDamageSource>();
+            if (impactDamageSource != null)
+            {
+                GameObject thrower = player != null
+                    ? player.gameObject
+                    : gameObject;
+                impactDamageSource.Arm(thrower);
+            }
+
+            ShakeGlove(body.mass);
+            return true;
         }
 
         /// <summary>
@@ -760,7 +796,8 @@ namespace Burntwax
         }
 
         private Vector3 GetPhysicalProjectileAimDirection(
-            Vector3 projectileOrigin)
+            Vector3 projectileOrigin,
+            GameObject projectileObject)
         {
             if (playerCamera == null)
                 playerCamera = Camera.main;
@@ -787,7 +824,9 @@ namespace Burntwax
             {
                 RaycastHit hit = physicalProjectileAimHits[i];
                 if (hit.collider == null
-                    || IsPhysicalProjectileAimIgnored(hit.collider)
+                    || IsPhysicalProjectileAimIgnored(
+                        hit.collider,
+                        projectileObject)
                     || hit.distance >= nearestDistance)
                 {
                     continue;
@@ -803,12 +842,14 @@ namespace Burntwax
                 : rayDirection;
         }
 
-        private bool IsPhysicalProjectileAimIgnored(Collider candidate)
+        private bool IsPhysicalProjectileAimIgnored(
+            Collider candidate,
+            GameObject projectileObject)
         {
             if (candidate == null)
                 return true;
 
-            if (IsColliderPartOf(candidate, heldObject)
+            if (IsColliderPartOf(candidate, projectileObject)
                 || IsColliderPartOf(candidate, gameObject))
             {
                 return true;

@@ -184,7 +184,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 2, y: 4, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &-377070453218575813
 Rigidbody:
@@ -254,6 +254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.VelocityImpactDamageSource
   config: {fileID: 11400000, guid: c13819f28dfeee44da00d0cb3eb1758d, type: 2}
+  activation: 0
   behavior: 0
 --- !u!114 &8999299518910622010
 MonoBehaviour:
@@ -301,3 +302,4 @@ MonoBehaviour:
   overrideRotation: 1
   localHeldRotation: {x: 30, y: 0, z: 0}
   hoverSpinMultiplier: 1
+  hoverBobMultiplier: 1

@@ -18,35 +18,66 @@ namespace Burntwax
     {
         public HitDefenseOutcome Outcome { get; }
         public DamageInfo ResolvedHit { get; }
+        public float CollisionImpulseMultiplier { get; }
+        public float SourceReboundSpeedMultiplier { get; }
+        public bool SourceMotionHandled { get; }
         public bool CancelsHit => Outcome == HitDefenseOutcome.Parried;
 
         private HitDefenseResult(
             HitDefenseOutcome outcome,
-            DamageInfo resolvedHit)
+            DamageInfo resolvedHit,
+            float collisionImpulseMultiplier,
+            float sourceReboundSpeedMultiplier,
+            bool sourceMotionHandled)
         {
             Outcome = outcome;
             ResolvedHit = resolvedHit;
+            CollisionImpulseMultiplier = Mathf.Clamp01(
+                collisionImpulseMultiplier);
+            SourceReboundSpeedMultiplier = Mathf.Max(
+                0f,
+                sourceReboundSpeedMultiplier);
+            SourceMotionHandled = sourceMotionHandled;
         }
 
         public static HitDefenseResult Pass(DamageInfo incomingHit) =>
             new HitDefenseResult(
                 HitDefenseOutcome.Passed,
-                incomingHit);
+                incomingHit,
+                1f,
+                0f,
+                false);
 
-        public static HitDefenseResult Block(DamageInfo reducedHit) =>
+        public static HitDefenseResult Block(
+            DamageInfo reducedHit,
+            float collisionImpulseMultiplier = 1f,
+            float sourceReboundSpeedMultiplier = 0f) =>
             new HitDefenseResult(
                 HitDefenseOutcome.Blocked,
-                reducedHit);
+                reducedHit,
+                collisionImpulseMultiplier,
+                sourceReboundSpeedMultiplier,
+                false);
 
-        public static HitDefenseResult Parry(DamageInfo incomingHit) =>
+        public static HitDefenseResult Parry(
+            DamageInfo incomingHit,
+            float collisionImpulseMultiplier = 1f,
+            float sourceReboundSpeedMultiplier = 0f,
+            bool sourceMotionHandled = false) =>
             new HitDefenseResult(
                 HitDefenseOutcome.Parried,
-                incomingHit);
+                incomingHit,
+                collisionImpulseMultiplier,
+                sourceReboundSpeedMultiplier,
+                sourceMotionHandled);
 
         public static HitDefenseResult GuardBreak(DamageInfo incomingHit) =>
             new HitDefenseResult(
                 HitDefenseOutcome.GuardBroken,
-                incomingHit);
+                incomingHit,
+                1f,
+                0f,
+                false);
     }
 
     /// <summary>

@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Burntwax
 {
     [DisallowMultipleComponent]
-    public class KatanaStateMachine : MonoBehaviour
+    public class KatanaStateMachine : MonoBehaviour, IParryReactionReceiver
     {
 
         [Header("Debug (read-only)")]
@@ -128,6 +128,18 @@ namespace Burntwax
             gestureRecognizer.IsInitialSlashQualified;
         public Vector2 InitialSlashDirection =>
             gestureRecognizer.InitialSlashDirection;
+        public float ParriedAttackRecoveryDuration
+        {
+            get
+            {
+                KatanaParryConfig config = ActiveKatanaScriptable != null
+                    ? ActiveKatanaScriptable.ParryConfig
+                    : null;
+                return config != null
+                    ? config.ParriedAttackRecoveryDuration
+                    : 0.35f;
+            }
+        }
 
         [HideInInspector] public bool selectedByArsenal;
 
@@ -322,6 +334,30 @@ namespace Burntwax
             }
         }
 
+        public void OnAttackParried(
+            DamageInfo parriedHit,
+            Collider defenderCollider)
+        {
+            if (!IsKatanaEquipped
+                || (parriedHit.Type & DamageType.Slash) == 0
+                || !IsCurrentStateSlash()
+                || parriedHit.Source == null
+                || !parriedHit.Source.transform.IsChildOf(transform))
+            {
+                return;
+            }
+
+            currentState.ExitState();
+            currentState = states.ParriedRecoil();
+            currentState.EnterState();
+        }
+
+        private bool IsCurrentStateSlash()
+        {
+            return currentState == states.LightSlash()
+                || currentState == states.HeavySlash();
+        }
+
         public void Pickup(KatanaScriptableObject katana)
         {
             GunStateMachine gun = GetComponent<GunStateMachine>();
@@ -465,7 +501,7 @@ namespace Burntwax
 
         private IEnumerator ParryWindow()
         {
-            Debug.Log("Parry window started");
+            // Debug.Log("Parry window started");
             isParryWindowActive = true;
             yield return new WaitForSeconds(parryWindow);
             isParryWindowActive = false;

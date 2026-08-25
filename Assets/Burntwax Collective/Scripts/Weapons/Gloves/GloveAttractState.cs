@@ -28,6 +28,12 @@ namespace Burntwax
             Ctx.PlayGloveAnimation(Ctx.attractHash);
             Ctx.heldObject = Ctx.detectedObject;
             Ctx.IgnoreHeldObjectPlayerCollisions();
+            CurvedRigidbodyFlight existingFlight = Ctx.heldObject != null
+                ? Ctx.heldObject.GetComponent<CurvedRigidbodyFlight>()
+                : null;
+            if (existingFlight != null)
+                existingFlight.CancelFlight();
+
             attractedBody = Ctx.heldObject != null
                 ? Ctx.heldObject.GetComponent<Rigidbody>()
                 : null;
@@ -92,7 +98,7 @@ namespace Burntwax
             if (Ctx.KatanaPerfectParryActive
                 && distanceToRest <= Ctx.BaseballBatDistance)
             {
-                Ctx.LaunchHeldObjectForward();
+                Ctx.LaunchHeldObjectAsBaseball();
                 SwitchState(Factory.Idle());
                 return;
             }

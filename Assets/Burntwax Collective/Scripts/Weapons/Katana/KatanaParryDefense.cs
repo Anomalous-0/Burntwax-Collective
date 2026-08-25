@@ -17,6 +17,9 @@ namespace Burntwax
         [Tooltip("Transform whose forward direction defines the defense arc. Defaults to the player transform.")]
         [SerializeField] private Transform facingReference;
 
+        [Tooltip("Audio source used for local defense sounds. Defaults to the player's AudioSource.")]
+        [SerializeField] private AudioSource feedbackAudioSource;
+
         [Header("Debug (read-only)")]
         [SerializeField] private HitDefenseOutcome lastOutcome =
             HitDefenseOutcome.Passed;
@@ -66,8 +69,15 @@ namespace Burntwax
                     RestoreGuardCapacity();
 
                 lastOutcome = HitDefenseOutcome.Parried;
+                bool perfectParryReturnHandled =
+                    TryLaunchPerfectParryReturn(incomingHit, config);
+                PlayDefenseFeedback(config, incomingHit, lastOutcome);
                 Defended?.Invoke(incomingHit, lastOutcome);
-                return HitDefenseResult.Parry(incomingHit);
+                return HitDefenseResult.Parry(
+                    incomingHit,
+                    0f,
+                    config.PerfectParryReboundSpeedMultiplier,
+                    perfectParryReturnHandled);
             }
 
             activeGuardRecoveryDelay = config.GuardRecoveryDelay;
@@ -76,6 +86,7 @@ namespace Burntwax
             {
                 guardExhausted = true;
                 lastOutcome = HitDefenseOutcome.GuardBroken;
+                PlayDefenseFeedback(config, incomingHit, lastOutcome);
                 Defended?.Invoke(incomingHit, lastOutcome);
                 return HitDefenseResult.GuardBreak(incomingHit);
             }
@@ -88,8 +99,154 @@ namespace Burntwax
             guardExhausted =
                 consecutiveBlocks >= config.MaximumConsecutiveBlocks;
             lastOutcome = HitDefenseOutcome.Blocked;
+            PlayDefenseFeedback(config, incomingHit, lastOutcome);
             Defended?.Invoke(incomingHit, lastOutcome);
-            return HitDefenseResult.Block(reducedHit);
+            return HitDefenseResult.Block(
+                reducedHit,
+                config.GuardCollisionImpulseMultiplier,
+                config.GuardReboundSpeedMultiplier);
+        }
+
+        private void PlayDefenseFeedback(
+            KatanaParryConfig config,
+            DamageInfo incomingHit,
+            HitDefenseOutcome outcome)
+        {
+            config.DefenseFeedback?.Play(
+                outcome,
+                incomingHit,
+                feedbackAudioSource);
+        }
+
+        private bool TryLaunchPerfectParryReturn(
+            DamageInfo incomingHit,
+            KatanaParryConfig config)
+        {
+            if (incomingHit.Source == null)
+                return false;
+
+            VelocityImpactDamageSource impactSource =
+                incomingHit.Source.GetComponentInParent<
+                    VelocityImpactDamageSource>();
+            if (impactSource == null)
+                return false;
+
+            Rigidbody sourceBody = impactSource.GetComponentInParent<Rigidbody>();
+            if (sourceBody == null)
+                return false;
+
+            float incomingSpeed = impactSource.LastImpactSpeed > 0f
+                ? impactSource.LastImpactSpeed
+                : impactSource.LastImpactClosingSpeed;
+            float returnSpeed = incomingSpeed
+                * config.PerfectParryReturnSpeedMultiplier;
+            if (returnSpeed <= Mathf.Epsilon)
+                return false;
+
+            sourceBody.isKinematic = false;
+            bool launchApplied;
+            if (TryGetRecordedReturnPoint(
+                impactSource,
+                out Vector3 returnPoint))
+            {
+                float targetDistance = Vector3.Distance(
+                    sourceBody.worldCenterOfMass,
+                    returnPoint);
+                float arcHeight = Mathf.Clamp(
+                    targetDistance * config.PerfectParryArcHeightPerMeter,
+                    config.PerfectParryMinimumArcHeight,
+                    Mathf.Max(
+                        config.PerfectParryMinimumArcHeight,
+                        config.PerfectParryMaximumArcHeight));
+
+                launchApplied = CurvedRigidbodyFlight.Launch(
+                    sourceBody,
+                    returnPoint,
+                    returnSpeed,
+                    arcHeight,
+                    true);
+
+                if (!launchApplied)
+                {
+                    Vector3 returnDirection =
+                        returnPoint - sourceBody.worldCenterOfMass;
+                    launchApplied = TryApplyStraightVelocity(
+                        sourceBody,
+                        returnDirection,
+                        returnSpeed);
+                }
+            }
+            else
+            {
+                CurvedRigidbodyFlight existingFlight =
+                    sourceBody.GetComponent<CurvedRigidbodyFlight>();
+                if (existingFlight != null)
+                    existingFlight.CancelFlight();
+
+                Camera playerCamera = Camera.main;
+                Vector3 returnDirection = playerCamera != null
+                    ? playerCamera.transform.forward
+                    : facingReference != null
+                        ? facingReference.forward
+                        : transform.forward;
+                launchApplied = TryApplyStraightVelocity(
+                    sourceBody,
+                    returnDirection,
+                    returnSpeed);
+            }
+
+            if (!launchApplied)
+                return false;
+
+            GameObject defender = stateMachine != null
+                ? stateMachine.player
+                : gameObject;
+            impactSource.ArmAfterCurrentImpact(defender);
+            return true;
+        }
+
+        private bool TryGetRecordedReturnPoint(
+            VelocityImpactDamageSource impactSource,
+            out Vector3 returnPoint)
+        {
+            returnPoint = default;
+            GameObject recordedThrower = impactSource.LastArmedInstigator;
+            if (recordedThrower == null
+                || !recordedThrower.activeInHierarchy)
+            {
+                return false;
+            }
+
+            GameObject defender = stateMachine != null
+                ? stateMachine.player
+                : gameObject;
+            if (recordedThrower == defender
+                || defender != null
+                && recordedThrower.transform.IsChildOf(defender.transform))
+            {
+                return false;
+            }
+
+            CombatAimTarget aimTarget =
+                recordedThrower.GetComponentInChildren<CombatAimTarget>();
+            return aimTarget != null
+                && aimTarget.TryGetPosition(out returnPoint);
+        }
+
+        private static bool TryApplyStraightVelocity(
+            Rigidbody body,
+            Vector3 direction,
+            float speed)
+        {
+            if (body == null
+                || speed <= Mathf.Epsilon
+                || direction.sqrMagnitude <= Mathf.Epsilon)
+            {
+                return false;
+            }
+
+            body.linearVelocity = direction.normalized * speed;
+            return true;
         }
 
         private void TickGuardRecovery()
@@ -205,6 +362,18 @@ namespace Burntwax
                 && stateMachine.player != null)
             {
                 facingReference = stateMachine.player.transform;
+            }
+
+            if (feedbackAudioSource == null)
+            {
+                if (stateMachine != null && stateMachine.player != null)
+                {
+                    feedbackAudioSource =
+                        stateMachine.player.GetComponent<AudioSource>();
+                }
+
+                if (feedbackAudioSource == null)
+                    feedbackAudioSource = GetComponentInParent<AudioSource>();
             }
         }
 

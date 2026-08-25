@@ -14,6 +14,7 @@ namespace Burntwax
         public Vector3 Normal { get; }
         public Vector3 Direction { get; }
         public Vector3 SourceVelocity { get; }
+        public Vector3 CollisionImpulse { get; }
         public float SourceClosingSpeed { get; }
         public float ClosingSpeed { get; }
         public bool PresentationHandled { get; private set; }
@@ -24,6 +25,7 @@ namespace Burntwax
             Vector3 normal,
             Vector3 direction,
             Vector3 sourceVelocity,
+            Vector3 collisionImpulse,
             float sourceClosingSpeed,
             float closingSpeed)
         {
@@ -32,6 +34,7 @@ namespace Burntwax
             Normal = normal;
             Direction = direction;
             SourceVelocity = sourceVelocity;
+            CollisionImpulse = collisionImpulse;
             SourceClosingSpeed = Mathf.Max(0f, sourceClosingSpeed);
             ClosingSpeed = Mathf.Max(0f, closingSpeed);
         }
@@ -62,6 +65,7 @@ namespace Burntwax
         [SerializeField, Min(0f)] private float audioCooldown = 0.1f;
 
         public event Action<RigidbodyImpact> ImpactReported;
+        public Vector3 VelocityBeforePhysics => velocityBeforePhysics;
 
         private Rigidbody body;
         private Vector3 velocityBeforePhysics;
@@ -112,6 +116,7 @@ namespace Burntwax
                 contact.normal,
                 incomingDirection,
                 velocityBeforePhysics,
+                collision.impulse,
                 sourceClosingSpeed,
                 closingSpeed);
 

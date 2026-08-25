@@ -44,6 +44,9 @@ namespace Burntwax
                     hitCollider,
                     damage);
 
+                if (defenseResult.Outcome == HitDefenseOutcome.Parried)
+                    NotifyParriedAttackSource(damage, hitCollider);
+
                 if (defenseResult.CancelsHit)
                     return false;
 
@@ -61,6 +64,30 @@ namespace Burntwax
             ImpactResolver.TryApplyImpact(hitCollider, damage);
 
             return DamageResolver.TryApplyDamage(hitCollider, damage);
+        }
+
+        private static void NotifyParriedAttackSource(
+            DamageInfo parriedHit,
+            Collider defenderCollider)
+        {
+            IParryReactionReceiver receiver =
+                FindParryReactionReceiver(parriedHit.Source);
+
+            if (receiver == null)
+            {
+                receiver = FindParryReactionReceiver(
+                    parriedHit.Instigator);
+            }
+
+            receiver?.OnAttackParried(parriedHit, defenderCollider);
+        }
+
+        private static IParryReactionReceiver FindParryReactionReceiver(
+            GameObject candidate)
+        {
+            return candidate != null
+                ? candidate.GetComponentInParent<IParryReactionReceiver>()
+                : null;
         }
     }
 }

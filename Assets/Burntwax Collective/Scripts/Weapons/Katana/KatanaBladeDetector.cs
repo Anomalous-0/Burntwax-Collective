@@ -155,6 +155,12 @@ namespace Burntwax
             if (detectedCollider == null)
                 return;
 
+            // A parry can close the window during this detector pass. Stop
+            // processing immediately so the canceled swing cannot hit another
+            // collider later in the same frame.
+            if (!stateMachine.IsDamageWindowActive)
+                return;
+
             Transform ownerRoot = stateMachine.player != null
                 ? stateMachine.player.transform.root
                 : stateMachine.transform.root;

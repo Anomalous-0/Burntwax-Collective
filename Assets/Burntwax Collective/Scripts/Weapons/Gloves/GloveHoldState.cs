@@ -85,7 +85,7 @@ namespace Burntwax
             if (canUseBaseballForgiveness
                 && Ctx.KatanaPerfectParryActive)
             {
-                Ctx.LaunchHeldObjectForward();
+                Ctx.LaunchHeldObjectAsBaseball();
                 SwitchState(Factory.Idle());
             }
             else if (InputManager.Instance.gloveTap)
