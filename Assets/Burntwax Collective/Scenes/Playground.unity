@@ -20574,6 +20574,10 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 475c3963ce15c11438f651abf472c1cd,
         type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1572520011}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
       insertIndex: -1
       addedObject: {fileID: 1647101625}
     m_AddedComponents:
@@ -20593,6 +20597,18 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1409608861}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1409608862}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1409608863}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1409608864}
   m_SourcePrefab: {fileID: 100100000, guid: 475c3963ce15c11438f651abf472c1cd, type: 3}
 --- !u!1 &1409608855 stripped
 GameObject:
@@ -20658,7 +20674,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409608855}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 529c1c20ab6c6274d89ce57eb9633ea8, type: 3}
   m_Name: 
@@ -20692,6 +20708,60 @@ MonoBehaviour:
   aimPoint: {fileID: 1572520011}
   useHumanoidHeadFallback: 1
   humanoidAnimator: {fileID: 1409608856}
+--- !u!114 &1409608862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409608855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a8841de487459fa36bfde138db1fcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyHealth
+  maxHealth: 100
+  currentHealth: 100
+  isDead: 0
+--- !u!114 &1409608863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409608855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f5c96b07a4fd683f6a95c0de5c176, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyMeleeAttack
+  attackConfig: {fileID: 11400000, guid: 78be284241540784194f7ec57541b494, type: 2}
+  attackOrigin: {fileID: 1409608859}
+  facingReference: {fileID: 1409608859}
+  useAutomaticTiming: 1
+  currentState: 0
+  stateElapsedTime: 0
+  targetsResolvedThisAttack: 0
+--- !u!114 &1409608864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409608855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4331472fe06941a88dffeaf1dda4c436, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyMeleePrototypeDriver
+  meleeAttack: {fileID: 1409608863}
+  target: {fileID: 0}
+  rotationRoot: {fileID: 1409608859}
+  attackRequestRange: 2
+  maximumStartAngle: 40.2
+  turnSpeed: 360
+  faceTargetDuringWindup: 1
+  targetSearchInterval: 1
 --- !u!1001 &1415115603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23312,12 +23382,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1572520010}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.82737, y: 1.701, z: 5.584}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: -0.9919626, z: 0, w: 0.12653135}
+  m_LocalPosition: {x: 0.00052799896, y: 1.5463637, z: 0.09847524}
+  m_LocalScale: {x: 0.90909094, y: 0.90909094, z: 0.90909094}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1409608859}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1576240660 stripped
 Transform:
@@ -35460,4 +35530,3 @@ SceneRoots:
   - {fileID: 1643080437}
   - {fileID: 1409608854}
   - {fileID: 8166370301499158524}
-  - {fileID: 1572520011}
