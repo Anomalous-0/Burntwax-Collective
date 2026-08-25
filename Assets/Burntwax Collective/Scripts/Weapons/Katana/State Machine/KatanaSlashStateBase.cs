@@ -72,6 +72,7 @@ namespace Burntwax
             // begin before the Animator has fully exited the previous one.
             Ctx.anim.Play(Ctx.slashAnimationHash, 0, 0f);
             Ctx.isSlashing = true;
+            Ctx.PlaySlashFeedback(attackStrength);
         }
 
         protected void UpdateSlash()

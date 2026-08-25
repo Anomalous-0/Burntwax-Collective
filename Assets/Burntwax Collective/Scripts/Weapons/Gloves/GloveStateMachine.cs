@@ -171,6 +171,8 @@ namespace Burntwax
         public float HoldSpinSpeed => holdSpinSpeed;
         public float HoldBobAmplitude => holdBobAmplitude;
         public float HoldBobFrequency => holdBobFrequency;
+        public bool HasUsableHeldObject =>
+            heldObject != null && heldObject.activeInHierarchy;
         // Read-only gates let Attract coordinate with the equipped katana
         // without making the glove itself an Arsenal WeaponMode.
         public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
@@ -216,6 +218,9 @@ namespace Burntwax
         private static readonly int ColorId = Shader.PropertyToID("_Color");
         private Coroutine restorePlayerCollisionsCoroutine;
         private bool waitingToRestorePlayerCollisions;
+        private Transform gloveParentedObject;
+        private Transform heldObjectOriginalParent;
+        private int heldObjectOriginalSiblingIndex;
 
         [HideInInspector] public int emptyHash, idleHash, chargeHash, attractHash, blastHash, blastProjectileHash;
         private int holdHash;
@@ -647,8 +652,61 @@ namespace Burntwax
             heldPlayerCollisionIgnores.Clear();
         }
 
+        /// <summary>
+        /// Parents the held object to the animated glove anchor while preserving
+        /// the hierarchy it occupied before the glove took ownership.
+        /// Attraction remains unparented and physics-driven.
+        /// </summary>
+        public void AttachHeldObjectToGlove()
+        {
+            RestoreHeldObjectHierarchy();
+
+            if (heldObject == null || restPos == null)
+                return;
+
+            gloveParentedObject = heldObject.transform;
+            heldObjectOriginalParent = gloveParentedObject.parent;
+            heldObjectOriginalSiblingIndex =
+                gloveParentedObject.GetSiblingIndex();
+            gloveParentedObject.SetParent(restPos.transform, true);
+        }
+
+        /// <summary>
+        /// Returns the glove-parented object to its original hierarchy without
+        /// changing its current world position or rotation.
+        /// </summary>
+        public void RestoreHeldObjectHierarchy()
+        {
+            Transform objectToRestore = gloveParentedObject;
+            Transform originalParent = heldObjectOriginalParent;
+            int originalSiblingIndex = heldObjectOriginalSiblingIndex;
+
+            gloveParentedObject = null;
+            heldObjectOriginalParent = null;
+            heldObjectOriginalSiblingIndex = 0;
+
+            if (objectToRestore == null)
+                return;
+
+            objectToRestore.SetParent(originalParent, true);
+            objectToRestore.SetSiblingIndex(originalSiblingIndex);
+        }
+
+        /// <summary>
+        /// Clears glove ownership immediately when another system breaks,
+        /// disables, or destroys the held object. Unlike a normal drop, there
+        /// is no collision-delay window because the object is no longer usable.
+        /// </summary>
+        public void ClearLostHeldObject()
+        {
+            RestoreHeldObjectHierarchy();
+            heldObject = null;
+            RestoreHeldObjectPlayerCollisions();
+        }
+
         public void DropHeldObjectWithCollisionDelay()
         {
+            RestoreHeldObjectHierarchy();
             heldObject = null;
 
             if (restorePlayerCollisionsCoroutine != null)
@@ -668,6 +726,8 @@ namespace Burntwax
 
         public void ReleaseHeldObject()
         {
+            RestoreHeldObjectHierarchy();
+
             if (heldObject != null)
             {
                 Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
@@ -719,6 +779,8 @@ namespace Burntwax
 
         private void LaunchHeldObject()
         {
+            RestoreHeldObjectHierarchy();
+
             if (heldObject != null)
             {
                 Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
@@ -942,6 +1004,8 @@ namespace Burntwax
 
         private void OnDisable()
         {
+            RestoreHeldObjectHierarchy();
+
             if (restorePlayerCollisionsCoroutine != null)
             {
                 StopCoroutine(restorePlayerCollisionsCoroutine);

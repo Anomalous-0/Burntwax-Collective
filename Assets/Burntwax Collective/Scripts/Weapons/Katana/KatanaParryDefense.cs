@@ -198,6 +198,11 @@ namespace Burntwax
             if (!launchApplied)
                 return false;
 
+            RigidbodySpinUtility.ApplyMassWeightedRandomSpin(
+                sourceBody,
+                config.PerfectParryMinimumSpin,
+                config.PerfectParryMaximumSpin);
+
             GameObject defender = stateMachine != null
                 ? stateMachine.player
                 : gameObject;

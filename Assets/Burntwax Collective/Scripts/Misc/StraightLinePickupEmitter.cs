@@ -36,6 +36,13 @@ namespace Burntwax
         [Tooltip("Initial speed along the spawn point's forward direction.")]
         [SerializeField, Min(0f)] private float launchSpeed = 12f;
 
+        [Header("Launch Spin")]
+        [Tooltip("Minimum random angular speed in radians per second. Heavier objects receive proportionally less spin.")]
+        [SerializeField, Min(0f)] private float minimumLaunchSpin = 1f;
+
+        [Tooltip("Maximum random angular speed in radians per second. Heavier objects receive proportionally less spin.")]
+        [SerializeField, Min(0f)] private float maximumLaunchSpin = 4f;
+
         [Tooltip("Seconds before each spawned pickup is destroyed.")]
         [SerializeField, Min(0.1f)] private float lifetime = 5f;
 
@@ -96,6 +103,11 @@ namespace Burntwax
                     body.linearVelocity = origin.forward * launchSpeed;
                 }
 
+                RigidbodySpinUtility.ApplyMassWeightedRandomSpin(
+                    body,
+                    minimumLaunchSpin,
+                    maximumLaunchSpin);
+
                 VelocityImpactDamageSource damageSource =
                     spawnedPickup.GetComponent<VelocityImpactDamageSource>();
                 GameObject resolvedInstigator = ResolveInstigator();
@@ -130,6 +142,10 @@ namespace Burntwax
         {
             spawnInterval = Mathf.Max(0.02f, spawnInterval);
             launchSpeed = Mathf.Max(0f, launchSpeed);
+            minimumLaunchSpin = Mathf.Max(0f, minimumLaunchSpin);
+            maximumLaunchSpin = Mathf.Max(
+                minimumLaunchSpin,
+                maximumLaunchSpin);
             lifetime = Mathf.Max(0.1f, lifetime);
             arcHeightPerMeter = Mathf.Max(0f, arcHeightPerMeter);
             minimumArcHeight = Mathf.Max(0f, minimumArcHeight);

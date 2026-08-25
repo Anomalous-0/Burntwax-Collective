@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Pool;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace Burntwax
@@ -33,7 +34,8 @@ namespace Burntwax
         public KatanaImpactConfig ImpactConfig;
         public KatanaParryConfig ParryConfig;
         public KatanaGestureConfig GestureConfig;
-        public KatanaAudioConfig AudioConfig;
+        [FormerlySerializedAs("AudioConfig")]
+        public KatanaCombatFeedbackConfig FeedbackConfig;
         public KatanaCrosshairConfig CrosshairConfig;
 
         private MonoBehaviour ActiveMonoBehaviour;

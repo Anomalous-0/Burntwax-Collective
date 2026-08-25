@@ -60,6 +60,14 @@ namespace Burntwax
         [SerializeField, Min(0f)]
         private float perfectParryMaximumArcHeight = 1.25f;
 
+        [Tooltip("Minimum random angular speed applied to a returned Rigidbody. Heavier objects receive proportionally less spin.")]
+        [SerializeField, Min(0f)]
+        private float perfectParryMinimumSpin = 1f;
+
+        [Tooltip("Maximum random angular speed applied to a returned Rigidbody. Heavier objects receive proportionally less spin.")]
+        [SerializeField, Min(0f)]
+        private float perfectParryMaximumSpin = 4f;
+
         [Header("Guard capacity")]
         [Tooltip("Number of consecutive held blocks allowed before the next block attempt breaks the guard.")]
         [SerializeField, Min(1)] private int maximumConsecutiveBlocks = 3;
@@ -97,6 +105,8 @@ namespace Burntwax
             perfectParryMinimumArcHeight;
         public float PerfectParryMaximumArcHeight =>
             perfectParryMaximumArcHeight;
+        public float PerfectParryMinimumSpin => perfectParryMinimumSpin;
+        public float PerfectParryMaximumSpin => perfectParryMaximumSpin;
         public int MaximumConsecutiveBlocks => maximumConsecutiveBlocks;
         public float GuardRecoveryDelay => guardRecoveryDelay;
         public bool PerfectParryRestoresGuard => perfectParryRestoresGuard;
@@ -136,6 +146,12 @@ namespace Burntwax
             perfectParryMaximumArcHeight = Mathf.Max(
                 perfectParryMinimumArcHeight,
                 perfectParryMaximumArcHeight);
+            perfectParryMinimumSpin = Mathf.Max(
+                0f,
+                perfectParryMinimumSpin);
+            perfectParryMaximumSpin = Mathf.Max(
+                perfectParryMinimumSpin,
+                perfectParryMaximumSpin);
             maximumConsecutiveBlocks = Mathf.Max(
                 1,
                 maximumConsecutiveBlocks);

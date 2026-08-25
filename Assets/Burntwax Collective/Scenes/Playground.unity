@@ -20673,6 +20673,8 @@ MonoBehaviour:
   maximumArcHeight: 2.5
   spawnInterval: 2
   launchSpeed: 20
+  minimumLaunchSpin: 1
+  maximumLaunchSpin: 4
   lifetime: 5
   spawnImmediately: 1
 --- !u!114 &1409608861
@@ -33460,7 +33462,7 @@ PrefabInstance:
     - target: {fileID: 1551346992031298249, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: baseballHoldForgivenessDuration
-      value: 0.1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}

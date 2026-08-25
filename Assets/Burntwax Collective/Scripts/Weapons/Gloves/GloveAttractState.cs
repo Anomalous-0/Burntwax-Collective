@@ -226,19 +226,10 @@ namespace Burntwax
 
         private Vector3 GetRandomAttractionSpin()
         {
-            float minimumSpin = Mathf.Max(0f, Ctx.MinimumAttractionSpin);
-            float maximumSpin = Mathf.Max(
-                minimumSpin,
+            return RigidbodySpinUtility.GetMassWeightedRandomSpin(
+                attractedBody,
+                Ctx.MinimumAttractionSpin,
                 Ctx.MaximumAttractionSpin);
-
-            if (maximumSpin <= Mathf.Epsilon)
-                return Vector3.zero;
-
-            float massMultiplier = 1f / Mathf.Max(1f, attractedBody.mass);
-
-            return Random.onUnitSphere
-                * Random.Range(minimumSpin, maximumSpin)
-                * massMultiplier;
         }
 
         private static Vector3 EvaluateArcPath(

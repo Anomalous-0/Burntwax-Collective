@@ -59,6 +59,13 @@ namespace Burntwax
         public int readyHash, slashHash, parryHash, stowHash, slashBlendHash, slashAnimationHash;
         public KatanaScriptableObject ActiveKatanaScriptable;
 
+        [Header("Slash Feedback")]
+        [Tooltip("Optional origin for swing VFX. Defaults to the active katana model transform.")]
+        [SerializeField] private Transform slashFeedbackOrigin;
+
+        [Tooltip("Audio source used for local katana swing and attacker-parried cues. Falls back to an AudioSource on the arms or player.")]
+        [SerializeField] private AudioSource katanaFeedbackAudioSource;
+
         private KatanaBaseState currentState;
         public KatanaStateFactory states;
 
@@ -167,6 +174,7 @@ namespace Burntwax
 
             arsenal = GetComponent<Arsenal>();
             katanaDriver = GetComponent<KatanaDriver>();
+            ResolveFeedbackAudioSource();
             RebuildKatanaCatalogLookup();
         }
 
@@ -347,9 +355,57 @@ namespace Burntwax
                 return;
             }
 
+            PlayAttackParriedFeedback(parriedHit);
             currentState.ExitState();
             currentState = states.ParriedRecoil();
             currentState.EnterState();
+        }
+
+        public void PlaySlashFeedback(KatanaAttackStrength strength)
+        {
+            KatanaCombatFeedbackConfig feedbackConfig = ActiveKatanaScriptable != null
+                ? ActiveKatanaScriptable.FeedbackConfig
+                : null;
+            if (feedbackConfig == null)
+                return;
+
+            ResolveFeedbackAudioSource();
+            Transform cueOrigin = slashFeedbackOrigin != null
+                ? slashFeedbackOrigin
+                : Katana != null
+                    ? Katana.transform
+                    : transform;
+            feedbackConfig.PlaySwing(
+                strength,
+                cueOrigin,
+                katanaFeedbackAudioSource);
+        }
+
+        private void PlayAttackParriedFeedback(DamageInfo parriedHit)
+        {
+            KatanaCombatFeedbackConfig feedbackConfig = ActiveKatanaScriptable != null
+                ? ActiveKatanaScriptable.FeedbackConfig
+                : null;
+            if (feedbackConfig == null)
+                return;
+
+            ResolveFeedbackAudioSource();
+            feedbackConfig.PlayAttackParried(
+                parriedHit,
+                katanaFeedbackAudioSource);
+        }
+
+        private void ResolveFeedbackAudioSource()
+        {
+            if (katanaFeedbackAudioSource != null)
+                return;
+
+            katanaFeedbackAudioSource = GetComponent<AudioSource>();
+            if (katanaFeedbackAudioSource == null && player != null)
+            {
+                katanaFeedbackAudioSource =
+                    player.GetComponent<AudioSource>();
+            }
         }
 
         private bool IsCurrentStateSlash()

@@ -9,6 +9,8 @@ namespace Burntwax
         private Rigidbody heldBody;
         private bool wasKinematic;
         private RigidbodyInterpolation originalInterpolation;
+        private Breakable heldBreakable;
+        private bool controlsHeldBodyPhysics;
         private GloveHoldProfile holdProfile;
         private Quaternion rotationOffsetFromHoldPoint;
         private bool hasRotationOffset;
@@ -23,6 +25,8 @@ namespace Burntwax
 
         public override void EnterState()
         {
+            heldBreakable = null;
+            controlsHeldBodyPhysics = false;
             hasRotationOffset = false;
             accumulatedHoverSpin = 0f;
             bobPhase = 0f;
@@ -47,6 +51,7 @@ namespace Burntwax
                 heldBody.angularVelocity = Vector3.zero;
                 heldBody.isKinematic = true;
                 heldBody.interpolation = RigidbodyInterpolation.None;
+                controlsHeldBodyPhysics = true;
 
                 if (Ctx.restPos != null)
                 {
@@ -55,25 +60,37 @@ namespace Burntwax
                         * heldBody.rotation;
                     hasRotationOffset = true;
                 }
+
+                Ctx.AttachHeldObjectToGlove();
             }
+
+            heldBreakable = Ctx.heldObject != null
+                ? Ctx.heldObject.GetComponent<Breakable>()
+                : null;
+            if (heldBreakable != null)
+                heldBreakable.Broken += OnHeldObjectBroken;
 
             InitializeSubState();
         }
 
         public override void UpdateState()
         {
+            if (!Ctx.HasUsableHeldObject)
+            {
+                Ctx.ClearLostHeldObject();
+                SwitchState(Factory.Idle());
+                return;
+            }
+
             HoldObject();
             CheckSwitchStates();
         }
 
         public override void ExitState()
         {
-            if (heldBody != null)
-            {
-                heldBody.isKinematic = wasKinematic;
-                heldBody.interpolation = originalInterpolation;
-            }
-
+            StopListeningForBreak();
+            Ctx.RestoreHeldObjectHierarchy();
+            RestoreHeldBodyPhysics();
         }
 
         public override void CheckSwitchStates()
@@ -105,6 +122,35 @@ namespace Burntwax
         }
 
         public override void InitializeSubState() { }
+
+        private void OnHeldObjectBroken(DamageInfo cause)
+        {
+            StopListeningForBreak();
+            Ctx.RestoreHeldObjectHierarchy();
+            RestoreHeldBodyPhysics();
+            Ctx.ClearLostHeldObject();
+        }
+
+        private void StopListeningForBreak()
+        {
+            if (heldBreakable != null)
+                heldBreakable.Broken -= OnHeldObjectBroken;
+
+            heldBreakable = null;
+        }
+
+        private void RestoreHeldBodyPhysics()
+        {
+            if (!controlsHeldBodyPhysics)
+                return;
+
+            controlsHeldBodyPhysics = false;
+            if (heldBody == null)
+                return;
+
+            heldBody.isKinematic = wasKinematic;
+            heldBody.interpolation = originalInterpolation;
+        }
 
         private void HoldObject()
         {
