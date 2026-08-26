@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using Cinemachine;
@@ -7,7 +8,9 @@ using System.Collections.Generic;
 namespace Burntwax
 {
     [DisallowMultipleComponent]
-    public class KatanaStateMachine : MonoBehaviour, IParryReactionReceiver
+    public class KatanaStateMachine : MonoBehaviour,
+        IParryReactionReceiver,
+        IPlayerResourceSource
     {
 
         [Header("Debug (read-only)")]
@@ -81,14 +84,27 @@ namespace Burntwax
         public bool ableToSlashInMiddleOfAnimation;
         public bool fullyEquipped;
 
+        [Header("Dash")]
+        [SerializeField] private PlayerResourceDefinition dashResourceDefinition;
+
         [Header("Dash (read-only)")]
         [SerializeField] private int currentDashCharges;
         [SerializeField] private int airborneDashesUsed;
 
         private readonly List<float> dashRechargeCompletionTimes = new();
+        private PlayerResourceRegistry playerResourceRegistry;
 
         public int CurrentDashCharges => currentDashCharges;
         public int AirborneDashesUsed => airborneDashesUsed;
+        public PlayerResourceDefinition ResourceDefinition =>
+            dashResourceDefinition;
+        public float CurrentValue => currentDashCharges;
+        public float MaximumValue => ActiveKatanaScriptable != null
+            ? ActiveKatanaScriptable.MaxDashCharges
+            : KatanaScriptable != null
+                ? KatanaScriptable.MaxDashCharges
+                : 0f;
+        public bool IsResourceAvailable => IsDashEquipped;
         public bool HasDashCharge => currentDashCharges > 0;
         public bool IsKatanaEquipped => enabled
             && gameObject.activeInHierarchy
@@ -98,6 +114,9 @@ namespace Burntwax
             && Katana != null
             && Katana.activeInHierarchy;
         public bool IsDashEquipped => IsKatanaEquipped;
+
+        public event Action<IPlayerResourceSource> ResourceChanged;
+
         public bool CanDash
         {
             get
@@ -313,6 +332,7 @@ namespace Burntwax
 
             activeKatana?.Despawn(this);
             ActiveKatanaScriptable = null;
+            NotifyDashResourceChanged();
         }
 
         private void Spawn(KatanaScriptableObject activeKatana)
@@ -427,6 +447,7 @@ namespace Burntwax
             KatanaScriptable = katana;
             SetupKatana();
             arsenal.currentMode = Arsenal.WeaponMode.Katana;
+            NotifyDashResourceChanged();
         }
 
         public void SetupKatana()
@@ -468,6 +489,7 @@ namespace Burntwax
                 0.01f,
                 ActiveKatanaScriptable.DashRechargeDuration);
             dashRechargeCompletionTimes.Add(Time.time + rechargeDuration);
+            NotifyDashResourceChanged();
             return true;
         }
 
@@ -478,10 +500,12 @@ namespace Burntwax
             currentDashCharges = ActiveKatanaScriptable != null
                 ? Mathf.Max(0, ActiveKatanaScriptable.MaxDashCharges)
                 : 0;
+            NotifyDashResourceChanged();
         }
 
         private void TickDashRecharge()
         {
+            bool chargeChanged = false;
             for (int i = dashRechargeCompletionTimes.Count - 1; i >= 0; i--)
             {
                 if (Time.time < dashRechargeCompletionTimes[i])
@@ -491,7 +515,11 @@ namespace Burntwax
                     currentDashCharges + 1,
                     ActiveKatanaScriptable.MaxDashCharges);
                 dashRechargeCompletionTimes.RemoveAt(i);
+                chargeChanged = true;
             }
+
+            if (chargeChanged)
+                NotifyDashResourceChanged();
         }
 
         private bool IsPlayerGrounded()
@@ -578,10 +606,36 @@ namespace Burntwax
 
         }
 
+        private void OnEnable()
+        {
+            RegisterDashResource();
+        }
+
         private void OnDisable()
         {
+            if (playerResourceRegistry != null)
+            {
+                playerResourceRegistry.UnregisterExternalSource(this);
+                playerResourceRegistry = null;
+            }
+
             CloseDamageWindow();
             ResetGestureRecognition();
+        }
+
+        private void RegisterDashResource()
+        {
+            if (player == null || dashResourceDefinition == null)
+                return;
+
+            playerResourceRegistry =
+                player.GetComponent<PlayerResourceRegistry>();
+            playerResourceRegistry?.RegisterExternalSource(this);
+        }
+
+        private void NotifyDashResourceChanged()
+        {
+            ResourceChanged?.Invoke(this);
         }
 
 

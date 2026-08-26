@@ -8,8 +8,14 @@ namespace Burntwax
     /// active katana's parry state/configuration.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class KatanaParryDefense : MonoBehaviour, IHitDefense
+    public sealed class KatanaParryDefense : MonoBehaviour,
+        IHitDefense,
+        IPlayerResourceSource
     {
+        [Header("Resource")]
+        [Tooltip("HUD identity for the katana's remaining safe blocks.")]
+        [SerializeField] private PlayerResourceDefinition blockResourceDefinition;
+
         [Header("References")]
         [Tooltip("Katana state machine that owns the active katana and parry window.")]
         [SerializeField] private KatanaStateMachine stateMachine;
@@ -30,9 +36,34 @@ namespace Burntwax
         [SerializeField] private bool guardExhausted;
 
         public event Action<DamageInfo, HitDefenseOutcome> Defended;
+        public event Action<IPlayerResourceSource> ResourceChanged;
 
         public int ConsecutiveBlocks => consecutiveBlocks;
         public bool GuardExhausted => guardExhausted;
+        public PlayerResourceDefinition ResourceDefinition =>
+            blockResourceDefinition;
+        public float CurrentValue => Mathf.Max(
+            0f,
+            MaximumValue - consecutiveBlocks);
+        public float MaximumValue
+        {
+            get
+            {
+                KatanaScriptableObject katana = stateMachine != null
+                    ? stateMachine.ActiveKatanaScriptable != null
+                        ? stateMachine.ActiveKatanaScriptable
+                        : stateMachine.KatanaScriptable
+                    : null;
+                KatanaParryConfig config = katana != null
+                    ? katana.ParryConfig
+                    : null;
+                return config != null
+                    ? config.MaximumConsecutiveBlocks
+                    : 0f;
+            }
+        }
+        public bool IsResourceAvailable => stateMachine != null
+            && stateMachine.IsKatanaEquipped;
 
         private float guardRecoveryStartTime = -1f;
         private float activeGuardRecoveryDelay = 1.5f;
@@ -98,6 +129,7 @@ namespace Burntwax
             consecutiveBlocks++;
             guardExhausted =
                 consecutiveBlocks >= config.MaximumConsecutiveBlocks;
+            NotifyGuardResourceChanged();
             lastOutcome = HitDefenseOutcome.Blocked;
             PlayDefenseFeedback(config, incomingHit, lastOutcome);
             Defended?.Invoke(incomingHit, lastOutcome);
@@ -280,9 +312,25 @@ namespace Burntwax
 
         private void RestoreGuardCapacity()
         {
+            bool changed = consecutiveBlocks != 0 || guardExhausted;
             consecutiveBlocks = 0;
             guardExhausted = false;
             guardRecoveryStartTime = -1f;
+
+            if (changed)
+                NotifyGuardResourceChanged();
+        }
+
+        private void NotifyGuardResourceChanged()
+        {
+            ResourceChanged?.Invoke(this);
+        }
+
+        private void OnKatanaResourceChanged(IPlayerResourceSource source)
+        {
+            // Dash and guard have separate values, but this notification also
+            // tells the guard HUD when the katana is equipped or removed.
+            NotifyGuardResourceChanged();
         }
 
         private bool TryGetActiveDefense(out KatanaParryConfig config)
@@ -386,6 +434,9 @@ namespace Burntwax
         {
             ResolveReferences();
 
+            if (stateMachine != null)
+                stateMachine.ResourceChanged += OnKatanaResourceChanged;
+
             if (stateMachine == null)
             {
                 Debug.LogWarning(
@@ -396,6 +447,9 @@ namespace Burntwax
 
         private void OnDisable()
         {
+            if (stateMachine != null)
+                stateMachine.ResourceChanged -= OnKatanaResourceChanged;
+
             RestoreGuardCapacity();
         }
     }

@@ -130,7 +130,22 @@ namespace Burntwax
                 return;
             }
 
-            if (closingSpeed >= minimumAudioSpeed && Time.time >= nextAudioTime)
+            // Unity reports a Rigidbody-to-Rigidbody collision to both bodies.
+            // Only the body contributing most of the motion into the contact
+            // may emit the passive target-surface presentation. Gameplay
+            // listeners above still receive the impact from both reporters.
+            //
+            // Future material-pair presentation can replace this boundary so,
+            // for example, a wooden crate supplies audio while struck glass
+            // independently supplies its shatter VFX.
+            bool ownsPassivePresentation = OwnsPassivePresentation(
+                collision,
+                contact,
+                sourceClosingSpeed);
+
+            if (ownsPassivePresentation
+                && closingSpeed >= minimumAudioSpeed
+                && Time.time >= nextAudioTime)
             {
                 if (closingSpeed >= majorImpactAudioSpeed)
                 {
@@ -167,6 +182,71 @@ namespace Burntwax
 
                 nextAudioTime = Time.time + audioCooldown;
             }
+        }
+
+        private bool OwnsPassivePresentation(
+            Collision collision,
+            ContactPoint contact,
+            float ownClosingContribution)
+        {
+            Rigidbody otherBody = collision.rigidbody;
+            if (otherBody == null)
+                return ownClosingContribution > Mathf.Epsilon;
+
+            RigidbodyImpactReporter otherReporter =
+                otherBody.GetComponent<RigidbodyImpactReporter>();
+            if (otherReporter == null
+                || !otherReporter.isActiveAndEnabled
+                || otherReporter == this)
+            {
+                return ownClosingContribution > Mathf.Epsilon;
+            }
+
+            // This contact normal points out of the other collider toward this
+            // body. The other body's closing contribution therefore uses the
+            // opposite sign from this reporter's calculation.
+            float otherClosingContribution = Mathf.Max(
+                0f,
+                Vector3.Dot(
+                    otherReporter.VelocityBeforePhysics,
+                    contact.normal));
+
+            const float contributionEpsilon = 0.001f;
+            if (ownClosingContribution
+                > otherClosingContribution + contributionEpsilon)
+            {
+                return true;
+            }
+
+            if (otherClosingContribution
+                > ownClosingContribution + contributionEpsilon)
+            {
+                return false;
+            }
+
+            // Equal head-on contributions still need one deterministic owner.
+            // World-space center ordering produces the same winner from both
+            // callbacks without relying on Unity instance IDs.
+            return ComesFirst(
+                body.worldCenterOfMass,
+                otherBody.worldCenterOfMass);
+        }
+
+        private static bool ComesFirst(Vector3 first, Vector3 second)
+        {
+            const float positionEpsilon = 0.0001f;
+            if (Mathf.Abs(first.x - second.x) > positionEpsilon)
+                return first.x < second.x;
+
+            if (Mathf.Abs(first.y - second.y) > positionEpsilon)
+                return first.y < second.y;
+
+            if (Mathf.Abs(first.z - second.z) > positionEpsilon)
+                return first.z < second.z;
+
+            // Perfectly overlapping centers are too ambiguous to present
+            // twice, so neither callback owns passive presentation.
+            return false;
         }
 
         private void OnValidate()

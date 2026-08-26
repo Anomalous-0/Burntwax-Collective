@@ -1,57 +1,41 @@
+using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Burntwax
 {
-    public class PlayerHealth : MonoBehaviour, IDamageable
+    public class PlayerHealth : MonoBehaviour,
+        IDamageable,
+        IPlayerResourceSource
     {
         private float health;
-        private float lerpTimer;
-        public float maxHealth = 100;
-        public float chipSpeed = 2.0f;
 
-        public Image frontHealthBar;
-        public Image backHealthBar;
-        void Start()
+        [Header("Resource")]
+        [SerializeField] private PlayerResourceDefinition resourceDefinition;
+
+        [Header("Health")]
+        public float maxHealth = 100;
+
+        public PlayerResourceDefinition ResourceDefinition =>
+            resourceDefinition;
+        public float CurrentValue => health;
+        public float MaximumValue => maxHealth;
+        public bool IsResourceAvailable => isActiveAndEnabled;
+
+        public event Action<IPlayerResourceSource> ResourceChanged;
+
+        private void Awake()
         {
             health = maxHealth;
         }
-        void Update()
-        {
-            health = Mathf.Clamp(health, 0, maxHealth);
-            UpdateHealthUI();
 
-        }
-
-        public void UpdateHealthUI()
+        private void Start()
         {
-            float fillF = frontHealthBar.fillAmount;
-            float fillB = backHealthBar.fillAmount;
-            float hFraction = health / maxHealth;
-            if (fillB > hFraction)
-            {
-                frontHealthBar.fillAmount = hFraction;
-                backHealthBar.color = Color.red;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                backHealthBar.fillAmount = Mathf.Lerp(fillB, hFraction, percentComplete * Time.deltaTime);
-            }
-            if (fillF < hFraction)
-            {
-                backHealthBar.color = Color.cyan;
-                backHealthBar.fillAmount = hFraction;
-                lerpTimer += Time.deltaTime;
-                float percentComplete = lerpTimer / chipSpeed;
-                percentComplete = percentComplete * percentComplete;
-                frontHealthBar.fillAmount = Mathf.Lerp(fillF, backHealthBar.fillAmount, percentComplete * Time.deltaTime);
-            }
+            NotifyResourceChanged();
         }
 
         public void TakeDamage(float damage)
         {
-            health -= damage;
-            lerpTimer = 0f;
+            SetHealth(health - damage);
         }
 
         public void ApplyDamage(DamageInfo damage)
@@ -61,8 +45,7 @@ namespace Burntwax
 
         public void RestoreHealth(float healAmount)
         {
-            health += healAmount;
-            lerpTimer = 0f;
+            SetHealth(health + healAmount);
         }
 
         public float CurrentHealth()
@@ -72,11 +55,26 @@ namespace Burntwax
 
         public void LoadData(PlayerHealthSaveData data)
         {
-            health = data.health;
+            SetHealth(data.health);
         }
         public void SaveData(ref PlayerHealthSaveData data)
         {
             data.health = health;
+        }
+
+        private void SetHealth(float value)
+        {
+            float nextHealth = Mathf.Clamp(value, 0f, maxHealth);
+            if (Mathf.Approximately(nextHealth, health))
+                return;
+
+            health = nextHealth;
+            NotifyResourceChanged();
+        }
+
+        private void NotifyResourceChanged()
+        {
+            ResourceChanged?.Invoke(this);
         }
     }
 

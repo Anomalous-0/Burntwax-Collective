@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11232370222023b4b8eb6587eb2d686d, type: 3}
+  m_Name: Player Impact
+  m_EditorClassIdentifier: 
+  surfaceTag: Player
+  damageTypes: 0
+  vfxPrefab: {fileID: 0}
+  impactSounds:
+  - {fileID: 8300000, guid: 10484a19d22ab0049b06480730ba0883, type: 3}
+  - {fileID: 8300000, guid: 027068841a2917544a25eac4bab56e20, type: 3}
+  - {fileID: 8300000, guid: 4eeda3508469ef144b7344d1b4f5fd1b, type: 3}
+  alignVfxToHitDirection: 0
+  hitDirectionRotationOffset: 0
+  volume: 0.657
