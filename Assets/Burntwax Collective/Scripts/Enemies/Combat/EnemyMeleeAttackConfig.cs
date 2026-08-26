@@ -11,17 +11,10 @@ namespace Burntwax
         fileName = "Enemy Melee Attack Config",
         menuName = "Enemies/Combat/Melee Attack Config",
         order = 0)]
-    public sealed class EnemyMeleeAttackConfig : ScriptableObject
+    public sealed class EnemyMeleeAttackConfig : EnemyCombatActionConfig
     {
-        [Header("Animation")]
-        [Tooltip("Animator state played when this attack starts. A short name such as Punching is automatically expanded to the selected Animator layer.")]
-        [SerializeField] private string animationStateName = "Punching";
-
-        [Tooltip("Animator layer containing the attack state. Layer 0 is normally the Base Layer.")]
-        [SerializeField, Min(0)] private int animationLayer;
-
-        [Tooltip("Fixed time, in seconds, used to blend from the current pose into this attack.")]
-        [SerializeField, Min(0f)] private float crossFadeDuration = 0.1f;
+        public override EnemyCombatActionCategory Category =>
+            EnemyCombatActionCategory.Melee;
 
         [Header("Damage")]
         [SerializeField, Min(0f)] private float baseDamage = 10f;
@@ -64,9 +57,6 @@ namespace Burntwax
         [Tooltip("Maximum unique actors hit by one attack. Use 1 for focused attacks and larger values for sweeping attacks.")]
         [SerializeField, Min(1)] private int maximumTargets = 1;
 
-        public string AnimationStateName => animationStateName;
-        public int AnimationLayer => animationLayer;
-        public float CrossFadeDuration => crossFadeDuration;
         public float BaseDamage => baseDamage;
         public DamageType DamageType => damageType;
         public DamageType PresentationType => presentationType !=
@@ -83,10 +73,9 @@ namespace Burntwax
         public LayerMask TargetLayers => targetLayers;
         public int MaximumTargets => maximumTargets;
 
-        private void OnValidate()
+        protected override void OnValidate()
         {
-            animationLayer = Mathf.Max(0, animationLayer);
-            crossFadeDuration = Mathf.Max(0f, crossFadeDuration);
+            base.OnValidate();
             baseDamage = Mathf.Max(0f, baseDamage);
             impactForce = Mathf.Max(0f, impactForce);
             startupDuration = Mathf.Max(0f, startupDuration);

@@ -23,9 +23,13 @@ namespace Burntwax
             EnemyCapability.GroundMovement
             | EnemyCapability.MeleeAttack;
 
+        [Tooltip("Combat actions this enemy family knows before evolution or per-spawn overrides.")]
+        [SerializeField] private EnemyCombatLoadout baseCombatLoadout;
+
         public string StableId => stableId;
         public EnemyRuntimeStats BaseStats => baseStats.Sanitized();
         public EnemyCapability BaseCapabilities => baseCapabilities;
+        public EnemyCombatLoadout BaseCombatLoadout => baseCombatLoadout;
 
         private void OnValidate()
         {

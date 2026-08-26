@@ -47,16 +47,11 @@ namespace Burntwax
         [SerializeField, Min(0.1f)] private float targetSearchInterval = 1f;
 
         [Header("Basic Melee Decision")]
+        [Tooltip("Prototype/per-enemy override. When empty, actions come from the resolved archetype and evolution profile.")]
+        [SerializeField] private EnemyCombatLoadout combatLoadoutOverride;
+
         [Tooltip("Attack selected by the current basic melee state. When empty, the executor's migrated fallback is used.")]
         [SerializeField] private EnemyMeleeAttackConfig defaultMeleeAttack;
-
-        [Tooltip("Decision distance only. The actual damaging shape remains in EnemyMeleeAttackConfig.")]
-        [FormerlySerializedAs("attackRequestRange")]
-        [SerializeField, Min(0f)] private float meleeRequestRange = 2f;
-
-        [FormerlySerializedAs("maximumStartAngle")]
-        [SerializeField, Range(0f, 180f)] private float meleeStartAngle =
-            15f;
 
         [FormerlySerializedAs("faceTargetDuringWindup")]
         [FormerlySerializedAs("faceTargetDuringMeleeWindup")]
@@ -85,6 +80,9 @@ namespace Burntwax
             faceTargetDuringMeleeStartup;
 
         private EnemyStateFactory states;
+        private readonly EnemyCombatActionSelector combatActionSelector = new();
+        private readonly EnemyCombatActionConfig[] fallbackCombatActions =
+            new EnemyCombatActionConfig[1];
         private float nextTargetSearchTime;
 
         // Action states write transient intents; movement states consume them.
@@ -135,6 +133,7 @@ namespace Burntwax
             StopRootState(EnemyStateRegion.Action);
             StopRootState(EnemyStateRegion.Movement);
             StopRootState(EnemyStateRegion.Life);
+            combatActionSelector.ClearCooldowns();
             ClearMovementIntents();
             RefreshDebugPaths();
         }
@@ -243,13 +242,66 @@ namespace Burntwax
         /// Central selection point used by EnemyMeleeState. The basic enemy has
         /// one configured choice; future scorers can choose among several assets.
         /// </summary>
-        internal EnemyMeleeAttackConfig SelectMeleeAttack()
+        internal bool TrySelectCombatAction(
+            out EnemyCombatActionConfig selectedAction)
         {
-            // This is the future attack-scoring boundary. An alien or human can
-            // later select from several configs without changing the executor.
-            return defaultMeleeAttack != null
+            selectedAction = null;
+            if (!HasValidTarget
+                || meleeExecutor == null
+                || !meleeExecutor.CanStartAttack)
+                return false;
+
+            Transform root = rotationRoot != null
+                ? rotationRoot
+                : transform;
+            Vector3 toTarget = target.position - root.position;
+            Vector3 flatDirection = Vector3.ProjectOnPlane(
+                toTarget,
+                Vector3.up);
+            float targetAngle = flatDirection.sqrMagnitude > Mathf.Epsilon
+                ? Vector3.Angle(root.forward, flatDirection)
+                : 0f;
+            EnemyCapability capabilities = runtimeProfile != null
+                ? runtimeProfile.Capabilities
+                : EnemyCapability.GroundMovement
+                    | EnemyCapability.MeleeAttack;
+
+            EnemyCombatSelectionContext selectionContext =
+                new EnemyCombatSelectionContext(
+                    toTarget.magnitude,
+                    targetAngle,
+                    Time.time,
+                    capabilities,
+                    EnemyCombatActionCategory.Melee);
+
+            return combatActionSelector.TrySelect(
+                GetAvailableCombatActions(),
+                selectionContext,
+                out selectedAction);
+        }
+
+        internal void MarkCombatActionStarted(
+            EnemyCombatActionConfig action)
+        {
+            combatActionSelector.MarkStarted(action, Time.time);
+        }
+
+        private IReadOnlyList<EnemyCombatActionConfig>
+            GetAvailableCombatActions()
+        {
+            if (combatLoadoutOverride != null)
+                return combatLoadoutOverride.Actions;
+
+            if (runtimeProfile != null
+                && runtimeProfile.CombatActions.Count > 0)
+            {
+                return runtimeProfile.CombatActions;
+            }
+
+            fallbackCombatActions[0] = defaultMeleeAttack != null
                 ? defaultMeleeAttack
                 : meleeExecutor?.FallbackAttackConfig;
+            return fallbackCombatActions;
         }
 
         internal void PlayMeleeAnimation(EnemyMeleeAttackConfig config)
@@ -269,39 +321,6 @@ namespace Burntwax
                 defaultAnimationState,
                 defaultAnimationLayer,
                 defaultCrossFadeDuration);
-        }
-
-        internal bool CanBeginMeleeAttack()
-        {
-            if (!HasValidTarget
-                || meleeExecutor == null
-                || !meleeExecutor.CanStartAttack
-                || SelectMeleeAttack() == null
-                || runtimeProfile != null
-                && !runtimeProfile.HasCapability(
-                    EnemyCapability.MeleeAttack))
-            {
-                return false;
-            }
-
-            Transform root = rotationRoot != null
-                ? rotationRoot
-                : transform;
-            Vector3 toTarget = target.position - root.position;
-            if (toTarget.sqrMagnitude > meleeRequestRange
-                * meleeRequestRange)
-            {
-                return false;
-            }
-
-            Vector3 flatDirection = Vector3.ProjectOnPlane(
-                toTarget,
-                Vector3.up);
-            if (flatDirection.sqrMagnitude <= Mathf.Epsilon)
-                return false;
-
-            return Vector3.Angle(root.forward, flatDirection)
-                <= meleeStartAngle;
         }
 
         private void OnEnemyDied(DamageInfo killingHit)
@@ -476,8 +495,6 @@ namespace Burntwax
         {
             ResolveReferences();
             targetSearchInterval = Mathf.Max(0.1f, targetSearchInterval);
-            meleeRequestRange = Mathf.Max(0f, meleeRequestRange);
-            meleeStartAngle = Mathf.Clamp(meleeStartAngle, 0f, 180f);
             defaultAnimationLayer = Mathf.Max(0, defaultAnimationLayer);
             defaultCrossFadeDuration = Mathf.Max(
                 0f,

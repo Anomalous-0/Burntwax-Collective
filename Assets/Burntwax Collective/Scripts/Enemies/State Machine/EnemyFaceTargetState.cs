@@ -1,9 +1,9 @@
 namespace Burntwax
 {
     /// <summary>
-    /// Faces the target and chooses the only action currently implemented. A
-    /// future action scorer can choose melee, ranged, throws, blocks, or an
-    /// evolution-granted action from this decision point.
+    /// Faces the target and asks the generic combat selector for an action. Only
+    /// Melee is executable today; future action states extend the switch without
+    /// changing loadouts, evolution traits, or scoring rules.
     /// </summary>
     public sealed class EnemyFaceTargetState : EnemyBaseState
     {
@@ -32,8 +32,20 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (Ctx.CanBeginMeleeAttack())
-                SwitchState(Factory.Melee());
+            if (!Ctx.TrySelectCombatAction(
+                    out EnemyCombatActionConfig selectedAction))
+            {
+                return;
+            }
+
+            switch (selectedAction)
+            {
+                case EnemyMeleeAttackConfig meleeAttack:
+                    EnemyMeleeState meleeState = Factory.Melee();
+                    meleeState.QueueAttack(meleeAttack);
+                    SwitchState(meleeState);
+                    break;
+            }
         }
 
         public override void InitializeSubState() { }

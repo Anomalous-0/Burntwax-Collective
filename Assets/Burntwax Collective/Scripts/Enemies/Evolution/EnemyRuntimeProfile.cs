@@ -38,10 +38,14 @@ namespace Burntwax
             EnemyRuntimeStats.Default;
         [SerializeField] private EnemyCapability resolvedCapabilities;
         [SerializeField] private List<string> appliedTraitIds = new();
+        [SerializeField] private List<EnemyCombatActionConfig>
+            resolvedCombatActions = new();
 
         public event Action ProfileRebuilt;
         public EnemyRuntimeStats Stats => resolvedStats;
         public EnemyCapability Capabilities => resolvedCapabilities;
+        public IReadOnlyList<EnemyCombatActionConfig> CombatActions =>
+            resolvedCombatActions;
 
         private readonly HashSet<AlienEvolutionTrait> appliedTraits = new();
         private EnemyHealth health;
@@ -95,6 +99,13 @@ namespace Burntwax
 
             appliedTraits.Clear();
             appliedTraitIds.Clear();
+            resolvedCombatActions.Clear();
+            if (archetype != null
+                && archetype.BaseCombatLoadout != null)
+            {
+                AddCombatActions(
+                    archetype.BaseCombatLoadout.Actions);
+            }
 
             if (inheritPopulationEvolution
                 && evolutionDirector != null)
@@ -150,6 +161,23 @@ namespace Burntwax
                     ref resolvedCapabilities);
                 appliedTraits.Add(trait);
                 appliedTraitIds.Add(trait.StableId);
+                AddCombatActions(trait.GrantedCombatActions);
+            }
+        }
+
+        private void AddCombatActions(
+            IEnumerable<EnemyCombatActionConfig> actions)
+        {
+            if (actions == null)
+                return;
+
+            foreach (EnemyCombatActionConfig action in actions)
+            {
+                if (action != null
+                    && !resolvedCombatActions.Contains(action))
+                {
+                    resolvedCombatActions.Add(action);
+                }
             }
         }
 

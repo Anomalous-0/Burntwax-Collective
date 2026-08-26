@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c85576f3e7643618d8101eb258763b9, type: 3}
   m_Name: Basic Melee Attack Config
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyMeleeAttackConfig
+  stableId: basic_punch
+  requiredCapabilities: 8
+  minimumRange: 0
+  maximumRange: 2
+  maximumStartAngle: 40.2
+  cooldown: 0.6
+  selectionPriority: 0
+  selectionWeight: 1
   animationStateName: Punching
   animationLayer: 0
   crossFadeDuration: 0.1

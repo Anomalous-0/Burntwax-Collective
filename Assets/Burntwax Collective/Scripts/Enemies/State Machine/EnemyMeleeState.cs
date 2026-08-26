@@ -9,6 +9,7 @@ namespace Burntwax
     {
         private bool attackStarted;
         private EnemyMeleeAttackConfig selectedAttack;
+        private EnemyMeleeAttackConfig queuedAttack;
 
         public override string DebugName => "Melee";
 
@@ -22,12 +23,21 @@ namespace Burntwax
         public override void EnterState()
         {
             // Cached states are reused, so entry-specific fields reset here.
-            selectedAttack = Ctx.SelectMeleeAttack();
+            selectedAttack = queuedAttack;
+            queuedAttack = null;
             attackStarted = Ctx.MeleeExecutor != null
                 && Ctx.MeleeExecutor.TryBeginAttack(selectedAttack);
 
             if (attackStarted)
+            {
+                Ctx.MarkCombatActionStarted(selectedAttack);
                 Ctx.PlayMeleeAnimation(selectedAttack);
+            }
+        }
+
+        public void QueueAttack(EnemyMeleeAttackConfig attack)
+        {
+            queuedAttack = attack;
         }
 
         public override void UpdateState()

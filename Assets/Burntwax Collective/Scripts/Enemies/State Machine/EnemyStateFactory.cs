@@ -47,7 +47,8 @@ namespace Burntwax
         public EnemyBaseState Idle() => states[EnemyStates.Idle];
         public EnemyBaseState Combat() => states[EnemyStates.Combat];
         public EnemyBaseState FaceTarget() => states[EnemyStates.FaceTarget];
-        public EnemyBaseState Melee() => states[EnemyStates.Melee];
+        public EnemyMeleeState Melee() =>
+            (EnemyMeleeState)states[EnemyStates.Melee];
         public EnemyBaseState Staggered() => states[EnemyStates.Staggered];
     }
 }

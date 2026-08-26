@@ -34,8 +34,13 @@ namespace Burntwax
         [SerializeField] private EnemyCapability grantedCapabilities;
         [SerializeField] private EnemyCapability removedCapabilities;
 
+        [Tooltip("Actions learned when this trait is applied. Their own capability requirements must also be satisfied before selection.")]
+        [SerializeField] private EnemyCombatActionConfig[] grantedCombatActions;
+
         public string StableId => stableId;
         public int EvolutionCost => evolutionCost;
+        public EnemyCombatActionConfig[] GrantedCombatActions =>
+            grantedCombatActions;
 
         public bool CanApply(EnemyCapability currentCapabilities)
         {
