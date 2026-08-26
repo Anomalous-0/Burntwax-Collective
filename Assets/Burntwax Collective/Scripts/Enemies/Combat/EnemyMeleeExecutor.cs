@@ -1,33 +1,46 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace Burntwax
 {
-    public enum EnemyMeleeAttackState
+    /// <summary>
+    /// Runtime phases within one melee action and its animation. These are not
+    /// hierarchical AI states and never select animations by themselves.
+    /// </summary>
+    public enum EnemyMeleeExecutionPhase
     {
         Disabled = 0,
         Ready = 1,
-        Windup = 2,
-        Active = 3,
+        Startup = 2,
+        DamageWindow = 3,
         Recovery = 4,
         Parried = 5
     }
 
     /// <summary>
     /// Coordinates one enemy melee attack without depending on AI or Animator.
-    /// Prototype timers and future animation events enter the same phases, so
+    /// Fallback timers and animation events enter the same phases, so
     /// changing the phase driver never replaces damage or defense resolution.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(EnemyHealth))]
-    public sealed class EnemyMeleeAttack : MonoBehaviour,
+    [MovedFrom(
+        true,
+        "Burntwax",
+        "Burntwax.Core",
+        "EnemyMeleeAttack")]
+    public sealed class EnemyMeleeExecutor : MonoBehaviour,
         IParryReactionReceiver
     {
         private const int HitBufferSize = 32;
 
         [Header("Attack")]
-        [SerializeField] private EnemyMeleeAttackConfig attackConfig;
+        [Tooltip("Backward-compatible default used until an AI profile supplies its own attack selection.")]
+        [FormerlySerializedAs("attackConfig")]
+        [SerializeField] private EnemyMeleeAttackConfig fallbackAttackConfig;
 
         [Tooltip("Start of the prototype hit capsule and source recorded in DamageInfo. Defaults to this transform.")]
         [SerializeField] private Transform attackOrigin;
@@ -35,35 +48,40 @@ namespace Burntwax
         [Tooltip("Forward direction of the prototype hit capsule. Defaults to Attack Origin.")]
         [SerializeField] private Transform facingReference;
 
-        [Header("Phase Driver")]
-        [Tooltip("Uses config timing for immediate testing. Disable this when animation events drive the public phase methods.")]
+        [Header("Damage Window Timing")]
+        [Tooltip("Uses config timing as a fallback. Disable this when animation events drive OpenDamageWindow, CloseDamageWindow, and FinishAttack.")]
         [SerializeField] private bool useAutomaticTiming = true;
 
         [Header("Debug (read-only)")]
-        [SerializeField] private EnemyMeleeAttackState currentState =
-            EnemyMeleeAttackState.Disabled;
-        [SerializeField] private float stateElapsedTime;
+        [FormerlySerializedAs("currentState")]
+        [SerializeField] private EnemyMeleeExecutionPhase currentPhase =
+            EnemyMeleeExecutionPhase.Disabled;
+        [FormerlySerializedAs("stateElapsedTime")]
+        [SerializeField] private float phaseElapsedTime;
         [SerializeField] private int targetsResolvedThisAttack;
         [SerializeField] private float runtimeDamageMultiplier = 1f;
         [SerializeField] private float runtimeAttackSpeedMultiplier = 1f;
         [SerializeField] private float runtimeStaggerDurationMultiplier = 1f;
 
-        public event Action<EnemyMeleeAttackState> StateChanged;
+        public event Action<EnemyMeleeExecutionPhase> PhaseChanged;
         public event Action<EnemyMeleeAttackConfig> AttackStarted;
         public event Action<DamageInfo, HitDefenseResult> HitResolved;
         public event Action<DamageInfo> AttackParried;
 
-        public EnemyMeleeAttackConfig AttackConfig => attackConfig;
-        public EnemyMeleeAttackState CurrentState => currentState;
+        public EnemyMeleeAttackConfig FallbackAttackConfig =>
+            fallbackAttackConfig;
+        public EnemyMeleeAttackConfig ActiveAttackConfig =>
+            activeAttackConfig;
+        public EnemyMeleeExecutionPhase CurrentPhase => currentPhase;
         public bool CanStartAttack => isActiveAndEnabled
-            && attackConfig != null
             && health != null
             && !health.IsDead
-            && currentState == EnemyMeleeAttackState.Ready;
+            && currentPhase == EnemyMeleeExecutionPhase.Ready;
 
         private readonly Collider[] hitBuffer = new Collider[HitBufferSize];
         private readonly HashSet<Component> resolvedTargets = new();
         private EnemyHealth health;
+        private EnemyMeleeAttackConfig activeAttackConfig;
 
         private void Awake()
         {
@@ -79,10 +97,10 @@ namespace Burntwax
         private void OnEnable()
         {
             health.Died += OnEnemyDied;
-            EnterState(
+            EnterPhase(
                 health.IsDead
-                    ? EnemyMeleeAttackState.Disabled
-                    : EnemyMeleeAttackState.Ready);
+                    ? EnemyMeleeExecutionPhase.Disabled
+                    : EnemyMeleeExecutionPhase.Ready);
         }
 
         private void OnDisable()
@@ -91,41 +109,42 @@ namespace Burntwax
                 health.Died -= OnEnemyDied;
 
             resolvedTargets.Clear();
-            currentState = EnemyMeleeAttackState.Disabled;
-            stateElapsedTime = 0f;
+            activeAttackConfig = null;
+            currentPhase = EnemyMeleeExecutionPhase.Disabled;
+            phaseElapsedTime = 0f;
             targetsResolvedThisAttack = 0;
         }
 
         private void Update()
         {
-            if (!useAutomaticTiming || attackConfig == null)
+            if (!useAutomaticTiming || activeAttackConfig == null)
                 return;
 
-            stateElapsedTime += Time.deltaTime;
+            phaseElapsedTime += Time.deltaTime;
 
-            switch (currentState)
+            switch (currentPhase)
             {
-                case EnemyMeleeAttackState.Windup:
-                    if (stateElapsedTime >= GetAttackPhaseDuration(
-                        attackConfig.WindupDuration))
+                case EnemyMeleeExecutionPhase.Startup:
+                    if (phaseElapsedTime >= GetAttackPhaseDuration(
+                        activeAttackConfig.StartupDuration))
                         OpenDamageWindow();
                     break;
 
-                case EnemyMeleeAttackState.Active:
-                    if (stateElapsedTime >= GetAttackPhaseDuration(
-                        attackConfig.ActiveDuration))
+                case EnemyMeleeExecutionPhase.DamageWindow:
+                    if (phaseElapsedTime >= GetAttackPhaseDuration(
+                        activeAttackConfig.DamageWindowDuration))
                         CloseDamageWindow();
                     break;
 
-                case EnemyMeleeAttackState.Recovery:
-                    if (stateElapsedTime >= GetAttackPhaseDuration(
-                        attackConfig.RecoveryDuration))
+                case EnemyMeleeExecutionPhase.Recovery:
+                    if (phaseElapsedTime >= GetAttackPhaseDuration(
+                        activeAttackConfig.RecoveryDuration))
                         FinishAttack();
                     break;
 
-                case EnemyMeleeAttackState.Parried:
-                    if (stateElapsedTime >=
-                        attackConfig.ParriedStaggerDuration
+                case EnemyMeleeExecutionPhase.Parried:
+                    if (phaseElapsedTime >=
+                        activeAttackConfig.ParriedStaggerDuration
                         * runtimeStaggerDurationMultiplier)
                     {
                         FinishParriedReaction();
@@ -136,40 +155,41 @@ namespace Burntwax
 
         private void FixedUpdate()
         {
-            if (currentState == EnemyMeleeAttackState.Active)
-                ResolveActiveHits();
+            if (currentPhase == EnemyMeleeExecutionPhase.DamageWindow)
+                ResolveDamageWindowHits();
         }
 
         /// <summary>
-        /// Called by AI, a test driver, or another gameplay decision maker.
+        /// Called by an AI action state or another gameplay decision maker.
         /// Animation remains a presentation/phase driver, never the requester.
         /// </summary>
-        public bool TryBeginAttack()
+        public bool TryBeginAttack(EnemyMeleeAttackConfig selectedAttack)
         {
-            if (!CanStartAttack)
+            if (!CanStartAttack || selectedAttack == null)
                 return false;
 
+            activeAttackConfig = selectedAttack;
             resolvedTargets.Clear();
             targetsResolvedThisAttack = 0;
-            EnterState(EnemyMeleeAttackState.Windup);
-            AttackStarted?.Invoke(attackConfig);
+            EnterPhase(EnemyMeleeExecutionPhase.Startup);
+            AttackStarted?.Invoke(activeAttackConfig);
             return true;
         }
 
         /// <summary>
         /// Animation-event hook. Opens the damaging portion of the attack.
-        /// The automatic prototype timeline calls this same method.
+        /// The automatic fallback timeline calls this same method.
         /// </summary>
         public void OpenDamageWindow()
         {
-            if (currentState != EnemyMeleeAttackState.Windup)
+            if (currentPhase != EnemyMeleeExecutionPhase.Startup)
                 return;
 
-            EnterState(EnemyMeleeAttackState.Active);
+            EnterPhase(EnemyMeleeExecutionPhase.DamageWindow);
 
             // Resolve once immediately so a very short animation window cannot
             // fall entirely between two physics ticks.
-            ResolveActiveHits();
+            ResolveDamageWindowHits();
         }
 
         /// <summary>
@@ -177,10 +197,10 @@ namespace Burntwax
         /// </summary>
         public void CloseDamageWindow()
         {
-            if (currentState != EnemyMeleeAttackState.Active)
+            if (currentPhase != EnemyMeleeExecutionPhase.DamageWindow)
                 return;
 
-            EnterState(EnemyMeleeAttackState.Recovery);
+            EnterPhase(EnemyMeleeExecutionPhase.Recovery);
         }
 
         /// <summary>
@@ -188,33 +208,36 @@ namespace Burntwax
         /// </summary>
         public void FinishAttack()
         {
-            if (currentState != EnemyMeleeAttackState.Recovery)
+            if (currentPhase != EnemyMeleeExecutionPhase.Recovery)
                 return;
 
             resolvedTargets.Clear();
-            EnterState(EnemyMeleeAttackState.Ready);
+            EnterPhase(EnemyMeleeExecutionPhase.Ready);
+            activeAttackConfig = null;
         }
 
         /// <summary>
         /// Animation-event hook. Marks the attacker's parried reaction as
-        /// complete. The prototype timer calls this automatically.
+        /// complete. The fallback timer calls this automatically.
         /// </summary>
         public void FinishParriedReaction()
         {
-            if (currentState != EnemyMeleeAttackState.Parried)
+            if (currentPhase != EnemyMeleeExecutionPhase.Parried)
                 return;
 
             resolvedTargets.Clear();
-            EnterState(EnemyMeleeAttackState.Ready);
+            EnterPhase(EnemyMeleeExecutionPhase.Ready);
+            activeAttackConfig = null;
         }
 
         public void CancelAttack()
         {
-            if (currentState == EnemyMeleeAttackState.Disabled)
+            if (currentPhase == EnemyMeleeExecutionPhase.Disabled)
                 return;
 
             resolvedTargets.Clear();
-            EnterState(EnemyMeleeAttackState.Ready);
+            EnterPhase(EnemyMeleeExecutionPhase.Ready);
+            activeAttackConfig = null;
         }
 
         /// <summary>
@@ -238,23 +261,23 @@ namespace Burntwax
             DamageInfo parriedHit,
             Collider defenderCollider)
         {
-            if (currentState != EnemyMeleeAttackState.Active
+            if (currentPhase != EnemyMeleeExecutionPhase.DamageWindow
                 || !BelongsToThisAttack(parriedHit))
             {
                 return;
             }
 
             resolvedTargets.Clear();
-            EnterState(EnemyMeleeAttackState.Parried);
+            EnterPhase(EnemyMeleeExecutionPhase.Parried);
             AttackParried?.Invoke(parriedHit);
         }
 
-        private void ResolveActiveHits()
+        private void ResolveDamageWindowHits()
         {
-            if (attackConfig == null
-                || currentState != EnemyMeleeAttackState.Active
+            if (activeAttackConfig == null
+                || currentPhase != EnemyMeleeExecutionPhase.DamageWindow
                 || targetsResolvedThisAttack >=
-                    attackConfig.MaximumTargets)
+                    activeAttackConfig.MaximumTargets)
             {
                 return;
             }
@@ -269,14 +292,14 @@ namespace Burntwax
                 ? facing.forward.normalized
                 : transform.forward;
             Vector3 start = origin.position;
-            Vector3 end = start + forward * attackConfig.Reach;
+            Vector3 end = start + forward * activeAttackConfig.Reach;
 
             int hitCount = Physics.OverlapCapsuleNonAlloc(
                 start,
                 end,
-                attackConfig.Radius,
+                activeAttackConfig.Radius,
                 hitBuffer,
-                attackConfig.TargetLayers,
+                activeAttackConfig.TargetLayers,
                 QueryTriggerInteraction.Ignore);
 
             for (int i = 0; i < hitCount; i++)
@@ -294,9 +317,9 @@ namespace Burntwax
                 targetsResolvedThisAttack++;
                 ResolveHit(hitCollider, origin, forward);
 
-                if (currentState != EnemyMeleeAttackState.Active
+                if (currentPhase != EnemyMeleeExecutionPhase.DamageWindow
                     || targetsResolvedThisAttack >=
-                        attackConfig.MaximumTargets)
+                        activeAttackConfig.MaximumTargets)
                 {
                     break;
                 }
@@ -316,15 +339,15 @@ namespace Burntwax
                 direction.Normalize();
 
             DamageInfo damage = new DamageInfo(
-                attackConfig.BaseDamage * runtimeDamageMultiplier,
-                attackConfig.DamageType,
+                activeAttackConfig.BaseDamage * runtimeDamageMultiplier,
+                activeAttackConfig.DamageType,
                 point,
                 -direction,
                 direction,
                 origin.gameObject,
                 gameObject,
-                direction * attackConfig.ImpactForce,
-                attackConfig.PresentationType);
+                direction * activeAttackConfig.ImpactForce,
+                activeAttackConfig.PresentationType);
 
             HitResolver.ResolveHit(
                 hitCollider,
@@ -381,20 +404,21 @@ namespace Burntwax
         private void OnEnemyDied(DamageInfo killingHit)
         {
             resolvedTargets.Clear();
-            EnterState(EnemyMeleeAttackState.Disabled);
+            activeAttackConfig = null;
+            EnterPhase(EnemyMeleeExecutionPhase.Disabled);
         }
 
-        private void EnterState(EnemyMeleeAttackState nextState)
+        private void EnterPhase(EnemyMeleeExecutionPhase nextPhase)
         {
-            if (currentState == nextState)
+            if (currentPhase == nextPhase)
             {
-                stateElapsedTime = 0f;
+                phaseElapsedTime = 0f;
                 return;
             }
 
-            currentState = nextState;
-            stateElapsedTime = 0f;
-            StateChanged?.Invoke(currentState);
+            currentPhase = nextPhase;
+            phaseElapsedTime = 0f;
+            PhaseChanged?.Invoke(currentPhase);
         }
 
         private float GetAttackPhaseDuration(float authoredDuration)
@@ -406,7 +430,10 @@ namespace Burntwax
 
         private void OnDrawGizmosSelected()
         {
-            if (attackConfig == null)
+            EnemyMeleeAttackConfig gizmoConfig = activeAttackConfig != null
+                ? activeAttackConfig
+                : fallbackAttackConfig;
+            if (gizmoConfig == null)
                 return;
 
             Transform origin = attackOrigin != null
@@ -417,20 +444,21 @@ namespace Burntwax
                 : origin;
             Vector3 start = origin.position;
             Vector3 end = start
-                + facing.forward.normalized * attackConfig.Reach;
+                + facing.forward.normalized * gizmoConfig.Reach;
 
             Color previousColor = Gizmos.color;
-            Gizmos.color = currentState == EnemyMeleeAttackState.Active
+            Gizmos.color = currentPhase ==
+                EnemyMeleeExecutionPhase.DamageWindow
                 ? Color.red
                 : new Color(1f, 0.55f, 0f, 0.8f);
-            Gizmos.DrawWireSphere(start, attackConfig.Radius);
-            Gizmos.DrawWireSphere(end, attackConfig.Radius);
+            Gizmos.DrawWireSphere(start, gizmoConfig.Radius);
+            Gizmos.DrawWireSphere(end, gizmoConfig.Radius);
             Gizmos.DrawLine(
-                start + facing.up * attackConfig.Radius,
-                end + facing.up * attackConfig.Radius);
+                start + facing.up * gizmoConfig.Radius,
+                end + facing.up * gizmoConfig.Radius);
             Gizmos.DrawLine(
-                start - facing.up * attackConfig.Radius,
-                end - facing.up * attackConfig.Radius);
+                start - facing.up * gizmoConfig.Radius,
+                end - facing.up * gizmoConfig.Radius);
             Gizmos.color = previousColor;
         }
 

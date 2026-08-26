@@ -27,12 +27,12 @@ namespace Burntwax
 
         public override void ExitState()
         {
-            EnemyMeleeAttack melee = Ctx.MeleeAttack;
-            if (melee != null
-                && melee.CurrentState != EnemyMeleeAttackState.Ready
-                && melee.CurrentState != EnemyMeleeAttackState.Disabled)
+            EnemyMeleeExecutor executor = Ctx.MeleeExecutor;
+            if (executor != null
+                && executor.CurrentPhase != EnemyMeleeExecutionPhase.Ready
+                && executor.CurrentPhase != EnemyMeleeExecutionPhase.Disabled)
             {
-                melee.CancelAttack();
+                executor.CancelAttack();
             }
         }
 

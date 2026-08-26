@@ -32,6 +32,9 @@ namespace Burntwax
 
         [Header("Arm Override")]
         [SerializeField] private string gloveLayerName = "Glove";
+        [Tooltip("Default fixed-time blend, in seconds, between glove animation states.")]
+        [SerializeField, Min(0f)] private float animationCrossFadeDuration =
+            0.08f;
         [Tooltip("Raise/lower speed in normalized layer weight per second.")]
         [SerializeField] private float raiseSpeed = 6f;
         [Range(0f, 1f)]
@@ -210,6 +213,7 @@ namespace Burntwax
         // Every non-primary body tugged during the current attract, so their momentum can be bled
         // off cleanly when the pull ends instead of leaving them rushing the player.
         private readonly HashSet<Rigidbody> pulledSecondaryBodies = new();
+        private readonly HashSet<int> warnedMissingAnimationStates = new();
         private readonly RaycastHit[] physicalProjectileAimHits = new RaycastHit[16];
         private Arsenal arsenal;
         private MaterialPropertyBlock detectionMpb;
@@ -509,10 +513,19 @@ namespace Burntwax
 
 
 
-        public void PlayGloveAnimation(int stateHash)
+        /// <summary>
+        /// Crossfades to a glove state on the glove Animator layer. Existing
+        /// states use the shared duration; a state may supply an override when a
+        /// specific action needs a faster or slower blend.
+        /// </summary>
+        public void PlayGloveAnimation(
+            int stateHash,
+            float crossFadeDuration = -1f)
         {
-            if (armsAnimator != null && gloveLayerIndex >= 0)
-                armsAnimator.Play(stateHash, gloveLayerIndex, 0f);
+            float duration = crossFadeDuration >= 0f
+                ? crossFadeDuration
+                : animationCrossFadeDuration;
+            CrossFadeGloveAnimation(stateHash, duration);
         }
 
         public void PlayHoldAnimation(GloveHoldPose holdPose)
@@ -527,7 +540,38 @@ namespace Burntwax
             if (!armsAnimator.HasState(gloveLayerIndex, requestedHash))
                 requestedHash = holdHash;
 
-            armsAnimator.Play(requestedHash, gloveLayerIndex, 0f);
+            CrossFadeGloveAnimation(
+                requestedHash,
+                animationCrossFadeDuration);
+        }
+
+        private bool CrossFadeGloveAnimation(
+            int stateHash,
+            float duration)
+        {
+            if (armsAnimator == null || gloveLayerIndex < 0)
+                return false;
+
+            if (!armsAnimator.HasState(gloveLayerIndex, stateHash))
+            {
+                if (warnedMissingAnimationStates.Add(stateHash))
+                {
+                    Debug.LogWarning(
+                        $"[GloveStateMachine] Animator state hash "
+                        + $"'{stateHash}' was not found on layer "
+                        + $"'{gloveLayerName}'.",
+                        this);
+                }
+
+                return false;
+            }
+
+            armsAnimator.CrossFadeInFixedTime(
+                stateHash,
+                Mathf.Max(0f, duration),
+                gloveLayerIndex,
+                0f);
+            return true;
         }
 
         public void SetChargeSlow(float chargeNormalized)

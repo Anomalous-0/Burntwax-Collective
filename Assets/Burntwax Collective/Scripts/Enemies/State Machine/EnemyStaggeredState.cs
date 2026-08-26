@@ -27,9 +27,9 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            EnemyMeleeAttack melee = Ctx.MeleeAttack;
-            if (melee == null
-                || melee.CurrentState == EnemyMeleeAttackState.Ready)
+            EnemyMeleeExecutor executor = Ctx.MeleeExecutor;
+            if (executor == null
+                || executor.CurrentPhase == EnemyMeleeExecutionPhase.Ready)
             {
                 SwitchState(Factory.FaceTarget());
             }

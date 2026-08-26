@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c85576f3e7643618d8101eb258763b9, type: 3}
   m_Name: Basic Melee Attack Config
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyMeleeAttackConfig
+  animationStateName: Punching
+  animationLayer: 0
+  crossFadeDuration: 0.1
   baseDamage: 20
   damageType: 2
   presentationType: 2
-  impactForce: 1
-  windupDuration: 0.4
-  activeDuration: 0.15
+  impactForce: 0
+  startupDuration: 0.4
+  damageWindowDuration: 0.15
   recoveryDuration: 0.6
   parriedStaggerDuration: 0.8
   reach: 2

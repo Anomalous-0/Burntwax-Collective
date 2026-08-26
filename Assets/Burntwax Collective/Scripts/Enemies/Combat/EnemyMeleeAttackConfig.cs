@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Burntwax
 {
@@ -12,6 +13,16 @@ namespace Burntwax
         order = 0)]
     public sealed class EnemyMeleeAttackConfig : ScriptableObject
     {
+        [Header("Animation")]
+        [Tooltip("Animator state played when this attack starts. A short name such as Punching is automatically expanded to the selected Animator layer.")]
+        [SerializeField] private string animationStateName = "Punching";
+
+        [Tooltip("Animator layer containing the attack state. Layer 0 is normally the Base Layer.")]
+        [SerializeField, Min(0)] private int animationLayer;
+
+        [Tooltip("Fixed time, in seconds, used to blend from the current pose into this attack.")]
+        [SerializeField, Min(0f)] private float crossFadeDuration = 0.1f;
+
         [Header("Damage")]
         [SerializeField, Min(0f)] private float baseDamage = 10f;
 
@@ -25,20 +36,22 @@ namespace Burntwax
         [Tooltip("Impulse magnitude directed from the attack source toward the target.")]
         [SerializeField, Min(0f)] private float impactForce = 2f;
 
-        [Header("Prototype / Fallback Timing")]
-        [Tooltip("Used by the automatic prototype timeline. Animation events can open the same combat phases later.")]
-        [SerializeField, Min(0f)] private float windupDuration = 0.4f;
+        [Header("Fallback Timing")]
+        [Tooltip("Used by automatic timing. Animation events can open the same combat phases instead.")]
+        [FormerlySerializedAs("windupDuration")]
+        [SerializeField, Min(0f)] private float startupDuration = 0.4f;
 
-        [Tooltip("Used by the automatic prototype timeline. Animation events will define the real hit window later.")]
-        [SerializeField, Min(0.01f)] private float activeDuration = 0.15f;
+        [Tooltip("Used by automatic timing. Animation events can define the exact hit window instead.")]
+        [FormerlySerializedAs("activeDuration")]
+        [SerializeField, Min(0.01f)] private float damageWindowDuration = 0.15f;
 
-        [Tooltip("Used by the automatic prototype timeline. Animation events can finish recovery later.")]
+        [Tooltip("Used by automatic timing. An animation event can finish recovery instead.")]
         [SerializeField, Min(0f)] private float recoveryDuration = 0.6f;
 
         [Tooltip("How long the attacker remains unable to act after this attack is perfectly parried.")]
         [SerializeField, Min(0f)] private float parriedStaggerDuration = 0.8f;
 
-        [Header("Prototype Hit Volume")]
+        [Header("Hit Volume")]
         [Tooltip("Forward distance covered by the basic capsule hit volume. Animation-driven traces can replace only the detector later.")]
         [SerializeField, Min(0f)] private float reach = 1.5f;
 
@@ -51,6 +64,9 @@ namespace Burntwax
         [Tooltip("Maximum unique actors hit by one attack. Use 1 for focused attacks and larger values for sweeping attacks.")]
         [SerializeField, Min(1)] private int maximumTargets = 1;
 
+        public string AnimationStateName => animationStateName;
+        public int AnimationLayer => animationLayer;
+        public float CrossFadeDuration => crossFadeDuration;
         public float BaseDamage => baseDamage;
         public DamageType DamageType => damageType;
         public DamageType PresentationType => presentationType !=
@@ -58,8 +74,8 @@ namespace Burntwax
                 ? presentationType
                 : damageType;
         public float ImpactForce => impactForce;
-        public float WindupDuration => windupDuration;
-        public float ActiveDuration => activeDuration;
+        public float StartupDuration => startupDuration;
+        public float DamageWindowDuration => damageWindowDuration;
         public float RecoveryDuration => recoveryDuration;
         public float ParriedStaggerDuration => parriedStaggerDuration;
         public float Reach => reach;
@@ -69,10 +85,14 @@ namespace Burntwax
 
         private void OnValidate()
         {
+            animationLayer = Mathf.Max(0, animationLayer);
+            crossFadeDuration = Mathf.Max(0f, crossFadeDuration);
             baseDamage = Mathf.Max(0f, baseDamage);
             impactForce = Mathf.Max(0f, impactForce);
-            windupDuration = Mathf.Max(0f, windupDuration);
-            activeDuration = Mathf.Max(0.01f, activeDuration);
+            startupDuration = Mathf.Max(0f, startupDuration);
+            damageWindowDuration = Mathf.Max(
+                0.01f,
+                damageWindowDuration);
             recoveryDuration = Mathf.Max(0f, recoveryDuration);
             parriedStaggerDuration = Mathf.Max(
                 0f,

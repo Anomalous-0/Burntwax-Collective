@@ -1,4 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.Scripting.APIUpdating;
 
 namespace Burntwax
 {
@@ -11,19 +14,28 @@ namespace Burntwax
     ///   Action: awareness, combat decisions, attacks, and reactions.
     ///
     /// This component owns shared context and update order. It does not perform
-    /// melee hit resolution itself; EnemyMeleeAttack remains the executor.
+    /// melee hit resolution itself; EnemyMeleeExecutor remains the executor.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(
         typeof(EnemyHealth),
         typeof(EnemyRuntimeProfile),
-        typeof(EnemyMeleeAttack))]
+        typeof(EnemyMeleeExecutor))]
+    [MovedFrom(
+        true,
+        "Burntwax",
+        "Burntwax.Core",
+        "EnemyMeleePrototypeDriver")]
     public sealed class EnemyStateMachine : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private EnemyHealth health;
         [SerializeField] private EnemyRuntimeProfile runtimeProfile;
-        [SerializeField] private EnemyMeleeAttack meleeAttack;
+        [FormerlySerializedAs("meleeAttack")]
+        [SerializeField] private EnemyMeleeExecutor meleeExecutor;
+
+        [Tooltip("Animator controlled by the enemy states. Defaults to the first Animator found on this enemy.")]
+        [SerializeField] private Animator animator;
 
         [Tooltip("Transform turned by the movement region. Defaults to the enemy root.")]
         [SerializeField] private Transform rotationRoot;
@@ -35,11 +47,27 @@ namespace Burntwax
         [SerializeField, Min(0.1f)] private float targetSearchInterval = 1f;
 
         [Header("Basic Melee Decision")]
+        [Tooltip("Attack selected by the current basic melee state. When empty, the executor's migrated fallback is used.")]
+        [SerializeField] private EnemyMeleeAttackConfig defaultMeleeAttack;
+
         [Tooltip("Decision distance only. The actual damaging shape remains in EnemyMeleeAttackConfig.")]
+        [FormerlySerializedAs("attackRequestRange")]
         [SerializeField, Min(0f)] private float meleeRequestRange = 2f;
+
+        [FormerlySerializedAs("maximumStartAngle")]
         [SerializeField, Range(0f, 180f)] private float meleeStartAngle =
             15f;
-        [SerializeField] private bool faceTargetDuringMeleeWindup = true;
+
+        [FormerlySerializedAs("faceTargetDuringWindup")]
+        [FormerlySerializedAs("faceTargetDuringMeleeWindup")]
+        [SerializeField] private bool faceTargetDuringMeleeStartup = true;
+
+        [Header("Animation")]
+        [Tooltip("State used when no attack animation is playing. A short name is expanded to the selected layer.")]
+        [SerializeField] private string defaultAnimationState = "default";
+
+        [SerializeField, Min(0)] private int defaultAnimationLayer;
+        [SerializeField, Min(0f)] private float defaultCrossFadeDuration = 0.1f;
 
         [Header("Debug (read-only)")]
         [SerializeField] private string lifeStatePath = "Inactive";
@@ -48,12 +76,13 @@ namespace Burntwax
 
         public EnemyHealth Health => health;
         public EnemyRuntimeProfile RuntimeProfile => runtimeProfile;
-        public EnemyMeleeAttack MeleeAttack => meleeAttack;
+        public EnemyMeleeExecutor MeleeExecutor => meleeExecutor;
+        public Animator Animator => animator;
         public Transform Target => target;
         public bool HasValidTarget => target != null
             && target.gameObject.activeInHierarchy;
-        public bool FaceTargetDuringMeleeWindup =>
-            faceTargetDuringMeleeWindup;
+        public bool FaceTargetDuringMeleeStartup =>
+            faceTargetDuringMeleeStartup;
 
         private EnemyStateFactory states;
         private float nextTargetSearchTime;
@@ -63,6 +92,7 @@ namespace Burntwax
         // body and keeps future NavMesh/flying motors replaceable.
         private bool hasFacingRequest;
         private Vector3 requestedFacingPoint;
+        private readonly HashSet<int> warnedAnimationStates = new();
 
         public EnemyBaseState CurrentLifeState { get; private set; }
         public EnemyBaseState CurrentMovementState { get; private set; }
@@ -80,7 +110,8 @@ namespace Burntwax
         {
             ResolveReferences();
             health.Died += OnEnemyDied;
-            runtimeProfile.ProfileRebuilt += ApplyRuntimeProfile;
+            if (runtimeProfile != null)
+                runtimeProfile.ProfileRebuilt += ApplyRuntimeProfile;
             ApplyRuntimeProfile();
 
             nextTargetSearchTime = 0f;
@@ -91,16 +122,6 @@ namespace Burntwax
                     ? states.Dead()
                     : states.Alive());
 
-            EnemyMeleePrototypeDriver prototypeDriver =
-                GetComponent<EnemyMeleePrototypeDriver>();
-            if (prototypeDriver != null && prototypeDriver.enabled)
-            {
-                Debug.LogWarning(
-                    "[EnemyStateMachine] EnemyMeleePrototypeDriver is still "
-                    + "enabled. Disable or remove it because the Action region "
-                    + "now decides when melee attacks begin.",
-                    this);
-            }
         }
 
         private void OnDisable()
@@ -218,13 +239,46 @@ namespace Burntwax
                 turnSpeed * Time.deltaTime);
         }
 
+        /// <summary>
+        /// Central selection point used by EnemyMeleeState. The basic enemy has
+        /// one configured choice; future scorers can choose among several assets.
+        /// </summary>
+        internal EnemyMeleeAttackConfig SelectMeleeAttack()
+        {
+            // This is the future attack-scoring boundary. An alien or human can
+            // later select from several configs without changing the executor.
+            return defaultMeleeAttack != null
+                ? defaultMeleeAttack
+                : meleeExecutor?.FallbackAttackConfig;
+        }
+
+        internal void PlayMeleeAnimation(EnemyMeleeAttackConfig config)
+        {
+            if (config == null)
+                return;
+
+            TryCrossFadeAnimation(
+                config.AnimationStateName,
+                config.AnimationLayer,
+                config.CrossFadeDuration);
+        }
+
+        internal void PlayDefaultAnimation()
+        {
+            TryCrossFadeAnimation(
+                defaultAnimationState,
+                defaultAnimationLayer,
+                defaultCrossFadeDuration);
+        }
+
         internal bool CanBeginMeleeAttack()
         {
             if (!HasValidTarget
-                || meleeAttack == null
-                || !meleeAttack.CanStartAttack
-                || runtimeProfile == null
-                || !runtimeProfile.HasCapability(
+                || meleeExecutor == null
+                || !meleeExecutor.CanStartAttack
+                || SelectMeleeAttack() == null
+                || runtimeProfile != null
+                && !runtimeProfile.HasCapability(
                     EnemyCapability.MeleeAttack))
             {
                 return false;
@@ -257,8 +311,8 @@ namespace Burntwax
 
         private void ApplyRuntimeProfile()
         {
-            if (runtimeProfile != null && meleeAttack != null)
-                meleeAttack.ApplyRuntimeStats(runtimeProfile.Stats);
+            if (runtimeProfile != null && meleeExecutor != null)
+                meleeExecutor.ApplyRuntimeStats(runtimeProfile.Stats);
         }
 
         private void TryFindPlayerTarget()
@@ -339,11 +393,60 @@ namespace Burntwax
             if (runtimeProfile == null)
                 runtimeProfile = GetComponent<EnemyRuntimeProfile>();
 
-            if (meleeAttack == null)
-                meleeAttack = GetComponent<EnemyMeleeAttack>();
+            if (meleeExecutor == null)
+                meleeExecutor = GetComponent<EnemyMeleeExecutor>();
+
+            if (animator == null)
+                animator = GetComponentInChildren<Animator>();
 
             if (rotationRoot == null)
                 rotationRoot = transform;
+        }
+
+        private bool TryCrossFadeAnimation(
+            string stateName,
+            int layer,
+            float duration)
+        {
+            if (animator == null || string.IsNullOrWhiteSpace(stateName))
+                return false;
+
+            if (layer < 0 || layer >= animator.layerCount)
+            {
+                WarnMissingAnimation(
+                    Animator.StringToHash(stateName),
+                    $"Animator layer {layer} does not exist.");
+                return false;
+            }
+
+            // Animator.HasState expects a full path hash. Configs can still use
+            // readable short names; the layer name is supplied automatically.
+            string statePath = stateName.Contains(".")
+                ? stateName
+                : animator.GetLayerName(layer) + "." + stateName;
+            int stateHash = Animator.StringToHash(statePath);
+            if (!animator.HasState(layer, stateHash))
+            {
+                WarnMissingAnimation(
+                    stateHash,
+                    $"Animator state '{statePath}' was not found.");
+                return false;
+            }
+
+            animator.CrossFadeInFixedTime(
+                stateHash,
+                Mathf.Max(0f, duration),
+                layer,
+                0f);
+            return true;
+        }
+
+        private void WarnMissingAnimation(int key, string message)
+        {
+            if (!warnedAnimationStates.Add(key))
+                return;
+
+            Debug.LogWarning($"[EnemyStateMachine] {message}", this);
         }
 
         private void RefreshDebugPaths()
@@ -375,6 +478,10 @@ namespace Burntwax
             targetSearchInterval = Mathf.Max(0.1f, targetSearchInterval);
             meleeRequestRange = Mathf.Max(0f, meleeRequestRange);
             meleeStartAngle = Mathf.Clamp(meleeStartAngle, 0f, 180f);
+            defaultAnimationLayer = Mathf.Max(0, defaultAnimationLayer);
+            defaultCrossFadeDuration = Mathf.Max(
+                0f,
+                defaultCrossFadeDuration);
         }
     }
 }

@@ -20609,6 +20609,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1409608864}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1409608865}
   m_SourcePrefab: {fileID: 100100000, guid: 475c3963ce15c11438f651abf472c1cd, type: 3}
 --- !u!1 &1409608855 stripped
 GameObject:
@@ -20735,13 +20739,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f6f5c96b07a4fd683f6a95c0de5c176, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyMeleeAttack
-  attackConfig: {fileID: 11400000, guid: 78be284241540784194f7ec57541b494, type: 2}
+  fallbackAttackConfig: {fileID: 11400000, guid: 78be284241540784194f7ec57541b494,
+    type: 2}
   attackOrigin: {fileID: 1409608859}
   facingReference: {fileID: 1409608859}
-  useAutomaticTiming: 1
-  currentState: 0
-  stateElapsedTime: 0
+  useAutomaticTiming: 0
+  currentPhase: 0
+  phaseElapsedTime: 0
   targetsResolvedThisAttack: 0
+  runtimeDamageMultiplier: 1
+  runtimeAttackSpeedMultiplier: 1
+  runtimeStaggerDurationMultiplier: 1
 --- !u!114 &1409608864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20754,14 +20762,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4331472fe06941a88dffeaf1dda4c436, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyMeleePrototypeDriver
-  meleeAttack: {fileID: 1409608863}
-  target: {fileID: 0}
+  health: {fileID: 1409608862}
+  runtimeProfile: {fileID: 1409608865}
+  meleeExecutor: {fileID: 1409608863}
+  animator: {fileID: 1409608856}
   rotationRoot: {fileID: 1409608859}
-  attackRequestRange: 2
-  maximumStartAngle: 40.2
-  turnSpeed: 360
-  faceTargetDuringWindup: 1
+  automaticallyFindPlayer: 1
+  target: {fileID: 0}
   targetSearchInterval: 1
+  defaultMeleeAttack: {fileID: 11400000, guid: 78be284241540784194f7ec57541b494, type: 2}
+  meleeRequestRange: 2
+  meleeStartAngle: 40.2
+  faceTargetDuringMeleeStartup: 1
+  defaultAnimationState: default
+  defaultAnimationLayer: 0
+  defaultCrossFadeDuration: 0.1
+  lifeStatePath: Inactive
+  movementStatePath: Inactive
+  actionStatePath: Inactive
+--- !u!114 &1409608865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409608855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed7d3f4461e8451e8459e4f194881a81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyRuntimeProfile
+  archetype: {fileID: 0}
+  inheritPopulationEvolution: 0
+  evolutionDirector: {fileID: 0}
+  rebuildWhenPopulationChanges: 0
+  individualTraits: []
+  difficultyModifiers:
+    maximumHealthAdditive: 0
+    maximumHealthMultiplierBonus: 0
+    groundMoveSpeedMultiplierBonus: 0
+    sprintSpeedMultiplierBonus: 0
+    turnSpeedMultiplierBonus: 0
+    meleeDamageMultiplierBonus: 0
+    attackSpeedMultiplierBonus: 0
+    staggerDurationMultiplierBonus: 0
+  resolvedStats:
+    maximumHealth: 100
+    groundMoveSpeed: 3.5
+    sprintSpeed: 6
+    turnSpeed: 360
+    meleeDamageMultiplier: 1
+    attackSpeedMultiplier: 1
+    staggerDurationMultiplier: 1
+  resolvedCapabilities: 0
+  appliedTraitIds: []
 --- !u!1001 &1415115603
 PrefabInstance:
   m_ObjectHideFlags: 0

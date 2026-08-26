@@ -16,7 +16,10 @@ namespace Burntwax
         {
         }
 
-        public override void EnterState() { }
+        public override void EnterState()
+        {
+            Ctx.PlayDefaultAnimation();
+        }
 
         public override void UpdateState()
         {
