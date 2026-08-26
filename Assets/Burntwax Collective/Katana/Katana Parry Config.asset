@@ -18,11 +18,13 @@ MonoBehaviour:
   guardImpulseMultiplier: 0.25
   guardCollisionImpulseMultiplier: 0.25
   guardReboundSpeedMultiplier: 0.25
-  perfectParryReboundSpeedMultiplier: 7
+  perfectParryReboundSpeedMultiplier: 8
   perfectParryReturnSpeedMultiplier: 2
   perfectParryArcHeightPerMeter: 0.001
   perfectParryMinimumArcHeight: 0.05
   perfectParryMaximumArcHeight: 0.1
+  perfectParryMinimumSpin: 1
+  perfectParryMaximumSpin: 4
   maximumConsecutiveBlocks: 3
   guardRecoveryDelay: 1.5
   perfectParryRestoresGuard: 1

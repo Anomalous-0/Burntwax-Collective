@@ -20678,7 +20678,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1409608855}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 529c1c20ab6c6274d89ce57eb9633ea8, type: 3}
   m_Name: 
@@ -20816,6 +20816,7 @@ MonoBehaviour:
     staggerDurationMultiplier: 1
   resolvedCapabilities: 0
   appliedTraitIds: []
+  resolvedCombatActions: []
 --- !u!1001 &1415115603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34561,7 +34562,8 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 5254480661762349328}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 1324939863945916025, guid: 6b67e5e6b6c2e1b448ac119e473b1316, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1148579728589637519, guid: 6b67e5e6b6c2e1b448ac119e473b1316,

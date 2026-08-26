@@ -117,10 +117,29 @@ namespace Burntwax
 
         private void Update()
         {
-            if (!useAutomaticTiming || activeAttackConfig == null)
+            if (activeAttackConfig == null)
                 return;
 
             phaseElapsedTime += Time.deltaTime;
+
+            // A perfect parry interrupts the authored attack timeline. Its
+            // gameplay stagger must therefore recover even when normal attack
+            // phases are driven by animation events rather than fallback
+            // timers.
+            if (currentPhase == EnemyMeleeExecutionPhase.Parried)
+            {
+                if (phaseElapsedTime >=
+                    activeAttackConfig.ParriedStaggerDuration
+                    * runtimeStaggerDurationMultiplier)
+                {
+                    FinishParriedReaction();
+                }
+
+                return;
+            }
+
+            if (!useAutomaticTiming)
+                return;
 
             switch (currentPhase)
             {
@@ -142,14 +161,6 @@ namespace Burntwax
                         FinishAttack();
                     break;
 
-                case EnemyMeleeExecutionPhase.Parried:
-                    if (phaseElapsedTime >=
-                        activeAttackConfig.ParriedStaggerDuration
-                        * runtimeStaggerDurationMultiplier)
-                    {
-                        FinishParriedReaction();
-                    }
-                    break;
             }
         }
 

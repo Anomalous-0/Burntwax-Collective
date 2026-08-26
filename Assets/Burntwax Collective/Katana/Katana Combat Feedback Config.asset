@@ -12,6 +12,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a496e4883cc34b04f8adddf1f47f6657, type: 3}
   m_Name: Katana Combat Feedback Config
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaCombatFeedbackConfig
+  lightSwing:
+    audioClips:
+    - {fileID: 8300000, guid: 8c3328bbbd22d3843b7fbb91f4b096e7, type: 3}
+    - {fileID: 8300000, guid: 6f1f5238371ec0943aeb0b312e0a289a, type: 3}
+    volume: 0.9
+    vfxPrefab: {fileID: 0}
+    attachVfxToOrigin: 0
+    vfxLifetime: 2
+  heavySwing:
+    audioClips:
+    - {fileID: 8300000, guid: 71f8d69d9340a844fadf9d0b7064b519, type: 3}
+    volume: 1
+    vfxPrefab: {fileID: 0}
+    attachVfxToOrigin: 0
+    vfxLifetime: 2
+  attackParried:
+    audioClips: []
+    volume: 1
+    vfxPrefab: {fileID: 0}
+    attachVfxToOrigin: 0
+    vfxLifetime: 2
   volume: 1
   slashClips:
   - {fileID: 0}
