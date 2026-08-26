@@ -33,6 +33,13 @@ namespace Burntwax
                 if (vfxPrefab != null)
                     Instantiate(vfxPrefab, position, rotation);
 
+                PlayAudio(position, audioSource);
+            }
+
+            public void PlayAudio(
+                Vector3 position,
+                AudioSource audioSource)
+            {
                 if (audioClips == null || audioClips.Length == 0)
                     return;
 
@@ -73,6 +80,15 @@ namespace Burntwax
             Vector3 position = incomingHit.Point + normal * 0.01f;
             Quaternion rotation = Quaternion.LookRotation(normal);
             profile.Play(position, rotation, audioSource);
+        }
+
+        public void PlayAudio(
+            HitDefenseOutcome outcome,
+            Vector3 position,
+            AudioSource audioSource)
+        {
+            FeedbackProfile profile = GetProfile(outcome);
+            profile?.PlayAudio(position, audioSource);
         }
 
         private FeedbackProfile GetProfile(HitDefenseOutcome outcome)

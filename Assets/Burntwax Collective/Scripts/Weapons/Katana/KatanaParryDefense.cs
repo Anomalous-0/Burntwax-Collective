@@ -97,9 +97,10 @@ namespace Burntwax
             if (stateMachine.isParryWindowActive)
             {
                 if (config.PerfectParryRestoresGuard)
-                    RestoreGuardCapacity();
+                    RecoverOneGuardUse();
 
                 lastOutcome = HitDefenseOutcome.Parried;
+                stateMachine.camStateMachine?.PlayPerfectParryFovKick();
                 bool perfectParryReturnHandled =
                     TryLaunchPerfectParryReturn(incomingHit, config);
                 PlayDefenseFeedback(config, incomingHit, lastOutcome);
@@ -147,6 +148,31 @@ namespace Burntwax
             config.DefenseFeedback?.Play(
                 outcome,
                 incomingHit,
+                feedbackAudioSource);
+        }
+
+        /// <summary>
+        /// Reuses only the configured perfect-parry audio for a successful
+        /// glove-baseball launch. This deliberately does not run defense
+        /// gameplay, restore guard, or spawn the perfect-parry VFX.
+        /// </summary>
+        public void PlayBaseballPerfectParryAudio(Vector3 position)
+        {
+            if (stateMachine == null)
+                ResolveReferences();
+
+            KatanaScriptableObject katana = stateMachine != null
+                ? stateMachine.ActiveKatanaScriptable != null
+                    ? stateMachine.ActiveKatanaScriptable
+                    : stateMachine.KatanaScriptable
+                : null;
+            KatanaParryConfig config = katana != null
+                ? katana.ParryConfig
+                : null;
+
+            config?.DefenseFeedback?.PlayAudio(
+                HitDefenseOutcome.Parried,
+                position,
                 feedbackAudioSource);
         }
 
@@ -304,10 +330,25 @@ namespace Burntwax
                 guardRecoveryStartTime = Time.time;
 
             if (Time.time - guardRecoveryStartTime
-                >= activeGuardRecoveryDelay)
+                < activeGuardRecoveryDelay)
             {
-                RestoreGuardCapacity();
+                return;
             }
+
+            RecoverOneGuardUse();
+        }
+
+        private void RecoverOneGuardUse()
+        {
+            if (consecutiveBlocks <= 0)
+                return;
+
+            consecutiveBlocks--;
+            guardExhausted = false;
+            guardRecoveryStartTime = consecutiveBlocks > 0
+                ? Time.time
+                : -1f;
+            NotifyGuardResourceChanged();
         }
 
         private void RestoreGuardCapacity()

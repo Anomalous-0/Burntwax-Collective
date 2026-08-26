@@ -62,6 +62,7 @@ namespace Burntwax
             Ctx.rb.linearDamping = 0f;
             Ctx.rb.linearVelocity = dashVelocity;
             dashEndTime = Time.time + dashConfig.DashDuration;
+            Ctx.CameraMachine?.SetDashFovActive(true);
         }
 
         public override void UpdateState()
@@ -108,6 +109,7 @@ namespace Burntwax
 
         public override void ExitState()
         {
+            Ctx.CameraMachine?.SetDashFovActive(false);
             Ctx.DisableMovement = false;
             Ctx.rb.useGravity = true;
             Ctx.rb.linearVelocity = Vector3.zero;

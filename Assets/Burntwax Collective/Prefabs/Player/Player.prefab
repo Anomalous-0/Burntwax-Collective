@@ -1532,6 +1532,7 @@ GameObject:
   - component: {fileID: 880000000000000012}
   - component: {fileID: 880000000000000013}
   - component: {fileID: 880000000000000014}
+  - component: {fileID: 882000000000000001}
   m_Layer: 5
   m_Name: Dash Segment 1
   m_TagString: Untagged
@@ -1665,6 +1666,7 @@ GameObject:
   - component: {fileID: 881000000000000012}
   - component: {fileID: 881000000000000013}
   - component: {fileID: 881000000000000014}
+  - component: {fileID: 882000000000000011}
   m_Layer: 5
   m_Name: Block Segment 1
   m_TagString: Untagged
@@ -1740,6 +1742,7 @@ GameObject:
   - component: {fileID: 881000000000000017}
   - component: {fileID: 881000000000000018}
   - component: {fileID: 881000000000000019}
+  - component: {fileID: 882000000000000012}
   m_Layer: 5
   m_Name: Block Segment 2
   m_TagString: Untagged
@@ -1815,6 +1818,7 @@ GameObject:
   - component: {fileID: 881000000000000022}
   - component: {fileID: 881000000000000023}
   - component: {fileID: 881000000000000024}
+  - component: {fileID: 882000000000000013}
   m_Layer: 5
   m_Name: Block Segment 3
   m_TagString: Untagged
@@ -1890,6 +1894,7 @@ GameObject:
   - component: {fileID: 880000000000000017}
   - component: {fileID: 880000000000000018}
   - component: {fileID: 880000000000000019}
+  - component: {fileID: 882000000000000002}
   m_Layer: 5
   m_Name: Dash Segment 2
   m_TagString: Untagged
@@ -1954,3 +1959,93 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &882000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b47c478374a28b04f0a325aabee6c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.UIGlow
+  useGraphicColor: 1
+  glowColor: {r: 1, g: 1, b: 1, a: 0.1}
+  radius: 5
+  samples: 12
+  rings: 2
+  outerFalloff: 0.2
+--- !u!114 &882000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880000000000000016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b47c478374a28b04f0a325aabee6c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.UIGlow
+  useGraphicColor: 1
+  glowColor: {r: 1, g: 1, b: 1, a: 0.1}
+  radius: 5
+  samples: 12
+  rings: 2
+  outerFalloff: 0.2
+--- !u!114 &882000000000000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881000000000000011}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b47c478374a28b04f0a325aabee6c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.UIGlow
+  useGraphicColor: 1
+  glowColor: {r: 1, g: 1, b: 1, a: 0.1}
+  radius: 5
+  samples: 12
+  rings: 2
+  outerFalloff: 0.2
+--- !u!114 &882000000000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881000000000000016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b47c478374a28b04f0a325aabee6c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.UIGlow
+  useGraphicColor: 1
+  glowColor: {r: 1, g: 1, b: 1, a: 0.1}
+  radius: 5
+  samples: 12
+  rings: 2
+  outerFalloff: 0.2
+--- !u!114 &882000000000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881000000000000021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a7b47c478374a28b04f0a325aabee6c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.UIGlow
+  useGraphicColor: 1
+  glowColor: {r: 1, g: 1, b: 1, a: 0.1}
+  radius: 5
+  samples: 12
+  rings: 2
+  outerFalloff: 0.2

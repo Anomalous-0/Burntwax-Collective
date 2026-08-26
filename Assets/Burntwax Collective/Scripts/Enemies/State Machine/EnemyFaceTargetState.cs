@@ -1,9 +1,9 @@
 namespace Burntwax
 {
     /// <summary>
-    /// Faces the target and asks the generic combat selector for an action. Only
-    /// Melee is executable today; future action states extend the switch without
-    /// changing loadouts, evolution traits, or scoring rules.
+    /// Faces the target and asks the generic combat selector for an action.
+    /// Concrete action configs route into their matching cached action state
+    /// without changing loadouts, evolution traits, or scoring rules.
     /// </summary>
     public sealed class EnemyFaceTargetState : EnemyBaseState
     {
@@ -44,6 +44,12 @@ namespace Burntwax
                     EnemyMeleeState meleeState = Factory.Melee();
                     meleeState.QueueAttack(meleeAttack);
                     SwitchState(meleeState);
+                    break;
+
+                case EnemyProjectileThrowConfig projectileThrow:
+                    EnemyThrowState throwState = Factory.Throw();
+                    throwState.QueueThrow(projectileThrow);
+                    SwitchState(throwState);
                     break;
             }
         }

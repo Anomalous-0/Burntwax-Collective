@@ -18,6 +18,7 @@ namespace Burntwax
         [Header("State Machines")]
         public GunStateMachine gunMachine;
         [HideInInspector] public KatanaStateMachine katanaMachine;
+        [HideInInspector] public CamStateMachine cameraMachine;
 
         [Header("Dash Collision")]
         [SerializeField] LayerMask dashBlockingLayers;
@@ -141,6 +142,7 @@ namespace Burntwax
         public float AirDrag { get { return airDrag; } }
         public float WallDrag { get { return wallDrag; } }
         public KatanaStateMachine KatanaMachine { get { return katanaMachine; } }
+        public CamStateMachine CameraMachine { get { return cameraMachine; } }
         public bool CanSprint
         {
             get
@@ -199,6 +201,8 @@ namespace Burntwax
 
         private void Awake()
         {
+            cameraMachine = GetComponent<CamStateMachine>();
+
             if (gunMachine != null)
                 katanaMachine = gunMachine.GetComponent<KatanaStateMachine>();
 
@@ -219,6 +223,7 @@ namespace Burntwax
         public void SetMantleActive(bool active)
         {
             GameplayActionsLocked = active;
+            CameraMachine?.SetMantleFovActive(active);
 
             Arsenal arsenal = gunMachine != null
                 ? gunMachine.GetComponent<Arsenal>()

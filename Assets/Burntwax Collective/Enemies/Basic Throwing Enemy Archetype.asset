@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 934b2c3b14a14f75a53e3242d8afd0ae, type: 3}
+  m_Name: Basic Throwing Enemy Archetype
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyArchetypeConfig
+  stableId: basic_throwing_enemy
+  baseStats:
+    maximumHealth: 100
+    groundMoveSpeed: 3.5
+    sprintSpeed: 6
+    turnSpeed: 360
+    meleeDamageMultiplier: 1
+    attackSpeedMultiplier: 1
+    staggerDurationMultiplier: 1
+  baseCapabilities: 41
+  baseCombatLoadout: {fileID: 11400000, guid: f1c9aed9163243ad80d3180f48174b1b, type: 2}

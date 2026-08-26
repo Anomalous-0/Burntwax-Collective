@@ -29,6 +29,7 @@ namespace Burntwax
         [SerializeField] private CamStateMachine camStateMachine;
         [SerializeField] private Animator armsAnimator;
         [SerializeField] private TwoBoneIKConstraint leftHandIK;
+        [SerializeField] private KatanaParryDefense katanaParryDefense;
 
         [Header("Arm Override")]
         [SerializeField] private string gloveLayerName = "Glove";
@@ -236,6 +237,13 @@ namespace Burntwax
             arsenal = GetComponent<Arsenal>();
             if (camStateMachine == null && player != null)
                 camStateMachine = player.GetComponent<CamStateMachine>();
+            if (katanaParryDefense == null)
+                katanaParryDefense = GetComponent<KatanaParryDefense>();
+            if (katanaParryDefense == null && player != null)
+            {
+                katanaParryDefense =
+                    player.GetComponentInChildren<KatanaParryDefense>(true);
+            }
             detectionMpb = new MaterialPropertyBlock();
             if (blastShake == null)
                 blastShake = GetComponent<CinemachineImpulseSource>();
@@ -818,21 +826,38 @@ namespace Burntwax
         /// </summary>
         public void LaunchHeldObjectAsBaseball()
         {
-            LaunchHeldObject();
+            Vector3 feedbackPosition = transform.position;
+            if (heldObject != null)
+            {
+                Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
+                feedbackPosition = heldBody != null
+                    ? heldBody.worldCenterOfMass
+                    : heldObject.transform.position;
+            }
+
+            if (LaunchHeldObject())
+            {
+                camStateMachine?.PlayBaseballFovKick();
+                katanaParryDefense?.PlayBaseballPerfectParryAudio(
+                    feedbackPosition);
+            }
         }
 
-        private void LaunchHeldObject()
+        private bool LaunchHeldObject()
         {
             RestoreHeldObjectHierarchy();
+
+            bool launchApplied = false;
 
             if (heldObject != null)
             {
                 Rigidbody heldBody = heldObject.GetComponent<Rigidbody>();
                 if (heldBody != null)
-                    LaunchGloveControlledRigidbody(heldBody);
+                    launchApplied = LaunchGloveControlledRigidbody(heldBody);
             }
 
             DropHeldObjectWithCollisionDelay();
+            return launchApplied;
         }
 
         /// <summary>

@@ -39,6 +39,28 @@ namespace Burntwax
         public float chargeZoomOvershoot = 4f;
         private float chargeZoomVelocity;
 
+        [Header("Movement FOV")]
+        [Tooltip("Degrees added to the normal camera FOV while sprinting.")]
+        [SerializeField, Min(0f)] private float sprintFovOffset = 5f;
+
+        [Tooltip("Degrees added to the normal camera FOV while dashing. Dash takes priority over mantle and sprint.")]
+        [SerializeField, Min(0f)] private float dashFovOffset = 10f;
+
+        [Tooltip("Degrees added to the normal camera FOV while mantling.")]
+        [SerializeField, Min(0f)] private float mantleFovOffset = 7f;
+
+        [Tooltip("How quickly movement FOV eases between normal, sprint, dash, and mantle values.")]
+        [SerializeField, Min(0.01f)] private float movementFovSmoothTime = 0.1f;
+
+        private bool sprintFovActive;
+        private bool dashFovActive;
+        private bool mantleFovActive;
+        private float currentMovementFovOffset;
+        private float movementFovVelocity;
+        private float fpsBaseFov;
+        private float aimBaseFov;
+        private float chargeBaseFov;
+
         [Header("Object Catch FOV")]
         [Tooltip("How many degrees the view widens when an attracted object reaches the glove.")]
         [SerializeField, Min(0f)] private float objectCatchFovKick = 8f;
@@ -54,8 +76,30 @@ namespace Burntwax
                 new Keyframe(1f, 0f));
 
         private Coroutine objectCatchFovRoutine;
-        private CinemachineVirtualCamera objectCatchCamera;
-        private float objectCatchBaseFov;
+        private float currentObjectCatchFovOffset;
+
+        [Header("Combat FOV Kicks")]
+        [Tooltip("Degrees briefly added when the katana baseball mechanic successfully launches an object.")]
+        [SerializeField, Min(0f)] private float baseballFovKick = 8f;
+
+        [Tooltip("Duration of the baseball zoom-out pulse.")]
+        [SerializeField, Min(0.01f)] private float baseballFovDuration = 0.22f;
+
+        [Tooltip("Degrees briefly added when the player confirms a perfect parry.")]
+        [SerializeField, Min(0f)] private float perfectParryFovKick = 10f;
+
+        [Tooltip("Duration of the perfect-parry zoom-out pulse.")]
+        [SerializeField, Min(0.01f)] private float perfectParryFovDuration = 0.18f;
+
+        [Tooltip("Normalized FOV offset used by baseball and perfect-parry pulses: 0 = normal, 1 = full kick.")]
+        [SerializeField] private AnimationCurve combatFovKickCurve =
+            new AnimationCurve(
+                new Keyframe(0f, 0f),
+                new Keyframe(0.12f, 1f),
+                new Keyframe(1f, 0f));
+
+        private Coroutine combatFovKickRoutine;
+        private float currentCombatFovOffset;
 
         public CameraBaseState currentState;
         public CameraStateFactory states;
@@ -74,6 +118,9 @@ namespace Burntwax
         private void Awake()
         {
             activeCam = fpsCam;
+            fpsBaseFov = fpsCam != null ? fpsCam.m_Lens.FieldOfView : 0f;
+            aimBaseFov = aimCam != null ? aimCam.m_Lens.FieldOfView : 0f;
+            chargeBaseFov = chargeCam != null ? chargeCam.m_Lens.FieldOfView : 0f;
             player = GetComponent<PlayerStateMachine>();
             crosshair = GetComponent<PlayerCrosshair>();
 
@@ -101,6 +148,11 @@ namespace Burntwax
             }
         }
 
+        private void LateUpdate()
+        {
+            UpdateMovementFov();
+        }
+
 
         public void Aim()
         {
@@ -125,7 +177,7 @@ namespace Burntwax
                 Charge();
 
             chargeZoomVelocity = 0f;
-            chargeCam.m_Lens.FieldOfView = fpsCam.m_Lens.FieldOfView;
+            chargeCam.m_Lens.FieldOfView = fpsBaseFov;
         }
 
         // Progressive ADS-style zoom for the glove pulse: narrow the charge camera's FOV in step with
@@ -138,7 +190,7 @@ namespace Burntwax
 
             chargeNormalized = Mathf.Clamp01(chargeNormalized);
 
-            float targetFov = Mathf.Lerp(fpsCam.m_Lens.FieldOfView, chargeFov, chargeNormalized);
+            float targetFov = Mathf.Lerp(fpsBaseFov, chargeFov, chargeNormalized);
             // Peaks near full charge (~0.7) and returns to zero at max, so hitting full charge reads as
             // a small punch-in that settles rather than a hard stop.
             targetFov -= chargeZoomOvershoot *
@@ -152,7 +204,34 @@ namespace Burntwax
         public void ResetChargeZoom()
         {
             chargeZoomVelocity = 0f;
-            chargeCam.m_Lens.FieldOfView = fpsCam.m_Lens.FieldOfView;
+            chargeCam.m_Lens.FieldOfView = chargeBaseFov;
+        }
+
+        public void SetSprintFovActive(bool active)
+        {
+            sprintFovActive = active;
+        }
+
+        public void SetDashFovActive(bool active)
+        {
+            dashFovActive = active;
+        }
+
+        public void SetMantleFovActive(bool active)
+        {
+            mantleFovActive = active;
+        }
+
+        public void PlayBaseballFovKick()
+        {
+            PlayCombatFovKick(baseballFovKick, baseballFovDuration);
+        }
+
+        public void PlayPerfectParryFovKick()
+        {
+            PlayCombatFovKick(
+                perfectParryFovKick,
+                perfectParryFovDuration);
         }
 
         public void PlayObjectCatchFovKick()
@@ -162,9 +241,6 @@ namespace Burntwax
                 return;
 
             RestoreObjectCatchFov();
-
-            objectCatchCamera = activeCam;
-            objectCatchBaseFov = objectCatchCamera.m_Lens.FieldOfView;
             objectCatchFovRoutine = StartCoroutine(AnimateObjectCatchFov());
         }
 
@@ -172,24 +248,20 @@ namespace Burntwax
         {
             float elapsed = 0f;
 
-            while (elapsed < objectCatchFovDuration &&
-                   objectCatchCamera != null &&
-                   objectCatchCamera == activeCam)
+            while (elapsed < objectCatchFovDuration)
             {
                 elapsed += Time.deltaTime;
                 float normalizedTime =
                     Mathf.Clamp01(elapsed / objectCatchFovDuration);
-                float offset =
+                currentObjectCatchFovOffset =
                     objectCatchFovCurve.Evaluate(normalizedTime) *
                     objectCatchFovKick;
-
-                objectCatchCamera.m_Lens.FieldOfView =
-                    objectCatchBaseFov + offset;
 
                 yield return null;
             }
 
-            RestoreObjectCatchFov();
+            objectCatchFovRoutine = null;
+            currentObjectCatchFovOffset = 0f;
         }
 
         private void RestoreObjectCatchFov()
@@ -200,24 +272,135 @@ namespace Burntwax
                 objectCatchFovRoutine = null;
             }
 
-            if (objectCatchCamera != null)
-                objectCatchCamera.m_Lens.FieldOfView = objectCatchBaseFov;
+            currentObjectCatchFovOffset = 0f;
+        }
 
-            objectCatchCamera = null;
+        private void PlayCombatFovKick(float fovKick, float duration)
+        {
+            // Glove charge owns its camera's intentional zoom-in.
+            if (activeCam == null || activeCam == chargeCam
+                || fovKick <= 0f || duration <= 0f)
+            {
+                return;
+            }
+
+            RestoreCombatFovKick();
+            combatFovKickRoutine = StartCoroutine(
+                AnimateCombatFovKick(fovKick, duration));
+        }
+
+        private IEnumerator AnimateCombatFovKick(
+            float fovKick,
+            float duration)
+        {
+            float elapsed = 0f;
+
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                float normalizedTime = Mathf.Clamp01(elapsed / duration);
+                currentCombatFovOffset =
+                    combatFovKickCurve.Evaluate(normalizedTime) * fovKick;
+
+                yield return null;
+            }
+
+            combatFovKickRoutine = null;
+            currentCombatFovOffset = 0f;
+        }
+
+        private void RestoreCombatFovKick()
+        {
+            if (combatFovKickRoutine != null)
+            {
+                StopCoroutine(combatFovKickRoutine);
+                combatFovKickRoutine = null;
+            }
+
+            currentCombatFovOffset = 0f;
         }
 
         private void OnDisable()
         {
             RestoreObjectCatchFov();
+            RestoreCombatFovKick();
+            sprintFovActive = false;
+            dashFovActive = false;
+            mantleFovActive = false;
+            currentMovementFovOffset = 0f;
+            movementFovVelocity = 0f;
+            RestoreBaseFovs();
         }
 
         private void SetCameraPriorities(CinemachineVirtualCamera NewCameraMode)
         {
+            RestoreBaseFov(activeCam);
             activeCam.Priority -= activeCameraPriorityModifier;
             NewCameraMode.Priority += activeCameraPriorityModifier;
             activeCam = NewCameraMode;
             pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
 
+            ApplySharedFov();
+
+        }
+
+        private void UpdateMovementFov()
+        {
+            float targetOffset = dashFovActive
+                ? dashFovOffset
+                : mantleFovActive
+                    ? mantleFovOffset
+                    : sprintFovActive
+                        ? sprintFovOffset
+                        : 0f;
+
+            currentMovementFovOffset = Mathf.SmoothDamp(
+                currentMovementFovOffset,
+                targetOffset,
+                ref movementFovVelocity,
+                movementFovSmoothTime);
+
+            ApplySharedFov();
+        }
+
+        private void ApplySharedFov()
+        {
+            // Glove charge owns its camera and performs an intentional zoom-in.
+            if (activeCam == null || activeCam == chargeCam)
+                return;
+
+            activeCam.m_Lens.FieldOfView =
+                GetBaseFov(activeCam) +
+                currentMovementFovOffset +
+                currentObjectCatchFovOffset +
+                currentCombatFovOffset;
+        }
+
+        private float GetBaseFov(CinemachineVirtualCamera camera)
+        {
+            if (camera == fpsCam)
+                return fpsBaseFov;
+
+            if (camera == aimCam)
+                return aimBaseFov;
+
+            if (camera == chargeCam)
+                return chargeBaseFov;
+
+            return camera != null ? camera.m_Lens.FieldOfView : 0f;
+        }
+
+        private void RestoreBaseFov(CinemachineVirtualCamera camera)
+        {
+            if (camera != null)
+                camera.m_Lens.FieldOfView = GetBaseFov(camera);
+        }
+
+        private void RestoreBaseFovs()
+        {
+            RestoreBaseFov(fpsCam);
+            RestoreBaseFov(aimCam);
+            RestoreBaseFov(chargeCam);
         }
 
         public void SlowCam(bool active)

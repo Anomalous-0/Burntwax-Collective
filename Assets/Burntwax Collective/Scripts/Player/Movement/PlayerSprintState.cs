@@ -11,6 +11,7 @@ namespace Burntwax
         public override void EnterState()
         {
             Ctx.PlayerVelocity = Ctx.SprintVelocity;
+            Ctx.CameraMachine?.SetSprintFovActive(true);
         }
 
         public override void UpdateState()
@@ -21,7 +22,7 @@ namespace Burntwax
 
         public override void ExitState()
         {
-
+            Ctx.CameraMachine?.SetSprintFovActive(false);
         }
 
         public override void CheckSwitchStates()

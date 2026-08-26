@@ -72,10 +72,10 @@ namespace Burntwax
         [Tooltip("Number of consecutive held blocks allowed before the next block attempt breaks the guard.")]
         [SerializeField, Min(1)] private int maximumConsecutiveBlocks = 3;
 
-        [Tooltip("Continuous time outside the guard stance required to restore all guard capacity.")]
+        [Tooltip("Continuous time outside the guard stance required to restore one spent guard use.")]
         [SerializeField, Min(0f)] private float guardRecoveryDelay = 1.5f;
 
-        [Tooltip("If enabled, a successful perfect parry immediately restores all guard capacity.")]
+        [Tooltip("If enabled, a successful perfect parry immediately restores one spent guard use.")]
         [SerializeField] private bool perfectParryRestoresGuard = true;
 
         [Header("Parried attacker reaction")]

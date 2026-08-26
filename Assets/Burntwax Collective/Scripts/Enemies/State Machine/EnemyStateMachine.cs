@@ -34,6 +34,9 @@ namespace Burntwax
         [FormerlySerializedAs("meleeAttack")]
         [SerializeField] private EnemyMeleeExecutor meleeExecutor;
 
+        [Tooltip("Passive executor used by configured projectile-throw actions. Optional for enemies without a throw action.")]
+        [SerializeField] private StraightLinePickupEmitter projectileThrowExecutor;
+
         [Tooltip("Animator controlled by the enemy states. Defaults to the first Animator found on this enemy.")]
         [SerializeField] private Animator animator;
 
@@ -72,6 +75,8 @@ namespace Burntwax
         public EnemyHealth Health => health;
         public EnemyRuntimeProfile RuntimeProfile => runtimeProfile;
         public EnemyMeleeExecutor MeleeExecutor => meleeExecutor;
+        public StraightLinePickupEmitter ProjectileThrowExecutor =>
+            projectileThrowExecutor;
         public Animator Animator => animator;
         public Transform Target => target;
         public bool HasValidTarget => target != null
@@ -239,18 +244,19 @@ namespace Burntwax
         }
 
         /// <summary>
-        /// Central selection point used by EnemyMeleeState. The basic enemy has
-        /// one configured choice; future scorers can choose among several assets.
+        /// Central selection point used by the combat action states. Loadouts,
+        /// capabilities, cooldowns, range, angle, priority, and weight all stay
+        /// data-driven as more melee and projectile actions are added.
         /// </summary>
         internal bool TrySelectCombatAction(
             out EnemyCombatActionConfig selectedAction)
         {
             selectedAction = null;
-            if (!HasValidTarget
-                || meleeExecutor == null
-                || !meleeExecutor.CanStartAttack)
+            if (!HasValidTarget)
                 return false;
 
+            IReadOnlyList<EnemyCombatActionConfig> availableActions =
+                GetAvailableCombatActions();
             Transform root = rotationRoot != null
                 ? rotationRoot
                 : transform;
@@ -265,19 +271,63 @@ namespace Burntwax
                 ? runtimeProfile.Capabilities
                 : EnemyCapability.GroundMovement
                     | EnemyCapability.MeleeAttack;
+            float targetDistance = toTarget.magnitude;
+            float meleeBoundary = GetMeleeBoundary(availableActions);
+            EnemyCombatActionCategory supportedCategories =
+                EnemyCombatActionCategory.None;
+
+            if (targetDistance <= meleeBoundary)
+            {
+                if (meleeExecutor != null
+                    && meleeExecutor.CanStartAttack)
+                {
+                    supportedCategories |=
+                        EnemyCombatActionCategory.Melee;
+                }
+            }
+            else if (projectileThrowExecutor != null)
+            {
+                supportedCategories |= EnemyCombatActionCategory.Throw;
+            }
+
+            if (supportedCategories == EnemyCombatActionCategory.None)
+                return false;
 
             EnemyCombatSelectionContext selectionContext =
                 new EnemyCombatSelectionContext(
-                    toTarget.magnitude,
+                    targetDistance,
                     targetAngle,
                     Time.time,
                     capabilities,
-                    EnemyCombatActionCategory.Melee);
+                    supportedCategories);
 
             return combatActionSelector.TrySelect(
-                GetAvailableCombatActions(),
+                availableActions,
                 selectionContext,
                 out selectedAction);
+        }
+
+        private static float GetMeleeBoundary(
+            IReadOnlyList<EnemyCombatActionConfig> actions)
+        {
+            float boundary = 0f;
+            if (actions == null)
+                return boundary;
+
+            for (int i = 0; i < actions.Count; i++)
+            {
+                EnemyCombatActionConfig action = actions[i];
+                if (action != null
+                    && (action.Category
+                        & EnemyCombatActionCategory.Melee) != 0)
+                {
+                    boundary = Mathf.Max(
+                        boundary,
+                        action.MaximumRange);
+                }
+            }
+
+            return boundary;
         }
 
         internal void MarkCombatActionStarted(
@@ -306,8 +356,17 @@ namespace Burntwax
 
         internal void PlayMeleeAnimation(EnemyMeleeAttackConfig config)
         {
-            if (config == null)
+            PlayCombatActionAnimation(config);
+        }
+
+        internal void PlayCombatActionAnimation(
+            EnemyCombatActionConfig config)
+        {
+            if (config == null
+                || string.IsNullOrWhiteSpace(config.AnimationStateName))
+            {
                 return;
+            }
 
             TryCrossFadeAnimation(
                 config.AnimationStateName,
@@ -414,6 +473,12 @@ namespace Burntwax
 
             if (meleeExecutor == null)
                 meleeExecutor = GetComponent<EnemyMeleeExecutor>();
+
+            if (projectileThrowExecutor == null)
+            {
+                projectileThrowExecutor = GetComponentInChildren<
+                    StraightLinePickupEmitter>(true);
+            }
 
             if (animator == null)
                 animator = GetComponentInChildren<Animator>();
