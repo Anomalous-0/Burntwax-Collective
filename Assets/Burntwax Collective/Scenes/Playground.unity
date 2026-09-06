@@ -20638,6 +20638,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1409608865}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 475c3963ce15c11438f651abf472c1cd,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1409608866}
   m_SourcePrefab: {fileID: 100100000, guid: 475c3963ce15c11438f651abf472c1cd, type: 3}
 --- !u!1 &1409608855 stripped
 GameObject:
@@ -20830,6 +20834,26 @@ MonoBehaviour:
   resolvedCapabilities: 0
   appliedTraitIds: []
   resolvedCombatActions: []
+--- !u!114 &1409608866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1409608855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 246c054d676d416409a387d1713859d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.EnemyDefense
+  defaultConfig: {fileID: 0}
+  health: {fileID: 0}
+  runtimeProfile: {fileID: 0}
+  facingReference: {fileID: 0}
+  currentMode: 0
+  lastOutcome: 0
+  lastIncomingTypes: 0
+  lastIncomingAngle: 0
 --- !u!1001 &1415115603
 PrefabInstance:
   m_ObjectHideFlags: 0
