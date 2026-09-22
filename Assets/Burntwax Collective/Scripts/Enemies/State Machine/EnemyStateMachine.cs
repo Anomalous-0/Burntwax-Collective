@@ -34,6 +34,9 @@ namespace Burntwax
         [FormerlySerializedAs("meleeAttack")]
         [SerializeField] private EnemyMeleeExecutor meleeExecutor;
 
+        [Tooltip("Optional defense receiver/executor. Required only for enemies whose loadout can select defense actions.")]
+        [SerializeField] private EnemyDefense enemyDefense;
+
         [Tooltip("Passive executor used by configured projectile-throw actions. Optional for enemies without a throw action.")]
         [SerializeField] private StraightLinePickupEmitter projectileThrowExecutor;
 
@@ -75,6 +78,7 @@ namespace Burntwax
         public EnemyHealth Health => health;
         public EnemyRuntimeProfile RuntimeProfile => runtimeProfile;
         public EnemyMeleeExecutor MeleeExecutor => meleeExecutor;
+        public EnemyDefense Defense => enemyDefense;
         public StraightLinePickupEmitter ProjectileThrowExecutor =>
             projectileThrowExecutor;
         public Animator Animator => animator;
@@ -276,6 +280,12 @@ namespace Burntwax
             EnemyCombatActionCategory supportedCategories =
                 EnemyCombatActionCategory.None;
 
+            if (enemyDefense != null
+                && (capabilities & EnemyCapability.Blocking) != 0)
+            {
+                supportedCategories |= EnemyCombatActionCategory.Defense;
+            }
+
             if (targetDistance <= meleeBoundary)
             {
                 if (meleeExecutor != null
@@ -382,6 +392,47 @@ namespace Burntwax
                 defaultCrossFadeDuration);
         }
 
+        /// <summary>
+        /// Animation event: upgrades the active normal guard into its short
+        /// perfect-parry window. Ignored outside EnemyDefenseState.
+        /// </summary>
+        public void OpenDefenseParryWindow()
+        {
+            FindActiveDefenseState()?.OpenParryWindow();
+        }
+
+        /// <summary>
+        /// Animation event: returns the active defense to its weaker normal
+        /// guard without ending the overall action.
+        /// </summary>
+        public void CloseDefenseParryWindow()
+        {
+            FindActiveDefenseState()?.CloseParryWindow();
+        }
+
+        /// <summary>
+        /// Animation event: marks the defensive animation complete. The state
+        /// closes defense immediately and exits on its next action update.
+        /// </summary>
+        public void FinishDefenseAction()
+        {
+            FindActiveDefenseState()?.FinishDefense();
+        }
+
+        private EnemyDefenseState FindActiveDefenseState()
+        {
+            EnemyBaseState state = CurrentActionState;
+            while (state != null)
+            {
+                if (state is EnemyDefenseState defenseState)
+                    return defenseState;
+
+                state = state.CurrentSubstate();
+            }
+
+            return null;
+        }
+
         private void OnEnemyDied(DamageInfo killingHit)
         {
             ChangeRootState(EnemyStateRegion.Life, states.Dead());
@@ -473,6 +524,9 @@ namespace Burntwax
 
             if (meleeExecutor == null)
                 meleeExecutor = GetComponent<EnemyMeleeExecutor>();
+
+            if (enemyDefense == null)
+                enemyDefense = GetComponent<EnemyDefense>();
 
             if (projectileThrowExecutor == null)
             {

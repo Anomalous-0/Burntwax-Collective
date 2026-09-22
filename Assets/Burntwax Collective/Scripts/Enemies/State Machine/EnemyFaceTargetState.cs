@@ -51,6 +51,12 @@ namespace Burntwax
                     throwState.QueueThrow(projectileThrow);
                     SwitchState(throwState);
                     break;
+
+                case EnemyDefenseActionConfig defenseAction:
+                    EnemyDefenseState defenseState = Factory.Defense();
+                    defenseState.QueueDefense(defenseAction);
+                    SwitchState(defenseState);
+                    break;
             }
         }
 

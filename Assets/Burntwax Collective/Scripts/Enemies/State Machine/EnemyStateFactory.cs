@@ -14,6 +14,7 @@ namespace Burntwax
         FaceTarget,
         Melee,
         Throw,
+        Defense,
         Staggered
     }
 
@@ -38,6 +39,7 @@ namespace Burntwax
             states[EnemyStates.FaceTarget] = new EnemyFaceTargetState(context, this);
             states[EnemyStates.Melee] = new EnemyMeleeState(context, this);
             states[EnemyStates.Throw] = new EnemyThrowState(context, this);
+            states[EnemyStates.Defense] = new EnemyDefenseState(context, this);
             states[EnemyStates.Staggered] = new EnemyStaggeredState(context, this);
         }
 
@@ -53,6 +55,8 @@ namespace Burntwax
             (EnemyMeleeState)states[EnemyStates.Melee];
         public EnemyThrowState Throw() =>
             (EnemyThrowState)states[EnemyStates.Throw];
+        public EnemyDefenseState Defense() =>
+            (EnemyDefenseState)states[EnemyStates.Defense];
         public EnemyBaseState Staggered() => states[EnemyStates.Staggered];
     }
 }

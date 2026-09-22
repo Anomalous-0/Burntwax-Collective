@@ -15,7 +15,8 @@ namespace Burntwax
         Melee = 1 << 0,
         Ranged = 1 << 1,
         Throw = 1 << 2,
-        Special = 1 << 3
+        Special = 1 << 3,
+        Defense = 1 << 4
     }
 
     /// <summary>
@@ -30,9 +31,9 @@ namespace Burntwax
         [SerializeField] private string stableId;
 
         [Header("Availability")]
-        [Tooltip("Capabilities required before this action can be selected.")]
-        [SerializeField] private EnemyCapability requiredCapabilities =
-            EnemyCapability.MeleeAttack;
+        [Tooltip("Extra capabilities required in addition to the action type's built-in requirement.")]
+        [InspectorName("Additional Required Capabilities")]
+        [SerializeField] private EnemyCapability requiredCapabilities;
 
         [Header("Selection")]
         [Tooltip("Closest target distance at which this action may be selected.")]
@@ -67,7 +68,8 @@ namespace Burntwax
         public string StableId => string.IsNullOrWhiteSpace(stableId)
             ? name
             : stableId;
-        public EnemyCapability RequiredCapabilities => requiredCapabilities;
+        public EnemyCapability RequiredCapabilities =>
+            ImplicitRequiredCapabilities | requiredCapabilities;
         public float MinimumRange => minimumRange;
         public float MaximumRange => maximumRange;
         public float MaximumStartAngle => maximumStartAngle;
@@ -77,6 +79,9 @@ namespace Burntwax
         public string AnimationStateName => animationStateName;
         public int AnimationLayer => animationLayer;
         public float CrossFadeDuration => crossFadeDuration;
+
+        protected virtual EnemyCapability ImplicitRequiredCapabilities =>
+            EnemyCapability.None;
 
         protected virtual void OnValidate()
         {

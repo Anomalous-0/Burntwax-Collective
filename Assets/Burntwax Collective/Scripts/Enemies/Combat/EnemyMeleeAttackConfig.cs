@@ -16,6 +16,9 @@ namespace Burntwax
         public override EnemyCombatActionCategory Category =>
             EnemyCombatActionCategory.Melee;
 
+        protected override EnemyCapability ImplicitRequiredCapabilities =>
+            EnemyCapability.MeleeAttack;
+
         [Header("Damage")]
         [SerializeField, Min(0f)] private float baseDamage = 10f;
 

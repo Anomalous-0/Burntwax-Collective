@@ -17,6 +17,9 @@ namespace Burntwax
         public override EnemyCombatActionCategory Category =>
             EnemyCombatActionCategory.Throw;
 
+        protected override EnemyCapability ImplicitRequiredCapabilities =>
+            EnemyCapability.ThrowAttack;
+
         [Header("Projectile")]
         [Tooltip("Rigidbody prefab launched by this action.")]
         [SerializeField] private GameObject projectilePrefab;
