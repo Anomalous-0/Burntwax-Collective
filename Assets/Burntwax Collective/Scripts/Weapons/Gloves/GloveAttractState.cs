@@ -27,6 +27,10 @@ namespace Burntwax
             gravityOverrideActive = false;
             Ctx.PlayGloveAnimation(Ctx.attractHash);
             Ctx.heldObject = Ctx.detectedObject;
+            // Detach before attraction captures the Rigidbody's original
+            // settings; otherwise Hold could restore the embedded state.
+            if (Ctx.heldObject != null)
+                Ctx.heldObject.GetComponent<SharpObjectEmbedding>()?.PrepareForAttraction(Ctx);
             Ctx.IgnoreHeldObjectPlayerCollisions();
             CurvedRigidbodyFlight existingFlight = Ctx.heldObject != null
                 ? Ctx.heldObject.GetComponent<CurvedRigidbodyFlight>()

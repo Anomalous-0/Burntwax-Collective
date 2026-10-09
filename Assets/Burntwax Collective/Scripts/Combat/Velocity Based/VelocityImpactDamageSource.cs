@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Burntwax
@@ -50,6 +51,14 @@ namespace Burntwax
         public float LastImpactClosingSpeed { get; private set; }
         public float LastImpactSpeed { get; private set; }
         public VelocityImpactActivation Activation => activation;
+        public VelocityImpactBehavior Behavior => behavior;
+
+        /// <summary>
+        /// A qualifying impact has finished defense, damage, self-damage and
+        /// throw bookkeeping. Optional physical responses (such as embedding)
+        /// can use the outcome without running a second damage/effects path.
+        /// </summary>
+        public event Action<RigidbodyImpact, HitDefenseResult> ImpactResolved;
 
         private RigidbodyImpactReporter impactReporter;
         private Rigidbody sourceBody;
@@ -138,6 +147,11 @@ namespace Burntwax
 
         private void OnImpactReported(RigidbodyImpact impact)
         {
+            // Held or embedded objects do not become new attacks just because
+            // another body collides with them.
+            if (sourceBody == null || sourceBody.isKinematic)
+                return;
+
             LastImpactClosingSpeed = impact.SourceClosingSpeed;
             LastImpactSpeed = impact.SourceVelocity.magnitude;
 
@@ -212,6 +226,9 @@ namespace Burntwax
                 pendingArmInstigator = null;
                 Arm(newInstigator);
             }
+
+            if (this != null && isActiveAndEnabled)
+                ImpactResolved?.Invoke(impact, defenseResult);
         }
 
         private void ApplyDefensePhysics(

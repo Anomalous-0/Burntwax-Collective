@@ -485,6 +485,11 @@ namespace Burntwax
                 if (candidate == primary || candidate == heldObject)
                     continue;
 
+                // Embedded objects must be deliberately selected. Kinematic
+                // objects cannot respond to the secondary physics tug.
+                if (body.isKinematic)
+                    continue;
+
                 // Nearer the primary → stronger pull; beyond reach → nothing.
                 float distanceFromPrimary = Vector3.Distance(body.position, primary.transform.position);
                 float weight = Mathf.Clamp01(1f - distanceFromPrimary / detectDistance);
@@ -506,7 +511,7 @@ namespace Burntwax
         {
             foreach (Rigidbody body in pulledSecondaryBodies)
             {
-                if (body == null)
+                if (body == null || body.isKinematic)
                     continue;
 
                 // The primary is handled by the attract/hold states themselves; never damp it here.
