@@ -14,7 +14,7 @@ namespace Burntwax
         {
             // Ctx.camStateMachine.SetCameraInputActive(false);
 
-            Ctx.anim.SetBool(Ctx.parryHash, true);
+            Ctx.PlayKatanaAnimation(KatanaAnimationType.Parry);
             Ctx.isParrying = true;
             InitializeSubState();
         }
@@ -30,8 +30,7 @@ namespace Burntwax
         {
             Ctx.katanaDriver.EndSwing();
             Ctx.camStateMachine.SlowCam(false);
-            Ctx.anim.SetBool(Ctx.parryHash, false);
-            Ctx.isParryWindowActive = false;
+            Ctx.EndDefenseAnimation();
 
 
         }

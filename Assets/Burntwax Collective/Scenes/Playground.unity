@@ -20782,6 +20782,7 @@ MonoBehaviour:
   health: {fileID: 1409608862}
   runtimeProfile: {fileID: 1409608865}
   meleeExecutor: {fileID: 1409608863}
+  enemyDefense: {fileID: 1409608866}
   projectileThrowExecutor: {fileID: 1409608860}
   animator: {fileID: 1409608856}
   rotationRoot: {fileID: 1409608859}
@@ -33636,6 +33637,11 @@ PrefabInstance:
       propertyPath: crosshair
       value: 
       objectReference: {fileID: 1513530040}
+    - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
+        type: 3}
+      propertyPath: camSlowdown
+      value: 0.005
+      objectReference: {fileID: 0}
     - target: {fileID: 2488700794300891772, guid: 4339d97cde5264747a29eaf7ae86e4b5,
         type: 3}
       propertyPath: parryWindow

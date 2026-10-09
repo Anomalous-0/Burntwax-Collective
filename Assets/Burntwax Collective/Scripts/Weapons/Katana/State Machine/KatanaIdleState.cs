@@ -15,7 +15,11 @@ namespace Burntwax
         public override void EnterState()
         {
             if(Ctx.ActiveKatanaScriptable != null)
+            {
                 Ctx.camStateMachine.SlowCam(false);
+                if (Ctx.fullyEquipped)
+                    Ctx.PlayKatanaAnimation(KatanaAnimationType.Idle);
+            }
             InitializeSubState();
         }
 
@@ -31,6 +35,10 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
+            // The equip clip must finish before Idle accepts combat input.
+            if (!Ctx.fullyEquipped)
+                return;
+
             if (InputManager.Instance.attackIsPressed)
             {
                 SwitchState(Factory.Ready());
@@ -38,6 +46,10 @@ namespace Burntwax
             else if (InputManager.Instance.aimIsPressed)
             {
                 SwitchState(Factory.Parry());
+            }
+            else if (InputPrioritySorter.Instance.SprintIsPriority())
+            {
+                SwitchState(Factory.Stow());
             }
         }
 

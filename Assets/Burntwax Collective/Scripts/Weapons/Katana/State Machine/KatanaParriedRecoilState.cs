@@ -25,8 +25,8 @@ namespace Burntwax
             Ctx.katanaDriver.EndSwing();
             Ctx.ResetGestureRecognition();
             Ctx.camStateMachine.SlowCam(false);
-            Ctx.anim.SetBool(Ctx.slashHash, false);
             Ctx.isSlashing = false;
+            Ctx.PlayKatanaAnimation(KatanaAnimationType.ParriedRecoil);
             Ctx.ableToSlashInMiddleOfAnimation = false;
 
             recoveryEndTime = Time.time

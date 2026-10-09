@@ -18,7 +18,7 @@ namespace Burntwax
             Ctx.ResetGestureRecognition();
 
             Ctx.camStateMachine.SlowCam(true);
-            Ctx.anim.SetBool(Ctx.readyHash, true);
+            Ctx.PlayKatanaAnimation(KatanaAnimationType.Ready);
 
 
             InitializeSubState();
@@ -38,7 +38,6 @@ namespace Burntwax
         {
 
             Ctx.camStateMachine.SlowCam(false);
-            Ctx.anim.SetBool(Ctx.readyHash, false);
 
 
         }

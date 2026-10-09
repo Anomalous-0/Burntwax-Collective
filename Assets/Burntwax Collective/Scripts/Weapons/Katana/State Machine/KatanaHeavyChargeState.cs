@@ -25,7 +25,7 @@ namespace Burntwax
             recognizedAttack = default;
 
             Ctx.camStateMachine.SlowCam(true);
-            Ctx.anim.SetBool(Ctx.readyHash, true);
+            Ctx.PlayKatanaAnimation(KatanaAnimationType.HeavyCharge, restart: false);
             Debug.Log(
                 $"[Katana] Heavy charge started. Initial direction: " +
                 $"{Ctx.InitialSlashDirection}.");
@@ -43,7 +43,6 @@ namespace Burntwax
         public override void ExitState()
         {
             Ctx.camStateMachine.SlowCam(false);
-            Ctx.anim.SetBool(Ctx.readyHash, false);
         }
 
         public override void CheckSwitchStates()

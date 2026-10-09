@@ -34,6 +34,7 @@ namespace Burntwax
         public KatanaImpactConfig ImpactConfig;
         public KatanaParryConfig ParryConfig;
         public KatanaGestureConfig GestureConfig;
+        public KatanaAnimationConfig AnimationConfig;
         [FormerlySerializedAs("AudioConfig")]
         public KatanaCombatFeedbackConfig FeedbackConfig;
         public KatanaCrosshairConfig CrosshairConfig;

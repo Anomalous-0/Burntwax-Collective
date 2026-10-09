@@ -58,8 +58,6 @@ namespace Burntwax
         [Header("Animation")]
         public GameObject Katana;
         public Animator anim;
-        [HideInInspector]
-        public int readyHash, slashHash, parryHash, stowHash, slashBlendHash, slashAnimationHash;
         public KatanaScriptableObject ActiveKatanaScriptable;
 
         [Header("Slash Feedback")]
@@ -170,22 +168,17 @@ namespace Burntwax
         [HideInInspector] public bool selectedByArsenal;
 
         private readonly Dictionary<int, KatanaScriptableObject> katanaCatalogLookup = new();
+        private readonly HashSet<int> warnedMissingAnimationStates = new();
+        private KatanaAnimationType? activeAnimationType;
+        private int activeAnimationHash;
+        private int activeAnimationLayer;
         private readonly KatanaGestureRecognizer gestureRecognizer = new();
         private KatanaAttackIntent pendingAttackIntent;
         private bool hasPendingAttackIntent;
+        private bool pendingAttackIsChained;
 
         private void Awake()
         {
-            states = new KatanaStateFactory(this);
-            currentState = states.Idle();
-            currentState.EnterState();
-
-            readyHash = Animator.StringToHash("ready");
-            slashHash = Animator.StringToHash("slash");
-            parryHash = Animator.StringToHash("parry");
-            stowHash = Animator.StringToHash("stow");
-            slashBlendHash = Animator.StringToHash("Blend");
-            slashAnimationHash = Animator.StringToHash("slash_Katana");
 
             stateMachine = player.GetComponent<PlayerStateMachine>();
             camStateMachine = player.GetComponent<CamStateMachine>();
@@ -195,6 +188,9 @@ namespace Burntwax
             katanaDriver = GetComponent<KatanaDriver>();
             ResolveFeedbackAudioSource();
             RebuildKatanaCatalogLookup();
+            states = new KatanaStateFactory(this);
+            currentState = states.Idle();
+            currentState.EnterState();
         }
 
         private void RebuildKatanaCatalogLookup()
@@ -281,18 +277,22 @@ namespace Burntwax
             lastRecognizedGesture = "None";
             pendingAttackIntent = default;
             hasPendingAttackIntent = false;
+            pendingAttackIsChained = false;
         }
 
-        public void QueueAttackIntent(KatanaAttackIntent intent)
+        public void QueueAttackIntent(KatanaAttackIntent intent, bool isChained = false)
         {
             pendingAttackIntent = intent;
             hasPendingAttackIntent = intent.IsValid;
+            pendingAttackIsChained = isChained;
         }
 
-        public bool TryConsumeAttackIntent(out KatanaAttackIntent intent)
+        public bool TryConsumeAttackIntent(out KatanaAttackIntent intent, out bool isChained)
         {
             intent = pendingAttackIntent;
             bool hadIntent = hasPendingAttackIntent;
+            isChained = hadIntent && pendingAttackIsChained;
+            pendingAttackIsChained = false;
             pendingAttackIntent = default;
             hasPendingAttackIntent = false;
             return hadIntent;
@@ -321,7 +321,7 @@ namespace Burntwax
 
         public void Despawn(KatanaScriptableObject activeKatana)
         {
-            CloseDamageWindow();
+            ResetCombatPresentation();
             fullyEquipped = false;
             currentDashCharges = 0;
             airborneDashesUsed = 0;
@@ -452,6 +452,7 @@ namespace Burntwax
 
         public void SetupKatana()
         {
+            ResetCombatPresentation();
             fullyEquipped = false;
             isSlashing = false;
             isParrying = false;
@@ -467,12 +468,11 @@ namespace Burntwax
             if (handIK != null)
                 handIK.weight = 1;
 
-            anim.Play("equip_Katana");
+            PlayKatanaAnimation(KatanaAnimationType.Equip);
 
             if (Katana != null)
                 camShake = Katana.GetComponent<CinemachineImpulseSource>();
 
-            ResetAnimationFlags();
         }
 
         public bool TryConsumeDashCharge()
@@ -529,20 +529,170 @@ namespace Burntwax
                     || stateMachine.CurrentState == stateMachine.states.Slope());
         }
 
-        private void ResetAnimationFlags()
+        private void ResetCombatPresentation()
         {
             CloseDamageWindow();
-            anim.SetBool(readyHash, false);
-            anim.SetBool(slashHash, false);
-            anim.SetBool(parryHash, false);
-            anim.SetBool(stowHash, false);
+            EndDefenseAnimation();
+            isSlashing = false;
+            ableToSlashInMiddleOfAnimation = false;
+            activeAnimationType = null;
+            ResetGestureRecognition();
+            katanaDriver?.EndSwing();
+        }
+
+        /// <summary>
+        /// Directly blends to the animation requested by the current gameplay
+        /// state. The Animator stores clips/blend trees; katana transitions
+        /// are owned entirely by the gameplay state machine.
+        /// </summary>
+        public bool PlayKatanaAnimation(KatanaAnimationType animationType, bool restart = true,
+            bool isChained = false)
+        {
+            if (anim == null)
+                return false;
+
+            KatanaAnimationConfig animationConfig =
+                ActiveKatanaScriptable != null
+                    ? ActiveKatanaScriptable.AnimationConfig
+                    : null;
+
+            string layerName = animationConfig != null
+                ? animationConfig.AnimatorLayerName
+                : "Default Layer";
+            int layerIndex = anim.GetLayerIndex(layerName);
+            if (layerIndex < 0)
+            {
+                WarnMissingAnimation(
+                    Animator.StringToHash($"Layer:{layerName}"),
+                    $"Animator layer '{layerName}' was not found.");
+                return false;
+            }
+
+            string stateName;
+            float crossFadeDuration;
+            float startTime = 0f;
+            KatanaAnimationConfig.State configuredState =
+                animationConfig != null
+                    ? animationConfig.GetState(animationType)
+                    : null;
+
+            if (animationType == KatanaAnimationType.Slash)
+            {
+                KatanaAnimationConfig.SlashState slashSettings =
+                    animationConfig != null ? animationConfig.GetSlashState(currentSlashDirection) : null;
+                stateName = slashSettings != null
+                    && !string.IsNullOrWhiteSpace(slashSettings.AnimatorStateName)
+                    ? slashSettings.AnimatorStateName
+                    : KatanaAnimationConfig.GetDefaultSlashName(currentSlashDirection);
+                crossFadeDuration = slashSettings == null ? 0.035f
+                    : isChained ? slashSettings.ChainBlendDuration : slashSettings.BlendDuration;
+                startTime = isChained && slashSettings != null
+                    ? slashSettings.GetChainStartTime() : 0f;
+            }
+            else if (configuredState != null
+                && !string.IsNullOrWhiteSpace(
+                    configuredState.AnimatorStateName))
+            {
+                stateName = configuredState.AnimatorStateName;
+                crossFadeDuration = configuredState.CrossFadeDuration;
+                startTime = configuredState.StartTime;
+            }
+            else
+            {
+                GetFallbackAnimation(
+                    animationType,
+                    out stateName,
+                    out crossFadeDuration,
+                    out startTime);
+            }
+
+            string statePath = stateName.Contains(".")
+                ? stateName
+                : layerName + "." + stateName;
+            int stateHash = Animator.StringToHash(statePath);
+            if (!anim.HasState(layerIndex, stateHash))
+            {
+                WarnMissingAnimation(
+                    stateHash,
+                    $"Animator state '{statePath}' was not found.");
+                return false;
+            }
+
+            // Ready and HeavyCharge can share a clip without replaying the
+            // pullback. Chained slashes deliberately restart their clip.
+            bool alreadyPlaying = anim.IsInTransition(layerIndex)
+                ? anim.GetNextAnimatorStateInfo(layerIndex).fullPathHash == stateHash
+                : anim.GetCurrentAnimatorStateInfo(layerIndex).fullPathHash == stateHash;
+            activeAnimationType = animationType;
+            activeAnimationHash = stateHash;
+            activeAnimationLayer = layerIndex;
+            if (!restart && alreadyPlaying)
+                return true;
+
+            anim.CrossFadeInFixedTime(
+                stateHash,
+                Mathf.Max(0f, crossFadeDuration),
+                layerIndex,
+                Mathf.Max(0f, startTime));
+            return true;
+        }
+
+        private static void GetFallbackAnimation(
+            KatanaAnimationType animationType,
+            out string stateName,
+            out float crossFadeDuration,
+            out float startTime)
+        {
+            startTime = 0f;
+            switch (animationType)
+            {
+                case KatanaAnimationType.Idle:
+                case KatanaAnimationType.ParriedRecoil:
+                    stateName = "equip_Katana";
+                    crossFadeDuration = animationType == KatanaAnimationType.Idle ? 0.15f : 0.05f;
+                    startTime = 0.275f;
+                    return;
+                case KatanaAnimationType.Equip:
+                    stateName = "equip_Katana";
+                    crossFadeDuration = 0.05f;
+                    return;
+                case KatanaAnimationType.Ready:
+                case KatanaAnimationType.HeavyCharge:
+                    stateName = "ready_Katana";
+                    crossFadeDuration = 0.05f;
+                    return;
+                case KatanaAnimationType.Parry:
+                    stateName = "parry_Katana";
+                    crossFadeDuration = 0.04f;
+                    return;
+                case KatanaAnimationType.Stow:
+                    stateName = "stow_Katana";
+                    crossFadeDuration = 0.05f;
+                    return;
+                default:
+                    stateName = string.Empty;
+                    crossFadeDuration = 0f;
+                    return;
+            }
+        }
+
+        private void WarnMissingAnimation(int key, string message)
+        {
+            if (!warnedMissingAnimationStates.Add(key))
+                return;
+
+            Debug.LogWarning($"[KatanaStateMachine] {message}", this);
         }
 
         // ── Animation Events ─────────────────────────────────────
 
-        public void EndEquip()
+        public void EndEquip(AnimationEvent animationEvent = null)
         {
+            if (!AcceptAnimationEvent(animationEvent, KatanaAnimationType.Equip))
+                return;
             fullyEquipped = true;
+            if (currentState == states.Idle())
+                PlayKatanaAnimation(KatanaAnimationType.Idle);
         }
 
         public void SetAttackStrength(KatanaAttackStrength attackStrength)
@@ -555,19 +705,30 @@ namespace Burntwax
             currentSlashDirection = slashDirection;
         }
 
-        public void OpenDamageWindow()
+        public void OpenDamageWindow(AnimationEvent animationEvent = null)
         {
+            if (!IsCurrentStateSlash()
+                || !AcceptAnimationEvent(animationEvent, KatanaAnimationType.Slash))
+                return;
             isDamageWindowActive = true;
         }
 
-        public void CloseDamageWindow()
+        public void CloseDamageWindow(AnimationEvent animationEvent = null)
         {
+            // Direct gameplay cleanup must always work. Only clip events
+            // are filtered, so an outgoing clip cannot close a new swing.
+            if (animationEvent != null
+                && !AcceptAnimationEvent(animationEvent, KatanaAnimationType.Slash))
+                return;
             isDamageWindowActive = false;
-            camStateMachine?.SlowCam(false);
+            //camStateMachine?.SlowCam(false);
         }
 
-        public void EndSlash()
+        public void EndSlash(AnimationEvent animationEvent = null)
         {
+            if (!IsCurrentStateSlash()
+                || !AcceptAnimationEvent(animationEvent, KatanaAnimationType.Slash))
+                return;
             CloseDamageWindow();
             ableToSlashInMiddleOfAnimation = false;
             isSlashing = false;
@@ -575,8 +736,11 @@ namespace Burntwax
 
         }
 
-        public void SlashChain()
+        public void SlashChain(AnimationEvent animationEvent = null)
         {
+            if (!IsCurrentStateSlash()
+                || !AcceptAnimationEvent(animationEvent, KatanaAnimationType.Slash))
+                return;
             ableToSlashInMiddleOfAnimation = true;
             // camStateMachine.SlowCam(false);
 
@@ -592,16 +756,22 @@ namespace Burntwax
             parryWindowCoroutine = null;
         }
 
-        public void StartParry()
+        public void StartParry(AnimationEvent animationEvent = null)
         {
+            if (currentState != states.Parry()
+                || !AcceptAnimationEvent(animationEvent, KatanaAnimationType.Parry))
+                return;
             if (parryWindowCoroutine != null)
                 StopCoroutine(parryWindowCoroutine);
 
             parryWindowCoroutine = StartCoroutine(ParryWindow());
         }
 
-        public void EndParry()
+        public void EndParry(AnimationEvent animationEvent = null)
         {
+            if (currentState != states.Parry()
+                || !AcceptAnimationEvent(animationEvent, KatanaAnimationType.Parry))
+                return;
             isParrying = false;
 
         }
@@ -609,6 +779,35 @@ namespace Burntwax
         private void OnEnable()
         {
             RegisterDashResource();
+        }
+
+        public void EndDefenseAnimation()
+        {
+            if (parryWindowCoroutine != null)
+                StopCoroutine(parryWindowCoroutine);
+            parryWindowCoroutine = null;
+            isParryWindowActive = false;
+            isParrying = false;
+        }
+
+        private bool AcceptAnimationEvent(AnimationEvent animationEvent, KatanaAnimationType expected)
+        {
+            if (!IsKatanaEquipped || activeAnimationType != expected)
+                return false;
+            if (animationEvent == null)
+                return true;
+            if (!animationEvent.isFiredByAnimator)
+                return false;
+
+            AnimatorStateInfo source = animationEvent.animatorStateInfo;
+            AnimatorStateInfo destination = anim.IsInTransition(activeAnimationLayer)
+                ? anim.GetNextAnimatorStateInfo(activeAnimationLayer)
+                : anim.GetCurrentAnimatorStateInfo(activeAnimationLayer);
+            // Crossfading can emit events from both clips. Compare playback
+            // time as well as the state hash for slash-to-slash crossfades.
+            return source.fullPathHash == activeAnimationHash
+                && destination.fullPathHash == activeAnimationHash
+                && Mathf.Abs(source.normalizedTime - destination.normalizedTime) < 0.001f;
         }
 
         private void OnDisable()
@@ -619,8 +818,7 @@ namespace Burntwax
                 playerResourceRegistry = null;
             }
 
-            CloseDamageWindow();
-            ResetGestureRecognition();
+            ResetCombatPresentation();
         }
 
         private void RegisterDashResource()
@@ -684,15 +882,14 @@ namespace Burntwax
                 return;
             }
 
-            ResetAnimationFlags();
-            ableToSlashInMiddleOfAnimation = false;
+            ResetCombatPresentation();
 
             Spawn(KatanaScriptable);
             RefillDashCharges();
             crosshair?.SetKatanaCrosshair(ActiveKatanaScriptable);
 
             currentState = states.Idle();
-            anim.Play("equip_Katana");
+            fullyEquipped = true;
             currentState.EnterState();
 
             if (handIK != null)
@@ -701,10 +898,6 @@ namespace Burntwax
             if (Katana != null)
                 camShake = Katana.GetComponent<CinemachineImpulseSource>();
 
-            ResetAnimationFlags();
-
-            // Skip equip animation — go straight to ready
-            fullyEquipped = true;
         }
     }
 

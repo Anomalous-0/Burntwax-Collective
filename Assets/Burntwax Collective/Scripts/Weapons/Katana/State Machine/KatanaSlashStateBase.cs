@@ -9,13 +9,6 @@ namespace Burntwax
     /// </summary>
     public abstract class KatanaSlashStateBase : KatanaBaseState
     {
-        private const float LeftSlashBlend = 0f;
-        private const float RightSlashBlend = 0.16666667f;
-        private const float UpLeftSlashBlend = 0.33333334f;
-        private const float UpRightSlashBlend = 0.5f;
-        private const float DownLeftSlashBlend = 0.6666667f;
-        private const float DownRightSlashBlend = 0.8333333f;
-        private const float DownSlashBlend = 1f;
 
         private Vector2 slashDirection;
         private KatanaAttackIntent bufferedNextAttack;
@@ -34,7 +27,7 @@ namespace Burntwax
             bufferedNextAttack = default;
             hasBufferedNextAttack = false;
 
-            if (Ctx.TryConsumeAttackIntent(out KatanaAttackIntent intent))
+            if (Ctx.TryConsumeAttackIntent(out KatanaAttackIntent intent, out bool isChained))
                 slashDirection = intent.ReleaseInput;
             else
             {
@@ -61,16 +54,9 @@ namespace Burntwax
 
             Ctx.camStateMachine.SlowCam(true);
 
-            // The slash Blend Tree uses exact thresholds as a four-way clip
-            // selector. Set direction before entering the slash state.
-            Ctx.anim.SetFloat(
-                Ctx.slashBlendHash,
-                GetSlashBlend(classifiedDirection));
-            Ctx.anim.SetBool(Ctx.slashHash, true);
-
-            // Restart the Blend Tree because a chained gameplay slash can
-            // begin before the Animator has fully exited the previous one.
-            Ctx.anim.Play(Ctx.slashAnimationHash, 0, 0f);
+            // Each direction has its own state, preserving the outgoing
+            // clip while blending into the next slash past its preparation.
+            Ctx.PlayKatanaAnimation(KatanaAnimationType.Slash, isChained: isChained);
             Ctx.isSlashing = true;
             Ctx.PlaySlashFeedback(attackStrength);
         }
@@ -94,17 +80,31 @@ namespace Burntwax
             Ctx.CloseDamageWindow();
             Ctx.katanaDriver.EndSwing();
             Ctx.camStateMachine.SlowCam(false);
-            Ctx.anim.SetBool(Ctx.slashHash, false);
             Ctx.ableToSlashInMiddleOfAnimation = false;
+            Ctx.isSlashing = false;
         }
 
         protected void CheckSlashTransitions()
         {
-            if (!Ctx.isSlashing && !InputManager.Instance.attackIsPressed)
+            if (!Ctx.isSlashing)
             {
                 if (InputManager.Instance.aimIsPressed)
                 {
                     SwitchState(Factory.Parry());
+                }
+                else if (hasBufferedNextAttack)
+                {
+                    Ctx.QueueAttackIntent(bufferedNextAttack, isChained: true);
+                    SwitchState(bufferedNextAttack.Strength == KatanaAttackStrength.Heavy
+                        ? Factory.HeavySlash() : Factory.LightSlash());
+                }
+                else if (Ctx.IsInitialSlashQualified)
+                {
+                    SwitchState(Factory.HeavyCharge());
+                }
+                else if (InputManager.Instance.attackIsPressed)
+                {
+                    SwitchState(Factory.Ready());
                 }
                 else
                 {
@@ -115,7 +115,7 @@ namespace Burntwax
             {
                 if (hasBufferedNextAttack)
                 {
-                    Ctx.QueueAttackIntent(bufferedNextAttack);
+                    Ctx.QueueAttackIntent(bufferedNextAttack, isChained: true);
 
                     if (bufferedNextAttack.Strength
                         == KatanaAttackStrength.Heavy)
@@ -127,10 +127,13 @@ namespace Burntwax
                         SwitchState(Factory.LightSlash());
                     }
                 }
-                else if (Ctx.IsInitialSlashQualified)
-                {
-                    SwitchState(Factory.HeavyCharge());
-                }
+                // Qualification alone is not the next attack: release still
+                // means light, and a held reversal still means heavy.
+                // Keep sampling in UpdateSlash while this recovery plays.
+                // Entering HeavyCharge here flashes its ready pose between
+                // otherwise continuous chained slashes. If recovery finishes
+                // while the gesture is still held, the branch above enters
+                // HeavyCharge normally.
                 else if (InputPrioritySorter.Instance.AimIsPriority())
                 {
                     SwitchState(Factory.Parry());
@@ -138,28 +141,5 @@ namespace Burntwax
             }
         }
 
-        private static float GetSlashBlend(
-            KatanaSlashDirection direction)
-        {
-            switch (direction)
-            {
-                case KatanaSlashDirection.Left:
-                    return LeftSlashBlend;
-                case KatanaSlashDirection.Right:
-                    return RightSlashBlend;
-                case KatanaSlashDirection.UpLeft:
-                    return UpLeftSlashBlend;
-                case KatanaSlashDirection.UpRight:
-                    return UpRightSlashBlend;
-                case KatanaSlashDirection.DownLeft:
-                    return DownLeftSlashBlend;
-                case KatanaSlashDirection.DownRight:
-                    return DownRightSlashBlend;
-                case KatanaSlashDirection.Down:
-                    return DownSlashBlend;
-                default:
-                    return RightSlashBlend;
-            }
-        }
     }
 }

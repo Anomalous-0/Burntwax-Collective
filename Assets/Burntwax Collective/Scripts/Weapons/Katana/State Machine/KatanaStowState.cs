@@ -16,7 +16,7 @@ namespace Burntwax
         public override void EnterState()
         {
 
-            Ctx.anim.SetBool(Ctx.stowHash, true);
+            Ctx.PlayKatanaAnimation(KatanaAnimationType.Stow);
             Ctx.fullyEquipped = true;
             Ctx.camStateMachine.SlowCam(false);
             InitializeSubState();
@@ -30,7 +30,6 @@ namespace Burntwax
 
         public override void ExitState()
         {
-            Ctx.anim.SetBool(Ctx.stowHash, false);
         }
 
         public override void CheckSwitchStates()
