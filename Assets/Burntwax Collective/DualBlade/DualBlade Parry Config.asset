@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6a3f179b8244c5e91f07a62ce8bd430, type: 3}
+  m_Name: DualBlade Parry Config
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.DualBladeParryConfig
+  defendableDamageTypes: 55
+  defenseArc: 120
+  guardDamageMultiplier: 0.35
+  guardImpulseMultiplier: 0.25
+  guardCollisionImpulseMultiplier: 0.25
+  guardReboundSpeedMultiplier: 0.25
+  perfectParryReboundSpeedMultiplier: 8
+  perfectParryReturnSpeedMultiplier: 2
+  perfectParryArcHeightPerMeter: 0.001
+  perfectParryMinimumArcHeight: 0.05
+  perfectParryMaximumArcHeight: 0.1
+  perfectParryMinimumSpin: 1
+  perfectParryMaximumSpin: 4
+  maximumConsecutiveBlocks: 3
+  guardRecoveryDelay: 1.5
+  perfectParryRestoresGuard: 1
+  parriedAttackRecoveryDuration: 0.35
+  defenseFeedback: {fileID: 11400000, guid: a609fef5f23b8d74589a199ea50a6fa9, type: 2}

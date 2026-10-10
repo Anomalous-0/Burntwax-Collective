@@ -20,7 +20,8 @@ namespace Burntwax
         public float mouseScroll { get; private set; } = 0;
         public int weaponSelectID { get; private set; } = -1;
         public bool HasWeaponSelectInput { get { return weaponSelectID >= 0; } }
-        [HideInInspector] public bool katanaSelect;
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaSelect")]
+        [HideInInspector] public bool dualBladeSelect;
 
         // ── Glove gesture API ─────────────────────────────────────
         // The Gloves button (F) is a plain Button now; all tap / double-tap / hold-charge
@@ -102,8 +103,8 @@ namespace Burntwax
             input.OnFoot.WeaponScroll.canceled += SetScroll;
             input.OnFoot.WeaponSelect.started += SetSelect;
             input.OnFoot.WeaponSelect.canceled += SetSelect;
-            input.OnFoot.KatanaSelect.started += SetKatanaSelect;
-            input.OnFoot.KatanaSelect.canceled += SetKatanaSelect;
+            input.OnFoot.DualBladeSelect.started += SetDualBladeSelect;
+            input.OnFoot.DualBladeSelect.canceled += SetDualBladeSelect;
             input.OnFoot.Interact.started += SetInteract;
             input.OnFoot.Interact.canceled += SetInteract;
             input.OnFoot.Gloves.started += OnGlovePressed;
@@ -138,8 +139,8 @@ namespace Burntwax
             input.OnFoot.WeaponScroll.canceled -= SetScroll;
             input.OnFoot.WeaponSelect.started -= SetSelect;
             input.OnFoot.WeaponSelect.canceled -= SetSelect;
-            input.OnFoot.KatanaSelect.started -= SetKatanaSelect;
-            input.OnFoot.KatanaSelect.canceled -= SetKatanaSelect;
+            input.OnFoot.DualBladeSelect.started -= SetDualBladeSelect;
+            input.OnFoot.DualBladeSelect.canceled -= SetDualBladeSelect;
             input.OnFoot.Interact.started -= SetInteract;
             input.OnFoot.Interact.canceled -= SetInteract;
             input.OnFoot.Gloves.started -= OnGlovePressed;
@@ -241,7 +242,7 @@ namespace Burntwax
             weaponSelectID = -1;
             mouseScroll = 0f;
         }
-        private void SetKatanaSelect(InputAction.CallbackContext ctx) => katanaSelect = ctx.started;
+        private void SetDualBladeSelect(InputAction.CallbackContext ctx) => dualBladeSelect = ctx.started;
         private void SetInteract(InputAction.CallbackContext ctx) => interactIsPressed = ctx.started;
 
         // ── Glove gesture recognizer ──────────────────────────────

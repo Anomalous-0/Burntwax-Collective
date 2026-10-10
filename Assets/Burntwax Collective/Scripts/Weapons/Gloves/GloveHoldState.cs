@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Burntwax
 {
     // Branch A, step 2: the primary object orbits in the hand until a tap fires it
-    // or a double-tap drops it. Katana parries leave an already-held object alone.
+    // or a double-tap drops it. DualBlade parries leave an already-held object alone.
     public class GloveHoldState : GloveBaseState
     {
         private Rigidbody heldBody;
@@ -78,7 +78,7 @@ namespace Burntwax
             if (!Ctx.HasUsableHeldObject)
             {
                 Ctx.ClearLostHeldObject();
-                SwitchState(Factory.Idle());
+                SwitchState(Factory.Unequipping());
                 return;
             }
 
@@ -100,7 +100,7 @@ namespace Burntwax
                 && Time.time <= baseballForgivenessEndTime;
 
             if (canUseBaseballForgiveness
-                && Ctx.KatanaPerfectParryActive)
+                && Ctx.DualBladePerfectParryActive)
             {
                 Ctx.LaunchHeldObjectAsBaseball();
                 SwitchState(Factory.Idle());
@@ -115,8 +115,8 @@ namespace Burntwax
             }
             else if (heldBody == null || Ctx.heldObject == null)
             {
-
-                SwitchState(Factory.Idle());
+                Ctx.ClearLostHeldObject();
+                SwitchState(Factory.Unequipping());
             }
 
         }

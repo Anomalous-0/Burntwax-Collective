@@ -30,7 +30,7 @@ namespace Burntwax
     /// Opt-in damage source for ordinary physics objects. It can be dangerous
     /// only after <see cref="Arm"/> or on every qualifying collision. Keeping
     /// this behavior component-based excludes guns, energy projectiles, and
-    /// katana blade detection from generic velocity damage.
+    /// dualBlade blade detection from generic velocity damage.
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Rigidbody), typeof(RigidbodyImpactReporter))]

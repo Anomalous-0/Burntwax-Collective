@@ -861,7 +861,7 @@ PrefabInstance:
     - target: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
         type: 3}
       propertyPath: m_Name
-      value: Katana Pickup
+      value: Wakizashi Pickup
       objectReference: {fileID: 0}
     - target: {fileID: 419120966271812492, guid: 9030a940f3e9efc4f98fc070a59bff8c,
         type: 3}
@@ -17130,7 +17130,7 @@ MonoBehaviour:
   interactIsPressed: 0
   jumpIsPressed: 0
   pauseIsPressed: 0
-  katanaSelect: 0
+  dualBladeSelect: 0
   gloveEquipped: 0
   gloveTap: 0
   gloveDoubleTap: 0
@@ -32343,8 +32343,8 @@ MonoBehaviour:
   dropForwardVelocity: 3.5
   playerVelocityInheritance: 1
   postDropCollisionDelay: 0.35
-  katanaLaunchSpeed: 20
-  katanaLaunchSpin: 6
+  dualBladeLaunchSpeed: 20
+  dualBladeLaunchSpin: 6
   minChargeSpeed: 0.45
   blastPrefab: {fileID: 0}
   blastSpeed: 45

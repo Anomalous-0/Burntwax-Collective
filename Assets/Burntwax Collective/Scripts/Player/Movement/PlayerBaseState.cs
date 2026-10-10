@@ -21,8 +21,8 @@ namespace Burntwax
                 || !InputManager.Instance.dashIsPressed)
                 return false;
 
-            KatanaStateMachine katana = Ctx.KatanaMachine;
-            if (katana == null || !katana.CanDash)
+            DualBladeStateMachine dualBlade = Ctx.DualBladeMachine;
+            if (dualBlade == null || !dualBlade.CanDash)
                 return false;
 
             InputManager.Instance.ConsumeDashInput();

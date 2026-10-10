@@ -9,15 +9,17 @@ namespace Burntwax
         [HideInInspector]
         public enum WeaponMode
         {
-            Guns,
-            Katana,
+            Guns = 0,
+            [InspectorName("Wakizashi")]
+            DualBlade = 1,
 
-            Glove
+            Glove = 2
         }
 
         [Header("References")]
         [HideInInspector] public GunStateMachine gunStateMachine;
-        [HideInInspector] public KatanaStateMachine katanaStateMachine;
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaStateMachine")]
+        [HideInInspector] public DualBladeStateMachine dualBladeStateMachine;
 
         [HideInInspector] public GloveStateMachine gloveStateMachine;
 
@@ -30,17 +32,15 @@ namespace Burntwax
         public bool GameplaySuppressed { get; private set; }
 
         private GameObject suppressedGunModel;
-        private GameObject suppressedKatanaModel;
         private bool suppressedGunWasActive;
-        private bool suppressedKatanaWasActive;
 
         private void Start()
         {
             if (gunStateMachine == null)
                 gunStateMachine = GetComponent<GunStateMachine>();
 
-            if (katanaStateMachine == null)
-                katanaStateMachine = GetComponent<KatanaStateMachine>();
+            if (dualBladeStateMachine == null)
+                dualBladeStateMachine = GetComponent<DualBladeStateMachine>();
 
             if (gloveStateMachine == null)
                 gloveStateMachine = GetComponent<GloveStateMachine>();
@@ -69,34 +69,26 @@ namespace Burntwax
                 suppressedGunModel = gunStateMachine != null
                     ? gunStateMachine.CurrentGunModel
                     : null;
-                suppressedKatanaModel = katanaStateMachine != null
-                    ? katanaStateMachine.Katana
-                    : null;
                 suppressedGunWasActive = suppressedGunModel != null
                     && suppressedGunModel.activeSelf;
-                suppressedKatanaWasActive = suppressedKatanaModel != null
-                    && suppressedKatanaModel.activeSelf;
 
                 if (suppressedGunModel != null)
                     suppressedGunModel.SetActive(false);
 
-                if (suppressedKatanaModel != null)
-                    suppressedKatanaModel.SetActive(false);
             }
             else
             {
                 if (suppressedGunModel != null)
                     suppressedGunModel.SetActive(suppressedGunWasActive);
 
-                if (suppressedKatanaModel != null)
-                    suppressedKatanaModel.SetActive(suppressedKatanaWasActive);
 
                 suppressedGunModel = null;
-                suppressedKatanaModel = null;
             }
 
             if (gloveStateMachine != null)
                 gloveStateMachine.SetGameplaySuppressed(suppressed);
+
+            dualBladeStateMachine?.RefreshBladeModels();
         }
 
         private void WeaponSwitch()
@@ -104,24 +96,24 @@ namespace Burntwax
             bool hasWeaponNumberInput = ReadWeaponHotkey(out int selectedID);
             bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
 
-            if (gunStateMachine.CurrentGuns.Count > 0 && katanaStateMachine.fullyEquipped && 
-            katanaStateMachine.CurrentState != katanaStateMachine.states.Parry() && 
-            katanaStateMachine.CurrentState != katanaStateMachine.states.LightSlash() &&
-            katanaStateMachine.CurrentState != katanaStateMachine.states.HeavyCharge() &&
-            katanaStateMachine.CurrentState != katanaStateMachine.states.HeavySlash() &&
+            if (gunStateMachine.CurrentGuns.Count > 0 && dualBladeStateMachine.fullyEquipped &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.Parry() &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.LightSlash() &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.HeavyCharge() &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.HeavySlash() &&
             gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
                 if (hasWeaponNumberInput)
                 {
                     if (selectedID == -1)
                     {
-                        InputManager.Instance.katanaSelect = false;
-                        if (currentMode == WeaponMode.Katana)
+                        InputManager.Instance.dualBladeSelect = false;
+                        if (currentMode == WeaponMode.DualBlade)
                         {
                             ScrollToGun();
                             return;
                         }
-                        SwitchToKatana();
+                        SwitchToDualBlade();
                         return;
                     }
 
@@ -161,7 +153,7 @@ namespace Burntwax
         {
             selectedID = currentID;
 
-            if (InputManager.Instance.katanaSelect) { selectedID = -1; return true; }
+            if (InputManager.Instance.dualBladeSelect) { selectedID = -1; return true; }
 
             if (!InputManager.Instance.HasWeaponSelectInput)
                 return false;
@@ -176,15 +168,15 @@ namespace Burntwax
 
         public void ScrollToGun()
         {
-            if (currentMode == WeaponMode.Katana)
+            if (currentMode == WeaponMode.DualBlade)
             {
 
-                if (!katanaStateMachine.fullyEquipped)
+                if (!dualBladeStateMachine.fullyEquipped)
                     return;
                 int id = lastID;
                 lastID = currentID;
                 currentMode = WeaponMode.Guns;
-                katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
+                dualBladeStateMachine.Despawn(dualBladeStateMachine.ActiveDualBladeScriptable);
                 gunStateMachine.SwitchToGun(id);
                 currentID = id;
             }
@@ -204,28 +196,28 @@ namespace Burntwax
 
 
 
-            if (currentMode == WeaponMode.Katana)
+            if (currentMode == WeaponMode.DualBlade)
             {
                 currentMode = WeaponMode.Guns;
-                katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
+                dualBladeStateMachine.Despawn(dualBladeStateMachine.ActiveDualBladeScriptable);
             }
             lastID = currentID;
             gunStateMachine.SwitchToGun(selectedID);
             currentID = selectedID;
         }
 
-        public void SwitchToKatana()
+        public void SwitchToDualBlade()
         {
             lastID = currentID;
 
             if (currentMode == WeaponMode.Guns)
             {
-                currentMode = WeaponMode.Katana;
+                currentMode = WeaponMode.DualBlade;
                 gunStateMachine.Despawn(gunStateMachine.ActiveGunScriptable);
                 gunStateMachine.fullyEquipped = false;
             }
 
-            katanaStateMachine.SetupKatana();
+            dualBladeStateMachine.SetupDualBlade();
             currentID = -1;
         }
 
@@ -238,7 +230,7 @@ namespace Burntwax
             data.lastID = lastID;
 
             gunStateMachine.SaveData(ref data.gunData);
-            katanaStateMachine.SaveData(ref data.katanaData);
+            dualBladeStateMachine.SaveData(ref data.dualBladeData);
         }
 
         public void LoadData(ArsenalSaveData data)
@@ -247,8 +239,8 @@ namespace Burntwax
             if (gunStateMachine.ActiveGunScriptable != null)
                 gunStateMachine.Despawn(gunStateMachine.ActiveGunScriptable);
 
-            if (katanaStateMachine.ActiveKatanaScriptable != null)
-                katanaStateMachine.Despawn(katanaStateMachine.ActiveKatanaScriptable);
+            if (dualBladeStateMachine.ActiveDualBladeScriptable != null)
+                dualBladeStateMachine.Despawn(dualBladeStateMachine.ActiveDualBladeScriptable);
 
 
 
@@ -259,7 +251,7 @@ namespace Burntwax
 
             // Load sub-system data
             gunStateMachine.LoadData(data.gunData);
-            katanaStateMachine.LoadData(data.katanaData);
+            dualBladeStateMachine.LoadData(data.dualBladeData);
 
             // Activate the correct weapon based on saved mode
             switch (currentMode)
@@ -270,9 +262,9 @@ namespace Burntwax
                     break;
 
 
-                case WeaponMode.Katana:
+                case WeaponMode.DualBlade:
 
-                    katanaStateMachine.SetupAfterLoad();
+                    dualBladeStateMachine.SetupAfterLoad();
                     break;
             }
         }
@@ -285,6 +277,7 @@ namespace Burntwax
         public int currentID;
         public int lastID;
         public GunSaveData gunData;
-        public KatanaSaveData katanaData;
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaData")]
+        public DualBladeSaveData dualBladeData;
     }
 }

@@ -17,12 +17,12 @@ namespace Burntwax
 
         public override void EnterState()
         {
-            KatanaStateMachine katana = Ctx.KatanaMachine;
-            KatanaScriptableObject dashConfig = katana != null
-                ? katana.ActiveKatanaScriptable
+            DualBladeStateMachine dualBlade = Ctx.DualBladeMachine;
+            DualBladeScriptableObject dashConfig = dualBlade != null
+                ? dualBlade.ActiveDualBladeScriptable
                 : null;
 
-            if (dashConfig == null || !katana.TryConsumeDashCharge())
+            if (dashConfig == null || !dualBlade.TryConsumeDashCharge())
             {
                 dashEndTime = Time.time;
                 return;
@@ -67,7 +67,7 @@ namespace Burntwax
 
         public override void UpdateState()
         {
-            if (Ctx.KatanaMachine == null || !Ctx.KatanaMachine.IsDashEquipped)
+            if (Ctx.DualBladeMachine == null || !Ctx.DualBladeMachine.IsDashEquipped)
             {
                 dashEndTime = Time.time;
                 CheckSwitchStates();

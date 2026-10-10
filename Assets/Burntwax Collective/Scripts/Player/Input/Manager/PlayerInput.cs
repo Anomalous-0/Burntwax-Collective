@@ -183,7 +183,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""KatanaSelect"",
+                    ""name"": ""DualBladeSelect"",
                     ""type"": ""Button"",
                     ""id"": ""2f7bce50-4c6e-42ac-8e2c-0cb3a25210cb"",
                     ""expectedControlType"": """",
@@ -498,7 +498,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""KatanaSelect"",
+                    ""action"": ""DualBladeSelect"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1200,7 +1200,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_OnFoot_Attack = m_OnFoot.FindAction("Attack", throwIfNotFound: true);
         m_OnFoot_Reload = m_OnFoot.FindAction("Reload", throwIfNotFound: true);
         m_OnFoot_Gloves = m_OnFoot.FindAction("Gloves", throwIfNotFound: true);
-        m_OnFoot_KatanaSelect = m_OnFoot.FindAction("KatanaSelect", throwIfNotFound: true);
+        m_OnFoot_DualBladeSelect = m_OnFoot.FindAction("DualBladeSelect", throwIfNotFound: true);
         m_OnFoot_WeaponScroll = m_OnFoot.FindAction("WeaponScroll", throwIfNotFound: true);
         m_OnFoot_WeaponSelect = m_OnFoot.FindAction("WeaponSelect", throwIfNotFound: true);
         m_OnFoot_Pause = m_OnFoot.FindAction("Pause", throwIfNotFound: true);
@@ -1309,7 +1309,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Attack;
     private readonly InputAction m_OnFoot_Reload;
     private readonly InputAction m_OnFoot_Gloves;
-    private readonly InputAction m_OnFoot_KatanaSelect;
+    private readonly InputAction m_OnFoot_DualBladeSelect;
     private readonly InputAction m_OnFoot_WeaponScroll;
     private readonly InputAction m_OnFoot_WeaponSelect;
     private readonly InputAction m_OnFoot_Pause;
@@ -1367,9 +1367,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @Gloves => m_Wrapper.m_OnFoot_Gloves;
         /// <summary>
-        /// Provides access to the underlying input action "OnFoot/KatanaSelect".
+        /// Provides access to the underlying input action "OnFoot/DualBladeSelect".
         /// </summary>
-        public InputAction @KatanaSelect => m_Wrapper.m_OnFoot_KatanaSelect;
+        public InputAction @DualBladeSelect => m_Wrapper.m_OnFoot_DualBladeSelect;
         /// <summary>
         /// Provides access to the underlying input action "OnFoot/WeaponScroll".
         /// </summary>
@@ -1446,9 +1446,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Gloves.started += instance.OnGloves;
             @Gloves.performed += instance.OnGloves;
             @Gloves.canceled += instance.OnGloves;
-            @KatanaSelect.started += instance.OnKatanaSelect;
-            @KatanaSelect.performed += instance.OnKatanaSelect;
-            @KatanaSelect.canceled += instance.OnKatanaSelect;
+            @DualBladeSelect.started += instance.OnDualBladeSelect;
+            @DualBladeSelect.performed += instance.OnDualBladeSelect;
+            @DualBladeSelect.canceled += instance.OnDualBladeSelect;
             @WeaponScroll.started += instance.OnWeaponScroll;
             @WeaponScroll.performed += instance.OnWeaponScroll;
             @WeaponScroll.canceled += instance.OnWeaponScroll;
@@ -1505,9 +1505,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Gloves.started -= instance.OnGloves;
             @Gloves.performed -= instance.OnGloves;
             @Gloves.canceled -= instance.OnGloves;
-            @KatanaSelect.started -= instance.OnKatanaSelect;
-            @KatanaSelect.performed -= instance.OnKatanaSelect;
-            @KatanaSelect.canceled -= instance.OnKatanaSelect;
+            @DualBladeSelect.started -= instance.OnDualBladeSelect;
+            @DualBladeSelect.performed -= instance.OnDualBladeSelect;
+            @DualBladeSelect.canceled -= instance.OnDualBladeSelect;
             @WeaponScroll.started -= instance.OnWeaponScroll;
             @WeaponScroll.performed -= instance.OnWeaponScroll;
             @WeaponScroll.canceled -= instance.OnWeaponScroll;
@@ -1829,12 +1829,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnGloves(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "KatanaSelect" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "DualBladeSelect" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnKatanaSelect(InputAction.CallbackContext context);
+        void OnDualBladeSelect(InputAction.CallbackContext context);
         /// <summary>
         /// Method invoked when associated input action "WeaponScroll" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>

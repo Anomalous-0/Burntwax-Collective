@@ -3,10 +3,11 @@ using UnityEngine;
 namespace Burntwax
 {
     // Branch A, step 1: stop-sign pose, pulling object(s) toward the hand. The primary latches into
-    // Hold unless a correctly timed katana parry bats it while it is close enough.
+    // Hold unless a correctly timed dualBlade parry bats it while it is close enough.
     public class GloveAttractState : GloveBaseState
     {
         private Rigidbody attractedBody;
+        private Breakable attractedBreakable;
         private Vector3 pathStart;
         private Vector3 arcDirection;
         private float arcHeight;
@@ -27,6 +28,9 @@ namespace Burntwax
             gravityOverrideActive = false;
             Ctx.PlayGloveAnimation(Ctx.attractHash);
             Ctx.heldObject = Ctx.detectedObject;
+            attractedBreakable = Ctx.heldObject != null
+                ? Ctx.heldObject.GetComponent<Breakable>()
+                : null;
             // Detach before attraction captures the Rigidbody's original
             // settings; otherwise Hold could restore the embedded state.
             if (Ctx.heldObject != null)
@@ -85,11 +89,13 @@ namespace Burntwax
 
         public override void CheckSwitchStates()
         {
-            if (attractedBody == null || Ctx.restPos == null)
+            // Some breakables retain their root after breaking, so null alone
+            // is not enough to determine whether attraction should stop.
+            if (!Ctx.HasUsableHeldObject || attractedBody == null || Ctx.restPos == null
+                || (attractedBreakable != null && attractedBreakable.IsBroken))
             {
-                Ctx.RestoreHeldObjectPlayerCollisions();
-                Ctx.heldObject = null;
-                SwitchState(Factory.Idle());
+                Ctx.ClearLostHeldObject();
+                SwitchState(Factory.Unequipping());
                 return;
             }
 
@@ -99,7 +105,7 @@ namespace Burntwax
 
             // Baseball interaction: entering the stance is not enough. The
             // animation's perfect-parry window must overlap the object's arrival.
-            if (Ctx.KatanaPerfectParryActive
+            if (Ctx.DualBladePerfectParryActive
                 && distanceToRest <= Ctx.BaseballBatDistance)
             {
                 Ctx.LaunchHeldObjectAsBaseball();

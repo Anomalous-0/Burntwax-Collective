@@ -88,7 +88,7 @@ namespace Burntwax
             GameManager.Instance.isLoading = true;
             string saveData = File.ReadAllText(SaveFileName());
             string decryptedData = EncryptionUtility.DecryptString(saveData);
-            _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
+            _saveData = DeserializeSaveData(decryptedData);
 
             await HandleLoadDataAsync();
             GameManager.Instance.isLoading = false;
@@ -125,7 +125,7 @@ namespace Burntwax
         {
             string saveData = File.ReadAllText(SaveFileName());
             string decryptedData = EncryptionUtility.DecryptString(saveData);
-            _saveData = JsonUtility.FromJson<SaveData>(decryptedData);
+            _saveData = DeserializeSaveData(decryptedData);
             HandleLoadData();
         }
         private static void HandleLoadData()
@@ -161,9 +161,20 @@ namespace Burntwax
             string encrypted = File.ReadAllText(path);
             string decrypted = EncryptionUtility.DecryptString(encrypted);
 
-            SaveData data = JsonUtility.FromJson<SaveData>(decrypted);
+            SaveData data = DeserializeSaveData(decrypted);
 
             return data.SceneData;
+        }
+
+        // Old saves keep the same weapon IDs and numeric Arsenal mode.
+        // Translate only JSON property names, never arbitrary saved text values.
+        private static SaveData DeserializeSaveData(string json)
+        {
+            json = System.Text.RegularExpressions.Regex.Replace(json,
+                "\"(katanaData|ownsKatana|katanaID)\"(?=\\s*:)",
+                match => match.Value.Replace("Katana", "DualBlade")
+                    .Replace("katana", "dualBlade"));
+            return JsonUtility.FromJson<SaveData>(json);
         }
 
 

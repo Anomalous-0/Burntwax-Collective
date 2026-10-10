@@ -10,7 +10,7 @@ namespace Burntwax
     /// The gravity glove. It lives ALONGSIDE the Arsenal (it is not a WeaponMode) and is equipped by
     /// tapping F once. Two mutually-exclusive ability branches hang off the Idle hub:
     ///   • Attract  (double-tap F): pull Consumable-layer objects toward the hand; the nearest latches
-    ///     and orbits, then a tap / katana slash launches it along the camera forward.
+    ///     and orbits, then a tap / dualBlade slash launches it along the camera forward.
     ///   • Charge   (hold F):       charge a plasma blast (slows movement), release to fire a projectile.
     ///
     /// This MonoBehaviour owns all the runtime work (detection, physics, tint, spawning); the HSM
@@ -29,7 +29,8 @@ namespace Burntwax
         [SerializeField] private CamStateMachine camStateMachine;
         [SerializeField] private Animator armsAnimator;
         [SerializeField] private TwoBoneIKConstraint leftHandIK;
-        [SerializeField] private KatanaParryDefense katanaParryDefense;
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaParryDefense")]
+        [SerializeField] private DualBladeParryDefense dualBladeParryDefense;
 
         [Header("Arm Override")]
         [SerializeField] private string gloveLayerName = "Glove";
@@ -113,11 +114,13 @@ namespace Burntwax
         [SerializeField, Range(0f, 1f)] private float playerVelocityInheritance = 1f;
         [Tooltip("How long a dropped object continues ignoring only the player's colliders.")]
         [SerializeField, Min(0f)] private float postDropCollisionDelay = 0.35f;
-        [Header("Katana Launch")]
-        [Tooltip("Speed the attracted object is hurled along the camera aim direction by the katana baseball interaction.")]
-        [SerializeField, Min(0f)] private float katanaLaunchSpeed = 20f;
+        [Header("DualBlade Launch")]
+        [Tooltip("Speed the attracted object is hurled along the camera aim direction by the dualBlade baseball interaction.")]
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaLaunchSpeed")]
+        [SerializeField, Min(0f)] private float dualBladeLaunchSpeed = 20f;
         [Tooltip("Random tumble applied to the launched object.")]
-        [SerializeField, Min(0f)] private float katanaLaunchSpin = 6f;
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaLaunchSpin")]
+        [SerializeField, Min(0f)] private float dualBladeLaunchSpin = 6f;
         [Tooltip("Maximum distance from the glove rest point at which a perfectly timed parry can bat an attracting object.")]
         [SerializeField, Min(0f)] private float baseballBatDistance = 2f;
         [Tooltip("Brief grace period after an attracting object enters Hold during which a perfect parry can still bat it.")]
@@ -177,18 +180,20 @@ namespace Burntwax
         public float HoldBobFrequency => holdBobFrequency;
         public bool HasUsableHeldObject =>
             heldObject != null && heldObject.activeInHierarchy;
-        // Read-only gates let Attract coordinate with the equipped katana
+        // Read-only gates let Attract coordinate with the equipped dualBlade
         // without making the glove itself an Arsenal WeaponMode.
-        public bool KatanaEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana;
-        public bool KatanaPerfectParryActive => KatanaEquipped
-            && arsenal.katanaStateMachine != null
-            && arsenal.katanaStateMachine.isParryWindowActive;
+        public bool DualBladeEquipped => arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.DualBlade;
+        public bool DualBladePerfectParryActive => DualBladeEquipped
+            && arsenal.dualBladeStateMachine != null
+            && arsenal.dualBladeStateMachine.isParryWindowActive;
         public float BaseballBatDistance => baseballBatDistance;
         public float BaseballHoldForgivenessDuration =>
             baseballHoldForgivenessDuration;
         // Raise progress of the arm-override layer, read by the Equipping / Unequipping action states.
         public bool GloveRaised => raiseAmount >= 0.99f;
         public bool GloveLowered => raiseAmount <= 0.01f;
+        // Keep the left blade stowed through the entire lowering blend.
+        public bool OccupiesLeftHand => gloveEquipped || !GloveLowered;
 
         public GloveBaseState CurrentState;
         public GloveStateFactory states;
@@ -237,12 +242,12 @@ namespace Burntwax
             arsenal = GetComponent<Arsenal>();
             if (camStateMachine == null && player != null)
                 camStateMachine = player.GetComponent<CamStateMachine>();
-            if (katanaParryDefense == null)
-                katanaParryDefense = GetComponent<KatanaParryDefense>();
-            if (katanaParryDefense == null && player != null)
+            if (dualBladeParryDefense == null)
+                dualBladeParryDefense = GetComponent<DualBladeParryDefense>();
+            if (dualBladeParryDefense == null && player != null)
             {
-                katanaParryDefense =
-                    player.GetComponentInChildren<KatanaParryDefense>(true);
+                dualBladeParryDefense =
+                    player.GetComponentInChildren<DualBladeParryDefense>(true);
             }
             detectionMpb = new MaterialPropertyBlock();
             if (blastShake == null)
@@ -816,7 +821,7 @@ namespace Burntwax
         }
 
         /// <summary>
-        /// Hurls the attracted/held object hard along the camera forward — the katana-slash launch.
+        /// Hurls the attracted/held object hard along the camera forward — the dualBlade-slash launch.
         /// Distinct from <see cref="ReleaseHeldObject"/>'s gentle drop; this is a deliberate throw.
         /// </summary>
         public void LaunchHeldObjectForward()
@@ -843,7 +848,7 @@ namespace Burntwax
             if (LaunchHeldObject())
             {
                 camStateMachine?.PlayBaseballFovKick();
-                katanaParryDefense?.PlayBaseballPerfectParryAudio(
+                dualBladeParryDefense?.PlayBaseballPerfectParryAudio(
                     feedbackPosition);
             }
         }
@@ -887,14 +892,14 @@ namespace Burntwax
             if (existingFlight != null)
                 existingFlight.CancelFlight();
 
-            if (katanaLaunchSpeed <= Mathf.Epsilon
+            if (dualBladeLaunchSpeed <= Mathf.Epsilon
                 || launchDirection.sqrMagnitude <= Mathf.Epsilon)
             {
                 return false;
             }
 
-            body.linearVelocity = launchDirection * katanaLaunchSpeed;
-            body.angularVelocity = Random.insideUnitSphere * katanaLaunchSpin;
+            body.linearVelocity = launchDirection * dualBladeLaunchSpeed;
+            body.angularVelocity = Random.insideUnitSphere * dualBladeLaunchSpin;
 
             VelocityImpactDamageSource impactDamageSource =
                 body.GetComponent<VelocityImpactDamageSource>();
@@ -912,7 +917,7 @@ namespace Burntwax
 
         /// <summary>
         /// True while this collider belongs to the primary object currently
-        /// being attracted or held by the glove. Katana slash detection uses
+        /// being attracted or held by the glove. DualBlade slash detection uses
         /// this to avoid damaging the player's own suspended projectile.
         /// </summary>
         public bool OwnsControlledObject(Collider candidate)
@@ -1071,6 +1076,7 @@ namespace Burntwax
         {
             gloveEquipped = equipped;
             unequippedAnimationPending = !equipped;
+            arsenal?.dualBladeStateMachine?.RefreshBladeModels();
 
             if (InputManager.Instance != null)
                 InputManager.Instance.gloveEquipped = equipped;

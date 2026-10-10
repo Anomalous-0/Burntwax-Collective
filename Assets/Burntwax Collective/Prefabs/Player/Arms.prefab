@@ -5186,7 +5186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.Arsenal
   gunStateMachine: {fileID: 0}
-  katanaStateMachine: {fileID: 0}
+  dualBladeStateMachine: {fileID: 0}
   gloveStateMachine: {fileID: 0}
   currentMode: 0
   currentID: 0
@@ -5293,8 +5293,8 @@ MonoBehaviour:
   dropForwardVelocity: 3.5
   playerVelocityInheritance: 1
   postDropCollisionDelay: 0.35
-  katanaLaunchSpeed: 35
-  katanaLaunchSpin: 0
+  dualBladeLaunchSpeed: 35
+  dualBladeLaunchSpin: 0
   physicalProjectileAimDistance: 100
   physicalProjectileAimLayers:
     serializedVersion: 2
@@ -5330,10 +5330,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1b1c7be398c3a5f46970409f78bb1721, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaStateMachine
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.DualBladeStateMachine
   currentStateText: 
   arsenal: {fileID: 0}
-  katanaDriver: {fileID: 0}
+  dualBladeDriver: {fileID: 0}
   player: {fileID: 0}
   stateMachine: {fileID: 0}
   camStateMachine: {fileID: 0}
@@ -5344,10 +5344,10 @@ MonoBehaviour:
   camSlowdown: 0.01
   camShake: {fileID: 3983912548163265846}
   handIK: {fileID: 3406981270840785279}
-  KatanaScriptable: {fileID: 0}
-  katanaCatalog:
+  DualBladeScriptable: {fileID: 0}
+  dualBladeCatalog:
   - {fileID: 11400000, guid: 6ca5b7445e1dfe944b42fa3c2c82e715, type: 2}
-  Katana: {fileID: 7120825543759020784}
+  rightBladeModel: {fileID: 7120825543759020784}
   anim: {fileID: 8982893999631422072}
   readyHash: 0
   slashHash: 0
@@ -5355,7 +5355,7 @@ MonoBehaviour:
   stowHash: 0
   slashBlendHash: 0
   slashAnimationHash: 0
-  ActiveKatanaScriptable: {fileID: 0}
+  ActiveDualBladeScriptable: {fileID: 0}
   isSlashing: 0
   isParrying: 0
   ableToSlashInMiddleOfAnimation: 0
@@ -5385,7 +5385,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f61b9e7954c40fe44ac08c3acf775e91, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaDriver
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.DualBladeDriver
   weaponPivot: {fileID: 8260342388871939}
   smoothing: 0.15
   isSwinging: 0
@@ -79673,7 +79673,7 @@ PrefabInstance:
     - target: {fileID: 3274835466470407498, guid: 3836e303a14af3c44a6a43391ac3b389,
         type: 3}
       propertyPath: m_Name
-      value: Katana
+      value: DualBlade
       objectReference: {fileID: 0}
     - target: {fileID: 3274835466470407498, guid: 3836e303a14af3c44a6a43391ac3b389,
         type: 3}
@@ -79812,7 +79812,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a73840a763f64bc0ae4afe79e0b4ea1a, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Burntwax.Core::Burntwax.KatanaBladeDetector
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.DualBladeDetector
   stateMachine: {fileID: 2488700794300891772}
   bladePoints:
   - {fileID: 7655207716374304547}

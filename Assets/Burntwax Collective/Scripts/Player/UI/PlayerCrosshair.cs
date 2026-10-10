@@ -34,12 +34,12 @@ namespace Burntwax
             }
         }
 
-        public void SetKatanaCrosshair(KatanaScriptableObject katana)
+        public void SetDualBladeCrosshair(DualBladeScriptableObject dualBlade)
         {
-            if (katana != null)
+            if (dualBlade != null)
             {
-                outerIcon.sprite = katana.CrosshairConfig.icon;
-                outerIcon.rectTransform.sizeDelta = katana.CrosshairConfig.dimensions;
+                outerIcon.sprite = dualBlade.CrosshairConfig.icon;
+                outerIcon.rectTransform.sizeDelta = dualBlade.CrosshairConfig.dimensions;
             }
         }
         public void SetAimCrosshair()

@@ -55,7 +55,23 @@ namespace Burntwax
         {
             ExitState();
 
-            if (isRootState)
+            // Hold/Attract can go straight to the root Unequipping state.
+            // Exit their Equipped parent too, stopping its delayed-idle timer.
+            if (newState.isRootState)
+            {
+                GloveBaseState parent = currentSuperState;
+                while (parent != null)
+                {
+                    parent.currentSubState = null;
+                    parent.ExitState();
+                    parent = parent.currentSuperState;
+                }
+                currentSuperState = null;
+                newState.currentSuperState = null;
+                ctx.CurrentState = newState;
+                newState.EnterState();
+            }
+            else if (isRootState)
             {
                 ctx.CurrentState = newState;
                 newState.EnterState();

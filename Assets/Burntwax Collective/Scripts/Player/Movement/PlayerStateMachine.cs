@@ -17,7 +17,8 @@ namespace Burntwax
 
         [Header("State Machines")]
         public GunStateMachine gunMachine;
-        [HideInInspector] public KatanaStateMachine katanaMachine;
+        [UnityEngine.Serialization.FormerlySerializedAs("katanaMachine")]
+        [HideInInspector] public DualBladeStateMachine dualBladeMachine;
         [HideInInspector] public CamStateMachine cameraMachine;
 
         [Header("Dash Collision")]
@@ -141,15 +142,15 @@ namespace Burntwax
         public float GroundDrag { get { return groundDrag; } }
         public float AirDrag { get { return airDrag; } }
         public float WallDrag { get { return wallDrag; } }
-        public KatanaStateMachine KatanaMachine { get { return katanaMachine; } }
+        public DualBladeStateMachine DualBladeMachine { get { return dualBladeMachine; } }
         public CamStateMachine CameraMachine { get { return cameraMachine; } }
         public bool CanSprint
         {
             get
             {
-                return katanaMachine == null
-                    || katanaMachine.arsenal == null
-                    || katanaMachine.arsenal.currentMode != Arsenal.WeaponMode.Katana;
+                return dualBladeMachine == null
+                    || dualBladeMachine.arsenal == null
+                    || dualBladeMachine.arsenal.currentMode != Arsenal.WeaponMode.DualBlade;
             }
         }
         public float DashCollisionSkin { get { return dashCollisionSkin; } }
@@ -204,7 +205,7 @@ namespace Burntwax
             cameraMachine = GetComponent<CamStateMachine>();
 
             if (gunMachine != null)
-                katanaMachine = gunMachine.GetComponent<KatanaStateMachine>();
+                dualBladeMachine = gunMachine.GetComponent<DualBladeStateMachine>();
 
             if (mantleAnimator == null && gunMachine != null)
                 mantleAnimator = gunMachine.anim;

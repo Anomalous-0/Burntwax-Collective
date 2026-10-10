@@ -16,7 +16,8 @@ namespace Burntwax
 
         [HideInInspector] public Arsenal arsenal;
         [HideInInspector] public GunStateMachine gun;
-        [HideInInspector] public KatanaStateMachine katana;
+        [UnityEngine.Serialization.FormerlySerializedAs("katana")]
+        [HideInInspector] public DualBladeStateMachine dualBlade;
 
         public PauseMenu pauseMenu;
 
@@ -79,7 +80,7 @@ namespace Burntwax
         private float currentObjectCatchFovOffset;
 
         [Header("Combat FOV Kicks")]
-        [Tooltip("Degrees briefly added when the katana baseball mechanic successfully launches an object.")]
+        [Tooltip("Degrees briefly added when the dualBlade baseball mechanic successfully launches an object.")]
         [SerializeField, Min(0f)] private float baseballFovKick = 8f;
 
         [Tooltip("Duration of the baseball zoom-out pulse.")]
@@ -126,7 +127,7 @@ namespace Burntwax
 
             arsenal = Arms.GetComponent<Arsenal>();
             gun = Arms.GetComponent<GunStateMachine>();
-            katana = Arms.GetComponent<KatanaStateMachine>();
+            dualBlade = Arms.GetComponent<DualBladeStateMachine>();
 
             pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
             Cursor.lockState = CursorLockMode.Locked;
@@ -411,10 +412,10 @@ namespace Burntwax
             {
                 cachedHorizontalSpeed = pov.m_HorizontalAxis.m_MaxSpeed;
                 cachedVerticalSpeed = pov.m_VerticalAxis.m_MaxSpeed;
-                pov.m_HorizontalAxis.m_MaxSpeed = katana.camSlowdown;
-                pov.m_VerticalAxis.m_MaxSpeed = katana.camSlowdown;
+                pov.m_HorizontalAxis.m_MaxSpeed = dualBlade.camSlowdown;
+                pov.m_VerticalAxis.m_MaxSpeed = dualBlade.camSlowdown;
             }
-            else if (pov.m_HorizontalAxis.m_MaxSpeed == katana.camSlowdown && pov.m_VerticalAxis.m_MaxSpeed == katana.camSlowdown)
+            else if (pov.m_HorizontalAxis.m_MaxSpeed == dualBlade.camSlowdown && pov.m_VerticalAxis.m_MaxSpeed == dualBlade.camSlowdown)
             {
                 pov.m_HorizontalAxis.m_MaxSpeed = cachedHorizontalSpeed;
                 pov.m_VerticalAxis.m_MaxSpeed = cachedVerticalSpeed;

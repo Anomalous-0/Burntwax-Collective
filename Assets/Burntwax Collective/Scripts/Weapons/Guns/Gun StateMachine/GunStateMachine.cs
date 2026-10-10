@@ -225,12 +225,12 @@ namespace Burntwax
             if (!HasWeaponModelForID(newID))
                 return false;
 
-            if (arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.Katana)
+            if (arsenal != null && arsenal.currentMode == Arsenal.WeaponMode.DualBlade)
             {
-                KatanaStateMachine katana = GetComponent<KatanaStateMachine>();
+                DualBladeStateMachine dualBlade = GetComponent<DualBladeStateMachine>();
 
-                if (katana != null && katana.ActiveKatanaScriptable != null)
-                    katana.Despawn(katana.ActiveKatanaScriptable);
+                if (dualBlade != null && dualBlade.ActiveDualBladeScriptable != null)
+                    dualBlade.Despawn(dualBlade.ActiveDualBladeScriptable);
             }
 
             if (ActiveGunScriptable != null)
@@ -288,10 +288,10 @@ namespace Burntwax
             CurrentGuns.Add(gun);
             gunLookup[gun.ID] = gun;
 
-            KatanaStateMachine katana = GetComponent<KatanaStateMachine>();
+            DualBladeStateMachine dualBlade = GetComponent<DualBladeStateMachine>();
 
-            if (arsenal.currentMode == Arsenal.WeaponMode.Katana)
-                katana.Despawn(katana.ActiveKatanaScriptable);
+            if (arsenal.currentMode == Arsenal.WeaponMode.DualBlade)
+                dualBlade.Despawn(dualBlade.ActiveDualBladeScriptable);
 
             if (ActiveGunScriptable != null)
                 Despawn(ActiveGunScriptable);
