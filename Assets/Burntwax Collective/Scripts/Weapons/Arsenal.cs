@@ -93,13 +93,15 @@ namespace Burntwax
 
         private void WeaponSwitch()
         {
-            if (InputManager.Instance == null)
-                return;
-
             bool hasWeaponNumberInput = ReadWeaponHotkey(out int selectedID);
             bool hasScrollInput = InputManager.Instance.mouseScroll != 0f;
 
-            if (CanSwitchActiveWeapon())
+            if (gunStateMachine.CurrentGuns.Count > 0 && dualBladeStateMachine.fullyEquipped &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.Parry() &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.LightSlash() &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.HeavyCharge() &&
+            dualBladeStateMachine.CurrentState != dualBladeStateMachine.states.HeavySlash() &&
+            gunStateMachine.CurrentState.CurrentSubstate() != gunStateMachine.states.Shoot())
             {
                 if (hasWeaponNumberInput)
                 {
@@ -124,35 +126,6 @@ namespace Burntwax
                     ScrollToGun();
                 }
             }
-        }
-
-        private bool CanSwitchActiveWeapon()
-        {
-            if (GameplaySuppressed)
-                return false;
-
-            // An inactive weapon's equip flag is normally false. Only the
-            // currently selected weapon may block a switch with its action.
-            if (currentMode == WeaponMode.DualBlade)
-            {
-                if (dualBladeStateMachine == null || !dualBladeStateMachine.fullyEquipped)
-                    return false;
-
-                DualBladeBaseState state = dualBladeStateMachine.CurrentState;
-                DualBladeStateFactory states = dualBladeStateMachine.states;
-                return state != states.Parry()
-                    && state != states.LightSlash()
-                    && state != states.HeavyCharge()
-                    && state != states.HeavySlash()
-                    && state != states.ParriedRecoil();
-            }
-
-            // No active gun means there is no gun animation to wait for.
-            if (gunStateMachine == null || gunStateMachine.ActiveGunScriptable == null)
-                return true;
-
-            return gunStateMachine.fullyEquipped
-                && gunStateMachine.CurrentState?.CurrentSubstate() != gunStateMachine.states.Shoot();
         }
 
         private int GetScrollID()
@@ -195,10 +168,6 @@ namespace Burntwax
 
         public void ScrollToGun()
         {
-            // Q must leave the blades equipped if there is no gun to return to.
-            if (gunStateMachine == null || gunStateMachine.CurrentGuns.Count == 0)
-                return;
-
             if (currentMode == WeaponMode.DualBlade)
             {
 
@@ -239,22 +208,15 @@ namespace Burntwax
 
         public void SwitchToDualBlade()
         {
-            // Validate ownership before hiding the current gun or changing mode.
-            if (dualBladeStateMachine == null
-                || dualBladeStateMachine.DualBladeScriptable == null
-                || currentMode == WeaponMode.DualBlade
-                || !CanSwitchActiveWeapon())
-                return;
-
             lastID = currentID;
 
-            if (currentMode == WeaponMode.Guns && gunStateMachine != null)
+            if (currentMode == WeaponMode.Guns)
             {
+                currentMode = WeaponMode.DualBlade;
                 gunStateMachine.Despawn(gunStateMachine.ActiveGunScriptable);
                 gunStateMachine.fullyEquipped = false;
             }
 
-            currentMode = WeaponMode.DualBlade;
             dualBladeStateMachine.SetupDualBlade();
             currentID = -1;
         }

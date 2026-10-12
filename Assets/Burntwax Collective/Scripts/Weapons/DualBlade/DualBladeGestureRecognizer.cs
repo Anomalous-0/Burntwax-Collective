@@ -58,65 +58,44 @@ namespace Burntwax
                 config.VelocitySampleWindow);
             CurrentLookVelocity = velocityWindow.Velocity;
 
-            // if (!IsInitialSlashQualified)
-            // {
-            //     if (CurrentLookSpeed < config.MinimumInitialSlashSpeed)
-            //         return false;
-
-            //     IsInitialSlashQualified = true;
-            //     InitialSlashDirection = CurrentLookVelocity.normalized;
-            //     InitialQualificationSpeed = CurrentLookSpeed;
-
-            //     // The initial flick must not dilute the following reversal.
-            //     // Start a fresh short velocity window for heavy recognition.
-            //     velocityWindow.Reset();
-            //     return false;
-            // }
-
-            // LastHeavyReversalSpeed = CurrentLookSpeed;
-            // if (CurrentLookSpeed <= Mathf.Epsilon)
-            // {
-            //     LastReversalAlignment = 0f;
-            //     return false;
-            // }
-
-            // Vector2 reversalDirection = CurrentLookVelocity.normalized;
-            // LastReversalAlignment = -Vector2.Dot(
-            //     InitialSlashDirection,
-            //     reversalDirection);
-
-            // bool isHeavyReversal =
-            //     CurrentLookSpeed >= config.MinimumHeavyReversalSpeed
-            //     && LastReversalAlignment >= config.MinimumReversalAlignment;
-
-            // if (!isHeavyReversal)
-            //     return false;
-
-            // intent = new DualBladeAttackIntent(
-            //     DualBladeAttackStrength.Heavy,
-            //     CurrentLookVelocity,
-            //     InitialSlashDirection);
-            // emittedIntentDuringCurrentPress = intent.IsValid;
-            // return intent.IsValid;
-
-            // Wait until the mouse movement qualifies as a directional attack.
-            if (CurrentLookSpeed <= Mathf.Epsilon
-                || CurrentLookSpeed < config.MinimumInitialSlashSpeed)
+            if (!IsInitialSlashQualified)
             {
+                if (CurrentLookSpeed < config.MinimumInitialSlashSpeed)
+                    return false;
+
+                IsInitialSlashQualified = true;
+                InitialSlashDirection = CurrentLookVelocity.normalized;
+                InitialQualificationSpeed = CurrentLookSpeed;
+
+                // The initial flick must not dilute the following reversal.
+                // Start a fresh short velocity window for heavy recognition.
+                velocityWindow.Reset();
                 return false;
             }
 
-            IsInitialSlashQualified = true;
-            InitialSlashDirection = CurrentLookVelocity.normalized;
-            InitialQualificationSpeed = CurrentLookSpeed;
+            LastHeavyReversalSpeed = CurrentLookSpeed;
+            if (CurrentLookSpeed <= Mathf.Epsilon)
+            {
+                LastReversalAlignment = 0f;
+                return false;
+            }
 
-            // A qualifying flick now commits immediately. No reversal required.
+            Vector2 reversalDirection = CurrentLookVelocity.normalized;
+            LastReversalAlignment = -Vector2.Dot(
+                InitialSlashDirection,
+                reversalDirection);
+
+            bool isHeavyReversal =
+                CurrentLookSpeed >= config.MinimumHeavyReversalSpeed
+                && LastReversalAlignment >= config.MinimumReversalAlignment;
+
+            if (!isHeavyReversal)
+                return false;
+
             intent = new DualBladeAttackIntent(
                 DualBladeAttackStrength.Heavy,
                 CurrentLookVelocity,
                 InitialSlashDirection);
-
-            // Prevent this same mouse press from producing another attack.
             emittedIntentDuringCurrentPress = intent.IsValid;
             return intent.IsValid;
         }
@@ -134,9 +113,11 @@ namespace Burntwax
         {
             intent = default;
 
-            // A press that hasn't already produced Heavy becomes Light on release.
             bool shouldEmitLight = wasAttackHeld
+                && IsInitialSlashQualified
                 && !emittedIntentDuringCurrentPress;
+            Vector2 qualifiedDirection = InitialSlashDirection;
+            float qualifiedSpeed = InitialQualificationSpeed;
 
             ResetGestureTracking();
             wasAttackHeld = false;
@@ -146,10 +127,11 @@ namespace Burntwax
 
             intent = new DualBladeAttackIntent(
                 DualBladeAttackStrength.Light,
-                Vector2.zero);
-
+                qualifiedDirection * qualifiedSpeed,
+                qualifiedDirection);
             return intent.IsValid;
         }
+
         private void ResetGestureTracking()
         {
             velocityWindow.Reset();

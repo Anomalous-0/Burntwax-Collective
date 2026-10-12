@@ -94,29 +94,7 @@ namespace Burntwax
             }
         }
 
-        [Serializable]
-        public sealed class LightSlashEntry
-        {
-            [SerializeField]
-            private SlashState animation = new SlashState("", 0f);
-
-            
-
-            public SlashState Animation => animation;
-        }
-
-        [Header("Light Slashes")]
-        [SerializeField]
-        private LightSlashEntry[] lightSlashes = Array.Empty<LightSlashEntry>();
-
-        public int LightSlashCount => lightSlashes.Length;
-
-        public LightSlashEntry GetLightSlash(int index)
-        {
-            return lightSlashes[index];
-        }
-
-        [Header("Heavy Directional Slashes")]
+        [Header("Directional Slashes")]
         [SerializeField] private SlashState left = new SlashState("left_slash_DualBlade", 0.06f);
         [SerializeField] private SlashState right = new SlashState("right_slash_DualBlade", 0.06f);
         [SerializeField] private SlashState upLeft = new SlashState("up_left_slash_DualBlade", 0.075f);
