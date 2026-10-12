@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22c6e09a2c49408ca36568b82503c02e, type: 3}
+  m_Name: DualBlade Animation Config
+  m_EditorClassIdentifier: Burntwax.Core::Burntwax.DualBladeAnimationConfig
+  lightSlashes:
+  - animation:
+      animatorStateName: combo_1_DualBlade
+      clip: {fileID: 7400000, guid: 7f550ca3f1a5fbb41a88a486dd3ae81b, type: 2}
+      blendDuration: 0
+      chainBlendDuration: 0
+      chainStartTime: 0
+    direction: 0
+  - animation:
+      animatorStateName: combo_2_DualBlade
+      clip: {fileID: 7400000, guid: e7d85b7a46beeaa4d9b4f00747ad2cec, type: 2}
+      blendDuration: 0
+      chainBlendDuration: 0
+      chainStartTime: 0
+    direction: 0
+  - animation:
+      animatorStateName: combo_3_DualBlade
+      clip: {fileID: 7400000, guid: fc9a3caa88ae7764ca4c22ca90a419e8, type: 2}
+      blendDuration: 0
+      chainBlendDuration: 0
+      chainStartTime: 0
+    direction: 0
+  left:
+    animatorStateName: left_slash_DualBlade
+    clip: {fileID: 7400000, guid: 696a567f710807442991aba58b1aa033, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.06
+  right:
+    animatorStateName: right_slash_DualBlade
+    clip: {fileID: 7400000, guid: 2c88484bec7a61f41bfae34425901299, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.06
+  upLeft:
+    animatorStateName: up_left_slash_DualBlade
+    clip: {fileID: 7400000, guid: 61f25ce984978d14f8fc69fffc492a85, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.075
+  upRight:
+    animatorStateName: up_right_slash_DualBlade
+    clip: {fileID: 7400000, guid: c36ad119c1e63b14bb4d00a585478606, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.075
+  downLeft:
+    animatorStateName: down_left_slash_DualBlade
+    clip: {fileID: 7400000, guid: 1a77ee199584bbd449d13faa46bebde4, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.045
+  downRight:
+    animatorStateName: down_right_slash_DualBlade
+    clip: {fileID: 7400000, guid: 0fda314e6c874864aa1600816e9893bb, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.045
+  down:
+    animatorStateName: down_slash_DualBlade
+    clip: {fileID: 7400000, guid: 7673092d2b96f6e4a9bafea0fa3644c5, type: 2}
+    blendDuration: 0.035
+    chainBlendDuration: 0.035
+    chainStartTime: 0.045
+  animatorLayerName: Default Layer
+  equip:
+    animatorStateName: equip_DualBlade
+    crossFadeDuration: 0.05
+    startTime: 0
+  ready:
+    animatorStateName: ready_DualBlade
+    crossFadeDuration: 0.05
+    startTime: 0
+  parry:
+    animatorStateName: parry_DualBlade
+    crossFadeDuration: 0.04
+    startTime: 0
+  stow:
+    animatorStateName: stow_DualBlade
+    crossFadeDuration: 0.05
+    startTime: 0
+  idle:
+    animatorStateName: equip_DualBlade
+    crossFadeDuration: 0.15
+    startTime: 0.275
+  heavyCharge:
+    animatorStateName: ready_DualBlade
+    crossFadeDuration: 0.05
+    startTime: 0
+  parriedRecoil:
+    animatorStateName: equip_DualBlade
+    crossFadeDuration: 0.05
+    startTime: 0.275

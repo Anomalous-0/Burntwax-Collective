@@ -48,7 +48,7 @@ namespace Burntwax
             {
                 SwitchState(Factory.Parry());
             }
-            else if (InputPrioritySorter.Instance.SprintIsPriority())
+            else if (Ctx.IsSprintOrDashActive)
             {
                 SwitchState(Factory.Stow());
             }

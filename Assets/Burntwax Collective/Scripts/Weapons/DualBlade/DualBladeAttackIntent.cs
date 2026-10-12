@@ -8,18 +8,23 @@ namespace Burntwax
     /// </summary>
     public readonly struct DualBladeAttackIntent
     {
+
+        private readonly bool wasCreated;
         public DualBladeAttackStrength Strength { get; }
         public Vector2 InitialDirection { get; }
         public Vector2 ReleaseInput { get; }
         public DualBladeSlashDirection SlashDirection { get; }
 
-        public bool IsValid => SlashDirection != DualBladeSlashDirection.None;
+        public bool IsValid => wasCreated && (Strength == DualBladeAttackStrength.Light
+        || SlashDirection != DualBladeSlashDirection.None);
 
         public DualBladeAttackIntent(
+
             DualBladeAttackStrength strength,
             Vector2 releaseInput,
             Vector2 initialDirection = default)
         {
+            wasCreated = true;
             Strength = strength;
             InitialDirection = initialDirection.sqrMagnitude > Mathf.Epsilon
                 ? initialDirection.normalized
