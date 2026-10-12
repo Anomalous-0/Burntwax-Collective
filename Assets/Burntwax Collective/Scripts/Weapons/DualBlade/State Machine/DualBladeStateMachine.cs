@@ -134,6 +134,27 @@ namespace Burntwax
             && rightBladeModel != null && rightBladeModel.activeInHierarchy;
         public bool IsDashEquipped => IsDualBladeEquipped;
 
+        // Presentation follows actual locomotion, not a held sprint key.
+        // Blade mode uses Dash; also support Sprint if movement rules change.
+        public bool IsSprintOrDashActive
+        {
+            get
+            {
+                if (stateMachine == null || stateMachine.states == null)
+                    return false;
+
+                for (PlayerBaseState movement = stateMachine.CurrentState;
+                    movement != null; movement = movement.CurrentSubstate())
+                {
+                    if (movement == stateMachine.states.Sprint()
+                        || movement == stateMachine.states.Dash())
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         public event Action<IPlayerResourceSource> ResourceChanged;
 
         public bool CanDash
@@ -666,8 +687,37 @@ namespace Burntwax
 
             if (animationType == DualBladeAnimationType.Slash)
             {
-                DualBladeAnimationConfig.SlashState slashSettings =
-                    animationConfig != null ? animationConfig.GetSlashState(currentSlashDirection) : null;
+                DualBladeAnimationConfig.SlashState slashSettings;
+
+                if (currentAttackStrength == DualBladeAttackStrength.Light)
+                {
+                    if (animationConfig == null || animationConfig.LightSlashCount == 0)
+                    {
+                        Debug.LogWarning("No Light slash animations are configured.", this);
+                        return false;
+                    }
+
+                    int index = UnityEngine.Random.Range(
+                        0,
+                        animationConfig.LightSlashCount);
+
+                    slashSettings = animationConfig.GetLightSlash(index)?.Animation;
+
+                    if (slashSettings == null
+                        || string.IsNullOrWhiteSpace(slashSettings.AnimatorStateName))
+                    {
+                        Debug.LogWarning("The selected Light slash entry is incomplete.", this);
+                        return false;
+                    }
+                }
+                else
+                {
+                    slashSettings = animationConfig != null
+                        ? animationConfig.GetSlashState(currentSlashDirection)
+                        : null;
+                }
+
+                
                 stateName = slashSettings != null
                     && !string.IsNullOrWhiteSpace(slashSettings.AnimatorStateName)
                     ? slashSettings.AnimatorStateName
