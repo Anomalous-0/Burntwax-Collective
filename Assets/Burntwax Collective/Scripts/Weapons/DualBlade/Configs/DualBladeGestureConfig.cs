@@ -13,6 +13,12 @@ namespace Burntwax
     [UnityEngine.Scripting.APIUpdating.MovedFrom(true, "Burntwax", "Burntwax.Core", "KatanaGestureConfig")]
     public sealed class DualBladeGestureConfig : ScriptableObject
     {
+        [Header("Attack Buffer")]
+        [Tooltip("Real-time seconds an early attack input remains queued. Zero allows only input processed when chaining is already available.")]
+        [SerializeField, Min(0f)] private float attackBufferDuration = 0.12f;
+
+        public float AttackBufferDuration => Mathf.Max(0f, attackBufferDuration);
+
         [Header("Velocity Sampling")]
         [Tooltip("Seconds of recent mouse movement used to calculate velocity. A short window filters frame spikes without allowing slow movement to accumulate indefinitely.")]
         [SerializeField, Range(0.02f, 0.15f)]
@@ -35,6 +41,7 @@ namespace Burntwax
 
         private void OnValidate()
         {
+            attackBufferDuration = Mathf.Max(0f, attackBufferDuration);
             velocitySampleWindow = Mathf.Clamp(
                 velocitySampleWindow,
                 0.02f,

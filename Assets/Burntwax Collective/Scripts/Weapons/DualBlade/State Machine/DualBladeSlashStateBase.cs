@@ -14,6 +14,7 @@ namespace Burntwax
         private Vector2 slashDirection;
         private DualBladeAttackIntent bufferedNextAttack;
         private bool hasBufferedNextAttack;
+        private float bufferedAttackExpiresAt;
 
         protected DualBladeSlashStateBase(
             DualBladeStateMachine currentContext,
@@ -27,6 +28,7 @@ namespace Burntwax
         {
             bufferedNextAttack = default;
             hasBufferedNextAttack = false;
+            bufferedAttackExpiresAt = 0f;
 
             if (Ctx.TryConsumeAttackIntent(out DualBladeAttackIntent intent, out bool isChained))
                 slashDirection = intent.ReleaseInput;
@@ -65,13 +67,30 @@ namespace Burntwax
             if (InputManager.Instance.attackIsPressed)
                 Ctx.dualBladeDriver.FeedInput(InputManager.Instance.LookInput);
 
-            if (!hasBufferedNextAttack
-                && Ctx.TryRecognizeAttack(
-                    out DualBladeAttackIntent nextIntent))
+            // Expire before checking transitions, so neither the chain event
+            // nor the end of the current attack can consume stale input.
+            if (hasBufferedNextAttack
+                && Time.unscaledTime > bufferedAttackExpiresAt)
             {
-                bufferedNextAttack = nextIntent;
-                hasBufferedNextAttack = true;
+                hasBufferedNextAttack = false;
+                bufferedNextAttack = default;
             }
+
+            // Always observe button releases, even while the buffer is full.
+            // Extra inputs must not extend the existing request's deadline.
+            bool recognized = Ctx.TryRecognizeAttack(
+                out DualBladeAttackIntent nextIntent);
+            if (!recognized || hasBufferedNextAttack)
+                return;
+
+            DualBladeGestureConfig config = Ctx.ActiveDualBladeScriptable != null
+                ? Ctx.ActiveDualBladeScriptable.GestureConfig
+                : null;
+            float duration = config != null ? config.AttackBufferDuration : 0.12f;
+
+            bufferedNextAttack = nextIntent;
+            hasBufferedNextAttack = true;
+            bufferedAttackExpiresAt = Time.unscaledTime + duration;
         }
 
         protected void ExitSlash()
