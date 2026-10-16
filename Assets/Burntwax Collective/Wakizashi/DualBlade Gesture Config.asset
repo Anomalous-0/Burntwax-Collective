@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2f7b443548b4fe7bd9a0a624e8f97c9, type: 3}
   m_Name: DualBlade Gesture Config
   m_EditorClassIdentifier: Burntwax.Core::Burntwax.DualBladeGestureConfig
+  attackBufferDuration: 0.09
   velocitySampleWindow: 0.05
   minimumInitialSlashSpeed: 60
   minimumHeavyReversalSpeed: 48
