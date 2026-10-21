@@ -53,7 +53,11 @@ namespace Burntwax
                 $"{classifiedDirection} ({slashDirection.x:F2}, " +
                 $"{slashDirection.y:F2}).");
 
-            Ctx.camStateMachine.SlowCam(true);
+            if (attackStrength == DualBladeAttackStrength.Heavy)
+            {
+                Ctx.camStateMachine.SlowCam(true);
+            }
+
 
             // Each direction has its own state, preserving the outgoing
             // clip while blending into the next slash past its preparation.
