@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
-using Cinemachine;
+
 
 namespace Burntwax
 {
@@ -17,7 +17,7 @@ namespace Burntwax
 
         [Space]
         [Header("Cinemachine Required")]
-        public CinemachineImpulseSource camShake;
+        public Unity.Cinemachine.CinemachineImpulseSource camShake;
 
         [Header("Animation Rigging Required")]
         public Rig handIK;
@@ -329,7 +329,7 @@ namespace Burntwax
             anim.Play("equip_" + ActiveGunScriptable.Type);
 
             if (CurrentGunModel != null)
-                camShake = CurrentGunModel.GetComponent<CinemachineImpulseSource>();
+                camShake = CurrentGunModel.GetComponent<Unity.Cinemachine.CinemachineImpulseSource>();
 
             ResetAnimationFlags();
         }

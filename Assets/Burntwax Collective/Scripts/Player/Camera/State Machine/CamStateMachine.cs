@@ -1,13 +1,13 @@
 using System.Collections;
 using UnityEngine;
-using Cinemachine;
+
 
 namespace Burntwax
 {
     public class CamStateMachine : MonoBehaviour
     {
         public Transform cam;
-        CinemachinePOV pov;
+        Unity.Cinemachine.CinemachinePOV pov;
 
         [Header("State Machines")]
         [HideInInspector] public PlayerStateMachine player;
@@ -24,12 +24,12 @@ namespace Burntwax
 
         [HideInInspector] public PlayerCrosshair crosshair;
 
-        CinemachineVirtualCamera activeCam;
+        Unity.Cinemachine.CinemachineVirtualCamera activeCam;
 
-        public CinemachineVirtualCamera fpsCam;
-        public CinemachineVirtualCamera aimCam;
+        public Unity.Cinemachine.CinemachineVirtualCamera fpsCam;
+        public Unity.Cinemachine.CinemachineVirtualCamera aimCam;
 
-        public CinemachineVirtualCamera chargeCam;
+        public Unity.Cinemachine.CinemachineVirtualCamera chargeCam;
 
         [Header("Charge Zoom")]
         [Tooltip("FOV the charge camera reaches at full glove charge. Lower = more zoom-in. Match it to the aim camera for an identical ADS feel.")]
@@ -129,7 +129,7 @@ namespace Burntwax
             gun = Arms.GetComponent<GunStateMachine>();
             dualBlade = Arms.GetComponent<DualBladeStateMachine>();
 
-            pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
+            pov = activeCam.GetCinemachineComponent<Unity.Cinemachine.CinemachinePOV>();
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -333,13 +333,13 @@ namespace Burntwax
             RestoreBaseFovs();
         }
 
-        private void SetCameraPriorities(CinemachineVirtualCamera NewCameraMode)
+        private void SetCameraPriorities(Unity.Cinemachine.CinemachineVirtualCamera NewCameraMode)
         {
             RestoreBaseFov(activeCam);
             activeCam.Priority -= activeCameraPriorityModifier;
             NewCameraMode.Priority += activeCameraPriorityModifier;
             activeCam = NewCameraMode;
-            pov = activeCam.GetCinemachineComponent<CinemachinePOV>();
+            pov = activeCam.GetCinemachineComponent<Unity.Cinemachine.CinemachinePOV>();
 
             ApplySharedFov();
 
@@ -377,7 +377,7 @@ namespace Burntwax
                 currentCombatFovOffset;
         }
 
-        private float GetBaseFov(CinemachineVirtualCamera camera)
+        private float GetBaseFov(Unity.Cinemachine.CinemachineVirtualCamera camera)
         {
             if (camera == fpsCam)
                 return fpsBaseFov;
@@ -391,7 +391,7 @@ namespace Burntwax
             return camera != null ? camera.m_Lens.FieldOfView : 0f;
         }
 
-        private void RestoreBaseFov(CinemachineVirtualCamera camera)
+        private void RestoreBaseFov(Unity.Cinemachine.CinemachineVirtualCamera camera)
         {
             if (camera != null)
                 camera.m_Lens.FieldOfView = GetBaseFov(camera);

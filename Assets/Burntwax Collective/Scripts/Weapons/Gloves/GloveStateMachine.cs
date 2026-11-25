@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Cinemachine;
+
 using UnityEngine;
 using UnityEngine.Animations.Rigging;
 
@@ -143,13 +143,13 @@ namespace Burntwax
         [SerializeField] private float blastMinForce = 6f;
         [SerializeField] private float blastMaxForce = 30f;
         [Tooltip("Camera kick on fire. Auto-fetched from this object if left empty.")]
-        [SerializeField] private CinemachineImpulseSource blastShake;
+        [SerializeField] private Unity.Cinemachine.CinemachineImpulseSource blastShake;
         [SerializeField] private float blastMinShake = 0.4f;
         [SerializeField] private float blastMaxShake = 1.4f;
 
         [Header("Attract / Repulse Shake")]
         [Tooltip("Camera kick when an object latches onto the pull or is hurled off the glove. Auto-fetched from this object if left empty.")]
-        [SerializeField] private CinemachineImpulseSource attractShake;
+        [SerializeField] private Unity.Cinemachine.CinemachineImpulseSource attractShake;
         [Tooltip("Shake for the lightest objects (Playground: ammo ~0.5 mass).")]
         [SerializeField] private float minShake = 0.35f;
         [Tooltip("Shake cap. Objects at or above Shake Mass For Max use this, so huge objects don't over-shake.")]
@@ -251,9 +251,9 @@ namespace Burntwax
             }
             detectionMpb = new MaterialPropertyBlock();
             if (blastShake == null)
-                blastShake = GetComponent<CinemachineImpulseSource>();
+                blastShake = GetComponent<Unity.Cinemachine.CinemachineImpulseSource>();
             if (attractShake == null)
-                attractShake = GetComponent<CinemachineImpulseSource>();
+                attractShake = GetComponent<Unity.Cinemachine.CinemachineImpulseSource>();
             emptyHash = Animator.StringToHash("empty_Glove");
             idleHash = Animator.StringToHash("idle_Glove");
             chargeHash = Animator.StringToHash("charge_blast_Glove");

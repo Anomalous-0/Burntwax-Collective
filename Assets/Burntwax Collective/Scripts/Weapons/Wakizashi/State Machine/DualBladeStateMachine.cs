@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.Animations.Rigging;
-using Cinemachine;
+
 using System.Collections;
 using System.Collections.Generic;
 
@@ -45,7 +45,7 @@ namespace Burntwax
 
         [Space]
         [Header("Cinemachine Required")]
-        public CinemachineImpulseSource camShake;
+        public Unity.Cinemachine.CinemachineImpulseSource camShake;
 
         [Header("Animation Rigging Required")]
         public Rig handIK;
@@ -576,7 +576,7 @@ namespace Burntwax
             PlayDualBladeAnimation(DualBladeAnimationType.Equip);
 
             if (rightBladeModel != null)
-                camShake = rightBladeModel.GetComponent<CinemachineImpulseSource>();
+                camShake = rightBladeModel.GetComponent<Unity.Cinemachine.CinemachineImpulseSource>();
 
         }
 
@@ -1036,7 +1036,7 @@ namespace Burntwax
                 handIK.weight = 1;
 
             if (rightBladeModel != null)
-                camShake = rightBladeModel.GetComponent<CinemachineImpulseSource>();
+                camShake = rightBladeModel.GetComponent<Unity.Cinemachine.CinemachineImpulseSource>();
 
         }
     }
