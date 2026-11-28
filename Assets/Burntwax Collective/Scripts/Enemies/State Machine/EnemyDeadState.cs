@@ -16,7 +16,10 @@ namespace Burntwax
             IsRootState = true;
         }
 
-        public override void EnterState() { }
+        public override void EnterState()
+        {
+            Ctx.Ragdoll?.ActivateRagdoll();
+        }
         public override void UpdateState() { }
         public override void FixedUpdateState() { }
         public override void ExitState() { }

@@ -75,6 +75,11 @@ namespace Burntwax
         [SerializeField] private string movementStatePath = "Inactive";
         [SerializeField] private string actionStatePath = "Inactive";
 
+        [Header("Death")]
+        private EnemyRagdoll ragdoll;
+        internal EnemyRagdoll Ragdoll => ragdoll;
+
+
         public EnemyHealth Health => health;
         public EnemyRuntimeProfile RuntimeProfile => runtimeProfile;
         public EnemyMeleeExecutor MeleeExecutor => meleeExecutor;
@@ -539,6 +544,9 @@ namespace Burntwax
 
             if (rotationRoot == null)
                 rotationRoot = transform;
+
+            if (ragdoll == null) 
+                ragdoll = GetComponent<EnemyRagdoll>();
         }
 
         private bool TryCrossFadeAnimation(
